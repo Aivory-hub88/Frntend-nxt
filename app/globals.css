@@ -1,0 +1,356 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ─── Global Font ─── */
+html, body, * {
+  font-family: var(--font-manrope), 'Manrope', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+/* ─── Scroll Animation Utility ─── */
+.animate-on-scroll {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 400ms ease-out, transform 400ms ease-out;
+}
+
+.animate-on-scroll.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-on-scroll {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
+/* ─── Feature Cards (Sticky Stack) ─── */
+.gsap-card-container {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  padding-bottom: 40px;
+  margin-top: 80px;
+  isolation: isolate;
+}
+
+.gsap-card {
+  position: sticky;
+  top: 12vh;
+  border-radius: 32px;
+  min-height: 520px;
+  margin-bottom: 80px;
+  overflow: hidden;
+  will-change: transform;
+  transform-origin: center top;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  box-shadow: 0 -20px 50px rgba(0, 0, 0, 0.6);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+  background: #191919;
+}
+
+.gsap-card.animate {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.gsap-card-text-area {
+  padding: 64px 48px 64px 80px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  text-align: left;
+}
+
+.gsap-card-visual-area {
+  padding: 48px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.gsap-card-visual-area > * {
+  transform: scale(1.25);
+  transform-origin: center center;
+}
+
+.gsap-card .fc-step-v {
+  display: inline-block;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #0ae8af;
+  margin-bottom: 20px;
+  font-family: 'Manrope', sans-serif;
+}
+
+.gsap-card .fc-title-v {
+  font-size: 44px;
+  font-weight: 400;
+  color: #fff;
+  margin-bottom: 24px;
+  font-family: 'Manrope', sans-serif;
+  line-height: 1.15;
+  text-align: left;
+  width: 100%;
+}
+
+.gsap-card .fc-desc-v {
+  font-size: 17px;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.65);
+  line-height: 1.7;
+  font-family: 'Manrope', sans-serif;
+  text-align: left;
+  width: 100%;
+}
+
+/* Responsive cards */
+@media (max-width: 1024px) {
+  .gsap-card {
+    grid-template-columns: 1fr;
+    min-height: auto;
+    border-radius: 24px;
+    top: 15vh;
+  }
+  .gsap-card-text-area {
+    padding: 40px 32px 24px;
+    align-items: center;
+    text-align: center;
+  }
+  .gsap-card .fc-title-v,
+  .gsap-card .fc-desc-v {
+    text-align: center;
+  }
+  .gsap-card-visual-area {
+    padding: 24px 32px 40px;
+    min-height: 200px;
+  }
+}
+
+/* ─── Workflow Builder Card Animations ─── */
+@keyframes wfTypeText {
+  0%, 8% { width: 0; }
+  42%, 86% { width: 23ch; }
+  87%, 100% { width: 0; }
+}
+
+@keyframes wfTypeCursor {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.2; }
+}
+
+@keyframes wfNodeLoop1 {
+  0%, 42%, 100% { opacity: 0; transform: translateY(6px); }
+  50%, 84% { opacity: 1; transform: translateY(0); }
+  90% { opacity: 0; transform: translateY(0); }
+}
+
+@keyframes wfNodeLoop2 {
+  0%, 46%, 100% { opacity: 0; transform: translateY(6px); }
+  54%, 84% { opacity: 1; transform: translateY(0); }
+  90% { opacity: 0; transform: translateY(0); }
+}
+
+@keyframes wfNodeLoop3 {
+  0%, 50%, 100% { opacity: 0; transform: translateY(6px); }
+  58%, 84% { opacity: 1; transform: translateY(0); }
+  90% { opacity: 0; transform: translateY(0); }
+}
+
+@keyframes wfNodeLoop4 {
+  0%, 54%, 100% { opacity: 0; transform: translateY(6px); }
+  62%, 84% { opacity: 1; transform: translateY(0); }
+  90% { opacity: 0; transform: translateY(0); }
+}
+
+@keyframes wfArrowFade {
+  0%, 41% { opacity: 0; }
+  42%, 86% { opacity: 1; }
+  87%, 100% { opacity: 0; }
+}
+
+.wf-prompt-text {
+  display: inline-block;
+  width: 0;
+  max-width: 23ch;
+  overflow: hidden;
+  white-space: nowrap;
+  animation: wfTypeText 6.5s steps(23, end) infinite;
+}
+
+.wf-cursor {
+  animation: wfTypeCursor 1s step-end infinite;
+}
+
+.wf-arrow {
+  opacity: 0;
+  animation: wfArrowFade 6.5s infinite;
+}
+
+.wf-node {
+  opacity: 0;
+  transform: translateY(6px);
+  animation-duration: 6.5s;
+  animation-iteration-count: infinite;
+  animation-timing-function: ease;
+}
+
+.wf-node:nth-child(1) { animation-name: wfNodeLoop1; }
+.wf-node:nth-child(2) { animation-name: wfNodeLoop2; }
+.wf-node:nth-child(3) { animation-name: wfNodeLoop3; }
+.wf-node:nth-child(4) { animation-name: wfNodeLoop4; }
+
+/* ─── Agent Hub Pulse ─── */
+@keyframes agentPulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(10, 232, 175, 0.4); }
+  50% { box-shadow: 0 0 0 8px rgba(10, 232, 175, 0); }
+}
+
+.agent-hub-rect {
+  animation: agentPulse 2.5s ease-in-out infinite;
+}
+
+/* Respect reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .wf-prompt-text,
+  .wf-cursor,
+  .wf-arrow,
+  .wf-node,
+  .agent-hub-rect {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+  .wf-prompt-text {
+    width: auto;
+  }
+}
+
+/* ─── Stats Section Laser Animations ─── */
+@keyframes laserMoveDown {
+  0% { top: -40px; opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { top: calc(100% + 40px); opacity: 0; }
+}
+
+@keyframes laserMoveRight {
+  0% { left: -120px; opacity: 0; }
+  5% { opacity: 1; }
+  95% { opacity: 1; }
+  100% { left: 100%; opacity: 0; }
+}
+
+@keyframes laserMoveLeft {
+  0% { right: -120px; opacity: 0; }
+  5% { opacity: 1; }
+  95% { opacity: 1; }
+  100% { right: 100%; opacity: 0; }
+}
+
+.animate-laser-down {
+  animation: laserMoveDown 2.8s ease-in-out infinite;
+}
+
+.animate-laser-right {
+  animation: laserMoveRight 4s ease-in-out infinite;
+}
+
+.animate-laser-left {
+  animation: laserMoveLeft 4s ease-in-out infinite 2s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-laser-down,
+  .animate-laser-right,
+  .animate-laser-left {
+    animation: none;
+    opacity: 0;
+  }
+}
+
+/* ─── Console Chat Animation (Card 7) ─── */
+.chat-b {
+  padding: 8px 12px;
+  border-radius: 12px;
+  font-size: 10px;
+  font-family: 'Manrope', sans-serif;
+  font-weight: 300;
+  max-width: 85%;
+  line-height: 1.4;
+  opacity: 0;
+  letter-spacing: 0.02em;
+  animation-duration: 14s;
+  animation-iteration-count: infinite;
+  animation-fill-mode: forwards;
+}
+
+.chat-user {
+  background: rgba(255,255,255,0.08);
+  color: #e0e0e0;
+  border: 1px solid rgba(255,255,255,0.05);
+  align-self: flex-end;
+  border-bottom-right-radius: 4px;
+}
+
+.chat-ai {
+  background: rgba(255,255,255,0.04);
+  color: #a1a1aa;
+  border: 1px solid rgba(255,255,255,0.05);
+  align-self: flex-start;
+  border-bottom-left-radius: 4px;
+}
+
+@keyframes msg1 {
+  0%, 2% { opacity: 0; transform: translateY(10px); }
+  5%, 95% { opacity: 1; transform: translateY(0); }
+  98%, 100% { opacity: 0; transform: translateY(-5px); }
+}
+
+@keyframes msg2 {
+  0%, 15% { opacity: 0; transform: translateY(10px); }
+  18%, 95% { opacity: 1; transform: translateY(0); }
+  98%, 100% { opacity: 0; transform: translateY(-5px); }
+}
+
+@keyframes msg3 {
+  0%, 35% { opacity: 0; transform: translateY(10px); }
+  38%, 95% { opacity: 1; transform: translateY(0); }
+  98%, 100% { opacity: 0; transform: translateY(-5px); }
+}
+
+@keyframes msg4 {
+  0%, 50% { opacity: 0; transform: translateY(10px); }
+  53%, 95% { opacity: 1; transform: translateY(0); }
+  98%, 100% { opacity: 0; transform: translateY(-5px); }
+}
+
+@keyframes msg5 {
+  0%, 70% { opacity: 0; transform: translateY(10px); }
+  73%, 95% { opacity: 1; transform: translateY(0); }
+  98%, 100% { opacity: 0; transform: translateY(-5px); }
+}
+
+@keyframes msg6 {
+  0%, 85% { opacity: 0; transform: translateY(10px); }
+  88%, 95% { opacity: 1; transform: translateY(0); }
+  98%, 100% { opacity: 0; transform: translateY(-5px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .chat-b {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+}
