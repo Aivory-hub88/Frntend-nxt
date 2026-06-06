@@ -2,8 +2,9 @@ import type { Metadata } from 'next';
 import Navbar from '@/components/home/Navbar';
 import Footer from '@/components/Footer';
 import { HeroSection } from '@/components/product/HeroSection';
-import { InteractiveShowcase } from '@/components/product/InteractiveShowcase';
+import { InteractiveGridShowcase } from '@/components/product/InteractiveGridShowcase';
 import { InteractiveGrid } from '@/components/product/InteractiveGrid';
+import { TechLabSection } from '@/components/product/TechLabSection';
 import { CTAFooter } from '@/components/product/CTAFooter';
 
 export const metadata: Metadata = {
@@ -24,18 +25,19 @@ export default function ProductPage() {
         subtitle="From diagnostic to deployment — everything you need to integrate AI into your business operations."
       />
 
-      {/* Sticky Scroll Interactive Showcase (Diagnostic, Blueprint, Roadmap, Console, Workflows) */}
-      <InteractiveShowcase />
+      {/* Grid Showcase (Diagnostic, Blueprint, Roadmap, Console, Workflows) */}
+      <InteractiveGridShowcase />
 
       {/* Spotlight Hover Utility Grid (Agents, Templates, Connectors, Telemetry) */}
       <InteractiveGrid />
 
+      {/* Aivory Tech Lab Section */}
+      <TechLabSection />
+
       {/* Call to Action Conversion Block */}
       <CTAFooter
         title="Ready to transform your business with AI?"
-        subtitle="Start with a free AI readiness diagnostic and discover your potential."
-        primaryCta={{ label: 'Get Started Free', href: '/free-diagnostic' }}
-        secondaryCta={{ label: 'Talk to Us', href: '#contact' }}
+        primaryCta={{ label: 'Talk to Us', href: '#contact' }}
       />
 
       {/* Standard Footer */}

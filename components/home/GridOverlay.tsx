@@ -58,9 +58,18 @@ export default function GridOverlay({ animated = false, className = '' }: GridOv
         const offsetX = (c.width / 2) % cw;
         const offsetY = (c.height / 2) % ch;
 
-        const k_center = Math.floor((c.width / 2) / cw);
-        const r_center = Math.floor((c.height / 2) / ch);
+        // Calculate dark cell pixel bounds (must match HeroSection positionDarkCell)
+        const darkX = (colCount - 1) * cw + offsetX;
+        const darkY = (rowCount - 1) * ch + offsetY;
 
+        // Clip the canvas to exclude the dark cell zone — nothing will draw over it
+        ctx.save();
+        ctx.beginPath();
+        ctx.rect(0, 0, c.width, c.height);
+        ctx.rect(darkX, darkY, cw, ch); // "cut out" the dark zone (even-odd rule)
+        ctx.clip('evenodd');
+
+        // Animated fading cells (excluding the fixed dark cell area)
         for (let i = 0; i < (colCount + 2) * (rowCount + 2) && i < cells.length; i++) {
           const cell = cells[i];
           if (cell.opacity < cell.target) {
@@ -71,32 +80,14 @@ export default function GridOverlay({ animated = false, className = '' }: GridOv
 
           const col = (i % (colCount + 2)) - 1;
           const row = Math.floor(i / (colCount + 2)) - 1;
-          const isTargetBox = col === k_center + 4 && row === r_center + 1;
 
-          if (isTargetBox) {
-            ctx.fillStyle = 'rgba(0,0,0,0.95)';
-            ctx.fillRect(col * cw + offsetX, row * ch + offsetY, cw, ch);
-          } else if (cell.opacity > 0.01) {
+          if (cell.opacity > 0.01) {
             ctx.fillStyle = `rgba(0,0,0,${cell.opacity})`;
             ctx.fillRect(col * cw + offsetX, row * ch + offsetY, cw, ch);
           }
         }
 
-        // Grid lines
-        ctx.strokeStyle = 'rgba(255,255,255,0.08)';
-        ctx.lineWidth = 1;
-        for (let x = -1; x <= colCount + 1; x++) {
-          ctx.beginPath();
-          ctx.moveTo(x * cw + offsetX, 0);
-          ctx.lineTo(x * cw + offsetX, c.height);
-          ctx.stroke();
-        }
-        for (let y = -1; y <= rowCount + 1; y++) {
-          ctx.beginPath();
-          ctx.moveTo(0, y * ch + offsetY);
-          ctx.lineTo(c.width, y * ch + offsetY);
-          ctx.stroke();
-        }
+
 
         // Crosshairs at intersections
         ctx.strokeStyle = 'rgba(255,255,255,0.25)';
@@ -116,6 +107,8 @@ export default function GridOverlay({ animated = false, className = '' }: GridOv
             ctx.stroke();
           }
         }
+
+        ctx.restore();
 
         animId = requestAnimationFrame(draw);
       };
@@ -143,20 +136,7 @@ export default function GridOverlay({ animated = false, className = '' }: GridOv
         const offsetX = (c.width / 2) % cw;
         const offsetY = (c.height / 2) % ch;
 
-        ctx.strokeStyle = 'rgba(255,255,255,0.08)';
-        ctx.lineWidth = 1;
-        for (let x = -1; x <= colCount + 1; x++) {
-          ctx.beginPath();
-          ctx.moveTo(x * cw + offsetX, 0);
-          ctx.lineTo(x * cw + offsetX, c.height);
-          ctx.stroke();
-        }
-        for (let y = -1; y <= rowCount + 1; y++) {
-          ctx.beginPath();
-          ctx.moveTo(0, y * ch + offsetY);
-          ctx.lineTo(c.width, y * ch + offsetY);
-          ctx.stroke();
-        }
+
 
         ctx.strokeStyle = 'rgba(255,255,255,0.25)';
         ctx.lineWidth = 1;

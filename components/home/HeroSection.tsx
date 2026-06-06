@@ -9,8 +9,33 @@ export default function HeroSection() {
   const { ref: animRef, isVisible } = useScrollAnimation();
   const videoRef = useRef<HTMLVideoElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
+  const darkCellRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    const CW = 120;
+    const CH = 120;
+
+    const positionDarkCell = () => {
+      const w = window.innerWidth;
+      const h = window.innerHeight;
+      const offsetX = (w / 2) % CW;
+      const offsetY = (h / 2) % CH;
+      const colCount = Math.ceil(w / CW);
+      const rowCount = Math.ceil(h / CH);
+      // last full cell x position
+      const cellX = (colCount - 1) * CW + offsetX;
+      const cellY = (rowCount - 1) * CH + offsetY;
+      if (darkCellRef.current) {
+        darkCellRef.current.style.left = `${cellX}px`;
+        darkCellRef.current.style.top = `${cellY}px`;
+        darkCellRef.current.style.width = `${CW}px`;
+        darkCellRef.current.style.height = `${CH}px`;
+      }
+    };
+
+    positionDarkCell();
+    window.addEventListener('resize', positionDarkCell);
+
     let ticking = false;
 
     const handleScroll = () => {
@@ -32,6 +57,7 @@ export default function HeroSection() {
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => {
       window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('resize', positionDarkCell);
     };
   }, []);
 
@@ -125,6 +151,16 @@ export default function HeroSection() {
           <div className="w-[1px] h-16 bg-gradient-to-t from-transparent to-white/80" />
         </div>
       </div>
+      {/* Fixed dark grid cell — canvas is clipped to never draw here; CSS div is fully opaque */}
+      <div
+        ref={darkCellRef}
+        className="absolute pointer-events-none"
+        style={{
+          backgroundColor: '#030408', // matches hero background
+          opacity: 0.98,
+          zIndex: 2,
+        }}
+      />
     </div>
   );
 }

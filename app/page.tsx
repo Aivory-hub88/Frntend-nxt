@@ -18,10 +18,14 @@ export default function HomePage() {
         <Navbar />
         <HeroSection />
         
-        {/* Scaled down content (85%) */}
-        <div style={{ zoom: 0.85 }}>
+        {/* Unscaled content (100% scale to match product page) */}
+        <div>
           <AIReadySection />
           <FeatureCards />
+        </div>
+
+        {/* Scaled down content (85%) */}
+        <div style={{ zoom: 0.85 }}>
           <StatsSection />
           <PricingStepOne />
           <PricingStepTwo />

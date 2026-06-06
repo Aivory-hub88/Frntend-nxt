@@ -279,12 +279,14 @@ function AppIntegrationsAnimation() {
           key={app.name}
           className="flex items-center justify-center aspect-square bg-[#111111] border border-white/5 rounded-lg hover:border-white/15 hover:bg-white/[0.03] transition-all duration-300 cursor-default group"
         >
-          <Image
+          {/* Using standard img for SVG to prevent Next.js Image lazy loading/optimization issues */}
+          <img
             src={app.icon}
             alt={app.name}
             width={22}
             height={22}
             className="opacity-70 group-hover:opacity-100 transition-opacity duration-300"
+            loading="lazy"
           />
         </div>
       ))}

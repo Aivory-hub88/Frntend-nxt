@@ -54,21 +54,7 @@ export function HeroSection({ title, subtitle }: HeroSectionProps) {
           {subtitle}
         </p>
 
-        {/* CTA Buttons */}
-        <div className="flex flex-col sm:flex-row items-center gap-4 mb-16">
-          <a
-            href="#showcase"
-            className="w-full sm:w-auto inline-flex justify-center items-center px-8 py-3.5 rounded-none bg-white text-black font-medium text-sm transition-all duration-200 hover:bg-white/90 active:scale-98"
-          >
-            Start Free Diagnostic
-          </a>
-          <a
-            href="#pricing"
-            className="w-full sm:w-auto inline-flex justify-center items-center px-8 py-3.5 rounded-none border border-white/25 text-white font-light text-sm transition-all duration-200 hover:bg-white/10 hover:border-white/40 active:scale-98"
-          >
-            Consultation Blueprint
-          </a>
-        </div>
+
       </div>
 
       {/* Wireframe Scroll Guide (Vertical line showing page flow) */}

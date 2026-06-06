@@ -621,7 +621,7 @@ body,
   position: absolute;
   inset: -1px;
   background: radial-gradient(300px circle at var(--mouse-x, 0px) var(--mouse-y, 0px),
-      rgba(10, 232, 175, 0.06),
+      rgba(111, 142, 91, 0.15),
       transparent 40%);
   z-index: 0;
   pointer-events: none;
