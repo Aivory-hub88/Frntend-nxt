@@ -335,34 +335,38 @@ function WorkflowAnimation() {
               <div className="absolute top-1/2 left-[50%] right-[15%] h-[1px] bg-[#aec99d] -translate-y-1/2 -z-10 origin-left animate-scale-x" style={{ animationDelay: '0.4s' }} />
 
               {/* Node 1: Trigger */}
-              <div className="flex flex-col rounded-lg border border-[#aec99d]/30 shadow-md flex-shrink-0 bg-[#333333] min-w-[90px]">
-                <div className="px-2 py-1.5 text-center">
-                  <span className="text-[9px] text-white/70 uppercase tracking-widest font-medium">Trigger</span>
+              <div className="flex flex-col rounded-[16px] border border-white/10 shadow-lg flex-shrink-0 w-[100px] sm:w-[110px] h-[105px] overflow-hidden bg-[#2A2A2A] relative z-10">
+                <div className="h-[32px] flex items-center justify-center bg-[#2A2A2A] border-b border-[#111]/50">
+                  <span className="text-[9px] text-white/60 uppercase tracking-widest font-medium">Trigger</span>
                 </div>
-                <div className="bg-[#aec99d] px-2 py-3 text-center rounded-b-lg flex flex-col items-center justify-center gap-1.5">
+                <div className="flex-1 bg-[#aec99d] flex flex-col items-center justify-center gap-1.5">
                   <img src="/integrations/icons/gmail.svg" alt="Gmail" className="w-5 h-5 drop-shadow-sm" />
                   <span className="text-xs font-semibold text-[#111111]">Gmail</span>
                 </div>
               </div>
               
               {/* Node 2: Agent */}
-              <div className="flex flex-col rounded-lg border border-white/25 shadow-md relative flex-shrink-0 bg-[#333333] min-w-[90px] animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
-                <div className="absolute -top-1.5 -right-1.5 w-3 h-3 rounded-full bg-[#939393] animate-ping opacity-60 z-20" />
-                <div className="absolute -top-1.5 -right-1.5 w-3 h-3 rounded-full bg-[#939393] z-20" />
-                <div className="px-2 py-1.5 text-center">
-                  <span className="text-[9px] text-[#939393] uppercase tracking-widest font-medium">AI Agent</span>
-                </div>
-                <div className="bg-[#111] px-2 py-3 text-center rounded-b-lg border-t border-[#939393]/30">
-                  <span className="text-xs font-semibold text-[#939393]">Extract</span>
+              <div className="relative flex-shrink-0 animate-fade-in-up z-20" style={{ animationDelay: '0.2s' }}>
+                {/* Blinker positioned outside overflow-hidden */}
+                <div className="absolute top-[-4px] right-[-4px] w-3.5 h-3.5 rounded-full bg-white/40 animate-ping z-30" />
+                <div className="absolute top-[-4px] right-[-4px] w-3.5 h-3.5 rounded-full bg-white/60 z-30 border border-[#111]" />
+                
+                <div className="flex flex-col rounded-[16px] border border-white/10 shadow-lg w-[100px] sm:w-[110px] h-[105px] overflow-hidden bg-[#2A2A2A]">
+                  <div className="h-[32px] flex items-center justify-center bg-[#2A2A2A] border-b border-[#111]">
+                    <span className="text-[9px] text-white/60 uppercase tracking-widest font-medium">AI Agent</span>
+                  </div>
+                  <div className="flex-1 bg-[#111111] flex flex-col items-center justify-center">
+                    <span className="text-xs font-medium text-white/60">Extract</span>
+                  </div>
                 </div>
               </div>
 
               {/* Node 3: Action */}
-              <div className="flex flex-col rounded-lg border border-[#aec99d]/30 shadow-md flex-shrink-0 bg-[#333333] min-w-[90px] animate-fade-in-up" style={{ animationDelay: '0.6s' }}>
-                <div className="px-2 py-1.5 text-center">
-                  <span className="text-[9px] text-white/70 uppercase tracking-widest font-medium">Action</span>
+              <div className="flex flex-col rounded-[16px] border border-white/10 shadow-lg flex-shrink-0 w-[100px] sm:w-[110px] h-[105px] overflow-hidden bg-[#2A2A2A] relative z-10 animate-fade-in-up" style={{ animationDelay: '0.6s' }}>
+                <div className="h-[32px] flex items-center justify-center bg-[#2A2A2A] border-b border-[#111]/50">
+                  <span className="text-[9px] text-white/60 uppercase tracking-widest font-medium">Action</span>
                 </div>
-                <div className="bg-[#aec99d] px-2 py-3 text-center rounded-b-lg flex flex-col items-center justify-center gap-1.5">
+                <div className="flex-1 bg-[#aec99d] flex flex-col items-center justify-center gap-1.5">
                   <img src="/integrations/icons/slack.svg" alt="Slack" className="w-5 h-5 drop-shadow-sm" />
                   <span className="text-xs font-semibold text-[#111111]">Slack</span>
                 </div>
@@ -391,6 +395,208 @@ function WorkflowAnimation() {
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M5 12h14M12 5l7 7-7 7" strokeLinecap="round" strokeLinejoin="round"/></svg>
             )}
           </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function RoadmapAnimation() {
+  const [step, setStep] = useState(0);
+
+  useEffect(() => {
+    let timer: NodeJS.Timeout;
+    const nextStep = () => setStep(s => (s >= 13 ? 0 : s + 1));
+    
+    const delays = [
+      500,  // 0 -> 1: W1
+      1000, // 1 -> 2: Task 1
+      800,  // 2 -> 3: Task 2
+      800,  // 3 -> 4: Task 3
+      1200, // 4 -> 5: W2
+      1000, // 5 -> 6: Task 1
+      800,  // 6 -> 7: Task 2
+      800,  // 7 -> 8: Task 3
+      1200, // 8 -> 9: W3
+      1000, // 9 -> 10: Task 1
+      800,  // 10 -> 11: Task 2
+      800,  // 11 -> 12: Task 3
+      2500, // 12 -> 13: Hold
+      500,  // 13 -> 0: Reset
+    ];
+
+    timer = setTimeout(nextStep, delays[step] || 1000);
+    return () => clearTimeout(timer);
+  }, [step]);
+
+  const waves = [
+    { num: 'W1', name: 'Setup', activeStep: 1 },
+    { num: 'W2', name: 'Automations', activeStep: 5 },
+    { num: 'W3', name: 'Scale', activeStep: 9 },
+  ];
+
+  const waveData = [
+    {
+      title: 'Wave 1 Milestone Action List',
+      tasks: [
+        'Finalize Diagnostic Baseline Parameters',
+        'Map Centralized Data Storage Schema',
+        'Establish Slack / Email Communication Links'
+      ]
+    },
+    {
+      title: 'Wave 2 Milestone Action List',
+      tasks: [
+        'Implement Core Agent Logic',
+        'Connect CRM and Internal Tools',
+        'Deploy Sandbox Environment'
+      ]
+    },
+    {
+      title: 'Wave 3 Milestone Action List',
+      tasks: [
+        'Rollout to Production',
+        'Monitor and Optimize Workflows',
+        'Expand to Additional Departments'
+      ]
+    }
+  ];
+
+  let currentWaveIdx = 0;
+  if (step >= 9) currentWaveIdx = 2;
+  else if (step >= 5) currentWaveIdx = 1;
+
+  const currentData = waveData[currentWaveIdx];
+  
+  let checkedCount = 0;
+  if (step === 2 || step === 6 || step === 10) checkedCount = 1;
+  if (step === 3 || step === 7 || step === 11) checkedCount = 2;
+  if (step >= 4 && step < 5) checkedCount = 3;
+  if (step >= 8 && step < 9) checkedCount = 3;
+  if (step >= 12) checkedCount = 3;
+
+  return (
+    <div className="flex-1 flex flex-col justify-center space-y-8 w-full h-full relative z-10">
+      {/* Top nodes */}
+      <div className="flex items-center justify-between w-full mx-auto relative px-8">
+        <div className="absolute top-1/2 left-[52px] right-[52px] h-[1px] bg-white/10 -translate-y-1/2 -z-10" />
+        
+        {/* Progress Line W1 to W2 */}
+        <div className={`absolute top-1/2 left-[52px] right-1/2 h-[1px] bg-[#aec99d] -translate-y-1/2 -z-10 origin-left transition-all duration-700 ${step >= 5 ? 'scale-x-100 opacity-100' : 'scale-x-0 opacity-0'}`} />
+        
+        {/* Progress Line W2 to W3 */}
+        <div className={`absolute top-1/2 left-1/2 right-[52px] h-[1px] bg-[#aec99d] -translate-y-1/2 -z-10 origin-left transition-all duration-700 ${step >= 9 ? 'scale-x-100 opacity-100' : 'scale-x-0 opacity-0'}`} />
+
+        {waves.map((wave) => {
+          const isActive = step >= wave.activeStep;
+          return (
+            <div key={wave.name} className="flex flex-col items-center gap-2 transition-all duration-500">
+              <div className={`w-10 h-10 rounded-full border flex items-center justify-center text-xs transition-all duration-500 relative z-10 ${
+                isActive ? 'border-[#aec99d] bg-[#111111] text-[#aec99d] font-semibold scale-110 shadow-[0_0_15px_rgba(174,201,157,0.3)]' : 'border-white/10 bg-[#111111] text-white/40 scale-100'
+              }`} style={{ fontFamily: "'Doto', 'Courier New', monospace" }}>
+                {wave.num}
+              </div>
+              <span className={`text-[10px] font-light transition-colors duration-500 ${isActive ? 'text-white/80' : 'text-white/50'}`}>{wave.name}</span>
+            </div>
+          );
+        })}
+      </div>
+
+      {/* Deliverables list */}
+      <div className="bg-[#111111] border border-white/5 rounded-2xl p-6 mx-auto w-full max-w-md space-y-4 shadow-lg transition-all duration-500">
+        <div className="text-[13.5px] text-white uppercase tracking-widest font-light transition-all duration-500" style={{ fontFamily: "'Doto', 'Courier New', monospace" }}>
+          {currentData.title}
+        </div>
+        <div className="space-y-3 relative overflow-hidden">
+          {currentData.tasks.map((text, i) => {
+            const isDone = i < checkedCount;
+            return (
+              <div key={`${currentWaveIdx}-${i}`} className="flex items-center gap-4 text-xs font-light transition-all duration-500 animate-fade-in-up" style={{ animationDelay: `${i * 0.1}s` }}>
+                <span className={`w-5 h-5 rounded border flex items-center justify-center text-[10px] transition-colors duration-500 ${
+                  isDone ? 'border-[#aec99d] text-[#aec99d] bg-[#aec99d]/10' : 'border-white/10 text-transparent'
+                }`}>
+                  ✓
+                </span>
+                <span className={`transition-all duration-500 ${isDone ? 'line-through text-white/40' : 'text-white/80'}`}>{text}</span>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function IntroAnimation() {
+  const [step, setStep] = useState(0);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting && step === 0) {
+          let timers: NodeJS.Timeout[] = [];
+          timers.push(setTimeout(() => setStep(1), 300));
+          timers.push(setTimeout(() => setStep(2), 1000));
+          timers.push(setTimeout(() => setStep(3), 2500));
+          timers.push(setTimeout(() => setStep(4), 4500));
+          timers.push(setTimeout(() => setStep(5), 7000));
+          timers.push(setTimeout(() => setStep(6), 8500));
+        }
+      },
+      { threshold: 0.5 }
+    );
+
+    if (containerRef.current) {
+      observer.observe(containerRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, [step]);
+
+  const getLineClasses = (lineStep: number) => {
+    if (step < lineStep) return 'opacity-0 translate-y-4';
+    if (step === lineStep) return 'opacity-100 translate-y-0';
+    return 'opacity-0 -translate-y-4'; // Exit upwards
+  };
+
+  return (
+    <div ref={containerRef} className="w-full h-full bg-[#151515] border border-white/5 rounded-3xl p-8 relative shadow-2xl flex flex-col justify-center items-center text-center">
+      {/* Agent Label */}
+      <div className={`transition-all duration-1000 ease-out absolute top-12 ${step >= 1 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
+        <div className="text-[11px] text-[#c4c9b8] uppercase tracking-[0.25em] font-medium">
+          AIVORY AGENT
+        </div>
+      </div>
+
+      {/* Rotating Lines Container */}
+      <div className="relative h-24 w-full flex items-center justify-center">
+        <div className={`absolute inset-0 flex items-center justify-center text-xl md:text-2xl font-light text-white transition-all duration-700 ease-in-out ${getLineClasses(2)}`}>
+          Hi.
+        </div>
+
+        <div className={`absolute inset-0 flex items-center justify-center text-xl md:text-2xl font-light text-white transition-all duration-700 ease-in-out ${getLineClasses(3)}`}>
+          Good to have you here.
+        </div>
+        
+        <div className={`absolute inset-0 flex items-center justify-center text-xl md:text-2xl font-medium text-white transition-all duration-700 ease-in-out ${getLineClasses(4)}`}>
+          Let's find where AI fits in your business.
+        </div>
+        
+        <div className={`absolute inset-0 flex items-center justify-center text-xl md:text-2xl font-light text-white transition-all duration-700 ease-in-out ${getLineClasses(5)}`}>
+          We'll take it one step at a time.
+        </div>
+
+        {/* Scroll indicator (replaces the text) */}
+        <div className={`absolute inset-0 flex flex-col items-center justify-center transition-all duration-1000 ease-out ${step >= 6 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
+          <div className="text-[10px] text-[#c4c9b8] uppercase tracking-widest font-medium mb-3 mt-4">
+            SCROLL TO EXPLORE
+          </div>
+          <div className="flex flex-col items-center space-y-[-12px]">
+            <svg className="w-5 h-5 text-[#c4c9b8] animate-pulse" style={{ animationDelay: '0s' }} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M6 9l6 6 6-6" strokeLinecap="round" strokeLinejoin="round"/></svg>
+            <svg className="w-5 h-5 text-[#c4c9b8] animate-pulse" style={{ animationDelay: '0.2s' }} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M6 9l6 6 6-6" strokeLinecap="round" strokeLinejoin="round"/></svg>
+            <svg className="w-5 h-5 text-[#c4c9b8] animate-pulse" style={{ animationDelay: '0.4s' }} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M6 9l6 6 6-6" strokeLinecap="round" strokeLinejoin="round"/></svg>
+          </div>
         </div>
       </div>
     </div>
@@ -544,24 +750,14 @@ export function InteractiveShowcase() {
               {/* Showcase Screen Layers */}
               <div className="flex-1 relative w-full h-full">
                 
-                {/* Intro Visualizer */}
+                {/* Intro Screen */}
                 <div
-                  className={`absolute inset-0 flex flex-col justify-center items-center transition-all duration-700 ease-in-out ${
+                  className={`absolute inset-0 flex flex-col justify-center transition-all duration-700 ease-in-out ${
                     activeIndex === -1 ? 'opacity-100 pointer-events-auto z-10' : 'opacity-0 pointer-events-none'
                   }`}
                 >
-                  <div className="flex flex-col items-center">
-                    <span 
-                      className="text-[#b2cca2] font-semibold text-lg md:text-xl uppercase tracking-wider text-center animate-pulse" 
-                      style={{ fontFamily: "'Doto', 'Courier New', monospace" }}
-                    >
-                      YOUR AI TRANSFORMATION START HERE
-                    </span>
-                    <div className="mt-8 animate-bounce">
-                      <div className="text-[#b2cca2] font-semibold text-3xl tracking-widest rotate-90">
-                        &gt;&gt;&gt;
-                      </div>
-                    </div>
+                  <div className="flex-1 w-full h-full relative">
+                    <IntroAnimation />
                   </div>
                 </div>
 
@@ -609,9 +805,9 @@ export function InteractiveShowcase() {
                                 <div className="absolute -top-1.5 -right-1.5 w-3 h-3 rounded-full bg-[#aec99d] z-20" />
                               </>
                             )}
-                            <div className={`w-8 h-8 rounded-lg flex items-center justify-center text-xs relative z-10 ${
-                              node.active ? 'bg-[#aec99d] text-[#111111] font-bold shadow-[0_0_15px_rgba(174,201,157,0.3)]' : 'bg-[#111111] border border-white/10 text-[#939393]'
-                            }`} style={{ fontFamily: "'Doto', 'Courier New', monospace" }}>
+                            <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs relative z-10 ${
+                              node.active ? 'bg-[#aec99d] text-black font-medium shadow-[0_0_15px_rgba(174,201,157,0.3)]' : 'bg-[#111111] border border-white/10 text-white/40 font-medium'
+                            }`} style={{ fontFamily: "'Manrope', sans-serif" }}>
                               0{i + 1}
                             </div>
                             <span className="text-[10px] text-white/60 font-medium">{node.name}</span>
@@ -631,50 +827,8 @@ export function InteractiveShowcase() {
                     activeIndex === 2 ? 'opacity-100 pointer-events-auto z-10' : 'opacity-0 pointer-events-none'
                   }`}
                 >
-                  <div key={`road-${activeIndex === 2 ? 'active' : 'inactive'}`} className="flex-1 flex flex-col justify-center space-y-8 w-full h-full opacity-0 animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
-                    {/* Top nodes */}
-                    <div className="flex items-center justify-between w-full mx-auto relative px-8 opacity-0 animate-fade-in" style={{ animationDelay: '0.6s' }}>
-                      <div className="absolute top-1/2 left-12 right-12 h-[1px] bg-white/10 -translate-y-1/2 -z-10" />
-                      <div className="absolute top-1/2 left-12 w-[33%] h-[1px] bg-[#aec99d] -translate-y-1/2 -z-10 origin-left opacity-0 animate-scale-x" style={{ animationDelay: '1.2s' }} />
-
-                      {[
-                        { num: 'W1', name: 'Setup', active: true, delay: '0.8s' },
-                        { num: 'W2', name: 'Automations', active: true, delay: '1.4s' },
-                        { num: 'W3', name: 'Scale', active: false, delay: '1.8s' },
-                      ].map((wave) => (
-                        <div key={wave.name} className="flex flex-col items-center gap-2 opacity-0 animate-fade-in-up" style={{ animationDelay: wave.delay }}>
-                          <div className={`w-10 h-10 rounded-full border flex items-center justify-center text-xs ${
-                            wave.active ? 'border-[#aec99d] bg-[#aec99d]/10 text-[#aec99d] font-semibold' : 'border-white/10 bg-[#111111] text-white/40'
-                          }`} style={{ fontFamily: "'Doto', 'Courier New', monospace" }}>
-                            {wave.num}
-                          </div>
-                          <span className="text-[10px] text-white/50 font-light">{wave.name}</span>
-                        </div>
-                      ))}
-                    </div>
-
-                    {/* Deliverables list */}
-                    <div className="bg-[#111111] border border-white/5 rounded-2xl p-6 mx-auto w-full max-w-md space-y-4 shadow-lg opacity-0 animate-fade-in-up" style={{ animationDelay: '2.0s' }}>
-                      <div className="text-[10px] text-white uppercase tracking-widest font-light" style={{ fontFamily: "'Doto', 'Courier New', monospace" }}>
-                        Wave 1 Milestone Action List
-                      </div>
-                      <div className="space-y-3">
-                        {[
-                          { text: 'Finalize Diagnostic Baseline Parameters', done: true, delay: '2.2s' },
-                          { text: 'Map Centralized Data Storage Schema', done: true, delay: '2.4s' },
-                          { text: 'Establish Slack / Email Communication Links', done: false, delay: '2.6s' },
-                        ].map((item, i) => (
-                          <div key={i} className="flex items-center gap-4 text-xs text-white/80 font-light opacity-0 animate-fade-in-up" style={{ animationDelay: item.delay }}>
-                            <span className={`w-5 h-5 rounded border flex items-center justify-center text-[10px] transition-colors ${
-                              item.done ? 'border-[#aec99d] text-[#aec99d] bg-[#aec99d]/10' : 'border-white/10 text-transparent'
-                            }`}>
-                              ✓
-                            </span>
-                            <span className={item.done ? 'line-through text-white/40' : ''}>{item.text}</span>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
+                  <div key={`road-${activeIndex === 2 ? 'active' : 'inactive'}`} className="flex-1 w-full h-full relative">
+                    {activeIndex === 2 && <RoadmapAnimation />}
                   </div>
                   <div className="text-[10px] text-[#c4c9b8] text-center uppercase tracking-widest mt-6 pb-6 font-manrope font-light">
                     * Phased wave system mapping out operational integrations step-by-step.

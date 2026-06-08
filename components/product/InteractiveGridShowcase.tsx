@@ -149,17 +149,20 @@ function BlueprintAnimation() {
   return (
     <div className="w-full h-full flex flex-col items-center justify-center p-2">
       <div className="text-[9px] text-[#c4c9b8] uppercase tracking-widest font-light mb-6 text-center w-full font-manrope">Architecture Pipeline</div>
-      <div className="flex justify-between items-center relative w-full px-2 mt-2">
+      <div className="flex justify-between items-center relative w-full px-4 mt-2">
         <div className="absolute top-[16px] left-[15%] right-[15%] h-[1px] bg-white/10 -z-10" />
-        <div className="absolute top-[16px] left-[15%] right-[15%] h-[1px] bg-[#aec99d]/50 -z-10 overflow-hidden">
-          <div className="h-full w-16 bg-[#aec99d] animate-[laser-right_3s_ease-in-out_infinite]" />
-        </div>
-        {[ 'Ingest', 'Process', 'Engine', 'Action' ].map((node, i) => (
-          <div key={node} className="flex flex-col items-center gap-2">
-            <div className="w-8 h-8 rounded-lg bg-[#111] border border-white/10 flex items-center justify-center text-[#939393]">
-              <span className="text-[10px]" style={{ fontFamily: "'Doto', 'Courier New', monospace" }}>0{i+1}</span>
+        <div className="absolute top-[16px] left-[15%] right-[15%] h-[1px] bg-[#aec99d] -z-10 origin-left animate-[scale-x_3s_ease-in-out_infinite]" />
+        {[
+          { name: 'Ingest', active: true, delay: '0s' },
+          { name: 'Process', active: true, delay: '0.2s' },
+          { name: 'Engine', active: true, delay: '0.4s' },
+          { name: 'Action', active: true, delay: '0.6s' }
+        ].map((node, i) => (
+          <div key={node.name} className="flex flex-col items-center gap-2 animate-fade-in-up" style={{ animationDelay: node.delay }}>
+            <div className={`w-8 h-8 rounded-full border flex items-center justify-center text-[10px] shadow-[0_0_10px_rgba(174,201,157,0.15)] bg-[#111111] ${node.active ? 'border-[#aec99d] text-[#aec99d] font-semibold scale-110' : 'border-white/10 text-white/40 scale-100'}`} style={{ fontFamily: "'Doto', 'Courier New', monospace" }}>
+              0{i + 1}
             </div>
-            <span className="text-[8px] text-white/60 font-medium">{node}</span>
+            <span className={`text-[8px] font-medium tracking-wide ${node.active ? 'text-white/80' : 'text-white/40'}`}>{node.name}</span>
           </div>
         ))}
       </div>
@@ -169,26 +172,86 @@ function BlueprintAnimation() {
 
 // ── 03. Roadmap ──
 function RoadmapAnimation() {
+  const [step, setStep] = useState(0);
+
+  useEffect(() => {
+    let timer: NodeJS.Timeout;
+    const nextStep = () => setStep(s => (s >= 13 ? 0 : s + 1));
+    const delays = [500, 1000, 800, 800, 1200, 1000, 800, 800, 1200, 1000, 800, 800, 2500, 500];
+    timer = setTimeout(nextStep, delays[step] || 1000);
+    return () => clearTimeout(timer);
+  }, [step]);
+
+  const waves = [
+    { num: 'W1', name: 'Setup', activeStep: 1 },
+    { num: 'W2', name: 'Automations', activeStep: 5 },
+    { num: 'W3', name: 'Scale', activeStep: 9 },
+  ];
+
+  const waveData = [
+    {
+      title: 'Wave 1 Milestones',
+      tasks: ['Diagnostic Baseline', 'Storage Schema', 'App Links']
+    },
+    {
+      title: 'Wave 2 Milestones',
+      tasks: ['Core Agent Logic', 'CRM Integration', 'Sandbox Deploy']
+    },
+    {
+      title: 'Wave 3 Milestones',
+      tasks: ['Prod Rollout', 'Monitor Workflows', 'Expand Depts']
+    }
+  ];
+
+  let currentWaveIdx = 0;
+  if (step >= 9) currentWaveIdx = 2;
+  else if (step >= 5) currentWaveIdx = 1;
+  const currentData = waveData[currentWaveIdx];
+
+  let checkedCount = 0;
+  if (step === 2 || step === 6 || step === 10) checkedCount = 1;
+  if (step === 3 || step === 7 || step === 11) checkedCount = 2;
+  if (step >= 4 && step < 5) checkedCount = 3;
+  if (step >= 8 && step < 9) checkedCount = 3;
+  if (step >= 12) checkedCount = 3;
+
   return (
-    <div className="w-full h-full flex flex-col justify-center gap-6 p-4">
-      <div className="flex items-center justify-between w-full relative px-2">
-        <div className="absolute top-1/2 left-6 right-6 h-[1px] bg-white/10 -translate-y-1/2 -z-10" />
-        <div className="absolute top-1/2 left-6 w-[40%] h-[1px] bg-[#aec99d] -translate-y-1/2 -z-10" />
-        {[ { n:'W1', a:true }, { n:'W2', a:true }, { n:'W3', a:false } ].map((w) => (
-          <div key={w.n} className={`w-8 h-8 rounded-full border flex items-center justify-center text-[10px] ${w.a ? 'border-[#aec99d] bg-[#aec99d]/10 text-[#aec99d]' : 'border-white/10 bg-[#111] text-white/40'}`}>
-            {w.n}
-          </div>
-        ))}
-      </div>
-      <div className="bg-[#181818] border border-white/5 rounded-lg p-3 w-full">
-        <div className="text-[8px] text-white/40 uppercase mb-2">Milestones</div>
-        <div className="space-y-2">
-          {[ { t:'Diagnostic Baseline', d:true }, { t:'Data Storage Schema', d:true }, { t:'App Links', d:false } ].map((m, i) => (
-            <div key={i} className="flex items-center gap-2 text-[10px] text-white/70">
-              <span className={`w-3.5 h-3.5 rounded border flex items-center justify-center text-[8px] ${m.d ? 'border-[#aec99d] text-[#aec99d]' : 'border-white/10 text-transparent'}`}>✓</span>
-              <span className={m.d ? 'line-through text-white/30' : ''}>{m.t}</span>
+    <div className="w-full h-full flex flex-col justify-center gap-4 p-4">
+      <div className="flex items-center justify-between w-full relative px-6">
+        <div className="absolute top-1/2 left-[36px] right-[36px] h-[1px] bg-white/10 -translate-y-1/2 -z-10" />
+        <div className={`absolute top-1/2 left-[36px] right-1/2 h-[1px] bg-[#aec99d] -translate-y-1/2 -z-10 origin-left transition-all duration-700 ${step >= 5 ? 'scale-x-100 opacity-100' : 'scale-x-0 opacity-0'}`} />
+        <div className={`absolute top-1/2 left-1/2 right-[36px] h-[1px] bg-[#aec99d] -translate-y-1/2 -z-10 origin-left transition-all duration-700 ${step >= 9 ? 'scale-x-100 opacity-100' : 'scale-x-0 opacity-0'}`} />
+
+        {waves.map((wave) => {
+          const isActive = step >= wave.activeStep;
+          return (
+            <div key={wave.name} className="flex flex-col items-center gap-1 transition-all duration-500">
+              <div className={`w-8 h-8 rounded-full border flex items-center justify-center text-[10px] transition-all duration-500 relative z-10 ${isActive ? 'border-[#aec99d] bg-[#111111] text-[#aec99d] font-semibold scale-110 shadow-[0_0_10px_rgba(174,201,157,0.3)]' : 'border-white/10 bg-[#111111] text-white/40 scale-100'}`} style={{ fontFamily: "'Doto', 'Courier New', monospace" }}>
+                {wave.num}
+              </div>
             </div>
-          ))}
+          );
+        })}
+      </div>
+      
+      <div className="bg-[#111111] border border-white/5 rounded-xl p-4 mx-auto w-full max-w-[90%] space-y-3 shadow-lg transition-all duration-500">
+        <div className="text-[9px] text-[#c4c9b8] uppercase tracking-[0.15em] font-medium font-manrope">
+          {currentData.title}
+        </div>
+        <div className="flex flex-col gap-2">
+          {currentData.tasks.map((task, idx) => {
+            const isChecked = idx < checkedCount;
+            return (
+              <div key={idx} className="flex items-center gap-2.5 transition-all duration-300">
+                <div className={`w-3.5 h-3.5 rounded flex items-center justify-center shrink-0 border transition-colors duration-300 ${isChecked ? 'bg-[#aec99d]/20 border-[#aec99d] text-[#aec99d]' : 'border-white/10 text-transparent'}`}>
+                  <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3"><path d="M5 13l4 4L19 7" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                </div>
+                <span className={`text-[10px] transition-all duration-300 font-light ${isChecked ? 'text-white/30 line-through' : 'text-white/80'}`}>
+                  {task}
+                </span>
+              </div>
+            );
+          })}
         </div>
       </div>
     </div>
@@ -197,158 +260,210 @@ function RoadmapAnimation() {
 
 // ── 04. Console ──
 function ConsoleAnimation() {
-  const [inView, setInView] = useState(false);
-  const ref = useRef<HTMLDivElement>(null);
+  const [phase, setPhase] = useState<'typing' | 'sent' | 'thinking' | 'response'>('typing');
+  const [typedText, setTypedText] = useState('');
+  const [dots, setDots] = useState('');
+  const timerRefs = useRef<ReturnType<typeof setTimeout>[]>([]);
+
+  const fullText = "Analyze current lead generation process.";
+
+  const clearAll = () => { timerRefs.current.forEach(clearTimeout); timerRefs.current = []; };
+  const t = (fn: () => void, s: number) => timerRefs.current.push(setTimeout(fn, s * 1000));
 
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setInView(true);
-          observer.disconnect();
+    const run = () => {
+      setPhase('typing');
+      setTypedText('');
+      let currentText = '';
+      const typeChar = (i: number) => {
+        if (i < fullText.length) {
+          currentText += fullText[i];
+          setTypedText(currentText);
+          timerRefs.current.push(setTimeout(() => typeChar(i + 1), 40));
+        } else {
+          t(() => setPhase('sent'), 0.4);
+          t(() => setPhase('thinking'), 0.8);
+          t(() => setPhase('response'), 2.8);
+          t(run, 10.0);
         }
-      },
-      { threshold: 0.2 }
-    );
-    if (ref.current) observer.observe(ref.current);
-    return () => observer.disconnect();
+      };
+      t(() => typeChar(0), 0.5);
+    };
+    run();
+    return clearAll;
   }, []);
 
-  return (
-    <div ref={ref} className="w-full h-full flex flex-col justify-center p-2 font-light">
-      {inView && (
-        <div className="flex flex-col gap-4 w-full max-w-[100%] mx-auto">
-          <div className="flex justify-end opacity-0 animate-fade-in-up" style={{ animationDelay: '0.4s' }}>
-            <div className="bg-[#2A2A2A] border border-white/5 rounded-2xl rounded-tr-sm px-5 py-4 text-white/90 text-sm shadow-md max-w-[100%]">
-              Can you analyze my current lead generation process?
-            </div>
-          </div>
-          
-          <div className="flex flex-col gap-4 mt-2">
-            {/* Header: Circles + Text */}
-            <div className="flex items-center gap-3 opacity-0 animate-fade-in-up" style={{ animationDelay: '1.2s' }}>
-              <div className="flex -space-x-2">
-                <div className="w-6 h-6 rounded-full bg-[#556B2F] border-2 border-[#181818] relative z-30" />
-                <div className="w-6 h-6 rounded-full bg-[#6B8E23] border-2 border-[#181818] relative z-20" />
-                <div className="w-6 h-6 rounded-full bg-[#9ACD32] border-2 border-[#181818] relative z-10" />
-              </div>
-              <div className="text-white/80 text-sm font-medium flex items-center gap-2">
-                Agents analyzing <span className="text-white/40">·</span> <span className="text-[#aec99d] animate-pulse">Processing...</span>
-              </div>
-            </div>
+  useEffect(() => {
+    if (phase !== 'thinking') return;
+    let i = 0;
+    const id = setInterval(() => { i = (i + 1) % 4; setDots('.'.repeat(i)); }, 400);
+    return () => clearInterval(id);
+  }, [phase]);
 
-            {/* Search Results List */}
-            <div className="flex flex-col gap-3 pl-2">
+  return (
+    <div className="w-full h-full flex flex-col justify-end p-4 font-light relative">
+      <div className="flex flex-col gap-4 w-full max-w-[100%] mx-auto mb-2">
+        {/* User Message */}
+        <div className={`flex justify-end transition-all duration-300 ease-out ${phase !== 'typing' ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
+          <div className="bg-[#2A2A2A] rounded-2xl rounded-tr-sm px-4 py-2 text-white/90 text-[12px] max-w-[90%] shadow-md">
+            {fullText}
+          </div>
+        </div>
+        
+        {/* AI Thinking & Response */}
+        <div className={`flex flex-col gap-3 transition-all duration-300 ${phase === 'thinking' || phase === 'response' ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 hidden'}`}>
+          {phase === 'thinking' && (
+            <div className="flex items-center gap-2">
+              <div className="flex -space-x-1.5 opacity-80">
+                <div className="w-3.5 h-3.5 rounded-full bg-[#556B2F] border border-[#181818] relative z-30" />
+                <div className="w-3.5 h-3.5 rounded-full bg-[#6B8E23] border border-[#181818] relative z-20" />
+                <div className="w-3.5 h-3.5 rounded-full bg-[#9ACD32] border border-[#181818] relative z-10" />
+              </div>
+              <div className="text-white/50 text-[11px] font-medium">Thinking{dots}</div>
+            </div>
+          )}
+
+          {phase === 'response' && (
+            <div className="flex flex-col gap-2 pl-1 animate-fade-in-up">
               {[
-                { source: 'Queried CRM', query: 'lead response time operations data', results: '520 records', delay: '2.0s' },
-                { source: 'Analyzed Logs', query: 'email triage flow delay analysis', results: '12 bottlenecks', delay: '2.8s' },
+                { source: 'Queried CRM', query: 'lead response time operations data', results: '520 records', delay: '0s' },
+                { source: 'Analyzed Logs', query: 'email triage flow delay analysis', results: '12 bottlenecks', delay: '0.4s' },
               ].map((item, i) => (
                 <div key={i} className="flex flex-col gap-1 opacity-0 animate-fade-in-up" style={{ animationDelay: item.delay }}>
                   <div className="flex items-center justify-between w-full">
-                    <div className="flex items-center gap-2 text-xs">
-                      <svg className="w-4 h-4 text-[#aec99d]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                      </svg>
+                    <div className="flex items-center gap-1.5 text-[10px]">
+                      <svg className="w-3.5 h-3.5 text-[#aec99d]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
                       <span className="text-white/70">{item.source}</span>
                     </div>
-                    <div className="text-white/40 text-[11px]">
-                      <span>{item.results}</span>
-                    </div>
+                    <div className="text-white/40 text-[9px]">{item.results}</div>
                   </div>
-                  <div className="ml-6 font-mono text-[11px] sm:text-xs text-white/60 bg-white/5 w-fit max-w-[calc(100%-1.5rem)] px-3 py-1.5 rounded-md border border-white/5 break-words">
+                  <div className="ml-5 font-mono text-[9px] text-white/60 bg-white/5 w-fit max-w-[calc(100%-1rem)] px-2.5 py-1 rounded border border-white/5 truncate">
                     {item.query}
                   </div>
                 </div>
               ))}
             </div>
-          </div>
+          )}
         </div>
-      )}
+      </div>
     </div>
   );
 }
 
 // ── 05. Workflow ──
 function WorkflowAnimation() {
-  const [inView, setInView] = useState(false);
-  const ref = useRef<HTMLDivElement>(null);
+  const [phase, setPhase] = useState<'typing' | 'sent' | 'generating' | 'generated'>('typing');
+  const [typedText, setTypedText] = useState('');
+  const [dots, setDots] = useState('');
+  const timerRefs = useRef<ReturnType<typeof setTimeout>[]>([]);
+
+  const fullText = "Create workflow to extract leads and send to Slack.";
+
+  const clearAll = () => { timerRefs.current.forEach(clearTimeout); timerRefs.current = []; };
+  const t = (fn: () => void, s: number) => timerRefs.current.push(setTimeout(fn, s * 1000));
 
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setInView(true);
-          observer.disconnect();
+    const run = () => {
+      setPhase('typing');
+      setTypedText('');
+      
+      let currentText = '';
+      const typeChar = (i: number) => {
+        if (i < fullText.length) {
+          currentText += fullText[i];
+          setTypedText(currentText);
+          timerRefs.current.push(setTimeout(() => typeChar(i + 1), 30));
+        } else {
+          t(() => setPhase('sent'), 0.4);
+          t(() => setPhase('generating'), 0.8);
+          t(() => setPhase('generated'), 2.8);
+          t(run, 10.0);
         }
-      },
-      { threshold: 0.2 }
-    );
-    if (ref.current) observer.observe(ref.current);
-    return () => observer.disconnect();
+      };
+      
+      t(() => typeChar(0), 0.5);
+    };
+    run();
+    return clearAll;
   }, []);
 
+  useEffect(() => {
+    if (phase !== 'generating') return;
+    let i = 0;
+    const id = setInterval(() => { i = (i + 1) % 4; setDots('.'.repeat(i)); }, 400);
+    return () => clearInterval(id);
+  }, [phase]);
+
   return (
-    <div ref={ref} className="w-full flex flex-col gap-4 h-full justify-center px-4">
-      {inView && (
-        <>
-          {/* Chat Prompt for Workflow */}
-          <div className="bg-[#111111] border border-white/5 rounded-2xl p-4 flex gap-4 items-center shadow-lg opacity-0 animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
-            <div className="w-9 h-9 rounded-full bg-[#1e1e1e] flex-shrink-0 flex items-center justify-center text-sm font-medium text-white/80 border border-white/5 shadow-sm">U</div>
-            <div className="text-white/90 text-sm flex-1 font-light leading-relaxed">
-              Create an automation workflow to extract email leads and send them to Slack.
-            </div>
-            <div className="w-5 h-5 rounded-full border-2 border-white/10 border-t-[#939393] flex-shrink-0 animate-spin opacity-0" style={{ animation: 'fade-in 0.1s ease-out 0.8s forwards, spin 1s linear infinite, fade-out 0.2s ease-in 2.5s forwards' }} />
+    <div className="w-full flex flex-col gap-3 h-full justify-center px-3 py-4">
+      {/* Chat Prompt for Workflow */}
+      <div className={`bg-[#2A2A2A] rounded-xl rounded-tr-sm px-4 py-2.5 text-white/90 text-[11px] shadow-md transition-all duration-300 ml-auto max-w-[90%] ${phase !== 'typing' ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
+        {phase === 'typing' ? (
+          <span>{typedText}<span className="ml-[2px] w-[2px] h-3 bg-white/60 animate-pulse inline-block align-middle" /></span>
+        ) : fullText}
+      </div>
+
+      {/* Generating Indicator */}
+      <div className={`flex items-center gap-2 transition-all duration-300 ${phase === 'generating' || phase === 'generated' ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 hidden'}`}>
+        {phase === 'generating' && (
+          <>
+            <div className="w-3 h-3 rounded-full border border-white/10 border-t-[#aec99d] animate-spin shrink-0" />
+            <span className="text-white/50 text-[11px] font-medium">Generating<span className="animate-pulse">{dots}</span></span>
+          </>
+        )}
+      </div>
+
+      {/* Generated Flow */}
+      {phase === 'generated' && (
+        <div className="w-full bg-[#111111] border border-white/5 rounded-xl p-4 flex flex-col gap-4 relative overflow-hidden shadow-lg animate-fade-in-up">
+          <div className="text-[9px] text-white/60 uppercase tracking-widest text-center font-light z-10" style={{ fontFamily: "'Doto', 'Courier New', monospace" }}>
+            Workflow Generated
           </div>
 
-          {/* Generated Flow */}
-          <div className="w-full bg-[#111111] border border-white/5 rounded-2xl p-6 flex flex-col gap-6 relative overflow-hidden shadow-2xl opacity-0 animate-fade-in-up" style={{ animationDelay: '2.5s' }}>
-            <div className="absolute inset-0 bg-[#939393]/5 opacity-0" style={{ animation: 'fade-in 1s ease-out 3s forwards, pulse 3s ease-in-out infinite alternate 4s' }} />
-            <div className="text-[10px] text-white/40 uppercase tracking-widest text-center font-light z-10" style={{ fontFamily: "'Doto', 'Courier New', monospace" }}>
-              Workflow Generated
-            </div>
+          <div className="flex items-center justify-between w-full max-w-xs mx-auto z-10 relative">
+            {/* Connecting Lines */}
+            <div className="absolute top-1/2 left-[15%] right-[15%] h-[1px] bg-white/10 -translate-y-1/2 -z-10" />
+            <div className="absolute top-1/2 left-[15%] right-[50%] h-[1px] bg-[#aec99d] -translate-y-1/2 -z-10 origin-left animate-scale-x" />
+            <div className="absolute top-1/2 left-[50%] right-[15%] h-[1px] bg-[#aec99d] -translate-y-1/2 -z-10 origin-left animate-scale-x" style={{ animationDelay: '0.4s' }} />
 
-            <div className="flex items-center justify-between w-full mx-auto z-10 relative">
-              {/* Connecting Lines */}
-              <div className="absolute top-1/2 left-[15%] right-[15%] h-[1px] bg-white/10 -translate-y-1/2 -z-10" />
-              <div className="absolute top-1/2 left-[15%] right-[50%] h-[1px] bg-white/30 -translate-y-1/2 -z-10 origin-left opacity-0 animate-scale-x" style={{ animationDelay: '3.2s' }} />
-              <div className="absolute top-1/2 left-[50%] right-[15%] h-[1px] bg-white/30 -translate-y-1/2 -z-10 origin-left opacity-0 animate-scale-x" style={{ animationDelay: '4.0s' }} />
-
-              {/* Node 1: Trigger */}
-              <div className="flex flex-col rounded-lg border border-white/15 shadow-md opacity-0 animate-fade-in-up flex-shrink-0 bg-[#333333] min-w-[70px] md:min-w-[90px]" style={{ animationDelay: '2.8s' }}>
-                <div className="px-2 py-1.5 text-center">
-                  <span className="text-[9px] text-white/70 uppercase tracking-widest font-medium">Trigger</span>
-                </div>
-                <div className="bg-[#aec99d] px-2 py-3 text-center rounded-b-lg flex flex-col items-center justify-center gap-1.5">
-                  <img src="/integrations/icons/gmail.svg" alt="Gmail" className="w-5 h-5 drop-shadow-sm" />
-                  <span className="text-xs font-semibold text-[#111111]">Gmail</span>
-                </div>
+            {/* Node 1: Trigger */}
+            <div className="flex flex-col rounded-[12px] border border-white/10 shadow-sm flex-shrink-0 w-[70px] h-[75px] overflow-hidden bg-[#2A2A2A] relative z-10">
+              <div className="h-[24px] flex items-center justify-center bg-[#2A2A2A] border-b border-[#111]/50">
+                <span className="text-[8px] text-white/60 uppercase tracking-widest font-medium">Trigger</span>
               </div>
+              <div className="flex-1 bg-[#aec99d] flex flex-col items-center justify-center gap-1">
+                <img src="/integrations/icons/gmail.svg" alt="Gmail" className="w-4 h-4 drop-shadow-sm" />
+                <span className="text-[10px] font-semibold text-[#111111]">Gmail</span>
+              </div>
+            </div>
+            
+            {/* Node 2: Agent */}
+            <div className="relative flex-shrink-0 animate-fade-in-up z-20" style={{ animationDelay: '0.2s' }}>
+              <div className="absolute top-[-3px] right-[-3px] w-2.5 h-2.5 rounded-full bg-white/40 animate-ping z-30" />
+              <div className="absolute top-[-3px] right-[-3px] w-2.5 h-2.5 rounded-full bg-white/60 z-30 border border-[#111]" />
               
-              {/* Node 2: Agent */}
-              <div className="flex flex-col rounded-lg border border-white/25 shadow-md relative opacity-0 animate-fade-in-up flex-shrink-0 bg-[#333333] min-w-[70px] md:min-w-[90px]" style={{ animationDelay: '3.6s' }}>
-                <div className="absolute -top-1.5 -right-1.5 w-3 h-3 rounded-full bg-[#939393] animate-ping opacity-60 z-20" />
-                <div className="absolute -top-1.5 -right-1.5 w-3 h-3 rounded-full bg-[#939393] z-20" />
-                <div className="px-2 py-1.5 text-center">
-                  <span className="text-[9px] text-[#939393] uppercase tracking-widest font-medium">AI Agent</span>
+              <div className="flex flex-col rounded-[12px] border border-white/10 shadow-sm w-[70px] h-[75px] overflow-hidden bg-[#2A2A2A]">
+                <div className="h-[24px] flex items-center justify-center bg-[#2A2A2A] border-b border-[#111]">
+                  <span className="text-[8px] text-white/60 uppercase tracking-widest font-medium">AI Agent</span>
                 </div>
-                <div className="bg-[#111] px-2 py-3 text-center rounded-b-lg border-t border-[#939393]/30">
-                  <span className="text-xs font-semibold text-[#939393]">Extract</span>
-                </div>
-              </div>
-
-              {/* Node 3: Action */}
-              <div className="flex flex-col rounded-lg border border-white/15 shadow-md opacity-0 animate-fade-in-up flex-shrink-0 bg-[#333333] min-w-[70px] md:min-w-[90px]" style={{ animationDelay: '4.4s' }}>
-                <div className="px-2 py-1.5 text-center">
-                  <span className="text-[9px] text-white/70 uppercase tracking-widest font-medium">Action</span>
-                </div>
-                <div className="bg-[#aec99d] px-2 py-3 text-center rounded-b-lg flex flex-col items-center justify-center gap-1.5">
-                  <img src="/integrations/icons/slack.svg" alt="Slack" className="w-5 h-5 drop-shadow-sm" />
-                  <span className="text-xs font-semibold text-[#111111]">Slack</span>
+                <div className="flex-1 bg-[#111111] flex flex-col items-center justify-center">
+                  <span className="text-[10px] font-medium text-white/60">Extract</span>
                 </div>
               </div>
             </div>
+
+            {/* Node 3: Action */}
+            <div className="flex flex-col rounded-[12px] border border-white/10 shadow-sm flex-shrink-0 w-[70px] h-[75px] overflow-hidden bg-[#2A2A2A] relative z-10 animate-fade-in-up" style={{ animationDelay: '0.6s' }}>
+              <div className="h-[24px] flex items-center justify-center bg-[#2A2A2A] border-b border-[#111]/50">
+                <span className="text-[8px] text-white/60 uppercase tracking-widest font-medium">Action</span>
+              </div>
+              <div className="flex-1 bg-[#aec99d] flex flex-col items-center justify-center gap-1">
+                <img src="/integrations/icons/slack.svg" alt="Slack" className="w-4 h-4 drop-shadow-sm" />
+                <span className="text-[10px] font-semibold text-[#111111]">Slack</span>
+              </div>
+            </div>
           </div>
-        </>
+        </div>
       )}
     </div>
   );

@@ -360,6 +360,13 @@ export function InteractiveGrid() {
 
         </div>
         
+        {/* NEW AGENT CARDS */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6">
+          {NEW_AGENTS.map((agent, idx) => (
+            <AgentCard key={idx} agent={agent} />
+          ))}
+        </div>
+        
         {/* Scrolling Logo Marquee */}
         <IntegrationsMarquee />
         
@@ -402,4 +409,131 @@ function IntegrationsMarquee() {
       </div>
     </div>
   );
+}
+
+const NEW_AGENTS = [
+  {
+    color: '#9B91EE',
+    title: 'Customer Service Agent',
+    description: 'Handle inbound support 24/7. Automatically triage, resolve, and escalate to a human if necessary.',
+    messages: [
+      { from: 'user', text: 'Hi, where is my order? It was supposed to arrive today.' },
+      { from: 'agent', sender: 'Customer Service', text: 'Hello! Your order has been processed. Estimated delivery: 2-3 business days.' }
+    ],
+    status: 'Active · 24/7 · WhatsApp + Telegram'
+  },
+  {
+    color: '#3ECFA0',
+    title: 'Leads Qualifier Agent',
+    description: 'Filter inbound leads using the BANT framework. Qualified leads are automatically routed to sales.',
+    messages: [
+      { from: 'user', text: "I'm interested in the Enterprise plan for my team of 50." },
+      { from: 'agent', sender: 'Leads Qualifier', text: 'BANT Score: 7/8 — QUALIFIED ✓\nRouting to Sales Outreach...' }
+    ],
+    status: 'Active · BANT scoring · CRM sync'
+  },
+  {
+    color: '#F5C068',
+    title: 'Meeting Intelligence',
+    description: 'Turn meeting transcripts into summaries, action items, & decisions synced directly to Notion & Slack.',
+    messages: [
+      { from: 'user', text: 'Can you summarize the Q3 Planning meeting?' },
+      { from: 'agent', sender: 'Meeting Intelligence', text: '3 action items detected · 1 decision · Sent to #general' }
+    ],
+    status: 'Active · Notion + Slack + Sheets'
+  }
+];
+
+function AgentCard({ agent }: { agent: typeof NEW_AGENTS[0] }) {
+  const [step, setStep] = useState(0);
+
+  useEffect(() => {
+    // Add a random initial offset to stagger the cards slightly
+    const randomOffset = Math.random() * 1500;
+    
+    let timer: NodeJS.Timeout;
+    const startCycle = () => {
+      const delays = [500, 1500, 2000, 4500]; // 0: clear, 1: user msg, 2: typing, 3: reply
+      const nextStep = (current: number) => {
+        const next = (current + 1) % 4;
+        setStep(next);
+        timer = setTimeout(() => nextStep(next), delays[next]);
+      };
+      // start immediately from step 0
+      timer = setTimeout(() => nextStep(0), delays[0]);
+    };
+    
+    const initTimer = setTimeout(startCycle, randomOffset);
+    return () => {
+      clearTimeout(initTimer);
+      clearTimeout(timer);
+    };
+  }, []);
+
+  return (
+    <SpotlightCard className="group flex flex-col p-6 relative overflow-hidden transition-all duration-300 hover:-translate-y-0.5 hover:border-white/10 cursor-default">
+      <div className="relative z-10 mb-5 flex-shrink-0">
+        <h4 className="text-lg font-medium text-white mb-2">
+          {agent.title}
+        </h4>
+        <p className="text-white/50 text-[13px] font-light leading-relaxed">
+          {agent.description}
+        </p>
+      </div>
+
+      {/* Animation Element */}
+      <div className="relative z-10 flex-1 min-h-[220px] bg-[#0A0A0A] border border-white/5 rounded-xl mt-auto overflow-hidden flex flex-col pt-10 pb-4">
+        
+        {/* Status Header */}
+        <div className="absolute top-4 left-4 flex items-center gap-2">
+          <div className="relative flex items-center justify-center w-2 h-2">
+            <span className="absolute inline-flex w-full h-full rounded-full bg-green-500 opacity-75 animate-ping" />
+            <span className="relative inline-flex w-2 h-2 rounded-full bg-green-500" />
+          </div>
+          <span className="text-[9px] text-white/40 uppercase tracking-wider font-medium">
+            {agent.status}
+          </span>
+        </div>
+
+        {/* Conversation Area */}
+        <div className="w-full px-5 flex flex-col gap-4 mt-2">
+          
+          {/* User Message */}
+          <div className={`flex justify-end transition-all duration-500 ease-out ${step >= 1 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-2'}`}>
+            <div className="bg-white/10 p-3 rounded-2xl rounded-br-sm max-w-[85%] border border-white/5 shadow-sm">
+               <div className="text-white/90 text-[11px] leading-relaxed">
+                 {agent.messages[0].text}
+               </div>
+            </div>
+          </div>
+
+          {/* Agent Side */}
+          <div className="relative min-h-[70px]">
+            {/* Typing Dots */}
+            <div className={`absolute left-0 transition-all duration-300 ${step === 2 ? 'opacity-100 scale-100' : 'opacity-0 scale-95 pointer-events-none'}`}>
+              <div className="flex space-x-1.5 bg-white/5 border border-white/10 px-4 py-3 rounded-2xl rounded-bl-sm shadow-sm w-fit">
+                <div className="w-1.5 h-1.5 bg-white/40 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
+                <div className="w-1.5 h-1.5 bg-white/40 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
+                <div className="w-1.5 h-1.5 bg-white/40 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
+              </div>
+            </div>
+
+            {/* Agent Reply */}
+            <div className={`absolute left-0 w-full transition-all duration-500 ease-out ${step >= 3 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 pointer-events-none'}`}>
+              <div className="bg-white/5 border border-white/10 p-3.5 rounded-2xl rounded-bl-sm shadow-lg backdrop-blur-md max-w-[95%]">
+                 <div className="text-[9px] uppercase tracking-wider font-bold text-[#c4c9b8] mb-1.5">
+                    {agent.messages[1].sender}
+                 </div>
+                 <div className="text-white/90 text-[11px] leading-relaxed whitespace-pre-wrap">
+                   {agent.messages[1].text}
+                 </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </SpotlightCard>
+  )
 }

@@ -17,6 +17,7 @@ const companyLinks = [
   { label: 'About', href: '#' },
   { label: 'Blog', href: '#' },
   { label: 'Careers', href: '#' },
+  { label: 'Investor Relations', href: '/investor-relations' },
   { label: 'Contact', href: '#' },
 ];
 
