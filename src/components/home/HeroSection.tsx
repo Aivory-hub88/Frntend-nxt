@@ -76,7 +76,7 @@ export default function HeroSection() {
         className="absolute inset-0 w-full h-full object-cover z-0"
         style={{ willChange: 'transform' }}
       >
-        <source src="/hero-video/Hero%20Aivory%20black%20sphere%20optimized.mp4" type="video/mp4" />
+        <source src="/hero-video/Hero%20Aivory%20black%20sphere%202%20optimized.mp4" type="video/mp4" />
       </video>
 
       {/* Grid Overlay with random fade (hero only) */}
