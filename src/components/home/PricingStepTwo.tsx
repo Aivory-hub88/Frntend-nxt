@@ -43,65 +43,61 @@ interface Plan {
   frequency: string;
   features: string[];
   cta: string;
+  overageUSD?: number;
 }
 
 const plans: Plan[] = [
   {
     name: 'Foundation',
-    description: 'For individuals and solo professionals starting their AI journey.',
+    description: 'For individuals and solo professionals deploying their first AI agent.',
     price: 20,
     frequency: '(month)',
     features: [
-      '50 IC/month',
-      'Aivory™ Agentic on-demand consultation',
-      '3 active workflows',
-      '5 JSON exports/month',
-      'Deploy to n8n (optional)',
+      '1,500 conversations/month',
       '1 active agent',
-      'Telegram or Slack',
+      'Telegram or Slack (choose one)',
+      'Multilingual by default',
     ],
     cta: 'Start With Foundation',
+    overageUSD: 0.015
   },
   {
     name: 'Pro',
-    description: 'For SMEs and founders running AI operations daily.',
+    description: 'For growing teams running AI operations daily.',
     price: 44,
     frequency: '(month)',
     features: [
-      '300 IC/month',
-      'Aivory™ Agentic response',
-      '10 active workflows',
-      'Unlimited JSON exports',
-      'Conditional logic & branching',
+      '5,000 conversations/month',
       '3 active agents',
-      'Telegram & Slack',
-      'Multi-step agent flows',
+      'Telegram + Slack + Email',
+      'Multilingual by default',
+      'Conditional logic & branching',
+      'Multi-step agent flows'
     ],
     cta: 'Start With Pro',
+    overageUSD: 0.012
   },
   {
     name: 'Enterprise',
-    description: 'For SMEs and founders running AI operations daily.',
+    description: 'For organizations scaling AI across operations.',
     price: 499,
     frequency: '(month)',
     features: [
-      '2,000 IC/month',
-      'Dedicated account manager',
-      'Unlimited workflows',
-      'Unlimited exports',
-      'Advanced orchestration',
+      'Unlimited conversations',
       'Unlimited agents',
+      'All channels + WhatsApp Business',
       'Custom integrations',
-      'SLA guarantee',
+      'Advanced orchestration',
       'Multi-team workspace',
+      'Dedicated support + SLA guarantee'
     ],
     cta: 'Contact Sales',
   },
 ];
 
-export default function PricingStepTwo() {
+export default function PricingStepTwo({ currency }: { currency?: 'IDR' | 'USD' }) {
   const { ref, isVisible } = useScrollAnimation();
-  const { formatPrice, language } = useLanguage();
+  const { language, exchangeRate } = useLanguage();
 
   const handleMouseMove = (e: React.MouseEvent<HTMLElement>) => {
     const rect = e.currentTarget.getBoundingClientRect();
@@ -109,6 +105,35 @@ export default function PricingStepTwo() {
     const y = e.clientY - rect.top;
     e.currentTarget.style.setProperty('--mouse-x', `${x}px`);
     e.currentTarget.style.setProperty('--mouse-y', `${y}px`);
+  };
+
+  // Helper to format exactly or fallback
+  const getFormattedPrice = (basePrice: number) => {
+    const activeCurrency = currency || (language === 'id' ? 'IDR' : 'USD');
+    if (activeCurrency === 'USD') return `${basePrice}`;
+    
+    // For IDR
+    const idrValue = basePrice * exchangeRate;
+    if (idrValue >= 1000000) {
+      const juta = idrValue / 1000000;
+      return `Rp ${parseFloat(juta.toFixed(2))} jt`;
+    } else if (idrValue >= 1000) {
+      const ribu = idrValue / 1000;
+      return `Rp ${Math.round(ribu)} rb`;
+    }
+    return `Rp ${Math.round(idrValue)}`;
+  };
+
+  const getFormattedOverage = (overageUSD?: number) => {
+    if (!overageUSD) return null;
+    const activeCurrency = currency || (language === 'id' ? 'IDR' : 'USD');
+    if (activeCurrency === 'USD') return `${overageUSD}/conversation`;
+    
+    // IDR
+    const idrValue = overageUSD * exchangeRate;
+    // Round to nearest 10 for cleaner look in IDR (e.g. 243 -> 240)
+    const roundedIdr = Math.round(idrValue / 10) * 10;
+    return `Rp ${roundedIdr}/conversation`;
   };
 
   return (
@@ -123,15 +148,19 @@ export default function PricingStepTwo() {
             </div>
             <div className="w-full h-[3px] bg-[#c4c9b8] mt-2 rounded-full" />
           </div>
-          <h2 className="text-3xl md:text-5xl lg:text-6xl font-normal tracking-tight mb-6">Ready to Deploy? Pick Your Plan</h2>
+          <h2 className="text-3xl md:text-5xl lg:text-6xl font-normal tracking-tight mb-6">Pick Your Plan. Deploy Today.</h2>
           <p className="text-xl text-[#494949] font-light leading-relaxed">
-            Everything you need to deploy, manage, build workflow from natural language, launch agents and scale AI operations from one platform.
+            Launch agents, build workflows from natural language, and scale your AI operations from one platform.
           </p>
         </div>
 
         {/* Plans Grid */}
         <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-3 mb-20 items-stretch gap-y-12 md:gap-y-0">
-          {plans.map((plan, idx) => (
+          {plans.map((plan, idx) => {
+            const activeCurrency = currency || (language === 'id' ? 'IDR' : 'USD');
+            const overageText = getFormattedOverage(plan.overageUSD);
+
+            return (
             <div 
               key={plan.name} 
               className={`flex flex-col ${
@@ -151,16 +180,29 @@ export default function PricingStepTwo() {
 
               {/* Price */}
               <div className="flex items-center justify-start gap-3 py-6 mt-2">
-                <span className={`${language === 'id' ? 'text-[28px] sm:text-[32px] md:text-[38px]' : 'text-[42px] sm:text-[48px] md:text-[52px]'} font-extrabold leading-none whitespace-nowrap text-[#1a1a1a]`}>
-                  {formatPrice(plan.price)}
+                <span className={`transition-all duration-300 ${activeCurrency === 'IDR' ? 'text-[28px] sm:text-[32px] md:text-[38px]' : 'text-[42px] sm:text-[48px] md:text-[52px]'} font-extrabold leading-none whitespace-nowrap text-[#1a1a1a]`}>
+                  {getFormattedPrice(plan.price)}
                 </span>
                 <div className="flex flex-col pt-1">
                   <span className="text-[14px] sm:text-[15px] md:text-[16px] font-normal leading-none text-[#494949] mb-[6px]">
-                    {language === 'id' ? plan.frequency.replace('(month)', '(bulan)') : plan.frequency}
+                    {activeCurrency === 'IDR' ? plan.frequency.replace('(month)', '(bulan)') : plan.frequency}
                   </span>
                   <div className="w-full h-[5px] bg-[#c4c9b8]" />
                 </div>
               </div>
+
+              {/* Overage */}
+              {overageText ? (
+                <div className="mt-4 text-[13px] font-semibold text-[#8a8f8e] transition-opacity duration-300">
+                  Overage: {overageText}
+                </div>
+              ) : (
+                <div className="mt-4 text-[13px] text-transparent select-none" aria-hidden="true">
+                  Spacer
+                </div>
+              )}
+
+              {/* Features */}
 
               {/* Features */}
               <ul className="mt-14 space-y-2 text-[15px] md:text-[16px] font-medium leading-[1.35] text-[#494949]">
@@ -180,7 +222,8 @@ export default function PricingStepTwo() {
                 </button>
               </div>
             </div>
-          ))}
+            );
+          })}
         </div>
 
         {/* IC Explanation */}

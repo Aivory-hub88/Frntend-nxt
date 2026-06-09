@@ -89,9 +89,9 @@ const cards: PricingCard[] = [
   },
 ];
 
-export default function PricingStepOne() {
+export default function PricingStepOne({ currency }: { currency?: 'IDR' | 'USD' }) {
   const { ref, isVisible } = useScrollAnimation();
-  const { formatPrice, language } = useLanguage();
+  const { language, exchangeRate } = useLanguage(); // Fixed here to use exchangeRate
 
   const handleMouseMove = (e: React.MouseEvent<HTMLElement>) => {
     const rect = e.currentTarget.getBoundingClientRect();
@@ -99,6 +99,23 @@ export default function PricingStepOne() {
     const y = e.clientY - rect.top;
     e.currentTarget.style.setProperty('--mouse-x', `${x}px`);
     e.currentTarget.style.setProperty('--mouse-y', `${y}px`);
+  };
+
+  // Helper to format exactly or fallback
+  const getFormattedPrice = (basePrice: number) => {
+    const activeCurrency = currency || (language === 'id' ? 'IDR' : 'USD');
+    if (activeCurrency === 'USD') return `${basePrice}`;
+    
+    // For IDR, use dynamic exchangeRate
+    const idrValue = basePrice * exchangeRate;
+    if (idrValue >= 1000000) {
+      const juta = idrValue / 1000000;
+      return `Rp ${parseFloat(juta.toFixed(2))} jt`;
+    } else if (idrValue >= 1000) {
+      const ribu = idrValue / 1000;
+      return `Rp ${Math.round(ribu)} rb`;
+    }
+    return `Rp ${Math.round(idrValue)}`;
   };
 
   return (
@@ -115,7 +132,7 @@ export default function PricingStepOne() {
           </div>
           <h2 className="text-3xl md:text-5xl lg:text-6xl font-normal tracking-tight mb-6">Start With Clarity.</h2>
           <p className="text-xl text-[#494949] font-light leading-relaxed">
-            Know what to build, why it matters, and how to make it work.
+            A structured assessment that tells you exactly what to build, why it matters, and where to begin.
           </p>
         </div>
 
@@ -143,12 +160,12 @@ export default function PricingStepOne() {
 
               {/* Price row */}
               <div className="flex items-center justify-start gap-3 py-6 mt-2">
-                <span className={`${language === 'id' ? 'text-[28px] sm:text-[32px] md:text-[38px]' : 'text-[42px] sm:text-[48px] md:text-[52px]'} font-extrabold leading-none whitespace-nowrap text-[#1a1a1a]`}>
-                  {formatPrice(card.price)}
+                <span className={`transition-all duration-300 ${(currency || language) === 'IDR' || language === 'id' && !currency ? 'text-[28px] sm:text-[32px] md:text-[38px]' : 'text-[42px] sm:text-[48px] md:text-[52px]'} font-extrabold leading-none whitespace-nowrap text-[#1a1a1a]`}>
+                  {getFormattedPrice(card.price)}
                 </span>
                 <div className="flex flex-col pt-1">
                   <span className="text-[14px] sm:text-[15px] md:text-[16px] font-normal leading-none text-[#494949] mb-[6px]">
-                    {language === 'id' ? card.frequency.replace('(month)', '(bulan)') : card.frequency}
+                    {((currency || language) === 'IDR' || language === 'id' && !currency) ? card.frequency.replace('(month)', '(bulan)') : card.frequency}
                   </span>
                   <div className="w-full h-[5px] bg-[#c4c9b8]" />
                 </div>
