@@ -48,7 +48,7 @@ function StatCounter({ stat, active, delay }: { stat: StatItem; active: boolean;
 
   return (
     <div
-      className="flex-1 min-w-0 md:min-w-[200px] text-center py-6 md:py-10 px-5 transition-all duration-[800ms] ease-out"
+      className="flex-1 min-w-0 md:min-w-[180px] text-center py-6 md:py-10 px-2 lg:px-4 transition-all duration-[800ms] ease-out"
       style={{
         opacity: active ? 1 : 0,
         transform: active ? 'translateY(0)' : 'translateY(30px)',
@@ -105,7 +105,7 @@ export default function StatsSection() {
   return (
     <div ref={animRef} className={`animate-on-scroll ${isVisible ? 'is-visible' : ''} w-full relative overflow-hidden`} style={{ background: 'transparent', padding: '60px 0' }}>
 
-      <div className="relative z-[1] max-w-[1160px] mx-auto px-6">
+      <div className="relative z-[1] max-w-[1340px] mx-auto px-4 lg:px-6">
         {/* Stats Row */}
         <div
           ref={ref}
