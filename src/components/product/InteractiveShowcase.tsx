@@ -259,6 +259,7 @@ function ConsoleAnimation() {
   );
 }
 
+// ── 05. Workflow ──
 function WorkflowAnimation() {
   const [phase, setPhase] = useState<'typing' | 'sent' | 'generating' | 'generated'>('typing');
   const [typedText, setTypedText] = useState('');
@@ -302,11 +303,11 @@ function WorkflowAnimation() {
   }, [phase]);
 
   return (
-    <div className="w-full flex flex-col gap-4 h-full justify-end relative pb-20 p-4 font-light">
-      <div className="flex flex-col gap-6 w-full max-w-[100%] mx-auto mb-4">
+    <div className="w-full flex flex-col gap-4 h-full justify-end relative pb-6 sm:pb-20 p-4 font-light">
+      <div className="flex flex-col gap-4 sm:gap-6 w-full max-w-[100%] mx-auto mb-4">
         {/* User Message */}
         <div className={`flex justify-end transition-all duration-300 ease-out ${phase !== 'typing' ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
-           <div className="bg-[#2A2A2A] rounded-3xl rounded-tr-md px-5 py-3 text-white/90 text-[14px] max-w-[90%] leading-relaxed shadow-md">
+           <div className="bg-[#2A2A2A] rounded-3xl rounded-tr-md px-4 py-2 sm:px-5 sm:py-3 text-white/90 text-[12px] sm:text-[14px] max-w-[95%] sm:max-w-[90%] leading-relaxed shadow-md">
              {fullText}
            </div>
         </div>
@@ -316,15 +317,15 @@ function WorkflowAnimation() {
            {phase === 'generating' ? (
              <>
                <div className="w-4 h-4 rounded-full border-2 border-white/10 border-t-[#aec99d] animate-spin shrink-0" />
-               <span className="text-white/50 text-[13px] font-medium">Aivory is generating workflow<span className="animate-pulse">{dots}</span></span>
+               <span className="text-white/50 text-[12px] sm:text-[13px] font-medium">Aivory is generating workflow<span className="animate-pulse">{dots}</span></span>
              </>
            ) : null}
         </div>
 
         {/* Generated Flow */}
         {phase === 'generated' && (
-          <div className="w-full bg-[#111111] border border-white/5 rounded-2xl p-6 flex flex-col gap-6 relative overflow-hidden shadow-2xl animate-fade-in-up">
-            <div className="text-[10px] text-white uppercase tracking-widest text-center font-light z-10" style={{ fontFamily: "'Doto', 'Courier New', monospace" }}>
+          <div className="w-full bg-[#111111] border border-white/5 rounded-2xl p-4 sm:p-6 flex flex-col gap-4 sm:gap-6 relative overflow-hidden shadow-2xl animate-fade-in-up">
+            <div className="text-[9px] sm:text-[10px] text-white uppercase tracking-widest text-center font-light z-10" style={{ fontFamily: "'Doto', 'Courier New', monospace" }}>
               Workflow Generated
             </div>
 
@@ -335,40 +336,39 @@ function WorkflowAnimation() {
               <div className="absolute top-1/2 left-[50%] right-[15%] h-[1px] bg-[#aec99d] -translate-y-1/2 -z-10 origin-left animate-scale-x" style={{ animationDelay: '0.4s' }} />
 
               {/* Node 1: Trigger */}
-              <div className="flex flex-col rounded-[16px] border border-white/10 shadow-lg flex-shrink-0 w-[100px] sm:w-[110px] h-[105px] overflow-hidden bg-[#2A2A2A] relative z-10">
-                <div className="h-[32px] flex items-center justify-center bg-[#2A2A2A] border-b border-[#111]/50">
-                  <span className="text-[9px] text-white/60 uppercase tracking-widest font-medium">Trigger</span>
+              <div className="flex flex-col rounded-[12px] sm:rounded-[16px] border border-white/10 shadow-lg flex-shrink-0 w-[80px] sm:w-[110px] h-[85px] sm:h-[105px] overflow-hidden bg-[#2A2A2A] relative z-10">
+                <div className="h-[28px] sm:h-[32px] flex items-center justify-center bg-[#2A2A2A] border-b border-[#111]/50">
+                  <span className="text-[8px] sm:text-[9px] text-white/60 uppercase tracking-widest font-medium">Trigger</span>
                 </div>
                 <div className="flex-1 bg-[#aec99d] flex flex-col items-center justify-center gap-1.5">
-                  <img src="/integrations/icons/gmail.svg" alt="Gmail" className="w-5 h-5 drop-shadow-sm" />
-                  <span className="text-xs font-semibold text-[#111111]">Gmail</span>
+                  <img src="/integrations/icons/gmail.svg" alt="Gmail" className="w-4 h-4 sm:w-5 sm:h-5 drop-shadow-sm" />
+                  <span className="text-[10px] sm:text-xs font-semibold text-[#111111]">Gmail</span>
                 </div>
               </div>
               
               {/* Node 2: Agent */}
               <div className="relative flex-shrink-0 animate-fade-in-up z-20" style={{ animationDelay: '0.2s' }}>
-                {/* Blinker positioned outside overflow-hidden */}
-                <div className="absolute top-[-4px] right-[-4px] w-3.5 h-3.5 rounded-full bg-white/40 animate-ping z-30" />
-                <div className="absolute top-[-4px] right-[-4px] w-3.5 h-3.5 rounded-full bg-white/60 z-30 border border-[#111]" />
+                <div className="absolute top-[-4px] right-[-4px] w-3 h-3 sm:w-3.5 sm:h-3.5 rounded-full bg-white/40 animate-ping z-30" />
+                <div className="absolute top-[-4px] right-[-4px] w-3 h-3 sm:w-3.5 sm:h-3.5 rounded-full bg-white/60 z-30 border border-[#111]" />
                 
-                <div className="flex flex-col rounded-[16px] border border-white/10 shadow-lg w-[100px] sm:w-[110px] h-[105px] overflow-hidden bg-[#2A2A2A]">
-                  <div className="h-[32px] flex items-center justify-center bg-[#2A2A2A] border-b border-[#111]">
-                    <span className="text-[9px] text-white/60 uppercase tracking-widest font-medium">AI Agent</span>
+                <div className="flex flex-col rounded-[12px] sm:rounded-[16px] border border-white/10 shadow-lg w-[80px] sm:w-[110px] h-[85px] sm:h-[105px] overflow-hidden bg-[#2A2A2A]">
+                  <div className="h-[28px] sm:h-[32px] flex items-center justify-center bg-[#2A2A2A] border-b border-[#111]">
+                    <span className="text-[8px] sm:text-[9px] text-white/60 uppercase tracking-widest font-medium">AI Agent</span>
                   </div>
                   <div className="flex-1 bg-[#111111] flex flex-col items-center justify-center">
-                    <span className="text-xs font-medium text-white/60">Extract</span>
+                    <span className="text-[10px] sm:text-xs font-medium text-white/60">Extract</span>
                   </div>
                 </div>
               </div>
 
               {/* Node 3: Action */}
-              <div className="flex flex-col rounded-[16px] border border-white/10 shadow-lg flex-shrink-0 w-[100px] sm:w-[110px] h-[105px] overflow-hidden bg-[#2A2A2A] relative z-10 animate-fade-in-up" style={{ animationDelay: '0.6s' }}>
-                <div className="h-[32px] flex items-center justify-center bg-[#2A2A2A] border-b border-[#111]/50">
-                  <span className="text-[9px] text-white/60 uppercase tracking-widest font-medium">Action</span>
+              <div className="flex flex-col rounded-[12px] sm:rounded-[16px] border border-white/10 shadow-lg flex-shrink-0 w-[80px] sm:w-[110px] h-[85px] sm:h-[105px] overflow-hidden bg-[#2A2A2A] relative z-10 animate-fade-in-up" style={{ animationDelay: '0.6s' }}>
+                <div className="h-[28px] sm:h-[32px] flex items-center justify-center bg-[#2A2A2A] border-b border-[#111]/50">
+                  <span className="text-[8px] sm:text-[9px] text-white/60 uppercase tracking-widest font-medium">Action</span>
                 </div>
                 <div className="flex-1 bg-[#aec99d] flex flex-col items-center justify-center gap-1.5">
-                  <img src="/integrations/icons/slack.svg" alt="Slack" className="w-5 h-5 drop-shadow-sm" />
-                  <span className="text-xs font-semibold text-[#111111]">Slack</span>
+                  <img src="/integrations/icons/slack.svg" alt="Slack" className="w-4 h-4 sm:w-5 sm:h-5 drop-shadow-sm" />
+                  <span className="text-[10px] sm:text-xs font-semibold text-[#111111]">Slack</span>
                 </div>
               </div>
             </div>
