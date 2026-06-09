@@ -3,6 +3,7 @@
 import { useRef } from 'react';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
 import { InteractiveShowcase } from '@/components/product/InteractiveShowcase';
+import { InteractiveGridShowcase } from '@/components/product/InteractiveGridShowcase';
 import { InteractiveGrid } from '@/components/product/InteractiveGrid';
 
 /* ─── Main Component ─── */
@@ -27,7 +28,12 @@ export default function FeatureCards() {
 
       {/* Replaced GSAP Cards with Product Page Components */}
       <div className="relative z-[1] w-full">
-        <InteractiveShowcase />
+        <div className="hidden lg:block">
+          <InteractiveShowcase />
+        </div>
+        <div className="block lg:hidden">
+          <InteractiveGridShowcase />
+        </div>
         <InteractiveGrid />
       </div>
     </>
