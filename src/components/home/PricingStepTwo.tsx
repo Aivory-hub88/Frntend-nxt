@@ -55,6 +55,7 @@ const plans: Plan[] = [
     features: [
       '1,500 conversations/month',
       '1 active agent',
+      '3 workflow build',
       'Telegram or Slack (choose one)',
       'Multilingual by default',
     ],
@@ -69,6 +70,7 @@ const plans: Plan[] = [
     features: [
       '5,000 conversations/month',
       '3 active agents',
+      '7 workflow build',
       'Telegram + Slack + Email',
       'Multilingual by default',
       'Conditional logic & branching',
@@ -85,6 +87,7 @@ const plans: Plan[] = [
     features: [
       'Unlimited conversations',
       'Unlimited agents',
+      'Unlimited workflow build',
       'All channels + WhatsApp Business',
       'Custom integrations',
       'Advanced orchestration',
