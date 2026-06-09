@@ -301,7 +301,7 @@ function ConsoleAnimation() {
   }, [phase]);
 
   return (
-    <div className="w-full h-full flex flex-col justify-end p-4 font-light relative">
+    <div className="w-full h-full flex flex-col justify-end px-6 pb-8 pt-4 font-light relative">
       <div className="flex flex-col gap-4 w-full max-w-[100%] mx-auto mb-2">
         {/* User Message */}
         <div className={`flex justify-end transition-all duration-300 ease-out ${phase !== 'typing' ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
@@ -343,6 +343,20 @@ function ConsoleAnimation() {
                 </div>
               ))}
             </div>
+          )}
+        </div>
+      </div>
+      
+      {/* Chat Input Bar */}
+      <div className="w-full bg-[#1A1A1A] rounded-xl border border-white/10 px-4 py-2.5 flex items-center shadow-lg mt-4 z-20 shrink-0">
+        <div className="text-white/80 text-[12px] font-light min-h-[18px] flex items-center">
+          {phase === 'typing' ? (
+            <>
+              {typedText}
+              <span className="animate-pulse ml-0.5 inline-block w-[2px] h-3.5 bg-[#aec99d] translate-y-px"></span>
+            </>
+          ) : (
+            <span className="text-white/30">Ask Aivory anything...</span>
           )}
         </div>
       </div>
@@ -394,7 +408,7 @@ function WorkflowAnimation() {
   }, [phase]);
 
   return (
-    <div className="w-full flex flex-col gap-4 h-full justify-end relative pb-6 sm:pb-20 p-4 font-light">
+    <div className="w-full flex flex-col gap-4 h-full justify-end relative px-6 pb-8 pt-4 font-light">
       <div className="flex flex-col gap-4 sm:gap-6 w-full max-w-[100%] mx-auto mb-4">
         {/* User Message */}
         <div className={`flex justify-end transition-all duration-300 ease-out ${phase !== 'typing' ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
@@ -465,6 +479,20 @@ function WorkflowAnimation() {
             </div>
           </div>
         )}
+      </div>
+
+      {/* Chat Input Bar */}
+      <div className="w-full bg-[#1A1A1A] rounded-xl border border-white/10 px-4 py-2.5 flex items-center shadow-lg mt-auto z-20 shrink-0">
+        <div className="text-white/80 text-[12px] sm:text-[13px] font-light min-h-[18px] flex items-center">
+          {phase === 'typing' ? (
+            <>
+              {typedText}
+              <span className="animate-pulse ml-0.5 inline-block w-[2px] h-3.5 sm:h-4 bg-[#aec99d] translate-y-px"></span>
+            </>
+          ) : (
+            <span className="text-white/30">Ask Aivory anything...</span>
+          )}
+        </div>
       </div>
     </div>
   );

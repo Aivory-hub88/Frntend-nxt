@@ -303,13 +303,13 @@ export function InteractiveGrid() {
       <div className="max-w-6xl mx-auto relative z-10">
         <div className="text-center mb-16">
           <h2 className="text-[#c4c9b8] uppercase tracking-widest text-xs font-manrope font-light mb-3">
-            Core Utilities
+            THE PLATFORM
           </h2>
           <h3 className="text-4xl md:text-5xl font-light tracking-tight mb-4">
-            And much more
+            Your AI Operations Stack.
           </h3>
           <p className="text-white/60 max-w-xl mx-auto font-light leading-relaxed">
-            Standard utilities to bridge automation across your operations, connect apps, and customize pre-built templates.
+            Agents that act, integrations that connect, and templates that ship fast.
           </p>
         </div>
 
@@ -392,8 +392,8 @@ function IntegrationsMarquee() {
   const marqueeItems = [...logos, ...logos];
 
   return (
-    <div className="w-full mt-32 mb-10">
-      <div className="text-center mb-12 px-6">
+    <div className="w-full mt-20 md:mt-24 mb-10">
+      <div className="text-center mb-16 px-6">
         <h3 className="text-[22px] md:text-[32px] font-light text-[#c4c9b8] mb-3 tracking-tight" style={{ fontFamily: "'Manrope', sans-serif" }}>
           Every Aivory agent speaks your customer&apos;s language. Literally.
         </h3>

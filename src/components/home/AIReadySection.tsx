@@ -32,7 +32,7 @@ export default function AIReadySection() {
           </p>
 
           <p
-            className="text-white text-base md:text-xl font-extrabold leading-relaxed max-w-[720px] mt-6"
+            className="text-white text-base md:text-xl font-normal leading-relaxed w-full md:whitespace-nowrap mt-6"
             style={{
               fontFamily: "'Manrope', sans-serif",
             }}

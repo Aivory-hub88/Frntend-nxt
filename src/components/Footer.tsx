@@ -5,12 +5,12 @@ import Image from 'next/image';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
 
 const productLinks = [
-  { label: 'Deep Diagnostic', href: '#' },
-  { label: 'AI Blueprint', href: '#' },
-  { label: 'AI Roadmap', href: '#' },
-  { label: 'Workflow Builder', href: '#' },
-  { label: 'AI Agents', href: '#' },
-  { label: 'Template Library', href: '#' },
+  { label: 'Deep Diagnostic', href: '/product' },
+  { label: 'AI Blueprint', href: '/product' },
+  { label: 'AI Roadmap', href: '/product' },
+  { label: 'Workflow Builder', href: '/product' },
+  { label: 'AI Agents', href: '/product' },
+  { label: 'Template Library', href: '/product' },
 ];
 
 const companyLinks = [
@@ -24,7 +24,7 @@ const companyLinks = [
 const legalLinks = [
   { label: 'Privacy Policy', href: '/privacy' },
   { label: 'Terms of Service', href: '/terms' },
-  { label: 'Cookie Policy', href: '#' },
+  { label: 'Cookie Policy', href: '/cookie-policy' },
 ];
 
 export default function Footer() {
