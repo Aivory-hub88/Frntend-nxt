@@ -52,9 +52,14 @@ export function TechLabSection() {
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="flex flex-col items-center text-center mb-12">
-          <span className="text-[#c4c9b8] uppercase tracking-widest text-xs font-manrope font-light mb-3">
+          <span className="text-[#c4c9b8] uppercase tracking-widest text-xs font-manrope font-light mb-6">
             PRACTICE
           </span>
+          <img 
+            src="/Aivory-tech-lab-logo-2026.svg" 
+            alt="Aivory Tech Lab Logo" 
+            className="w-12 h-12 md:w-16 md:h-16 lg:w-20 lg:h-20 mb-4 object-contain brightness-0 invert opacity-90"
+          />
           <h2 className="text-4xl md:text-5xl font-light tracking-tight text-white leading-tight mb-4">
             Aivory Tech Lab
           </h2>
