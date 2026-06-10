@@ -8,8 +8,11 @@ const showcaseProducts = [
     id: 'diagnostic',
     step: '01. DISCOVER',
     title: 'Deep Diagnostic',
-    description:
-      'We audit your current operations, constraints, and data accessibility. Rather than offering templates, we map out a customized assessment to establish a realistic readiness baseline before you write code or deploy models.',
+    description: (
+      <>
+        In this stage, Aivory runs a deep diagnostic across your current operations, constraints, and data environment to understand where AI can create the most impact. <span className="font-semibold text-white">Using a high-intelligence deterministic engine</span>, it maps readiness, surfaces execution gaps, and identifies the conditions needed to move forward faster without relying on long traditional consulting cycles.
+      </>
+    ),
     features: ['Operational Gaps Audit', 'Infrastructure Readiness', 'Constraint & Risk Check'],
   },
   {
