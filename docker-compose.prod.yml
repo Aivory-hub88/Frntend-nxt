@@ -1,5 +1,5 @@
 services:
-  # ── PostgreSQL Database ─────────────────────────────────────────────────────
+  # ── PostgreSQL ─────────────────────────────────────────────────────────────
   postgres:
     image: postgres:16
     container_name: avry-postgres
@@ -21,7 +21,7 @@ services:
     ports:
       - "5432:5432"
 
-  # ── Reverse Proxy ──────────────────────────────────────────────────────────
+  # ── Traefik ────────────────────────────────────────────────────────────────
   traefik:
     image: traefik:v2.11
     container_name: avry-traefik
@@ -42,12 +42,21 @@ services:
       - "--log.level=INFO"
       - "--accesslog=true"
 
-  # ── Main Website / Landing (Next.js 14, built from this directory) ─────────
-  # Catch-all priority=1: serves /, /blog, /careers, /about, /product, etc.
-  # The Next.js app handles /blog and /careers as internal pages which call
-  # the API at /api/blog and /api/careers via NEXT_PUBLIC_BLOG_URL / NEXT_PUBLIC_CAREERS_URL.
+  # ── Main Website (landing, /blog, /careers — catch-all priority=1) ─────────
   avry-website:
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        NEXT_PUBLIC_API_BASE_URL: http://${VPS_IP:-129.226.155.216}:8081
+        NEXT_PUBLIC_BACKEND_URL: http://${VPS_IP:-129.226.155.216}:8081
+        NEXT_PUBLIC_BLOG_URL: http://${VPS_IP:-129.226.155.216}/api/blog
+        NEXT_PUBLIC_CAREERS_URL: http://${VPS_IP:-129.226.155.216}/api/careers
+        NEXT_PUBLIC_DIAGNOSTICS_URL: http://${VPS_IP:-129.226.155.216}:8082
+        NEXT_PUBLIC_BLUEPRINT_URL: http://${VPS_IP:-129.226.155.216}:8083
+        NEXT_PUBLIC_WORKFLOWS_URL: http://${VPS_IP:-129.226.155.216}:8082
+        NEXT_PUBLIC_PAYMENTS_URL: http://${VPS_IP:-129.226.155.216}:3030
+        NEXT_PUBLIC_ROADMAP_URL: http://${VPS_IP:-129.226.155.216}:8084
     container_name: avry-website
     restart: unless-stopped
     networks:
@@ -60,15 +69,89 @@ services:
       - "traefik.http.routers.main-app.priority=1"
       - "traefik.http.services.main-app.loadbalancer.server.port=3000"
 
-  # ── Blog API Service (port 8089, routed via /api/blog with strip) ──────────
-  # Browser calls this via NEXT_PUBLIC_BLOG_URL=http://IP/api/blog
+  # ── User Dashboard (port 9001) ─────────────────────────────────────────────
+  avry-user-dashboard:
+    build:
+      context: ./frontend/avry-user-dashboard
+      dockerfile: Dockerfile
+      args:
+        NEXT_PUBLIC_API_BASE_URL: http://${VPS_IP:-129.226.155.216}:8081
+        NEXT_PUBLIC_BACKEND_URL: http://${VPS_IP:-129.226.155.216}:8081
+        NEXT_PUBLIC_DIAGNOSTICS_URL: http://${VPS_IP:-129.226.155.216}:8082
+        NEXT_PUBLIC_BLUEPRINT_URL: http://${VPS_IP:-129.226.155.216}:8083
+        NEXT_PUBLIC_WORKFLOWS_URL: http://${VPS_IP:-129.226.155.216}:8082
+        NEXT_PUBLIC_PAYMENTS_URL: http://${VPS_IP:-129.226.155.216}:3030
+        NEXT_PUBLIC_ROADMAP_URL: http://${VPS_IP:-129.226.155.216}:8084
+    container_name: avry-user-dashboard
+    restart: unless-stopped
+    networks:
+      - aivory-network
+    ports:
+      - "9001:9001"
+    environment:
+      - PORT=9001
+      - NODE_ENV=production
+
+  # ── Admin Dashboard (port 9002) ────────────────────────────────────────────
+  avry-admin-dashboards:
+    build:
+      context: ./frontend/avry-admin-dashboard
+      dockerfile: Dockerfile
+      args:
+        NEXT_PUBLIC_API_URL: http://${VPS_IP:-129.226.155.216}:8081
+    container_name: avry-admin-dashboards
+    restart: unless-stopped
+    networks:
+      - aivory-network
+    ports:
+      - "9002:9002"
+    environment:
+      - PORT=9002
+      - NODE_ENV=production
+      - BACKEND_SERVICE_URL=http://avry-backend:8081
+      - PAYMENTS_SERVICE_URL=http://avry-payments:3030
+      - DIAGNOSTICS_SERVICE_URL=http://avry-diagnostics:8082
+      - BLUEPRINT_SERVICE_URL=http://avry-blueprint:8083
+      - ROADMAP_SERVICE_URL=http://avry-roadmap:8084
+      - WORKFLOWS_SERVICE_URL=http://avry-workflows:8082
+      - BLOG_SERVICE_URL=http://avry-blog:8089
+      - CAREERS_SERVICE_URL=http://avry-careers:8090
+      - SETUP_SECRET=${INTERNAL_TOKEN:-aivory-internal-2026}
+
+  # ── Backend API (port 8081) ────────────────────────────────────────────────
+  avry-backend:
+    build:
+      context: ./backend/avry-backend
+      dockerfile: Dockerfile
+    container_name: avry-backend
+    restart: unless-stopped
+    networks:
+      - aivory-network
+    ports:
+      - "8081:8081"
+    environment:
+      - PORT=8081
+      - DATABASE_URL=${DATABASE_URL}
+      - JWT_SECRET=${JWT_SECRET}
+      - OPENROUTER_API_KEY=${OPENROUTER_API_KEY}
+      - ENVIRONMENT=production
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8081/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 15s
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  # ── Blog API (port 8089 — /api/blog via Traefik priority=10) ──────────────
   avry-blog:
     build:
       context: ./services/avry-blog
       dockerfile: Dockerfile
     container_name: avry-blog
     restart: unless-stopped
-    working_dir: /app
     networks:
       - aivory-network
     environment:
@@ -84,20 +167,16 @@ services:
       - "traefik.http.routers.blog.middlewares=blog-stripprefix"
       - "traefik.http.middlewares.blog-stripprefix.stripprefix.prefixes=/api/blog"
     depends_on:
-      traefik:
-        condition: service_started
       postgres:
         condition: service_healthy
 
-  # ── Careers API Service (port 8090, routed via /api/careers with strip) ────
-  # Browser calls this via NEXT_PUBLIC_CAREERS_URL=http://IP/api/careers
+  # ── Careers API (port 8090 — /api/careers via Traefik priority=10) ────────
   avry-careers:
     build:
       context: ./services/avry-careers
       dockerfile: Dockerfile
     container_name: avry-careers
     restart: unless-stopped
-    working_dir: /app
     networks:
       - aivory-network
     environment:
@@ -119,11 +198,10 @@ services:
       - "traefik.http.routers.careers.middlewares=careers-stripprefix"
       - "traefik.http.middlewares.careers-stripprefix.stripprefix.prefixes=/api/careers"
     depends_on:
-      traefik:
-        condition: service_started
       postgres:
         condition: service_healthy
 
+  # ── Diagnostics (port 8082) ────────────────────────────────────────────────
   avry-diagnostics:
     build:
       context: ./services/avry-diagnostics
@@ -132,20 +210,13 @@ services:
     restart: unless-stopped
     networks:
       - aivory-network
+    ports:
+      - "8082:8082"
     environment:
       - PORT=8082
       - DATABASE_URL=${DATABASE_URL}
       - JWT_SECRET=${JWT_SECRET}
       - OPENROUTER_API_KEY=${OPENROUTER_API_KEY}
-    labels:
-      - "traefik.enable=true"
-      - "traefik.docker.network=aivory-network"
-      - "traefik.http.routers.diagnostics.rule=PathPrefix(`/api/diagnostics`)"
-      - "traefik.http.routers.diagnostics.entrypoints=web"
-      - "traefik.http.routers.diagnostics.priority=10"
-      - "traefik.http.services.diagnostics.loadbalancer.server.port=8082"
-      - "traefik.http.routers.diagnostics.middlewares=diagnostics-stripprefix"
-      - "traefik.http.middlewares.diagnostics-stripprefix.stripprefix.prefixes=/api/diagnostics"
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8082/health"]
       interval: 30s
@@ -156,6 +227,7 @@ services:
       postgres:
         condition: service_healthy
 
+  # ── Blueprint (port 8083) ──────────────────────────────────────────────────
   avry-blueprint:
     build:
       context: ./services/avry-blueprint
@@ -164,20 +236,13 @@ services:
     restart: unless-stopped
     networks:
       - aivory-network
+    ports:
+      - "8083:8083"
     environment:
       - PORT=8083
       - DATABASE_URL=${DATABASE_URL}
       - JWT_SECRET=${JWT_SECRET}
       - OPENROUTER_API_KEY=${OPENROUTER_API_KEY}
-    labels:
-      - "traefik.enable=true"
-      - "traefik.docker.network=aivory-network"
-      - "traefik.http.routers.blueprint.rule=PathPrefix(`/api/blueprint`)"
-      - "traefik.http.routers.blueprint.entrypoints=web"
-      - "traefik.http.routers.blueprint.priority=10"
-      - "traefik.http.services.blueprint.loadbalancer.server.port=8083"
-      - "traefik.http.routers.blueprint.middlewares=blueprint-stripprefix"
-      - "traefik.http.middlewares.blueprint-stripprefix.stripprefix.prefixes=/api/blueprint"
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8083/health"]
       interval: 30s
@@ -188,71 +253,7 @@ services:
       postgres:
         condition: service_healthy
 
-  avry-workflows:
-    build:
-      context: ./services/avry-workflows
-      dockerfile: Dockerfile
-    container_name: avry-workflows
-    restart: unless-stopped
-    networks:
-      - aivory-network
-    environment:
-      - PORT=8082
-      - DATABASE_URL=${DATABASE_URL}
-      - JWT_SECRET=${JWT_SECRET}
-      - OPENROUTER_API_KEY=${OPENROUTER_API_KEY}
-    labels:
-      - "traefik.enable=true"
-      - "traefik.docker.network=aivory-network"
-      - "traefik.http.routers.workflows.rule=PathPrefix(`/api/workflows`)"
-      - "traefik.http.routers.workflows.entrypoints=web"
-      - "traefik.http.routers.workflows.priority=10"
-      - "traefik.http.services.workflows.loadbalancer.server.port=8082"
-      - "traefik.http.routers.workflows.middlewares=workflows-stripprefix"
-      - "traefik.http.middlewares.workflows-stripprefix.stripprefix.prefixes=/api/workflows"
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8082/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 15s
-    depends_on:
-      postgres:
-        condition: service_healthy
-
-  avry-payments:
-    build:
-      context: ./services/avry-payments
-      dockerfile: Dockerfile
-    container_name: avry-payments
-    restart: unless-stopped
-    networks:
-      - aivory-network
-    environment:
-      - PORT=8085
-      - DATABASE_URL=${DATABASE_URL}
-      - JWT_SECRET=${JWT_SECRET}
-      - MIDTRANS_SERVER_KEY=${MIDTRANS_SERVER_KEY}
-      - MIDTRANS_CLIENT_KEY=${MIDTRANS_CLIENT_KEY}
-    labels:
-      - "traefik.enable=true"
-      - "traefik.docker.network=aivory-network"
-      - "traefik.http.routers.payments.rule=PathPrefix(`/api/payments`)"
-      - "traefik.http.routers.payments.entrypoints=web"
-      - "traefik.http.routers.payments.priority=10"
-      - "traefik.http.services.payments.loadbalancer.server.port=8085"
-      - "traefik.http.routers.payments.middlewares=payments-stripprefix"
-      - "traefik.http.middlewares.payments-stripprefix.stripprefix.prefixes=/api/payments"
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8085/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 15s
-    depends_on:
-      postgres:
-        condition: service_healthy
-
+  # ── Roadmap (port 8084) ────────────────────────────────────────────────────
   avry-roadmap:
     build:
       context: ./services/avry-roadmap
@@ -261,22 +262,68 @@ services:
     restart: unless-stopped
     networks:
       - aivory-network
+    ports:
+      - "8084:8084"
     environment:
       - PORT=8084
       - DATABASE_URL=${DATABASE_URL}
       - JWT_SECRET=${JWT_SECRET}
       - OPENROUTER_API_KEY=${OPENROUTER_API_KEY}
-    labels:
-      - "traefik.enable=true"
-      - "traefik.docker.network=aivory-network"
-      - "traefik.http.routers.roadmap.rule=PathPrefix(`/api/roadmap`)"
-      - "traefik.http.routers.roadmap.entrypoints=web"
-      - "traefik.http.routers.roadmap.priority=10"
-      - "traefik.http.services.roadmap.loadbalancer.server.port=8084"
-      - "traefik.http.routers.roadmap.middlewares=roadmap-stripprefix"
-      - "traefik.http.middlewares.roadmap-stripprefix.stripprefix.prefixes=/api/roadmap"
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8084/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 15s
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  # ── Workflows (port 8082 internally, separate path) ────────────────────────
+  avry-workflows:
+    build:
+      context: ./services/avry-workflows
+      dockerfile: Dockerfile
+    container_name: avry-workflows
+    restart: unless-stopped
+    networks:
+      - aivory-network
+    ports:
+      - "8087:8087"
+    environment:
+      - PORT=8087
+      - DATABASE_URL=${DATABASE_URL}
+      - JWT_SECRET=${JWT_SECRET}
+      - OPENROUTER_API_KEY=${OPENROUTER_API_KEY}
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8087/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 15s
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  # ── Payments (port 3030) ───────────────────────────────────────────────────
+  avry-payments:
+    build:
+      context: ./services/avry-payments
+      dockerfile: Dockerfile
+    container_name: avry-payments
+    restart: unless-stopped
+    networks:
+      - aivory-network
+    ports:
+      - "3030:3030"
+    environment:
+      - PORT=3030
+      - DATABASE_URL=${DATABASE_URL}
+      - JWT_SECRET=${JWT_SECRET}
+      - MIDTRANS_SERVER_KEY=${MIDTRANS_SERVER_KEY}
+      - MIDTRANS_CLIENT_KEY=${MIDTRANS_CLIENT_KEY}
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3030/health"]
       interval: 30s
       timeout: 10s
       retries: 3
