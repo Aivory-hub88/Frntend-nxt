@@ -94,9 +94,9 @@ export default function Footer() {
             <div className="col-span-2 md:col-span-1 flex md:justify-end mt-8 md:mt-0">
               <div className="flex flex-col items-start">
                 <Image
-                  src="/aivory-logo.svg"
+                  src="/Aivory_logo_2_2026.svg"
                   alt="Aivory Logo"
-                  width={72}
+                  width={345}
                   height={72}
                   className="h-[48px] md:h-[72px] w-auto opacity-90"
                 />
@@ -108,7 +108,7 @@ export default function Footer() {
           <div className="pb-6 text-sm text-white/80">
             &copy; 2026 Aivory. All rights reserved.
           </div>
-          <div className="border-b border-white/20 w-full mb-8"></div>
+          {/* Divider removed */}
         </div>
       </div>
     </footer>
