@@ -310,9 +310,10 @@ export default function FreeDiagnosticPage() {
 
         // Clone and render at full size
         const clone = node.cloneNode(true) as HTMLElement;
+        clone.id = 'html2canvas-clone';
         clone.style.position = 'fixed';
-        clone.style.left = '0px';
-        clone.style.top = '0px';
+        clone.style.left = '-9999px';
+        clone.style.top = '-9999px';
         clone.style.width = '1080px';
         clone.style.height = '1350px';
         clone.style.overflow = 'hidden';
@@ -321,26 +322,20 @@ export default function FreeDiagnosticPage() {
         clone.style.background = '#ffffff';
         clone.style.zIndex = '-9999';
         clone.style.pointerEvents = 'none';
-        clone.style.visibility = 'hidden';
         document.body.appendChild(clone);
 
         try {
+          await document.fonts.ready;
           const canvas = await html2canvas(clone, {
-            scale: 1,
+            scale: 2,
             width: 1080,
             height: 1350,
             useCORS: true,
             allowTaint: true,
             backgroundColor: '#ffffff',
             logging: false,
-            scrollX: 0,
-            scrollY: 0,
             windowWidth: 1080,
-            windowHeight: 1350,
-            onclone: (clonedDoc) => {
-              const el = clonedDoc.querySelector('[style*="visibility: hidden"]') as HTMLElement;
-              if (el) el.style.visibility = 'visible';
-            }
+            windowHeight: 1350
           });
 
           const link = document.createElement('a');
@@ -536,7 +531,15 @@ export default function FreeDiagnosticPage() {
                     <div>
                       {/* Logo placeholder */}
                       <div style={{ height: 60, width: 290, marginBottom: 36, display: 'flex', alignItems: 'center' }}>
-                        <span style={{ fontSize: 36, fontWeight: 700, letterSpacing: '-0.03em' }}>Aivory</span>
+                        <svg viewBox="0 0 382.6 79.4" style={{ height: '36px', width: 'auto', display: 'block' }}>
+                          <path fill="#5b5b5b" d="M104.8,65.4V20.7h8.9v44.7h-8.9Z"/>
+                          <path fill="#5b5b5b" d="M182.2,20.5l-19.6,32.6c-5.9,9.8-9.8,12.1-25,12.1h-17.3V20.5h8.9v39.2c13.3,0,17.7.6,26.5-13.4l15.3-25.8s11.1,0,11.1,0Z"/>
+                          <path fill="#5b5b5b" d="M240.4,43c0,12.7-4.8,22.8-30.2,22.8h-1.3c-25.2,0-30.2-10.1-30.2-22.8s4.8-22.8,30.2-22.8h1.3c25.2,0,30.2,10.1,30.2,22.8ZM230.1,43c0-16.3-8.9-17.2-18-17.2h-4.6c-9.1,0-18,1-18,17.2s9.1,17.7,18,17.7h4.6c9.2,0,18-1.4,18-17.7Z"/>
+                          <path fill="#5b5b5b" d="M300.8,65.4h-5.6c-4.5,0-8.9-2.6-14.6-8.8l-3-3.3h-24.2v12.1h-9.4V20.7h36.1c14.4,0,17.9,5.6,17.6,16.4-.1,5.6-1.6,12.8-10.5,15.3l13.7,13h0ZM289.2,37.3c0-6.9-1.3-11-9.7-11h-26.1v20.3h26.1c4.6,0,9.7-1.4,9.7-9.4Z"/>
+                          <path fill="#5b5b5b" d="M350.1,20.5l-22.9,28.7v16h-8.8v-15.7l-23.4-29h10.1l17.9,22.4,17-22.4h10.1Z"/>
+                          <path fill="#5b5b5b" d="M36.1,65.5l19.8-32.9c5.9-10,10-12.3,25.1-12.3h17.5v45.2h-9.1V28.3c-16.7,0-20.1-1.9-28.1,11.1l-15.4,26.1h-9.8.1Z"/>
+                          <path fill="#9cb77e" d="M77.4,56.2v9.4h-16.3l1.6-3c1.2-2,2.2-4,3.9-4.9,0,0,2-1.3,5.5-1.3h5.5-.1Z"/>
+                        </svg>
                       </div>
                       <h1 style={{ fontSize: 64, fontWeight: 700, lineHeight: 1.05, letterSpacing: '-0.03em', marginBottom: 30, color: '#111' }}>AI Readiness<br />Quick Diagnostic</h1>
 
@@ -564,7 +567,7 @@ export default function FreeDiagnosticPage() {
                               </g>
                               <circle cx="100" cy="100" r="68" fill="#111111" />
                             </svg>
-                            <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', textAlign: 'center', color: '#ffffff' }}>
+                            <div style={{ position: 'absolute', top: 0, left: 0, width: '160px', height: '160px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', color: '#ffffff' }}>
                               <div style={{ fontSize: 13, textTransform: 'uppercase', letterSpacing: '0.15em', opacity: 0.8, marginBottom: -2 }}>score</div>
                               <div style={{ fontFamily: "'Doto', monospace", fontSize: 50, fontWeight: 700, lineHeight: 1 }}>{score}</div>
                             </div>
@@ -627,7 +630,7 @@ export default function FreeDiagnosticPage() {
 
                     <div style={{ marginTop: 'auto' }}>
                       <div style={{ fontSize: 20, fontWeight: 500, color: '#111', marginBottom: 20 }}>© 2026 Aivory. All rights reserved.</div>
-                      <div style={{ borderTop: '2px solid #111', paddingTop: 20, fontSize: 20, fontWeight: 500, color: '#111' }}>www.aivory.id</div>
+                      <div style={{ borderTop: '2px solid #111', paddingTop: 20, fontSize: 20, fontWeight: 500, color: '#111' }}>www.aivory.uk</div>
                     </div>
                   </div>
                 </div>
@@ -679,12 +682,20 @@ export default function FreeDiagnosticPage() {
                     <div style={{ marginTop: 'auto' }}>
                       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: 24 }}>
                         <div style={{ fontSize: 20, fontWeight: 500, color: '#111' }}>© 2026 Aivory. All rights reserved.</div>
-                        <div style={{ textAlign: 'right' }}>
+                        <div style={{ textAlign: 'right', display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
                           <div style={{ fontSize: 20, fontWeight: 700, color: '#111', marginBottom: 12 }}>Diagnose by</div>
-                          <span style={{ fontSize: 28, fontWeight: 700, letterSpacing: '-0.03em' }}>Aivory</span>
+                          <svg viewBox="0 0 382.6 79.4" style={{ height: '32px', width: 'auto', display: 'block' }}>
+                            <path fill="#5b5b5b" d="M104.8,65.4V20.7h8.9v44.7h-8.9Z"/>
+                            <path fill="#5b5b5b" d="M182.2,20.5l-19.6,32.6c-5.9,9.8-9.8,12.1-25,12.1h-17.3V20.5h8.9v39.2c13.3,0,17.7.6,26.5-13.4l15.3-25.8s11.1,0,11.1,0Z"/>
+                            <path fill="#5b5b5b" d="M240.4,43c0,12.7-4.8,22.8-30.2,22.8h-1.3c-25.2,0-30.2-10.1-30.2-22.8s4.8-22.8,30.2-22.8h1.3c25.2,0,30.2,10.1,30.2,22.8ZM230.1,43c0-16.3-8.9-17.2-18-17.2h-4.6c-9.1,0-18,1-18,17.2s9.1,17.7,18,17.7h4.6c9.2,0,18-1.4,18-17.7Z"/>
+                            <path fill="#5b5b5b" d="M300.8,65.4h-5.6c-4.5,0-8.9-2.6-14.6-8.8l-3-3.3h-24.2v12.1h-9.4V20.7h36.1c14.4,0,17.9,5.6,17.6,16.4-.1,5.6-1.6,12.8-10.5,15.3l13.7,13h0ZM289.2,37.3c0-6.9-1.3-11-9.7-11h-26.1v20.3h26.1c4.6,0,9.7-1.4,9.7-9.4Z"/>
+                            <path fill="#5b5b5b" d="M350.1,20.5l-22.9,28.7v16h-8.8v-15.7l-23.4-29h10.1l17.9,22.4,17-22.4h10.1Z"/>
+                            <path fill="#5b5b5b" d="M36.1,65.5l19.8-32.9c5.9-10,10-12.3,25.1-12.3h17.5v45.2h-9.1V28.3c-16.7,0-20.1-1.9-28.1,11.1l-15.4,26.1h-9.8.1Z"/>
+                            <path fill="#9cb77e" d="M77.4,56.2v9.4h-16.3l1.6-3c1.2-2,2.2-4,3.9-4.9,0,0,2-1.3,5.5-1.3h5.5-.1Z"/>
+                          </svg>
                         </div>
                       </div>
-                      <div style={{ borderTop: '2px solid #111', paddingTop: 20, fontSize: 20, fontWeight: 500, color: '#111' }}>www.aivory.id</div>
+                      <div style={{ borderTop: '2px solid #111', paddingTop: 20, fontSize: 20, fontWeight: 500, color: '#111' }}>www.aivory.uk</div>
                     </div>
                   </div>
                 </div>
