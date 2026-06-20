@@ -125,8 +125,8 @@ export default function GridOverlay({ animated = false, className = '' }: GridOv
       // Uses window dimensions since it's position: fixed
       const drawStatic = () => {
         if (!c || !ctx) return;
-        c.width = window.innerWidth;
-        c.height = window.innerHeight;
+        c.width = c.offsetWidth;
+        c.height = c.offsetHeight;
         ctx.clearRect(0, 0, c.width, c.height);
 
         const cw = 120;
@@ -172,7 +172,7 @@ export default function GridOverlay({ animated = false, className = '' }: GridOv
       ref={canvasRef}
       className={className}
       style={{
-        position: animated ? 'absolute' : 'fixed',
+        position: 'absolute',
         top: 0,
         left: 0,
         width: '100%',

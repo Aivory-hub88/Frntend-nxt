@@ -85,7 +85,7 @@ const cards: PricingCard[] = [
     description: 'Everything in one. Know, plan, execute in order.',
     features: ['• Deep Diagnostic', '• Blueprint', '• Roadmap'],
     cta: 'View Deployment Plans',
-    savings: 'Save $48',
+    savings: 'Save 13%',
   },
 ];
 
@@ -178,9 +178,16 @@ export default function PricingStepOne({ currency }: { currency?: 'IDR' | 'USD' 
 
               {/* Features */}
               <ul className="mt-14 space-y-2 text-[15px] md:text-[16px] font-medium leading-[1.4] text-[#494949]">
-                {card.features.map((f) => (
-                  <li key={f}>{f}</li>
-                ))}
+                {card.features.map((f) => {
+                  const isBullet = f.startsWith('• ');
+                  const text = isBullet ? f.replace('• ', '') : f;
+                  return (
+                    <li key={f} className={isBullet ? "flex gap-2" : ""}>
+                      {isBullet && <span className="shrink-0">•</span>}
+                      <span>{text}</span>
+                    </li>
+                  );
+                })}
               </ul>
 
               {/* Savings badge */}

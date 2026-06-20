@@ -11,24 +11,19 @@ export default function AIReadySection() {
       <div className="max-w-[1400px] mx-auto px-6 md:px-12 lg:px-24 relative z-[1]">
         <div className="text-center flex flex-col justify-center items-center">
           <h2 className="text-4xl md:text-5xl font-light tracking-tight mb-6 leading-tight text-white max-w-3xl">
-            AI is ready. The question is, are you?
+            Aivory&trade; exists because AI adoption needed to be fixed.
           </h2>
 
           <p className="text-white/60 max-w-2xl font-light leading-relaxed mb-6">
-            Aivory™ helps you move from &ldquo;where do we start?&rdquo; to AI that&rsquo;s working
-            inside your business. Assess your readiness, find the highest-impact opportunities, and
-            launch the right AI systems with one clear plan in one platform.
+            Aivory™ helps you move from <span className="text-white">&ldquo;where do we start?&rdquo;</span> to AI that&rsquo;s working inside your business. Assess your readiness, find the highest‑impact opportunities, and launch the right AI systems with one clear plan in one platform.
           </p>
 
           <p className="text-white/60 max-w-2xl font-light leading-relaxed mb-6">
-            No long discovery cycles. No bloated consulting timelines. No generic strategy decks.
-            Just fast clarity, a roadmap built for your business, and the tools to put AI into action
-            from day one.
+            <span className="text-white">No long discovery cycles. No bloated consulting timelines. No generic strategy decks.</span> Instead of traditional consulting, Aivory uses a <span className="text-white">high‑intelligence deterministic engine</span> to compress work that used to take weeks into clear AI decisions and workflows in minutes.
           </p>
 
           <p className="text-white/60 max-w-2xl font-light leading-relaxed">
-            AI should feel practical, not overwhelming. Aivory™ turns complexity into a clear path
-            forward, so your team can move faster and see real business results.
+            <span className="text-white">AI should feel practical, not overwhelming.</span> Aivory™ turns complexity into a clear path forward, so your team can move faster and see real business results.
           </p>
 
           <p

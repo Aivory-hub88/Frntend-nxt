@@ -80,7 +80,7 @@ export default function HeroSection() {
       </video>
 
       {/* Grid Overlay with random fade (hero only) */}
-      <GridOverlay animated />
+      <GridOverlay />
 
       {/* Content */}
       <div

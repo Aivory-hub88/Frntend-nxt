@@ -296,7 +296,7 @@ function AppIntegrationsAnimation() {
 
 export function InteractiveGrid() {
   return (
-    <section className="bg-black text-white py-24 px-6 md:px-16 lg:px-24 border-b border-white/10 relative">
+    <section className="bg-black text-white py-24 px-6 md:px-16 lg:px-24 relative">
       {/* Background grid line overlay */}
       <div className="absolute inset-0 bg-grid-pattern opacity-40 pointer-events-none" />
 
@@ -375,7 +375,33 @@ export function InteractiveGrid() {
   );
 }
 
+const MULTILINGUAL_TEXTS = [
+  { text: "Multilingual by default. No configuration required.", font: "'Manrope', sans-serif" },
+  { text: "Multibahasa secara default. Tanpa konfigurasi tambahan.", font: "'Manrope', sans-serif" },
+  { text: "Multilingue par défaut. Aucune configuration requise.", font: "'Manrope', sans-serif" },
+  { text: "Mehrsprachig standardmäßig. Keine Konfiguration erforderlich.", font: "'Manrope', sans-serif" },
+  { text: "Multilingüe por defecto. No se requiere configuración.", font: "'Manrope', sans-serif" },
+  { text: "默认支持多语言。无需任何配置。", font: "'PingFang SC', 'Microsoft YaHei', 'Noto Sans SC', sans-serif" },
+  { text: "標準で多言語対応。設定は一切不要です。", font: "'Hiragino Kaku Gothic ProN', 'Meiryo', 'Noto Sans JP', sans-serif" },
+  { text: "متعدد اللغات افتراضياً. لا حاجة لأي إعداد", font: "'Tajawal', 'Cairo', 'Noto Kufi Arabic', system-ui, sans-serif" }
+];
+
 function IntegrationsMarquee() {
+  const [langIndex, setLangIndex] = useState(0);
+  const [isFading, setIsFading] = useState(false);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setIsFading(true);
+      setTimeout(() => {
+        setLangIndex((prev) => (prev + 1) % MULTILINGUAL_TEXTS.length);
+        setIsFading(false);
+      }, 500);
+    }, 3500);
+
+    return () => clearInterval(interval);
+  }, []);
+
   const logos = [
     { name: 'Zoom', icon: '/integrations/icons/discord.svg' }, // using placeholder icons if real ones missing
     { name: 'Letta', icon: '/integrations/icons/stripe-v2-svgrepo-com.svg' },
@@ -397,8 +423,8 @@ function IntegrationsMarquee() {
         <h3 className="text-[22px] md:text-[32px] font-light text-[#c4c9b8] mb-3 tracking-tight" style={{ fontFamily: "'Manrope', sans-serif" }}>
           Every Aivory agent speaks your customer&apos;s language. Literally.
         </h3>
-        <p className="text-[15px] md:text-[17px] text-[#8a8f8e] font-light">
-          Multilingual by default. No configuration required.
+        <p className={`text-[20px] md:text-[22px] text-[#8a8f8e] font-light transition-opacity duration-500 ${isFading ? 'opacity-0' : 'opacity-100'}`} style={{ fontFamily: MULTILINGUAL_TEXTS[langIndex].font }}>
+          {MULTILINGUAL_TEXTS[langIndex].text}
         </p>
       </div>
 

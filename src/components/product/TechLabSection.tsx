@@ -56,7 +56,7 @@ export function TechLabSection() {
             Built with you. Not just for you.
           </span>
           <img 
-            src="/Aivory-tech-lab-logo-2026.svg" 
+            src="/aivory-tech-lab-v2.svg" 
             alt="Aivory Tech Lab Logo" 
             className="w-32 md:w-48 lg:w-56 h-auto mb-2 md:mb-4 object-contain brightness-0 invert opacity-90"
           />

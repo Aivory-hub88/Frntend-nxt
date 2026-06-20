@@ -30,7 +30,7 @@ export default function PrivacySection() {
   const { ref, isVisible } = useScrollAnimation();
 
   return (
-    <section ref={ref} className={`animate-on-scroll ${isVisible ? 'is-visible' : ''} w-full bg-[#050505] text-white pt-24 pb-12 font-sans border-t border-gray-900`}>
+    <section ref={ref} className={`animate-on-scroll ${isVisible ? 'is-visible' : ''} w-full bg-[#050505] text-white pt-24 pb-12 font-sans`}>
       <div className="max-w-7xl mx-auto px-6 md:px-12">
         <div className="mb-4">
           <div className="text-sm font-medium mb-6">Privacy &amp; Security</div>

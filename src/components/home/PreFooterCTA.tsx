@@ -67,7 +67,7 @@ export default function PreFooterCTA() {
           </p>
 
           {/* Divider */}
-          <div className="border-t border-white/20 mb-12" />
+          {/* Divider removed */}
 
           {/* Service Cards */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-14">
