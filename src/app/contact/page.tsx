@@ -16,8 +16,14 @@ export default function ContactPage() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // TODO: Implement form submission logic
-    console.log('Form submitted:', formData);
+    // Route the enquiry to hello@aivory.uk via the visitor's mail client
+    const subject = `Contact from ${formData.name}${formData.company ? ` — ${formData.company}` : ''}`;
+    const body =
+      `Name: ${formData.name}\n` +
+      `Company: ${formData.company}\n` +
+      `Email: ${formData.email}\n\n` +
+      `${formData.message}`;
+    window.location.href = `mailto:hello@aivory.uk?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
     setIsSubmitted(true);
   };
 
@@ -137,7 +143,7 @@ export default function ContactPage() {
 
                 <button
                   type="submit"
-                  className="flex items-center justify-center gap-2 px-8 py-3.5 bg-white text-black font-semibold hover:bg-black hover:text-white transition-all text-sm border border-white mt-4"
+                  className="flex items-center justify-center gap-2 px-8 py-3.5 bg-[#a3aa96] text-[#494949] font-medium hover:bg-[#8f9681] transition-all text-sm mt-4"
                 >
                   <svg
                     width="14"
