@@ -20,7 +20,7 @@ export default function HomePage() {
         
         {/* Unscaled content (100% scale to match product page) */}
         <div className="relative bg-black">
-          {/* Global seamless background for these sections */}
+          {/* Global seamless background for all these sections */}
           <div className="absolute inset-0 z-0 pointer-events-none" style={{ clipPath: 'inset(0 0 0 0)' }}>
             <div className="sticky top-0 w-full h-screen">
               <HalftoneWave />
@@ -34,18 +34,13 @@ export default function HomePage() {
             <div style={{ zoom: 0.85 }}>
               <StatsSection />
             </div>
-          </div>
-        </div>
 
-        <PricingClientWrapper />
-
-        <div className="relative bg-black">
-          <div className="absolute inset-0 z-0 pointer-events-none" style={{ clipPath: 'inset(0 0 0 0)' }}>
-            <div className="sticky top-0 w-full h-screen">
-              <HalftoneWave />
+            {/* Pricing Section (unscaled, has its own black background that covers the clouds) */}
+            <div style={{ zoom: 1 }}>
+              <PricingClientWrapper />
             </div>
-          </div>
-          <div className="relative z-10">
+
+            {/* Scaled down content (85%) */}
             <div style={{ zoom: 0.85 }}>
               <PrivacySection />
               <PreFooterCTA />
