@@ -14,6 +14,13 @@ export default function HeroSection() {
     const CW = 120;
     const CH = 120;
 
+    // Force video to play reliably
+    if (videoRef.current) {
+      videoRef.current.play().catch(error => {
+        console.log("Video autoplay failed:", error);
+      });
+    }
+
     const positionDarkCell = () => {
       const w = window.innerWidth;
       const h = window.innerHeight;
