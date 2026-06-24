@@ -12,6 +12,9 @@ export const metadata: Metadata = {
   title: 'Aivory — AI-Powered Business Transformation',
   description:
     'From diagnostic to deployment — everything you need to integrate AI into your business operations.',
+  icons: {
+    icon: '/favicon.ico',
+  },
 };
 
 import { LanguageProvider } from '@/components/context/LanguageContext';
