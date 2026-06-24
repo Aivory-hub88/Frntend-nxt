@@ -8,6 +8,7 @@ import PrivacySection from '@/components/home/PrivacySection';
 import PreFooterCTA from '@/components/home/PreFooterCTA';
 import Footer from '@/components/Footer';
 import ScrollRevealProvider from '@/components/home/ScrollRevealProvider';
+import { HalftoneWave } from '@/components/ui/HalftoneWave';
 
 export default function HomePage() {
   return (
@@ -18,21 +19,38 @@ export default function HomePage() {
         <HeroSection />
         
         {/* Unscaled content (100% scale to match product page) */}
-        <div>
-          <AIReadySection />
-          <FeatureCards />
-        </div>
-
-        {/* Scaled down content (85%) */}
-        <div style={{ zoom: 0.85 }}>
-          <StatsSection />
+        <div className="relative bg-black">
+          {/* Global seamless background for these sections */}
+          <div className="absolute inset-0 z-0 pointer-events-none" style={{ clipPath: 'inset(0 0 0 0)' }}>
+            <div className="sticky top-0 w-full h-screen">
+              <HalftoneWave />
+            </div>
+          </div>
+          <div className="relative z-10">
+            <AIReadySection />
+            <FeatureCards />
+            
+            {/* Scaled down content (85%) */}
+            <div style={{ zoom: 0.85 }}>
+              <StatsSection />
+            </div>
+          </div>
         </div>
 
         <PricingClientWrapper />
 
-        <div style={{ zoom: 0.85 }}>
-          <PrivacySection />
-          <PreFooterCTA />
+        <div className="relative bg-black">
+          <div className="absolute inset-0 z-0 pointer-events-none" style={{ clipPath: 'inset(0 0 0 0)' }}>
+            <div className="sticky top-0 w-full h-screen">
+              <HalftoneWave />
+            </div>
+          </div>
+          <div className="relative z-10">
+            <div style={{ zoom: 0.85 }}>
+              <PrivacySection />
+              <PreFooterCTA />
+            </div>
+          </div>
         </div>
         
         <Footer />

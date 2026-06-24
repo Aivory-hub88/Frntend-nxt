@@ -741,7 +741,7 @@ export function InteractiveShowcase() {
   }, []);
 
   return (
-    <section id="showcase" className="relative bg-black text-white py-16 md:py-32">
+    <section id="showcase" className="relative text-white py-16 md:py-32">
       <div className="max-w-[1400px] mx-auto px-6 md:px-12 lg:px-24">
         {/* Sticky Scroll Layout Container */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 relative">

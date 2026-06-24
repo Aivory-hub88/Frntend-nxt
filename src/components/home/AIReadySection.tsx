@@ -6,8 +6,7 @@ export default function AIReadySection() {
   const { ref, isVisible } = useScrollAnimation();
 
   return (
-    <div ref={ref} className={`animate-on-scroll ${isVisible ? 'is-visible' : ''} w-full py-16 md:py-24 relative overflow-hidden bg-black`}>
-
+    <div ref={ref} className={`animate-on-scroll ${isVisible ? 'is-visible' : ''} w-full py-16 md:py-24 relative overflow-hidden`}>
       <div className="max-w-[1400px] mx-auto px-6 md:px-12 lg:px-24 relative z-[1]">
         <div className="text-center flex flex-col justify-center items-center">
           <h2 className="text-4xl md:text-5xl font-light tracking-tight mb-6 leading-tight text-white max-w-3xl">

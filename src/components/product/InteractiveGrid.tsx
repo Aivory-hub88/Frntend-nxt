@@ -2,6 +2,7 @@
 
 import { MouseEvent, useRef, useEffect, useState } from 'react';
 import Image from 'next/image';
+import { HalftoneWave } from '@/components/ui/HalftoneWave';
 
 // Reusable Spotlight Card Component
 function SpotlightCard({ children, className = '' }: { children: React.ReactNode; className?: string }) {
@@ -296,9 +297,9 @@ function AppIntegrationsAnimation() {
 
 export function InteractiveGrid() {
   return (
-    <section className="bg-black text-white py-24 px-6 md:px-16 lg:px-24 relative">
+    <section className="text-white py-24 px-6 md:px-16 lg:px-24 relative overflow-hidden">
       {/* Background grid line overlay */}
-      <div className="absolute inset-0 bg-grid-pattern opacity-40 pointer-events-none" />
+      <div className="absolute inset-0 bg-grid-pattern opacity-40 pointer-events-none z-0" />
 
       <div className="max-w-6xl mx-auto relative z-10">
         <div className="text-center mb-16">
