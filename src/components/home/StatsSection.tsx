@@ -122,16 +122,16 @@ export default function StatsSection() {
           <div className="absolute bottom-0 left-0 right-0 h-px bg-transparent">
             <div className="absolute -top-px h-[3px] w-[120px] rounded-sm blur-[1px] animate-laser-right"
               style={{
-                background: 'linear-gradient(90deg, transparent, #6b8f71, #0ae8af, #6b8f71, transparent)',
-                boxShadow: '0 0 15px rgba(107,143,113,0.5), 0 0 35px rgba(10,232,175,0.25)',
+                background: 'linear-gradient(90deg, transparent, #6b8f71, #c4c9b8, #6b8f71, transparent)',
+                boxShadow: '0 0 15px rgba(107,143,113,0.5), 0 0 35px rgba(196, 201, 184,0.25)',
               }}
             />
           </div>
           <div className="absolute top-0 left-0 right-0 h-px bg-transparent">
             <div className="absolute -top-px h-[3px] w-[120px] rounded-sm blur-[1px] animate-laser-left"
               style={{
-                background: 'linear-gradient(90deg, transparent, #6b8f71, #0ae8af, #6b8f71, transparent)',
-                boxShadow: '0 0 15px rgba(107,143,113,0.5), 0 0 35px rgba(10,232,175,0.25)',
+                background: 'linear-gradient(90deg, transparent, #6b8f71, #c4c9b8, #6b8f71, transparent)',
+                boxShadow: '0 0 15px rgba(107,143,113,0.5), 0 0 35px rgba(196, 201, 184,0.25)',
               }}
             />
           </div>

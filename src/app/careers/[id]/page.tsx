@@ -1,7 +1,4 @@
-"use client"
-
-import React, { useEffect, useState } from "react"
-import { useParams } from "next/navigation"
+import React from "react"
 import Link from "next/link"
 import Navbar from "@/components/home/Navbar";
 import Footer from "@/components/Footer";
@@ -83,7 +80,7 @@ function renderRichContentBlock(block: unknown, index: number): React.ReactNode 
     case "quote":
     case "blockquote":
       return (
-        <blockquote key={index} className="border-l-4 border-[#07D197]/50 pl-4 mb-4 italic text-gray-400">
+        <blockquote key={index} className="border-l-4 border-[#c4c9b8]/50 pl-4 mb-4 italic text-gray-400">
           {text}
         </blockquote>
       )
@@ -155,7 +152,7 @@ function renderInlineContent(content: unknown[] | undefined): React.ReactNode {
       if (inline.code) return <code key={i} className="bg-white/10 px-1.5 py-0.5 rounded text-sm font-mono">{text}</code>
       if (inline.link || inline.href) {
         return (
-          <a key={i} href={(inline.link as string) || (inline.href as string)} className="text-[#07D197] hover:underline" target="_blank" rel="noopener noreferrer">
+          <a key={i} href={(inline.link as string) || (inline.href as string)} className="text-[#c4c9b8] hover:underline" target="_blank" rel="noopener noreferrer">
             {text}
           </a>
         )
@@ -264,67 +261,29 @@ function NotFoundState() {
   )
 }
 
-function LoadingState() {
-  return (
-    <div className="flex min-h-screen flex-col font-manrope" style={{ background: "#050505" }}>
-      <Navbar />
-      <main className="flex-1 px-6 py-24">
-        <div className="max-w-3xl mx-auto animate-pulse">
-          <div className="h-4 bg-white/10 rounded w-32 mb-8" />
-          <div className="h-10 bg-white/10 rounded w-3/4 mb-6" />
-          <div className="flex gap-3 mb-8">
-            <div className="h-8 bg-white/5 rounded-full w-28" />
-            <div className="h-8 bg-white/5 rounded-full w-24" />
-            <div className="h-8 bg-white/5 rounded-full w-32" />
-          </div>
-          <div className="space-y-3">
-            <div className="h-4 bg-white/5 rounded w-full" />
-            <div className="h-4 bg-white/5 rounded w-full" />
-            <div className="h-4 bg-white/5 rounded w-5/6" />
-            <div className="h-4 bg-white/5 rounded w-full" />
-            <div className="h-4 bg-white/5 rounded w-2/3" />
-          </div>
-        </div>
-      </main>
-      <Footer />
-    </div>
-  )
-}
 
-export default function VacancyDetailPage() {
-  const params = useParams()
-  const id = params.id as string
+export const revalidate = 60; // SSG with ISR (1 min)
 
-  const [vacancy, setVacancy] = useState<Vacancy | null>(null)
-  const [loading, setLoading] = useState(true)
-  const [notFound, setNotFound] = useState(false)
+export default async function VacancyDetailPage(props: { params: Promise<{ id: string }> }) {
+  const params = await props.params;
+  const id = params.id;
 
-  useEffect(() => {
-    async function fetchVacancy() {
-      if (!id) return
+  let vacancy: Vacancy | null = null;
+  let notFound = false;
 
-      try {
-        setLoading(true)
-        setNotFound(false)
-        const data = await getVacancy(id)
-        if (!data) {
-          setNotFound(true)
-        } else {
-          setVacancy(data)
-        }
-      } catch (err) {
-        console.error("[VacancyDetailPage] Error fetching vacancy:", err)
-        setNotFound(true)
-      } finally {
-        setLoading(false)
-      }
+  try {
+    const data = await getVacancy(id);
+    if (!data) {
+      notFound = true;
+    } else {
+      vacancy = data;
     }
+  } catch (err) {
+    console.error("[VacancyDetailPage] Error fetching vacancy:", err);
+    notFound = true;
+  }
 
-    fetchVacancy()
-  }, [id])
-
-  if (loading) return <LoadingState />
-  if (notFound || !vacancy) return <NotFoundState />
+  if (notFound || !vacancy) return <NotFoundState />;
 
   return (
     <div className="flex min-h-screen flex-col font-manrope" style={{ background: "#050505" }}>
@@ -334,7 +293,7 @@ export default function VacancyDetailPage() {
           {/* Back link */}
           <Link
             href="/careers"
-            className="inline-flex items-center gap-2 text-sm text-gray-400 hover:text-[#07D197] transition-colors mb-8"
+            className="inline-flex items-center gap-2 text-sm text-gray-400 hover:text-[#c4c9b8] transition-colors mb-8"
           >
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
