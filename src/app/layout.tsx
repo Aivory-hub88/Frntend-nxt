@@ -13,7 +13,7 @@ export const metadata: Metadata = {
   description:
     'From diagnostic to deployment — everything you need to integrate AI into your business operations.',
   icons: {
-    icon: '/favicon.ico',
+    icon: '/favicon.svg',
   },
 };
 
