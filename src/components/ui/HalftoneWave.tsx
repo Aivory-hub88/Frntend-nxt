@@ -118,7 +118,8 @@ export function HalftoneWave() {
           float macro = fbm3(macroUv);
           // Map macro to [0, 1] and threshold it to create distinct massive shapes
           macro = macro * 0.5 + 0.5;
-          float cluster = smoothstep(0.45, 0.75, macro);
+          // Lowering the threshold to 0.35 allows more noise to become clouds
+          float cluster = smoothstep(0.35, 0.70, macro);
 
           // 2. MICRO NOISE (Creates the fluffy edge details and density variations)
           // Faster drift for the internal cloud fluff
@@ -132,7 +133,8 @@ export function HalftoneWave() {
           float density = cluster * detail;
           
           // Boost and clamp the core density so the clouds have solid centers
-          density = smoothstep(0.15, 0.55, density);
+          // Lowering the threshold to 0.10 makes the edges fluffier and the clouds more dense overall
+          density = smoothstep(0.10, 0.45, density);
 
           // 3. ASCII / BITMAP RENDERER
           // Map density to 6 distinct levels (0 = empty, 5 = solid)
