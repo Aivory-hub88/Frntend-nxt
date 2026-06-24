@@ -80,11 +80,23 @@ export function HalftoneWave() {
           return 130.0 * dot(m, g);
         }
 
-        // Fractal Brownian Motion
-        float fbm(vec2 p) {
+        // 3-octave Fractal Brownian Motion (for macro)
+        float fbm3(vec2 p) {
             float f = 0.0;
             float w = 0.5;
-            for (int i = 0; i < 4; i++) {
+            for (int i = 0; i < 3; i++) {
+                f += w * snoise(p);
+                p *= 2.0;
+                w *= 0.5;
+            }
+            return f;
+        }
+
+        // 2-octave Fractal Brownian Motion (for micro)
+        float fbm2(vec2 p) {
+            float f = 0.0;
+            float w = 0.5;
+            for (int i = 0; i < 2; i++) {
                 f += w * snoise(p);
                 p *= 2.0;
                 w *= 0.5;
@@ -103,7 +115,7 @@ export function HalftoneWave() {
           // Slow drift for the giant cloud bodies
           vec2 macroUv = cell * 0.006;
           macroUv.x -= uTime * 0.04;
-          float macro = fbm(macroUv);
+          float macro = fbm3(macroUv);
           // Map macro to [0, 1] and threshold it to create distinct massive shapes
           macro = macro * 0.5 + 0.5;
           float cluster = smoothstep(0.45, 0.75, macro);
@@ -113,7 +125,7 @@ export function HalftoneWave() {
           vec2 microUv = cell * 0.02;
           microUv.x -= uTime * 0.08;
           microUv.y += uTime * 0.03;
-          float micro = fbm(microUv);
+          float micro = fbm2(microUv);
           float detail = micro * 0.5 + 0.5;
 
           // Combine them: the cluster is the mask, the detail creates the fluffy volume
@@ -173,14 +185,21 @@ export function HalftoneWave() {
     }, { threshold: 0.0 });
     observer.observe(renderer.domElement);
 
-    const renderLoop = () => {
+    let lastRenderTime = 0;
+    const fpsInterval = 1000 / 30; // 30 FPS throttle
+
+    const renderLoop = (timestamp: number) => {
       animationFrameId = requestAnimationFrame(renderLoop);
       if (isVisible) {
-        uniforms.uTime.value = clock.getElapsedTime();
-        renderer.render(scene, camera);
+        const elapsed = timestamp - lastRenderTime;
+        if (elapsed > fpsInterval) {
+          lastRenderTime = timestamp - (elapsed % fpsInterval);
+          uniforms.uTime.value = clock.getElapsedTime();
+          renderer.render(scene, camera);
+        }
       }
     };
-    renderLoop();
+    renderLoop(0);
 
     const handleResize = () => {
       if (!mountRef.current) return;
