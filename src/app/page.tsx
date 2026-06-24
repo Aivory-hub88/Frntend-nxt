@@ -8,7 +8,12 @@ import PrivacySection from '@/components/home/PrivacySection';
 import PreFooterCTA from '@/components/home/PreFooterCTA';
 import Footer from '@/components/Footer';
 import ScrollRevealProvider from '@/components/home/ScrollRevealProvider';
-import { HalftoneWave } from '@/components/ui/HalftoneWave';
+import dynamic from 'next/dynamic';
+
+const HalftoneWave = dynamic(
+  () => import('@/components/ui/HalftoneWave').then((mod) => mod.HalftoneWave),
+  { ssr: false }
+);
 
 export default function HomePage() {
   return (
