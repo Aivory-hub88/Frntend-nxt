@@ -58,9 +58,9 @@ export default function PrivacySection() {
               {badges.map((badge) => (
                 <div
                   key={badge}
-                  className="flex items-center gap-2 border border-white/20 px-4 py-2.5 text-xs md:text-sm font-medium"
+                  className="flex items-center gap-2 border border-white/20 px-4 py-2.5 text-xs md:text-sm font-medium hover:border-[#a3aa96] hover:bg-white/5 transition-all cursor-pointer"
                 >
-                  <ArrowIcon className="w-4 h-4 text-[#05e5ba]" />
+                  <ArrowIcon className="w-4 h-4 text-[#a3aa96]" />
                   {badge}
                 </div>
               ))}
