@@ -8,12 +8,7 @@ import PrivacySection from '@/components/home/PrivacySection';
 import PreFooterCTA from '@/components/home/PreFooterCTA';
 import Footer from '@/components/Footer';
 import ScrollRevealProvider from '@/components/home/ScrollRevealProvider';
-import dynamic from 'next/dynamic';
-
-const HalftoneWave = dynamic(
-  () => import('@/components/ui/HalftoneWave').then((mod) => mod.HalftoneWave),
-  { ssr: false }
-);
+import { HalftoneWaveWrapper } from '@/components/ui/HalftoneWaveWrapper';
 
 export default function HomePage() {
   return (
@@ -28,7 +23,7 @@ export default function HomePage() {
           {/* Global seamless background for all these sections */}
           <div className="absolute inset-0 z-0 pointer-events-none" style={{ clipPath: 'inset(0 0 0 0)' }}>
             <div className="sticky top-0 w-full h-screen">
-              <HalftoneWave />
+              <HalftoneWaveWrapper />
             </div>
           </div>
           <div className="relative z-10">
