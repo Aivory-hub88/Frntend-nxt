@@ -67,6 +67,24 @@ export function HalftoneWave() {
         uniform float uPixelSize;
         uniform sampler2D uTexture;
 
+        float getCloudLayer(sampler2D tex, vec2 cell, float scale, float speed, vec2 offset, float time) {
+            vec2 uv = cell * scale;
+            
+            // Scroll horizontally
+            uv.x -= time * speed;
+            uv += offset;
+            
+            // Stagger every other row to create an interlocking batik pattern
+            float row = floor(uv.y);
+            uv.x += mod(row, 2.0) * 0.5;
+            
+            // Subtle overarching wave to make the pattern undulate slightly and feel organic
+            uv.y += sin(uv.x * 4.0 + time * 0.5) * 0.03;
+            
+            float texVal = texture2D(tex, fract(uv)).r;
+            return 1.0 - texVal;
+        }
+
         void main() {
           // Cell coordinates for the macro grids (ASCII characters)
           vec2 cell = floor(gl_FragCoord.xy / uPixelSize);
@@ -74,30 +92,28 @@ export function HalftoneWave() {
           // Local coordinates within the cell [0, 1]
           vec2 local = fract(gl_FragCoord.xy / uPixelSize);
 
-          // 1. TILE THE AUTHENTIC MEGAMENDUNG TEXTURE
-          // Scale to fit ~4 clouds horizontally across the screen
-          vec2 uv = cell * 0.015; 
+          // 1. MULTI-LAYERED PARALLAX CLOUD SKY
+          // We sample the authentic Megamendung texture at 4 different scales and speeds
+          // to create a rich, dense sky with varied cloud sizes and positions.
+
+          // Layer 1: Far Background (Tiny clouds, very many, moving slowest)
+          float l1 = getCloudLayer(uTexture, cell, 0.045, 0.02, vec2(0.0, 0.0), uTime);
           
-          // Scroll horizontally
-          uv.x -= uTime * 0.01;
+          // Layer 2: Background (Small clouds, moving slowly)
+          float l2 = getCloudLayer(uTexture, cell, 0.030, 0.04, vec2(0.33, 0.7), uTime);
           
-          // Stagger every other row to create an interlocking batik pattern
-          float row = floor(uv.y);
-          uv.x += mod(row, 2.0) * 0.5;
+          // Layer 3: Midground (Medium clouds, moving moderately)
+          float l3 = getCloudLayer(uTexture, cell, 0.018, 0.07, vec2(0.66, 0.2), uTime);
           
-          // Subtle overarching wave to make the pattern undulate slightly
-          uv.y += sin(uv.x * 4.0 + uTime * 0.5) * 0.03;
+          // Layer 4: Foreground (Large clouds, moving fastest)
+          float l4 = getCloudLayer(uTexture, cell, 0.009, 0.12, vec2(0.1, 0.5), uTime);
           
-          // Sample the texture. 
-          // The image is black shapes on a white background.
-          float texVal = texture2D(uTexture, fract(uv)).r;
-          
-          // We want the black areas to be solid (1.0) and white areas to be empty (0.0).
-          float density = 1.0 - texVal;
+          // Combine the layers using max() so foreground clouds cleanly overlap background clouds.
+          // Background clouds are multiplied by smaller factors so they appear fainter (depth effect).
+          float density = max(max(max(l1 * 0.25, l2 * 0.5), l3 * 0.75), l4 * 1.0);
           
           // Because the original image might have sharp edges, we smooth it out slightly
           // to generate a gradient that maps to the ASCII characters (+, x, [])
-          // If the texture was loaded with linear filtering, the edges will naturally have a gradient!
           density = smoothstep(0.05, 0.8, density);
 
           // 3. ASCII / BITMAP RENDERER
