@@ -111,48 +111,67 @@ export function HalftoneWave() {
           // Local coordinates within the cell [0, 1]
           vec2 local = fract(gl_FragCoord.xy / uPixelSize);
 
-          // 1. CLEAN GEOMETRIC WARP (Smooth sines instead of fractal noise)
-          // This creates the highly structured, sweeping curls of Megamendung
-          vec2 p = cell * 0.004;
-          p.x -= uTime * 0.015; // slow scroll left
-          p.y -= uTime * 0.005;
-
-          // Warp space using large smooth waves to create the "hook" or "curl" shapes
-          vec2 curl = vec2(
-              sin(p.y * 10.0 + uTime * 0.2) * 0.08 + sin(p.x * 5.0) * 0.04,
-              cos(p.x * 12.0 + uTime * 0.2) * 0.08 + cos(p.y * 6.0) * 0.04
+          // 1. MEGAMENDUNG EXPLICIT SDF (No noise melting, 100% crisp geometry)
+          // We define a perfect mathematical Megamendung cloud using distance fields
+          vec2 p = cell * 0.012;
+          p.x -= uTime * 0.015; // scroll left
+          
+          // Gentle overarching wave to make the whole pattern undulate like a sky
+          p.y += sin(p.x * 2.0 + uTime * 0.3) * 0.05;
+          
+          // Grid spacing
+          float spacingX = 1.1;
+          float spacingY = 0.7;
+          
+          vec2 gridId = floor(vec2(p.x / spacingX, p.y / spacingY));
+          
+          // Stagger every other row to interlock the clouds (typical in batik)
+          float stagger = mod(gridId.y, 2.0) * 0.5 * spacingX;
+          
+          vec2 localP = vec2(
+              mod(p.x - stagger, spacingX) - spacingX * 0.5,
+              mod(p.y, spacingY) - spacingY * 0.5
           );
-          vec2 p_warped = p + curl;
           
-          // 2. BASE PATTERN (Elongated peaks)
-          // Multiply sines to get smooth peaks. 
-          // p_warped.x * 16.0 and p_warped.y * 12.0 elongates them horizontally
-          float wave1 = sin(p_warped.x * 16.0) * sin(p_warped.y * 12.0);
+          // 2. BUILD THE CLOUD SHAPE (Using 5 overlapping circles for the bumps)
+          // Main center head (highest point)
+          float d1 = length(localP - vec2(-0.15, 0.10)) - 0.18;
+          // Second bump (cascading down to the right)
+          float d2 = length(localP - vec2(0.05, 0.02)) - 0.16;
+          // Third bump (tail end)
+          float d3 = length(localP - vec2(0.22, -0.05)) - 0.13;
+          // Fourth bump (far tail tip)
+          float d4 = length(localP - vec2(0.38, -0.12)) - 0.09;
+          // Front hook (curling inwards on the left)
+          float d5 = length(localP - vec2(-0.35, -0.02)) - 0.13;
           
-          // Add a diagonal sine to break symmetry and create the "sweeping" batik feel
-          float wave2 = sin(p_warped.x * 9.0 + p_warped.y * 15.0);
+          // Union of the top bumps (takes the minimum distance)
+          float d = min(d1, min(d2, min(d3, min(d4, d5))));
           
-          // Combine and map to [0, 1]
-          float base = wave1 * 0.7 + wave2 * 0.3;
-          base = base * 0.5 + 0.5;
+          // 3. SWEEPING BOTTOM CURVE
+          // Megamendung has a distinct continuous curved bottom line.
+          float bottomCurve = -0.12 + localP.x * -0.1 + (localP.x * localP.x) * 0.4;
+          float dBottom = bottomCurve - localP.y;
           
-          // 3. MEGAMENDUNG BANDS (Terracing & ASCII Shading)
-          // 10 bands total -> 5 bands visible in the masked top half
-          float numBands = 10.0;
-          float bands = base * numBands;
+          // Intersect the top bumps with the bottom boundary
+          d = max(d, dBottom);
+          
+          // 4. MEGAMENDUNG BANDS & ASCII SHADING
+          // d is negative inside the cloud, 0 at the boundary.
+          // Multiply by a factor to get the number of bands (22.0 gives ~3-4 bands in the center)
+          float bands = d * -22.0; 
+          
+          // Calculate the gradation inside the band
           float gradation = fract(bands);
           
-          // Create a smooth gradient that spans the ASCII characters (0.0 to 1.0)
-          // This makes the characters transition: empty -> . -> + -> x -> [] -> ■
+          // Create the smooth ASCII gradient (spanning 0.0 to 1.0) 
+          // and a sharp nested outline at the edge of each band
           float layerDensity = smoothstep(0.0, 0.85, gradation);
+          layerDensity *= smoothstep(1.0, 0.85, gradation);
           
-          // Very sharp drop-off at the edge (0.85 to 1.0) to create the nested outline
-          layerDensity *= smoothstep(1.0, 0.85, gradation); 
-          
-          // 4. CLOUD MASK
-          // Hide everything below 0.5 to form isolated cloud islands
-          // base = 0.5 perfectly aligns with bands = 5.0, so the outer edge is a sharp outline!
-          float mask = step(0.5, base);
+          // Mask: Only show the cloud where d < 0 (inside the SDF)
+          // To make the outermost edge perfectly sharp, we use a step function.
+          float mask = step(d, 0.0);
           
           float density = layerDensity * mask;
 
