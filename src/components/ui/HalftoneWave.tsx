@@ -68,26 +68,40 @@ export function HalftoneWave() {
         uniform sampler2D uTexture;
 
         float getCloudLayer(sampler2D tex, vec2 cell, float scale, float speed, vec2 offset, float time) {
-            // Apply scale, but multiply Y scale by 1.21 to compensate for cropping the empty vertical space
-            vec2 uv = cell * vec2(scale, scale * 1.21) + offset;
+            // Base continuous coordinates
+            float baseMovingX = cell.x * scale + offset.x - time * speed;
+            float baseY = cell.y * (scale * 1.21) + offset.y;
             
-            // 1. ORGANIC ROW STAGGERING (NO VERTICAL MOVEMENT)
-            // Instead of time-based warping which causes up/down bobbing,
-            // we give each horizontal row a static, pseudo-random starting X offset.
-            // This breaks the rigid grid and makes the arrangement non-linear/organic.
-            float row = floor(uv.y);
-            float randomOffset = fract(sin(row * 12.9898 + scale * 78.233) * 43758.5453);
-            uv.x += randomOffset;
+            // 1. ORGANIC SCATTERING (NO VERTICAL BOBBING)
+            // To completely break the "linear/neat" rows without adding time-based bobbing,
+            // we give each individual cloud (tile) a static random X and Y offset!
             
-            // Move purely horizontally
-            uv.x -= time * speed;
+            // First, get the row to apply a random X stagger
+            float row = floor(baseY);
+            float randomXOffset = fract(sin(row * 12.9898 + scale * 78.233) * 43758.5453);
             
-            // The original image has huge empty margins. Crop to the middle 82.5% (0.0875 to 0.9125) 
-            // to further reduce density and make the sky look very expansive and sparse.
-            float croppedY = mix(0.0875, 0.9125, fract(uv.y));
+            float finalX = baseMovingX + randomXOffset;
+            float col = floor(finalX);
             
-            float texVal = texture2D(tex, vec2(fract(uv.x), croppedY)).r;
-            return 1.0 - texVal;
+            // Now, use the column and row to generate a unique random Y offset for this specific cloud.
+            // This permanently shifts the cloud up or down within its tile, breaking the straight line!
+            float randomYOffset = (fract(sin(col * 43.123 + row * 12.312 + scale) * 12345.0) - 0.5) * 0.4;
+            
+            float finalY = baseY + randomYOffset;
+            
+            // Get local coordinates within the tile
+            float localX = fract(finalX);
+            float localY = fract(finalY);
+            
+            // The original image has huge empty margins. Crop to the middle 82.5% (0.0875 to 0.9125)
+            float croppedY = mix(0.0875, 0.9125, localY);
+            
+            // Soften the edges to prevent any hard seams if the cloud touches the tile boundary
+            float edgeMask = smoothstep(0.0, 0.05, localX) * smoothstep(1.0, 0.95, localX);
+            edgeMask *= smoothstep(0.0, 0.1, localY) * smoothstep(1.0, 0.9, localY);
+            
+            float texVal = texture2D(tex, vec2(localX, croppedY)).r;
+            return (1.0 - texVal) * edgeMask;
         }
 
         void main() {
@@ -97,11 +111,11 @@ export function HalftoneWave() {
           // Local coordinates within the cell [0, 1]
           vec2 local = fract(gl_FragCoord.xy / uPixelSize);
 
-          // 1. MULTI-LAYERED PARALLAX CLOUD SKY
-          float l1 = getCloudLayer(uTexture, cell, 0.065, 0.02, vec2(0.0, 0.0), uTime);
-          float l2 = getCloudLayer(uTexture, cell, 0.044, 0.04, vec2(0.33, 0.7), uTime);
-          float l3 = getCloudLayer(uTexture, cell, 0.026, 0.07, vec2(0.66, 0.2), uTime);
-          float l4 = getCloudLayer(uTexture, cell, 0.015, 0.12, vec2(0.1, 0.5), uTime);
+          // 1. MULTI-LAYERED PARALLAX CLOUD SKY (Density reduced by 10%)
+          float l1 = getCloudLayer(uTexture, cell, 0.071, 0.02, vec2(0.0, 0.0), uTime);
+          float l2 = getCloudLayer(uTexture, cell, 0.048, 0.04, vec2(0.33, 0.7), uTime);
+          float l3 = getCloudLayer(uTexture, cell, 0.028, 0.07, vec2(0.66, 0.2), uTime);
+          float l4 = getCloudLayer(uTexture, cell, 0.016, 0.12, vec2(0.1, 0.5), uTime);
           
           // 2. ATMOSPHERIC PERSPECTIVE COMPOSITING
           // We multiply each layer by a carefully chosen weight so they map to different ASCII characters!
