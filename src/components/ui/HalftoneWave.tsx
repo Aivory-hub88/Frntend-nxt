@@ -71,18 +71,15 @@ export function HalftoneWave() {
             // Apply scale, but multiply Y scale by 1.21 to compensate for cropping the empty vertical space
             vec2 uv = cell * vec2(scale, scale * 1.21) + offset;
             
-            // 1. NON-LINEAR ORGANIC WARPING
-            // Warp the UV space using low-frequency sine and cosine waves to break the rigid grid.
-            // This deforms the "straight rows" into natural, organic curves.
-            uv.y += sin(uv.x * 3.14 + time * 0.4) * 0.15;
-            uv.x += cos(uv.y * 2.71 + time * 0.3) * 0.15;
-            
-            // 2. STAGGERING
-            // Stagger every other row to further ensure it doesn't look like a grid
+            // 1. ORGANIC ROW STAGGERING (NO VERTICAL MOVEMENT)
+            // Instead of time-based warping which causes up/down bobbing,
+            // we give each horizontal row a static, pseudo-random starting X offset.
+            // This breaks the rigid grid and makes the arrangement non-linear/organic.
             float row = floor(uv.y);
-            uv.x += mod(row, 2.0) * 0.5;
+            float randomOffset = fract(sin(row * 12.9898 + scale * 78.233) * 43758.5453);
+            uv.x += randomOffset;
             
-            // Move horizontally
+            // Move purely horizontally
             uv.x -= time * speed;
             
             // The original image has huge empty margins. Crop to the middle 82.5% (0.0875 to 0.9125) 
