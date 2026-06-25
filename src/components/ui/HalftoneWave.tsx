@@ -111,43 +111,50 @@ export function HalftoneWave() {
           // Local coordinates within the cell [0, 1]
           vec2 local = fract(gl_FragCoord.xy / uPixelSize);
 
-          // 1. MEGAMENDUNG BASE SHAPE
-          // Scale UV and stretch horizontally for Megamendung style
-          vec2 uv = cell * 0.005;
-          uv.y *= 1.3; // horizontal stretch
-          uv.x -= uTime * 0.015; // slow scroll left
+          // 1. CLEAN GEOMETRIC WARP (Smooth sines instead of fractal noise)
+          // This creates the highly structured, sweeping curls of Megamendung
+          vec2 p = cell * 0.004;
+          p.x -= uTime * 0.015; // slow scroll left
+          p.y -= uTime * 0.005;
 
-          // Domain warping to create the characteristic swirls and curls
-          vec2 warp = vec2(
-              fbm3(uv + vec2(0.0, 0.0) + uTime * 0.01),
-              fbm3(uv + vec2(5.2, 1.3) - uTime * 0.01)
+          // Warp space using large smooth waves to create the "hook" or "curl" shapes
+          vec2 curl = vec2(
+              sin(p.y * 10.0 + uTime * 0.2) * 0.08 + sin(p.x * 5.0) * 0.04,
+              cos(p.x * 12.0 + uTime * 0.2) * 0.08 + cos(p.y * 6.0) * 0.04
           );
+          vec2 p_warped = p + curl;
           
-          // Combine to form the base noise field
-          float n = fbm3(uv + warp * 1.8);
-          n = n * 0.5 + 0.5; // Map to [0, 1]
+          // 2. BASE PATTERN (Elongated peaks)
+          // Multiply sines to get smooth peaks. 
+          // p_warped.x * 16.0 and p_warped.y * 12.0 elongates them horizontally
+          float wave1 = sin(p_warped.x * 16.0) * sin(p_warped.y * 12.0);
           
-          // 2. MEGAMENDUNG BANDS (Terracing)
-          // Multiply to create multiple nested rings/bands
-          float bands = n * 8.0;
+          // Add a diagonal sine to break symmetry and create the "sweeping" batik feel
+          float wave2 = sin(p_warped.x * 9.0 + p_warped.y * 15.0);
+          
+          // Combine and map to [0, 1]
+          float base = wave1 * 0.7 + wave2 * 0.3;
+          base = base * 0.5 + 0.5;
+          
+          // 3. MEGAMENDUNG BANDS (Terracing & ASCII Shading)
+          // 10 bands total -> 5 bands visible in the masked top half
+          float numBands = 10.0;
+          float bands = base * numBands;
           float gradation = fract(bands);
           
-          // Smooth the gradation to form solid shaded bands with distinct outlines
-          // Gradation goes 0 -> 1. We want it to fade in quickly, stay solid, then fade out sharply at the edge
-          float layerDensity = smoothstep(0.0, 0.25, gradation);
+          // Create a smooth gradient that spans the ASCII characters (0.0 to 1.0)
+          // This makes the characters transition: empty -> . -> + -> x -> [] -> ■
+          float layerDensity = smoothstep(0.0, 0.85, gradation);
+          
+          // Very sharp drop-off at the edge (0.85 to 1.0) to create the nested outline
           layerDensity *= smoothstep(1.0, 0.85, gradation); 
           
-          // 3. CLOUD MASK
-          // Hide all bands below a certain threshold to form isolated cloud islands
-          // We cut it exactly at n = 0.375 (which is exactly the boundary of the 3rd band, 3.0 / 8.0)
-          // This makes the outer boundary perfectly align with the sharp edge of a band
-          float mask = step(0.375, n);
+          // 4. CLOUD MASK
+          // Hide everything below 0.5 to form isolated cloud islands
+          // base = 0.5 perfectly aligns with bands = 5.0, so the outer edge is a sharp outline!
+          float mask = step(0.5, base);
           
-          // Combine mask and layer gradation
           float density = layerDensity * mask;
-          
-          // Boost density so the ASCII characters reach the solid block '■' in the center of the bands
-          density = smoothstep(0.05, 0.75, density);
 
           // 3. ASCII / BITMAP RENDERER
           // Map density to 6 distinct levels (0 = empty, 5 = solid)
