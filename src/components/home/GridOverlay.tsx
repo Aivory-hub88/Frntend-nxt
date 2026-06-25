@@ -90,7 +90,7 @@ export default function GridOverlay({ animated = false, className = '' }: GridOv
 
 
         // Crosshairs at intersections
-        ctx.strokeStyle = 'rgba(255,255,255,0.25)';
+        ctx.strokeStyle = 'rgba(255,255,255,0.15)';
         ctx.lineWidth = 1;
         const cs = 4;
         for (let x = -1; x <= colCount + 1; x++) {
@@ -138,7 +138,7 @@ export default function GridOverlay({ animated = false, className = '' }: GridOv
 
 
 
-        ctx.strokeStyle = 'rgba(255,255,255,0.25)';
+        ctx.strokeStyle = 'rgba(255,255,255,0.15)';
         ctx.lineWidth = 1;
         const cs = 4;
         for (let x = -1; x <= colCount + 1; x++) {
