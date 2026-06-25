@@ -78,14 +78,14 @@ export function HalftoneWave() {
             
             // First, get the row to apply a random X stagger
             float row = floor(baseY);
-            float randomXOffset = fract(sin(row * 12.9898 + scale * 78.233) * 43758.5453) * 5.0; // wider X scatter
+            float randomXOffset = (fract(sin(row * 12.9898 + scale * 78.233) * 43758.5453) - 0.5) * 20.0; // HUGE random X scatter
             
             float finalX = baseMovingX + randomXOffset;
             float col = floor(finalX);
             
             // Now, use the column and row to generate a unique random Y offset for this specific cloud.
             // This permanently shifts the cloud up or down within its tile, breaking the straight line!
-            float randomYOffset = (fract(sin(col * 43.123 + row * 12.312 + scale) * 12345.0) - 0.5) * 0.5; // -0.25 to +0.25
+            float randomYOffset = (fract(sin(col * 43.123 + row * 12.312 + scale) * 12345.0) - 0.5) * 0.7; // -0.35 to +0.35
             
             float finalY = baseY + randomYOffset;
             
@@ -112,11 +112,11 @@ export function HalftoneWave() {
           // Local coordinates within the cell [0, 1]
           vec2 local = fract(gl_FragCoord.xy / uPixelSize);
 
-          // 1. MULTI-LAYERED PARALLAX CLOUD SKY (Exaggerated Parallax for intense 3D depth)
-          float l1 = getCloudLayer(uTexture, cell, 0.071, 0.01, vec2(0.0, 0.0), uTime);   // Background: Very Slow
-          float l2 = getCloudLayer(uTexture, cell, 0.048, 0.03, vec2(0.33, 0.7), uTime);  // Mid-BG: Slow
-          float l3 = getCloudLayer(uTexture, cell, 0.028, 0.08, vec2(0.66, 0.2), uTime);  // Mid-FG: Fast
-          float l4 = getCloudLayer(uTexture, cell, 0.016, 0.20, vec2(0.1, 0.5), uTime);   // Foreground: Very Fast
+          // 1. MULTI-LAYERED PARALLAX CLOUD SKY (Density reduced by 10%)
+          float l1 = getCloudLayer(uTexture, cell, 0.071, 0.015, vec2(0.0, 0.0), uTime);  // Background
+          float l2 = getCloudLayer(uTexture, cell, 0.048, 0.03, vec2(0.33, 0.7), uTime);  // Mid-BG
+          float l3 = getCloudLayer(uTexture, cell, 0.028, 0.05, vec2(0.66, 0.2), uTime);  // Mid-FG
+          float l4 = getCloudLayer(uTexture, cell, 0.016, 0.08, vec2(0.1, 0.5), uTime);   // Foreground (Slowed down significantly)
           
           // 2. ATMOSPHERIC PERSPECTIVE COMPOSITING
           // We multiply each layer by a carefully chosen weight so they map to different ASCII characters!
