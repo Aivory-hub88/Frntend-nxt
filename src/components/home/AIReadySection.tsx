@@ -26,12 +26,12 @@ export default function AIReadySection() {
           </p>
 
           <p
-            className="text-white text-base md:text-xl font-normal leading-relaxed w-full md:whitespace-nowrap mt-6"
+            className="text-white font-normal leading-relaxed w-full md:whitespace-nowrap mt-6"
             style={{
               fontFamily: "'Manrope', sans-serif",
             }}
           >
-            No guesswork. No wasted budget. No hidden cost. Just a clear path forward.
+            No guesswork. No wasted budget. No false starts. Just execution.
           </p>
         </div>
       </div>
