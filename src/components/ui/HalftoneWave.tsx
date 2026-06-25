@@ -28,12 +28,15 @@ export function HalftoneWave() {
     // Full screen quad
     const geometry = new THREE.PlaneGeometry(2, 2);
 
+    const defaultTexture = new THREE.DataTexture(new Uint8Array([255, 255, 255, 255]), 1, 1, THREE.RGBAFormat);
+    defaultTexture.needsUpdate = true;
+
     const uniforms = {
       uTime: { value: 0.0 },
       uColor: { value: new THREE.Color('#444444') },
       uResolution: { value: new THREE.Vector2(width, height) },
       uPixelSize: { value: 10.0 }, // 10px cells for clear ASCII characters
-      uTexture: { value: null as THREE.Texture | null }
+      uTexture: { value: defaultTexture }
     };
 
     // Load the authentic Megamendung texture mask
@@ -72,26 +75,30 @@ export function HalftoneWave() {
           vec2 local = fract(gl_FragCoord.xy / uPixelSize);
 
           // 1. TILE THE AUTHENTIC MEGAMENDUNG TEXTURE
-          // Scale controls how many clouds appear on screen
-          vec2 uv = cell * 0.003; 
+          // Scale to fit ~4 clouds horizontally across the screen
+          vec2 uv = cell * 0.015; 
           
           // Scroll horizontally
-          uv.x -= uTime * 0.02;
+          uv.x -= uTime * 0.01;
+          
+          // Stagger every other row to create an interlocking batik pattern
+          float row = floor(uv.y);
+          uv.x += mod(row, 2.0) * 0.5;
           
           // Subtle overarching wave to make the pattern undulate slightly
-          uv.y += sin(uv.x * 10.0 + uTime * 0.5) * 0.02;
+          uv.y += sin(uv.x * 4.0 + uTime * 0.5) * 0.03;
           
           // Sample the texture. 
           // The image is black shapes on a white background.
           float texVal = texture2D(uTexture, fract(uv)).r;
           
           // We want the black areas to be solid (1.0) and white areas to be empty (0.0).
-          // Thanks to mipmapping/filtering, the edges between black and white are blurred grayscale,
-          // which will naturally map to the intermediate ASCII characters (+, x, [])!
           float density = 1.0 - texVal;
           
-          // Adjust contrast slightly to ensure we get a good spread of ASCII characters
-          density = smoothstep(0.1, 0.9, density);
+          // Because the original image might have sharp edges, we smooth it out slightly
+          // to generate a gradient that maps to the ASCII characters (+, x, [])
+          // If the texture was loaded with linear filtering, the edges will naturally have a gradient!
+          density = smoothstep(0.05, 0.8, density);
 
           // 3. ASCII / BITMAP RENDERER
           // Map density to 6 distinct levels (0 = empty, 5 = solid)
