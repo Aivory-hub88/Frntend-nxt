@@ -78,14 +78,14 @@ export function HalftoneWave() {
             
             // First, get the row to apply a random X stagger
             float row = floor(baseY);
-            float randomXOffset = fract(sin(row * 12.9898 + scale * 78.233) * 43758.5453);
+            float randomXOffset = fract(sin(row * 12.9898 + scale * 78.233) * 43758.5453) * 5.0; // wider X scatter
             
             float finalX = baseMovingX + randomXOffset;
             float col = floor(finalX);
             
             // Now, use the column and row to generate a unique random Y offset for this specific cloud.
             // This permanently shifts the cloud up or down within its tile, breaking the straight line!
-            float randomYOffset = (fract(sin(col * 43.123 + row * 12.312 + scale) * 12345.0) - 0.5) * 0.4;
+            float randomYOffset = (fract(sin(col * 43.123 + row * 12.312 + scale) * 12345.0) - 0.5) * 0.5; // -0.25 to +0.25
             
             float finalY = baseY + randomYOffset;
             
@@ -93,14 +93,21 @@ export function HalftoneWave() {
             float localX = fract(finalX);
             float localY = fract(finalY);
             
+            // 2. WIND RIPPLE (DYNAMIC SHAPE DEFORMATION)
+            // Gently warp the internal coordinates so the clouds look gaseous and evolving,
+            // like real clouds constantly shifting shape in the wind.
+            float warpedX = localX + sin(localY * 12.0 - time * 1.5) * 0.025;
+            float warpedY = localY + cos(localX * 12.0 + time * 1.2) * 0.025;
+            
             // The original image has huge empty margins. Crop to the middle 82.5% (0.0875 to 0.9125)
-            float croppedY = mix(0.0875, 0.9125, localY);
+            float croppedY = mix(0.0875, 0.9125, warpedY);
             
             // Soften the edges to prevent any hard seams if the cloud touches the tile boundary
+            // Use the unwarped local coordinates for the mask so the boundary stays rigid and safe!
             float edgeMask = smoothstep(0.0, 0.05, localX) * smoothstep(1.0, 0.95, localX);
             edgeMask *= smoothstep(0.0, 0.1, localY) * smoothstep(1.0, 0.9, localY);
             
-            float texVal = texture2D(tex, vec2(localX, croppedY)).r;
+            float texVal = texture2D(tex, vec2(warpedX, croppedY)).r;
             return (1.0 - texVal) * edgeMask;
         }
 
@@ -111,11 +118,11 @@ export function HalftoneWave() {
           // Local coordinates within the cell [0, 1]
           vec2 local = fract(gl_FragCoord.xy / uPixelSize);
 
-          // 1. MULTI-LAYERED PARALLAX CLOUD SKY (Density reduced by 10%)
-          float l1 = getCloudLayer(uTexture, cell, 0.071, 0.02, vec2(0.0, 0.0), uTime);
-          float l2 = getCloudLayer(uTexture, cell, 0.048, 0.04, vec2(0.33, 0.7), uTime);
-          float l3 = getCloudLayer(uTexture, cell, 0.028, 0.07, vec2(0.66, 0.2), uTime);
-          float l4 = getCloudLayer(uTexture, cell, 0.016, 0.12, vec2(0.1, 0.5), uTime);
+          // 1. MULTI-LAYERED PARALLAX CLOUD SKY (Exaggerated Parallax for intense 3D depth)
+          float l1 = getCloudLayer(uTexture, cell, 0.071, 0.01, vec2(0.0, 0.0), uTime);   // Background: Very Slow
+          float l2 = getCloudLayer(uTexture, cell, 0.048, 0.03, vec2(0.33, 0.7), uTime);  // Mid-BG: Slow
+          float l3 = getCloudLayer(uTexture, cell, 0.028, 0.08, vec2(0.66, 0.2), uTime);  // Mid-FG: Fast
+          float l4 = getCloudLayer(uTexture, cell, 0.016, 0.20, vec2(0.1, 0.5), uTime);   // Foreground: Very Fast
           
           // 2. ATMOSPHERIC PERSPECTIVE COMPOSITING
           // We multiply each layer by a carefully chosen weight so they map to different ASCII characters!
