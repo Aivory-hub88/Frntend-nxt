@@ -68,23 +68,26 @@ export function HalftoneWave() {
         uniform sampler2D uTexture;
 
         float getCloudLayer(sampler2D tex, vec2 cell, float scale, float speed, vec2 offset, float time) {
-            // Apply scale, but multiply Y scale by 1.33 to compensate for cropping the empty vertical space
-            vec2 uv = cell * vec2(scale, scale * 1.33) + offset;
+            // Apply scale, but multiply Y scale by 1.21 to compensate for cropping the empty vertical space
+            vec2 uv = cell * vec2(scale, scale * 1.21) + offset;
             
-            // Stagger every other row to create an interlocking batik pattern.
-            // This prevents massive vertical empty gaps and breaks the grid alignment!
+            // 1. NON-LINEAR ORGANIC WARPING
+            // Warp the UV space using low-frequency sine and cosine waves to break the rigid grid.
+            // This deforms the "straight rows" into natural, organic curves.
+            uv.y += sin(uv.x * 3.14 + time * 0.4) * 0.15;
+            uv.x += cos(uv.y * 2.71 + time * 0.3) * 0.15;
+            
+            // 2. STAGGERING
+            // Stagger every other row to further ensure it doesn't look like a grid
             float row = floor(uv.y);
             uv.x += mod(row, 2.0) * 0.5;
             
             // Move horizontally
             uv.x -= time * speed;
             
-            // Subtle overarching wave to make the pattern undulate slightly
-            uv.y += sin(uv.x * 4.0 + time * 0.5) * 0.03;
-            
-            // The original image has huge empty margins. Crop to the middle 75% (0.125 to 0.875) 
-            // to further reduce density and leave wide breathing room for the sky.
-            float croppedY = mix(0.125, 0.875, fract(uv.y));
+            // The original image has huge empty margins. Crop to the middle 82.5% (0.0875 to 0.9125) 
+            // to further reduce density and make the sky look very expansive and sparse.
+            float croppedY = mix(0.0875, 0.9125, fract(uv.y));
             
             float texVal = texture2D(tex, vec2(fract(uv.x), croppedY)).r;
             return 1.0 - texVal;
@@ -98,10 +101,10 @@ export function HalftoneWave() {
           vec2 local = fract(gl_FragCoord.xy / uPixelSize);
 
           // 1. MULTI-LAYERED PARALLAX CLOUD SKY
-          float l1 = getCloudLayer(uTexture, cell, 0.059, 0.02, vec2(0.0, 0.0), uTime);
-          float l2 = getCloudLayer(uTexture, cell, 0.040, 0.04, vec2(0.33, 0.7), uTime);
-          float l3 = getCloudLayer(uTexture, cell, 0.024, 0.07, vec2(0.66, 0.2), uTime);
-          float l4 = getCloudLayer(uTexture, cell, 0.014, 0.12, vec2(0.1, 0.5), uTime);
+          float l1 = getCloudLayer(uTexture, cell, 0.065, 0.02, vec2(0.0, 0.0), uTime);
+          float l2 = getCloudLayer(uTexture, cell, 0.044, 0.04, vec2(0.33, 0.7), uTime);
+          float l3 = getCloudLayer(uTexture, cell, 0.026, 0.07, vec2(0.66, 0.2), uTime);
+          float l4 = getCloudLayer(uTexture, cell, 0.015, 0.12, vec2(0.1, 0.5), uTime);
           
           // 2. ATMOSPHERIC PERSPECTIVE COMPOSITING
           // We multiply each layer by a carefully chosen weight so they map to different ASCII characters!
