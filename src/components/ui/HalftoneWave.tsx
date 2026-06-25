@@ -68,8 +68,8 @@ export function HalftoneWave() {
         uniform sampler2D uTexture;
 
         float getCloudLayer(sampler2D tex, vec2 cell, float scale, float speed, vec2 offset, float time) {
-            // Apply scale, but multiply Y scale by 1.8 to compensate for cropping the empty vertical space
-            vec2 uv = cell * vec2(scale, scale * 1.8) + offset;
+            // Apply scale, but multiply Y scale by 1.54 to compensate for cropping the empty vertical space
+            vec2 uv = cell * vec2(scale, scale * 1.54) + offset;
             
             // Stagger every other row to create an interlocking batik pattern.
             // This prevents massive vertical empty gaps and breaks the grid alignment!
@@ -82,9 +82,9 @@ export function HalftoneWave() {
             // Subtle overarching wave to make the pattern undulate slightly
             uv.y += sin(uv.x * 4.0 + time * 0.5) * 0.03;
             
-            // The original image has huge empty margins. Crop to the middle 55% (0.25 to 0.8) 
-            // so we don't have massive empty voids, but keep enough breathing room for depth.
-            float croppedY = mix(0.25, 0.8, fract(uv.y));
+            // The original image has huge empty margins. Crop to the middle 65% (0.20 to 0.85) 
+            // to reduce the density by 15% while keeping enough breathing room for depth.
+            float croppedY = mix(0.20, 0.85, fract(uv.y));
             
             float texVal = texture2D(tex, vec2(fract(uv.x), croppedY)).r;
             return 1.0 - texVal;
@@ -98,10 +98,10 @@ export function HalftoneWave() {
           vec2 local = fract(gl_FragCoord.xy / uPixelSize);
 
           // 1. MULTI-LAYERED PARALLAX CLOUD SKY
-          float l1 = getCloudLayer(uTexture, cell, 0.045, 0.02, vec2(0.0, 0.0), uTime);
-          float l2 = getCloudLayer(uTexture, cell, 0.030, 0.04, vec2(0.33, 0.7), uTime);
-          float l3 = getCloudLayer(uTexture, cell, 0.018, 0.07, vec2(0.66, 0.2), uTime);
-          float l4 = getCloudLayer(uTexture, cell, 0.010, 0.12, vec2(0.1, 0.5), uTime);
+          float l1 = getCloudLayer(uTexture, cell, 0.052, 0.02, vec2(0.0, 0.0), uTime);
+          float l2 = getCloudLayer(uTexture, cell, 0.035, 0.04, vec2(0.33, 0.7), uTime);
+          float l3 = getCloudLayer(uTexture, cell, 0.021, 0.07, vec2(0.66, 0.2), uTime);
+          float l4 = getCloudLayer(uTexture, cell, 0.012, 0.12, vec2(0.1, 0.5), uTime);
           
           // 2. ATMOSPHERIC PERSPECTIVE COMPOSITING
           // We multiply each layer by a carefully chosen weight so they map to different ASCII characters!
