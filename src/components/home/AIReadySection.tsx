@@ -16,16 +16,9 @@ export default function AIReadySection() {
           <p className="text-white/60 max-w-2xl font-light leading-relaxed mb-6">
             Aivory&trade; helps you move from <span className="text-white">&ldquo;where do we start?&rdquo;</span> to AI that&rsquo;s working inside your business.<br />
             <span className="text-white">Most businesses don&rsquo;t fail at AI because of the technology.</span> They fail because there&rsquo;s no clear starting point. No map. No structure. No plan that actually fits how they operate. So they stall.<br />
-            Aivory fixes that.
-          </p>
-
-          <p className="text-white/60 max-w-2xl font-light leading-relaxed mb-6">
-            <span className="text-white">No long discovery cycles. No bloated consulting timelines.<br /> No generic strategy decks.</span><br />
-            Instead of traditional consulting, Aivory uses a high-intelligence deterministic engine to compress work that used to take weeks into clear AI decisions and workflows in minutes.
-          </p>
-
-          <p className="text-white/60 max-w-2xl font-light leading-relaxed">
-            AI should feel practical, not overwhelming. Aivory&trade; turns complexity into a clear path forward, so your team can move faster and see real business results.
+            Aivory fixes that. Assess your readiness, surface what actually matters, and launch the right AI systems with one clear plan.<br />
+            <span className="text-white">No long discovery cycles. No bloated consulting timelines.<br />
+            No generic decks that go nowhere.</span>
           </p>
 
           <p
