@@ -111,30 +111,43 @@ export function HalftoneWave() {
           // Local coordinates within the cell [0, 1]
           vec2 local = fract(gl_FragCoord.xy / uPixelSize);
 
-          // 1. MACRO NOISE (Creates the large distinct cloud clusters)
-          // Slow drift for the giant cloud bodies
-          vec2 macroUv = cell * 0.006;
-          macroUv.x -= uTime * 0.04;
-          float macro = fbm3(macroUv);
-          // Map macro to [0, 1] and threshold it to create distinct massive shapes
-          macro = macro * 0.5 + 0.5;
-          // Lowering the threshold to 0.35 allows more noise to become clouds
-          float cluster = smoothstep(0.35, 0.70, macro);
+          // 1. MEGAMENDUNG BASE SHAPE
+          // Scale UV and stretch horizontally for Megamendung style
+          vec2 uv = cell * 0.005;
+          uv.y *= 1.3; // horizontal stretch
+          uv.x -= uTime * 0.015; // slow scroll left
 
-          // 2. MICRO NOISE (Creates the fluffy edge details and density variations)
-          // Faster drift for the internal cloud fluff
-          vec2 microUv = cell * 0.02;
-          microUv.x -= uTime * 0.08;
-          microUv.y += uTime * 0.03;
-          float micro = fbm2(microUv);
-          float detail = micro * 0.5 + 0.5;
-
-          // Combine them: the cluster is the mask, the detail creates the fluffy volume
-          float density = cluster * detail;
+          // Domain warping to create the characteristic swirls and curls
+          vec2 warp = vec2(
+              fbm3(uv + vec2(0.0, 0.0) + uTime * 0.01),
+              fbm3(uv + vec2(5.2, 1.3) - uTime * 0.01)
+          );
           
-          // Boost and clamp the core density so the clouds have solid centers
-          // Lowering the threshold to 0.10 makes the edges fluffier and the clouds more dense overall
-          density = smoothstep(0.10, 0.45, density);
+          // Combine to form the base noise field
+          float n = fbm3(uv + warp * 1.8);
+          n = n * 0.5 + 0.5; // Map to [0, 1]
+          
+          // 2. MEGAMENDUNG BANDS (Terracing)
+          // Multiply to create multiple nested rings/bands
+          float bands = n * 8.0;
+          float gradation = fract(bands);
+          
+          // Smooth the gradation to form solid shaded bands with distinct outlines
+          // Gradation goes 0 -> 1. We want it to fade in quickly, stay solid, then fade out sharply at the edge
+          float layerDensity = smoothstep(0.0, 0.25, gradation);
+          layerDensity *= smoothstep(1.0, 0.85, gradation); 
+          
+          // 3. CLOUD MASK
+          // Hide all bands below a certain threshold to form isolated cloud islands
+          // We cut it exactly at n = 0.375 (which is exactly the boundary of the 3rd band, 3.0 / 8.0)
+          // This makes the outer boundary perfectly align with the sharp edge of a band
+          float mask = step(0.375, n);
+          
+          // Combine mask and layer gradation
+          float density = layerDensity * mask;
+          
+          // Boost density so the ASCII characters reach the solid block '■' in the center of the bands
+          density = smoothstep(0.05, 0.75, density);
 
           // 3. ASCII / BITMAP RENDERER
           // Map density to 6 distinct levels (0 = empty, 5 = solid)
