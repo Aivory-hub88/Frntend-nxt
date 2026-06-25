@@ -32,8 +32,20 @@ export function HalftoneWave() {
       uTime: { value: 0.0 },
       uColor: { value: new THREE.Color('#444444') },
       uResolution: { value: new THREE.Vector2(width, height) },
-      uPixelSize: { value: 10.0 } // 10px cells for clear ASCII characters
+      uPixelSize: { value: 10.0 }, // 10px cells for clear ASCII characters
+      uTexture: { value: null as THREE.Texture | null }
     };
+
+    // Load the authentic Megamendung texture mask
+    const textureLoader = new THREE.TextureLoader();
+    textureLoader.load('/megamendung_mask.png', (texture) => {
+      texture.wrapS = THREE.RepeatWrapping;
+      texture.wrapT = THREE.RepeatWrapping;
+      // Linear filtering creates smooth grayscale edges on the B/W mask, which maps perfectly to the ASCII density layers!
+      texture.minFilter = THREE.LinearMipmapLinearFilter;
+      texture.magFilter = THREE.LinearFilter;
+      uniforms.uTexture.value = texture;
+    });
 
     const material = new THREE.ShaderMaterial({
       uniforms,
@@ -50,59 +62,7 @@ export function HalftoneWave() {
         uniform vec3 uColor;
         uniform vec2 uResolution;
         uniform float uPixelSize;
-
-        // Simplex 2D noise
-        vec3 permute(vec3 x) { return mod(((x*34.0)+1.0)*x, 289.0); }
-        float snoise(vec2 v){
-          const vec4 C = vec4(0.211324865405187, 0.366025403784439,
-                   -0.577350269189626, 0.024390243902439);
-          vec2 i  = floor(v + dot(v, C.yy) );
-          vec2 x0 = v -   i + dot(i, C.xx);
-          vec2 i1;
-          i1 = (x0.x > x0.y) ? vec2(1.0, 0.0) : vec2(0.0, 1.0);
-          vec4 x12 = x0.xyxy + C.xxzz;
-          x12.xy -= i1;
-          i = mod(i, 289.0);
-          vec3 p = permute( permute( i.y + vec3(0.0, i1.y, 1.0 ))
-          + i.x + vec3(0.0, i1.x, 1.0 ));
-          vec3 m = max(0.5 - vec3(dot(x0,x0), dot(x12.xy,x12.xy),
-            dot(x12.zw,x12.zw)), 0.0);
-          m = m*m ;
-          m = m*m ;
-          vec3 x = 2.0 * fract(p * C.www) - 1.0;
-          vec3 h = abs(x) - 0.5;
-          vec3 ox = floor(x + 0.5);
-          vec3 a0 = x - ox;
-          m *= 1.79284291400159 - 0.85373472095314 * ( a0*a0 + h*h );
-          vec3 g;
-          g.x  = a0.x  * x0.x  + h.x  * x0.y;
-          g.yz = a0.yz * x12.xz + h.yz * x12.yw;
-          return 130.0 * dot(m, g);
-        }
-
-        // 3-octave Fractal Brownian Motion (for macro)
-        float fbm3(vec2 p) {
-            float f = 0.0;
-            float w = 0.5;
-            for (int i = 0; i < 3; i++) {
-                f += w * snoise(p);
-                p *= 2.0;
-                w *= 0.5;
-            }
-            return f;
-        }
-
-        // 2-octave Fractal Brownian Motion (for micro)
-        float fbm2(vec2 p) {
-            float f = 0.0;
-            float w = 0.5;
-            for (int i = 0; i < 2; i++) {
-                f += w * snoise(p);
-                p *= 2.0;
-                w *= 0.5;
-            }
-            return f;
-        }
+        uniform sampler2D uTexture;
 
         void main() {
           // Cell coordinates for the macro grids (ASCII characters)
@@ -111,57 +71,27 @@ export function HalftoneWave() {
           // Local coordinates within the cell [0, 1]
           vec2 local = fract(gl_FragCoord.xy / uPixelSize);
 
-          // 1. MEGAMENDUNG PROCEDURAL PATTERN (Dense & Highly Structured)
-          float PI = 3.14159265;
+          // 1. TILE THE AUTHENTIC MEGAMENDUNG TEXTURE
+          // Scale controls how many clouds appear on screen
+          vec2 uv = cell * 0.003; 
           
-          // Scale adjusted to generate MANY clouds across the screen
-          vec2 p = cell * 0.025; 
-          p.x -= uTime * 0.015;
-          p.y *= 1.2; // slight horizontal stretch
+          // Scroll horizontally
+          uv.x -= uTime * 0.02;
           
-          // Map to a grid space where period is 1.0
-          vec2 grid = p * PI;
+          // Subtle overarching wave to make the pattern undulate slightly
+          uv.y += sin(uv.x * 10.0 + uTime * 0.5) * 0.02;
           
-          // Add a very subtle organic noise so it looks hand-drawn like batik, not totally rigid
-          grid.x += snoise(p * 2.0) * 0.25;
-          grid.y += snoise(p * 2.0 + vec2(5.2, 1.3)) * 0.25;
+          // Sample the texture. 
+          // The image is black shapes on a white background.
+          float texVal = texture2D(uTexture, fract(uv)).r;
           
-          vec2 warped = grid;
+          // We want the black areas to be solid (1.0) and white areas to be empty (0.0).
+          // Thanks to mipmapping/filtering, the edges between black and white are blurred grayscale,
+          // which will naturally map to the intermediate ASCII characters (+, x, [])!
+          float density = 1.0 - texVal;
           
-          // Apply Megamendung styling (Trigonometric Shear):
-          // 1. Linear shear for the characteristic sweeping directional tail
-          warped.x += grid.y * 0.6;
-          
-          // 2. Cyclic shear to curl the tips into hooks 
-          // The period perfectly matches the grid, so every cloud gets an identical, perfect hook!
-          warped.x += sin(grid.y * 2.0) * 0.7;
-          warped.y += cos(grid.x * 2.0) * 0.7;
-          
-          // Generate the sharp, nested peaks using inverted absolute sines
-          float shapeX = 1.0 - abs(sin(warped.x));
-          float shapeY = 1.0 - abs(sin(warped.y));
-          
-          // Isolate the peaks into swirling cloud islands
-          float base = pow(shapeX * shapeY, 1.2);
-          
-          // Number of nested bands (typical Megamendung has 4-6)
-          float numBands = 5.0;
-          float bands = base * numBands;
-          float gradation = fract(bands);
-          
-          // ASCII transition (0 to 1) for the smooth inner gradient of the band
-          float layerDensity = smoothstep(0.0, 0.8, gradation);
-          // Sharp outline drop-off at the edge of each band
-          layerDensity *= smoothstep(1.0, 0.85, gradation);
-          
-          // Mask to show only the isolated clouds, cutting off the empty space
-          // A threshold of 0.2 cuts it EXACTLY at the boundary of the first band! (0.2 * 5.0 = 1.0)
-          float mask = step(0.2, base);
-          
-          float density = layerDensity * mask;
-          
-          // Boost to ensure it maps perfectly to the ASCII characters
-          density = smoothstep(0.05, 0.9, density);
+          // Adjust contrast slightly to ensure we get a good spread of ASCII characters
+          density = smoothstep(0.1, 0.9, density);
 
           // 3. ASCII / BITMAP RENDERER
           // Map density to 6 distinct levels (0 = empty, 5 = solid)
