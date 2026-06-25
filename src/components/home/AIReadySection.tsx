@@ -22,7 +22,7 @@ export default function AIReadySection() {
           </p>
 
           <p className="text-white/60 max-w-2xl font-light leading-relaxed">
-            Aivory fixes that. Assess your readiness, surface what actually matters, and launch the right AI systems with one clear plan. <span className="text-white">No long discovery cycles. No bloated consulting timelines. No generic decks that go nowhere.</span>
+            Aivory fixes that. Assess your readiness, surface what actually matters, and launch the right AI systems with one clear plan. <span className="text-white">No long discovery cycles. No bloated consulting timelines.<br /> No generic decks that go nowhere.</span>
           </p>
 
           <p
