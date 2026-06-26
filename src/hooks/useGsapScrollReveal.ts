@@ -21,11 +21,10 @@ export function useGsapScrollReveal() {
   function revealElements(selector: string) {
     const elements = document.querySelectorAll(selector);
     elements.forEach((el) => {
-      // Skip elements inside hero, stacking cards, or animate-on-scroll sections
+      // Skip elements inside hero or stacking cards
       if (el.closest('.hero')) return;
       if (el.closest('.gsap-card-container')) return;
       if (el.closest('.gsap-card')) return;
-      if (el.closest('.animate-on-scroll')) return;
       if ((el as any)._isSplit) return;
       (el as any)._isSplit = true;
 
@@ -71,7 +70,6 @@ export function useGsapScrollReveal() {
     grids.forEach((grid) => {
       if (grid.closest('.hero')) return;
       if (grid.closest('.gsap-card-container')) return;
-      if (grid.closest('.animate-on-scroll')) return;
 
       gsap.set(grid, {
         opacity: 0,
@@ -99,7 +97,6 @@ export function useGsapScrollReveal() {
     dividers.forEach((divider) => {
       if (divider.closest('.hero')) return;
       if (divider.closest('.grid')) return;
-      if (divider.closest('.animate-on-scroll')) return;
 
       gsap.from(divider, {
         scaleX: 0,

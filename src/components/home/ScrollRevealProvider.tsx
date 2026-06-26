@@ -28,11 +28,11 @@ export default function ScrollRevealProvider() {
 
     revealElements(headingSelectors);
 
-    // Grid containers — only target grids NOT inside animate-on-scroll sections
+    // Grid containers
     revealGrids('main .grid');
 
     // Border dividers — only standalone decorative dividers, not section borders
-    revealDividers('.border-t:not(section):not([class*="animate-on-scroll"])');
+    revealDividers('.border-t:not(section)');
 
     return () => {
       killAllScrollTriggers();
