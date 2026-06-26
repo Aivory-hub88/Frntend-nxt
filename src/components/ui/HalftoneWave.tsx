@@ -22,7 +22,11 @@ export function HalftoneWave() {
 
     const renderer = new THREE.WebGLRenderer({ antialias: false, alpha: true });
     renderer.setSize(width, height);
-    renderer.setPixelRatio(1);
+    
+    // EXTREME MOBILE OPTIMIZATION: Reduce render resolution by 50% on mobile (saves 75% fragments!)
+    const isMobile = window.innerWidth < 768;
+    renderer.setPixelRatio(isMobile ? 0.5 : 1);
+    
     mountRef.current.appendChild(renderer.domElement);
 
     // Full screen quad
@@ -36,7 +40,8 @@ export function HalftoneWave() {
       uColor: { value: new THREE.Color('#444444') },
       uResolution: { value: new THREE.Vector2(width, height) },
       uPixelSize: { value: 10.0 }, // 10px cells for clear ASCII characters
-      uTexture: { value: defaultTexture }
+      uTexture: { value: defaultTexture },
+      uIsMobile: { value: isMobile ? 1.0 : 0.0 }
     };
 
     // Load the authentic Megamendung texture mask
@@ -66,6 +71,7 @@ export function HalftoneWave() {
         uniform vec2 uResolution;
         uniform float uPixelSize;
         uniform sampler2D uTexture;
+        uniform float uIsMobile;
 
         float getCloudLayer(sampler2D tex, vec2 cell, float scale, float speed, vec2 offset, float time) {
             // Base continuous coordinates
@@ -112,21 +118,24 @@ export function HalftoneWave() {
           // Local coordinates within the cell [0, 1]
           vec2 local = fract(gl_FragCoord.xy / uPixelSize);
 
-          // 1. MULTI-LAYERED PARALLAX CLOUD SKY (Density reduced by 10%)
-          float l1 = getCloudLayer(uTexture, cell, 0.071, 0.015, vec2(0.0, 0.0), uTime);  // Background
-          float l2 = getCloudLayer(uTexture, cell, 0.048, 0.03, vec2(0.33, 0.7), uTime);  // Mid-BG
-          float l3 = getCloudLayer(uTexture, cell, 0.028, 0.05, vec2(0.66, 0.2), uTime);  // Mid-FG
-          float l4 = getCloudLayer(uTexture, cell, 0.016, 0.08, vec2(0.1, 0.5), uTime);   // Foreground (Slowed down significantly)
-          
-          // 2. ATMOSPHERIC PERSPECTIVE COMPOSITING
-          // We multiply each layer by a carefully chosen weight so they map to different ASCII characters!
-          // l1 (0.30) -> maps to '.' (Far background dust)
-          // l2 (0.45) -> maps to 'x' (Background clouds)
-          // l3 (0.60) -> maps to '[]' (Midground clouds, hollow outlines)
-          // l4 (1.00) -> maps to '■' (Foreground clouds, solid blocks)
-          // Because they map to different characters, they will NEVER merge into a flat blob when they overlap!
-          // This creates a stunning 3D spatial perspective with distinct depth layers.
-          float density = max(max(max(l1 * 0.30, l2 * 0.45), l3 * 0.60), l4 * 1.00);
+          float density = 0.0;
+
+          if (uIsMobile > 0.5) {
+              // EXTREME MOBILE OPTIMIZATION: Only evaluate 2 layers (Background and Foreground)
+              // Skips 50% of the expensive trigonometric math!
+              float l1 = getCloudLayer(uTexture, cell, 0.071, 0.015, vec2(0.0, 0.0), uTime);
+              float l4 = getCloudLayer(uTexture, cell, 0.016, 0.08, vec2(0.1, 0.5), uTime);
+              density = max(l1 * 0.30, l4 * 1.00);
+          } else {
+              // 1. MULTI-LAYERED PARALLAX CLOUD SKY (Desktop)
+              float l1 = getCloudLayer(uTexture, cell, 0.071, 0.015, vec2(0.0, 0.0), uTime);  // Background
+              float l2 = getCloudLayer(uTexture, cell, 0.048, 0.03, vec2(0.33, 0.7), uTime);  // Mid-BG
+              float l3 = getCloudLayer(uTexture, cell, 0.028, 0.05, vec2(0.66, 0.2), uTime);  // Mid-FG
+              float l4 = getCloudLayer(uTexture, cell, 0.016, 0.08, vec2(0.1, 0.5), uTime);   // Foreground
+              
+              // 2. ATMOSPHERIC PERSPECTIVE COMPOSITING
+              density = max(max(max(l1 * 0.30, l2 * 0.45), l3 * 0.60), l4 * 1.00);
+          }
           
           // Smooth out slightly to generate a gradient that maps to the ASCII characters (+, x, [])
           density = smoothstep(0.05, 0.8, density);
