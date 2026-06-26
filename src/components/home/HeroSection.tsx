@@ -79,7 +79,7 @@ export default function HeroSection() {
         muted
         loop
         playsInline
-        preload="auto"
+        preload="metadata"
         className="absolute inset-0 w-full h-full object-cover z-0"
         style={{ willChange: 'transform' }}
       >
