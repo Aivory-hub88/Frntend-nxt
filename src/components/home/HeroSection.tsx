@@ -80,6 +80,7 @@ export default function HeroSection() {
         loop
         playsInline
         preload="auto"
+        poster="/hero-video-poster.jpg"
         className="absolute inset-0 w-full h-full object-cover z-0"
         style={{ willChange: 'transform' }}
       >

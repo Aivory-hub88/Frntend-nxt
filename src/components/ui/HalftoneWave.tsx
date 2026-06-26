@@ -32,7 +32,10 @@ export function HalftoneWave() {
     // Full screen quad
     const geometry = new THREE.PlaneGeometry(2, 2);
 
-    const defaultTexture = new THREE.DataTexture(new Uint8Array([255, 255, 255, 255]), 1, 1, THREE.RGBAFormat);
+    // Provide a grey default texture [128, 128, 128, 255] instead of white [255].
+    // This creates an instant fallback density of 0.5, rendering shifting 'x' ASCII characters
+    // immediately as a "loading state" while the 171KB image downloads over slow networks!
+    const defaultTexture = new THREE.DataTexture(new Uint8Array([128, 128, 128, 255]), 1, 1, THREE.RGBAFormat);
     defaultTexture.needsUpdate = true;
 
     const uniforms = {
