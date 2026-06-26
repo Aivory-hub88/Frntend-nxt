@@ -176,7 +176,22 @@ export function HalftoneWave() {
             discard;
           }
 
-          gl_FragColor = vec4(uColor, 1.0);
+          // Volumetric 3D Shading
+          // Creates a strong 3D effect by mapping density to a dynamic color gradient.
+          // Deeper clouds (low density) fall into shadow, foreground clouds (high density) catch light.
+          vec3 shadowColor = uColor * 0.15;
+          vec3 highlightColor = min(uColor * 3.0, vec3(1.0)); // Prevent blowing out to white completely
+          
+          // Non-linear lighting curve makes the "cloud peaks" pop like 3D geometry
+          float lighting = pow(density, 1.5);
+          vec3 finalColor = mix(shadowColor, highlightColor, lighting);
+          
+          // Fake Ambient Occlusion / Subsurface glow for mid-tones
+          // This adds a subtle 'rim light' to the edges of the thickest clouds
+          float rim = smoothstep(0.3, 0.6, density) * (1.0 - smoothstep(0.6, 1.0, density));
+          finalColor += uColor * rim * 1.2;
+
+          gl_FragColor = vec4(finalColor, 1.0);
         }
       `,
       transparent: true,
