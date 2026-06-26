@@ -3,6 +3,7 @@
 import { useEffect } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import SplitType from 'split-type';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -25,18 +26,35 @@ export function useGsapScrollReveal() {
       if (el.closest('.gsap-card-container')) return;
       if (el.closest('.gsap-card')) return;
       if (el.closest('.animate-on-scroll')) return;
+      if ((el as any)._isSplit) return;
+      (el as any)._isSplit = true;
 
-      gsap.set(el, {
+      // Apply SplitType to split text into lines and words
+      const text = new SplitType(el as HTMLElement, { types: 'lines, words' });
+
+      // We animate the words!
+      const targetElements = text.words;
+      if (!targetElements || targetElements.length === 0) return;
+
+      // Ensure the wrapper lines have overflow hidden so words slide up from behind a mask
+      if (text.lines) {
+        text.lines.forEach((line) => {
+           line.style.overflow = 'hidden';
+        });
+      }
+
+      gsap.set(targetElements, {
         opacity: 0,
-        y: 30,
+        y: '100%',
         willChange: 'opacity, transform',
       });
 
-      gsap.to(el, {
+      gsap.to(targetElements, {
         opacity: 1,
-        y: 0,
-        duration: 0.7,
-        ease: 'power2.out',
+        y: '0%',
+        duration: 0.6,
+        ease: 'power3.out',
+        stagger: 0.015, // Stagger each word slightly for a cascading wave effect!
         scrollTrigger: {
           trigger: el,
           start: 'top 88%',
