@@ -43,7 +43,11 @@ export function HalftoneWave() {
       uColor: { value: new THREE.Color('#444444') },
       uResolution: { value: new THREE.Vector2(width, height) },
       uPixelSize: { value: 10.0 }, // 10px cells for clear ASCII characters
-      uTexture: { value: defaultTexture }
+      uTexture: { value: defaultTexture },
+      // ── depth / density tuning knobs (tweak freely & redeploy) ──
+      uDensityFloor: { value: 0.22 }, // higher = more open sky (less dense)
+      uFarDim: { value: 0.22 },       // background brightness — keep low for text legibility
+      uNearBright: { value: 1.7 }     // foreground cloud "pop"
     };
 
     // Load the authentic Megamendung texture mask
@@ -76,6 +80,9 @@ export function HalftoneWave() {
         uniform vec2 uResolution;
         uniform float uPixelSize;
         uniform sampler2D uTexture;
+        uniform float uDensityFloor;
+        uniform float uFarDim;
+        uniform float uNearBright;
 
         float getCloudLayer(sampler2D tex, vec2 cell, float scale, float speed, vec2 offset, float time) {
             // Base continuous coordinates
@@ -118,31 +125,37 @@ export function HalftoneWave() {
         void main() {
           // Cell coordinates for the macro grids (ASCII characters)
           vec2 cell = floor(gl_FragCoord.xy / uPixelSize);
-          
+
           // Local coordinates within the cell [0, 1]
           vec2 local = fract(gl_FragCoord.xy / uPixelSize);
 
+          // Raw per-layer cloud densities, far -> near. We composite them
+          // BACK-TO-FRONT (alpha-over) so nearer clouds actually OCCLUDE farther
+          // ones, and carry a depth value (0 = far, 1 = near) so shading can
+          // apply atmospheric perspective. uDensityFloor controls how much faint
+          // cloud survives -> higher = more open sky (less "padat").
           float density = 0.0;
+          float depth = 0.0;
 
 #if IS_MOBILE == 1
-          // EXTREME MOBILE OPTIMIZATION: Only evaluate 2 layers (Background and Foreground)
-          // Skips 50% of the expensive trigonometric math!
-          float l1 = getCloudLayer(uTexture, cell, 0.071, 0.015, vec2(0.0, 0.0), uTime);
-          float l4 = getCloudLayer(uTexture, cell, 0.016, 0.08, vec2(0.1, 0.5), uTime);
-          density = max(l1 * 0.30, l4 * 1.00);
+          float r1 = getCloudLayer(uTexture, cell, 0.071, 0.015, vec2(0.0, 0.0), uTime);
+          float r4 = getCloudLayer(uTexture, cell, 0.016, 0.08, vec2(0.1, 0.5), uTime);
+          float a1 = smoothstep(uDensityFloor, 0.9, r1); density = mix(density, r1, a1); depth = mix(depth, 0.0, a1);
+          float a4 = smoothstep(uDensityFloor, 0.9, r4); density = mix(density, r4, a4); depth = mix(depth, 1.0, a4);
 #else
-          // 1. MULTI-LAYERED PARALLAX CLOUD SKY (Desktop)
-          float l1 = getCloudLayer(uTexture, cell, 0.071, 0.015, vec2(0.0, 0.0), uTime);  // Background
-          float l2 = getCloudLayer(uTexture, cell, 0.048, 0.03, vec2(0.33, 0.7), uTime);  // Mid-BG
-          float l3 = getCloudLayer(uTexture, cell, 0.028, 0.05, vec2(0.66, 0.2), uTime);  // Mid-FG
-          float l4 = getCloudLayer(uTexture, cell, 0.016, 0.08, vec2(0.1, 0.5), uTime);   // Foreground
-          
-          // 2. ATMOSPHERIC PERSPECTIVE COMPOSITING
-          density = max(max(max(l1 * 0.30, l2 * 0.45), l3 * 0.60), l4 * 1.00);
+          float r1 = getCloudLayer(uTexture, cell, 0.071, 0.015, vec2(0.0, 0.0), uTime);  // far
+          float r2 = getCloudLayer(uTexture, cell, 0.048, 0.03, vec2(0.33, 0.7), uTime);
+          float r3 = getCloudLayer(uTexture, cell, 0.028, 0.05, vec2(0.66, 0.2), uTime);
+          float r4 = getCloudLayer(uTexture, cell, 0.016, 0.08, vec2(0.1, 0.5), uTime);   // near
+
+          float a1 = smoothstep(uDensityFloor, 0.9, r1); density = mix(density, r1, a1); depth = mix(depth, 0.00, a1);
+          float a2 = smoothstep(uDensityFloor, 0.9, r2); density = mix(density, r2, a2); depth = mix(depth, 0.40, a2);
+          float a3 = smoothstep(uDensityFloor, 0.9, r3); density = mix(density, r3, a3); depth = mix(depth, 0.70, a3);
+          float a4 = smoothstep(uDensityFloor, 0.9, r4); density = mix(density, r4, a4); depth = mix(depth, 1.00, a4);
 #endif
-          
-          // Smooth out slightly to generate a gradient that maps to the ASCII characters (+, x, [])
-          density = smoothstep(0.05, 0.8, density);
+
+          // Map the surviving density into the ASCII character ramp.
+          density = smoothstep(0.0, 0.85, density);
 
           // 3. ASCII / BITMAP RENDERER
           // Map density to 6 distinct levels (0 = empty, 5 = solid)
@@ -176,20 +189,21 @@ export function HalftoneWave() {
             discard;
           }
 
-          // Volumetric 3D Shading
-          // Creates a strong 3D effect by mapping density to a dynamic color gradient.
-          // Deeper clouds (low density) fall into shadow, foreground clouds (high density) catch light.
-          vec3 shadowColor = uColor * 0.2;
-          vec3 highlightColor = uColor * 1.4; // Toned down from 3.0 to keep text readable
-          
-          // Non-linear lighting curve makes the "cloud peaks" pop like 3D geometry
-          float lighting = pow(density, 1.5);
-          vec3 finalColor = mix(shadowColor, highlightColor, lighting);
-          
-          // Fake Ambient Occlusion / Subsurface glow for mid-tones
-          // This adds a subtle 'rim light' to the edges of the thickest clouds
-          float rim = smoothstep(0.3, 0.6, density) * (1.0 - smoothstep(0.6, 1.0, density));
-          finalColor += uColor * rim * 0.4; // Toned down from 1.2
+          // 3D shading via ATMOSPHERIC PERSPECTIVE.
+          // Brightness is driven primarily by DEPTH (which layer won this pixel),
+          // not just density: far clouds stay dim (and readable behind text),
+          // near clouds pop. Density then adds a secondary highlight on the peaks,
+          // so a near cloud clearly reads as "in front of" a far one.
+          vec3 farColor  = uColor * uFarDim;      // background: dim
+          vec3 nearColor = uColor * uNearBright;  // foreground: bright
+          vec3 base = mix(farColor, nearColor, depth);
+
+          float pop = pow(density, 1.5);
+          vec3 finalColor = base * (0.65 + 0.55 * pop);
+
+          // Rim light only on thick, NEAR clouds -> crisp 3D edge without flooding the BG
+          float rim = smoothstep(0.45, 0.75, density) * depth;
+          finalColor += uColor * rim * 0.35;
 
           gl_FragColor = vec4(finalColor, 1.0);
         }
