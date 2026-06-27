@@ -291,7 +291,11 @@ function AppIntegrationsAnimation() {
             alt={app.name}
             width={22}
             height={22}
-            className="opacity-70 group-hover:opacity-100 transition-opacity duration-300"
+            className={`transition-opacity duration-300 ${
+              app.name === 'GitHub' || app.name === 'OpenAI' || app.name === 'HTTP API' || app.name === 'Notion' 
+                ? 'invert opacity-70 group-hover:opacity-100' 
+                : 'opacity-70 group-hover:opacity-100'
+            }`}
             loading="lazy"
           />
         </div>
