@@ -77,10 +77,14 @@ export default function HeroSection() {
         ref={videoRef}
         autoPlay
         muted
+        defaultMuted
         loop
         playsInline
         preload="auto"
         poster="/hero-video-poster.jpg"
+        onCanPlay={(e) => {
+          e.currentTarget.play().catch(() => {});
+        }}
         className="absolute inset-0 w-full h-full object-cover z-0"
         style={{ willChange: 'transform' }}
       >
