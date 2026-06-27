@@ -69,6 +69,26 @@ function DiagnosticStatItem({
 /* ─── Main Component ─── */
 export default function FeatureCards() {
   const { ref: animRef, isVisible } = useScrollAnimation();
+  const statsRef = useRef<HTMLDivElement>(null);
+  const [statsActive, setStatsActive] = useState(false);
+
+  useEffect(() => {
+    const el = statsRef.current;
+    if (!el) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setStatsActive(true);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.3 }
+    );
+
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
 
   // Both showcases used to mount on every device (CSS `hidden` only hides them — the
   // component still mounts and keeps ~20 setInterval animation loops running off-screen).
@@ -106,12 +126,12 @@ export default function FeatureCards() {
                 Days of consulting, compressed into minutes
               </h3>
 
-              <div className="flex flex-nowrap justify-center items-start relative flex-row w-full mt-4">
-                <DiagnosticStatItem target={10} prefix="" suffix="min" title="AI Readiness Diagnostic" subtitle="not days of sessions" active={isVisible} delay={0} />
+              <div ref={statsRef} className="flex flex-nowrap justify-center items-start relative flex-row w-full mt-4">
+                <DiagnosticStatItem target={10} prefix="" suffix="min" title="AI Readiness Diagnostic" subtitle="not days of sessions" active={statsActive} delay={0} />
                 <div className="w-px self-stretch relative min-h-[100px] hidden md:block border-l border-white/10" />
-                <DiagnosticStatItem target={5} prefix="<" suffix="min" title="AI System Blueprint" subtitle="not weeks of decks" active={isVisible} delay={100} />
+                <DiagnosticStatItem target={5} prefix="<" suffix="min" title="AI System Blueprint" subtitle="not weeks of decks" active={statsActive} delay={100} />
                 <div className="w-px self-stretch relative min-h-[100px] hidden md:block border-l border-white/10" />
-                <DiagnosticStatItem target={0} prefix="" suffix="" title="False Starts" subtitle="one clear starting point" active={isVisible} delay={200} />
+                <DiagnosticStatItem target={0} prefix="" suffix="" title="False Starts" subtitle="one clear starting point" active={statsActive} delay={200} />
               </div>
             </div>
           </div>
