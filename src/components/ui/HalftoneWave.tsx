@@ -45,9 +45,9 @@ export function HalftoneWave() {
       uPixelSize: { value: 10.0 }, // 10px cells for clear ASCII characters
       uTexture: { value: defaultTexture },
       // ── depth / density tuning knobs (tweak freely & redeploy) ──
-      uDensityFloor: { value: 0.22 }, // higher = more open sky (less dense)
-      uFarDim: { value: 0.22 },       // background brightness — keep low for text legibility
-      uNearBright: { value: 1.7 }     // foreground cloud "pop"
+      uDensityFloor: { value: 0.25 }, // higher = more open sky (less dense)
+      uFarDim: { value: 0.02 },       // background brightness — keep low for text legibility
+      uNearBright: { value: 0.5 }     // foreground cloud "pop"
     };
 
     // Load the authentic Megamendung texture mask
@@ -140,18 +140,18 @@ export function HalftoneWave() {
 #if IS_MOBILE == 1
           float r1 = getCloudLayer(uTexture, cell, 0.071, 0.015, vec2(0.0, 0.0), uTime);
           float r4 = getCloudLayer(uTexture, cell, 0.016, 0.08, vec2(0.1, 0.5), uTime);
-          float a1 = smoothstep(uDensityFloor, 0.9, r1); density = mix(density, r1, a1); depth = mix(depth, 0.0, a1);
-          float a4 = smoothstep(uDensityFloor, 0.9, r4); density = mix(density, r4, a4); depth = mix(depth, 1.0, a4);
+          float a1 = smoothstep(uDensityFloor, uDensityFloor + 0.2, r1); density = mix(density, r1, a1); depth = mix(depth, 0.0, a1);
+          float a4 = smoothstep(uDensityFloor, uDensityFloor + 0.2, r4); density = mix(density, r4, a4); depth = mix(depth, 1.0, a4);
 #else
           float r1 = getCloudLayer(uTexture, cell, 0.071, 0.015, vec2(0.0, 0.0), uTime);  // far
           float r2 = getCloudLayer(uTexture, cell, 0.048, 0.03, vec2(0.33, 0.7), uTime);
           float r3 = getCloudLayer(uTexture, cell, 0.028, 0.05, vec2(0.66, 0.2), uTime);
           float r4 = getCloudLayer(uTexture, cell, 0.016, 0.08, vec2(0.1, 0.5), uTime);   // near
 
-          float a1 = smoothstep(uDensityFloor, 0.9, r1); density = mix(density, r1, a1); depth = mix(depth, 0.00, a1);
-          float a2 = smoothstep(uDensityFloor, 0.9, r2); density = mix(density, r2, a2); depth = mix(depth, 0.40, a2);
-          float a3 = smoothstep(uDensityFloor, 0.9, r3); density = mix(density, r3, a3); depth = mix(depth, 0.70, a3);
-          float a4 = smoothstep(uDensityFloor, 0.9, r4); density = mix(density, r4, a4); depth = mix(depth, 1.00, a4);
+          float a1 = smoothstep(uDensityFloor, uDensityFloor + 0.2, r1); density = mix(density, r1, a1); depth = mix(depth, 0.00, a1);
+          float a2 = smoothstep(uDensityFloor, uDensityFloor + 0.2, r2); density = mix(density, r2, a2); depth = mix(depth, 0.40, a2);
+          float a3 = smoothstep(uDensityFloor, uDensityFloor + 0.2, r3); density = mix(density, r3, a3); depth = mix(depth, 0.70, a3);
+          float a4 = smoothstep(uDensityFloor, uDensityFloor + 0.2, r4); density = mix(density, r4, a4); depth = mix(depth, 1.00, a4);
 #endif
 
           // Map the surviving density into the ASCII character ramp.
