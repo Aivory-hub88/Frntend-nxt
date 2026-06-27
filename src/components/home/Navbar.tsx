@@ -67,13 +67,10 @@ export default function Navbar() {
       <div className="max-w-[1400px] mx-auto flex justify-between items-center" style={{ padding: '1.5rem clamp(1rem, 4vw, 2rem)' }}>
         {/* Left: Aivory logo */}
         <Link href="/" className="flex items-center">
-          <Image
+          <img
             src="/Aivory_logo_2_2026.svg"
             alt="Aivory Logo"
-            width={140}
-            height={30}
             className="h-[30px] w-auto object-contain"
-            priority
           />
         </Link>
 
@@ -210,11 +207,9 @@ export default function Navbar() {
         {/* Top bar: Logo + Close */}
         <div className="flex justify-between items-center px-4 py-6">
           <Link href="/" onClick={() => setIsMobileMenuOpen(false)}>
-            <Image
+            <img
               src="/Aivory_logo_2_2026.svg"
               alt="Aivory Logo"
-              width={140}
-              height={30}
               className="h-[30px] w-auto object-contain"
             />
           </Link>

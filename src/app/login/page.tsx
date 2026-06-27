@@ -89,7 +89,7 @@ export default function LoginPage() {
 
         <div className="text-center mb-8">
           <div className="flex justify-center mb-6">
-            <Image src="/Aivory_logo_2_2026.svg" alt="Aivory" width={100} height={32} className="h-[32px] w-auto opacity-90" priority />
+            <img src="/Aivory_logo_2_2026.svg" alt="Aivory" className="h-[32px] w-auto opacity-90" />
           </div>
           <h2 className="text-2xl font-semibold text-white mb-2 tracking-tight" style={{ fontFamily: "'Manrope', sans-serif" }}>
             Welcome back
