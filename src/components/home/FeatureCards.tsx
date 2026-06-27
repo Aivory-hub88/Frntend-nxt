@@ -27,7 +27,7 @@ export default function FeatureCards() {
       </div>
 
       {/* Replaced GSAP Cards with Product Page Components */}
-      <div className="relative z-[1] w-full">
+      <div className="relative w-full">
         <div className="hidden lg:block">
           <InteractiveShowcase />
         </div>

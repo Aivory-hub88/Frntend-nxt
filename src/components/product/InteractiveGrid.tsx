@@ -301,7 +301,7 @@ export function InteractiveGrid() {
       {/* Background grid line overlay */}
       <div className="absolute inset-0 bg-grid-pattern opacity-40 pointer-events-none z-0" />
 
-      <div className="max-w-6xl mx-auto relative z-10">
+      <div className="max-w-6xl mx-auto relative">
         <div className="text-center mb-16">
           <h2 className="text-[#c4c9b8] uppercase tracking-widest text-xs font-manrope font-light mb-3">
             THE PLATFORM

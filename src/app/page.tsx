@@ -26,12 +26,12 @@ export default function HomePage() {
               <HalftoneWaveWrapper />
             </div>
           </div>
-          <div className="relative z-10">
+          <div className="relative">
             <AIReadySection />
             <FeatureCards />
             
             {/* Scaled down content (85%) */}
-            <div style={{ zoom: 0.85 }}>
+            <div style={{ zoom: 0.85, marginTop: '-150px' }}>
               <StatsSection />
             </div>
 
