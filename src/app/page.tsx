@@ -19,7 +19,7 @@ export default function HomePage() {
         <HeroSection />
         
         {/* Unscaled content (100% scale to match product page) */}
-        <div className="relative bg-black overflow-hidden">
+        <div className="relative bg-black">
           {/* Global seamless background for all these sections */}
           <div className="absolute inset-0 z-0 pointer-events-none">
             <div className="sticky top-0 w-full h-screen">
