@@ -21,7 +21,7 @@ function SpotlightCard({ children, className = '' }: { children: React.ReactNode
     <div
       ref={cardRef}
       onMouseMove={handleMouseMove}
-      className={`spotlight-card rounded-2xl border border-white/5 bg-zinc-950/65 shadow-lg ${className}`}
+      className={`spotlight-card rounded-2xl border border-white/5 bg-zinc-950/40 backdrop-blur-md shadow-lg ${className}`}
     >
       {children}
     </div>
@@ -297,7 +297,7 @@ function AppIntegrationsAnimation() {
 
 export function InteractiveGrid() {
   return (
-    <section className="text-white py-24 px-6 md:px-16 lg:px-24 relative overflow-hidden">
+    <section className="text-white pt-24 pb-0 px-6 md:px-16 lg:px-24 relative overflow-hidden">
       {/* Background grid line overlay */}
       <div className="absolute inset-0 bg-grid-pattern opacity-40 pointer-events-none z-0" />
 
@@ -419,8 +419,8 @@ function IntegrationsMarquee() {
   const marqueeItems = [...logos, ...logos];
 
   return (
-    <div className="w-full mt-20 md:mt-24 mb-10">
-      <div className="text-center mb-16 px-6">
+    <div className="w-full mt-10 md:mt-12 mb-0">
+      <div className="text-center mb-8 px-6">
         <h3 className="text-[22px] md:text-[32px] font-light text-[#c4c9b8] mb-3 tracking-tight" style={{ fontFamily: "'Manrope', sans-serif" }}>
           Every Aivory agent speaks your customer&apos;s language. Literally.
         </h3>
