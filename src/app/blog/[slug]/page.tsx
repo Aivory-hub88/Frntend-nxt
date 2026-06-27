@@ -1,8 +1,64 @@
+import type { Metadata } from "next"
 import Link from "next/link"
 import Navbar from "@/components/home/Navbar";
 import Footer from "@/components/Footer";
 import { getBlogPost, BlogPostDetail, BlogContentBlock } from "@/lib/blog-api"
 import { notFound } from "next/navigation"
+import {
+  SITE_URL,
+  ORGANIZATION,
+  absoluteUrl,
+  richContentToPlainText,
+  clampDescription,
+  JsonLd,
+} from "@/lib/seo"
+
+/** Best-effort description: explicit excerpt, else first words of the body. */
+function postDescription(post: BlogPostDetail): string {
+  if (post.excerpt) return clampDescription(post.excerpt)
+  return clampDescription(richContentToPlainText(post.body?.blocks))
+}
+
+export async function generateMetadata(
+  props: { params: Promise<{ slug: string }> }
+): Promise<Metadata> {
+  const { slug } = await props.params
+  let post: BlogPostDetail | null = null
+  try {
+    post = await getBlogPost(slug)
+  } catch {
+    post = null
+  }
+
+  if (!post) {
+    return { title: "Post not found", robots: { index: false, follow: false } }
+  }
+
+  const description = postDescription(post)
+  const url = absoluteUrl(`/blog/${post.slug}`)
+  const images = post.thumbnail_url ? [post.thumbnail_url] : undefined
+
+  return {
+    title: post.title,
+    description,
+    alternates: { canonical: url },
+    openGraph: {
+      type: "article",
+      title: post.title,
+      description,
+      url,
+      images,
+      publishedTime: post.published_at,
+      authors: post.author_name ? [post.author_name] : undefined,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: post.title,
+      description,
+      images,
+    },
+  }
+}
 
 function formatDate(dateString: string): string {
   const date = new Date(dateString)
@@ -195,6 +251,25 @@ export default async function BlogPostPage(props: { params: Promise<{ slug: stri
           </div>
         ) : post ? (
           <article className="max-w-3xl mx-auto">
+            <JsonLd
+              data={{
+                "@context": "https://schema.org",
+                "@type": "BlogPosting",
+                headline: post.title,
+                description: postDescription(post),
+                image: post.thumbnail_url || undefined,
+                datePublished: post.published_at,
+                dateModified: post.published_at,
+                author: { "@type": "Person", name: post.author_name },
+                publisher: ORGANIZATION,
+                mainEntityOfPage: {
+                  "@type": "WebPage",
+                  "@id": absoluteUrl(`/blog/${post.slug}`),
+                },
+                url: absoluteUrl(`/blog/${post.slug}`),
+                isPartOf: { "@type": "Blog", name: "Aivory Blog", url: `${SITE_URL}/blog` },
+              }}
+            />
             {/* Back link */}
             <Link
               href="/blog"

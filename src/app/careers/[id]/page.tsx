@@ -1,8 +1,113 @@
+import type { Metadata } from "next"
 import React from "react"
 import Link from "next/link"
 import Navbar from "@/components/home/Navbar";
 import Footer from "@/components/Footer";
 import { getVacancy, type Vacancy } from "@/lib/careers-api"
+import {
+  ORGANIZATION,
+  SITE_NAME,
+  absoluteUrl,
+  richContentToPlainText,
+  clampDescription,
+  JsonLd,
+} from "@/lib/seo"
+
+/** Map our employment_type strings to schema.org employmentType enums. */
+function schemaEmploymentType(type: string | null): string | undefined {
+  if (!type) return undefined
+  const t = type.toLowerCase().replace(/[\s_]/g, "-")
+  const map: Record<string, string> = {
+    "full-time": "FULL_TIME",
+    "part-time": "PART_TIME",
+    contract: "CONTRACTOR",
+    contractor: "CONTRACTOR",
+    freelance: "CONTRACTOR",
+    internship: "INTERN",
+    intern: "INTERN",
+    temporary: "TEMPORARY",
+    volunteer: "VOLUNTEER",
+  }
+  return map[t]
+}
+
+/** Build the JobPosting structured-data object for a vacancy. */
+function jobPostingJsonLd(vacancy: Vacancy, description: string) {
+  const datePosted = vacancy.posted_at || vacancy.created_at
+  const isRemote = (vacancy.location || "").toLowerCase().includes("remote")
+
+  const jobLocation = isRemote
+    ? undefined
+    : vacancy.location
+      ? {
+          "@type": "Place",
+          address: { "@type": "PostalAddress", addressLocality: vacancy.location },
+        }
+      : undefined
+
+  return {
+    "@context": "https://schema.org",
+    "@type": "JobPosting",
+    title: vacancy.title,
+    description,
+    datePosted,
+    employmentType: schemaEmploymentType(vacancy.employment_type),
+    hiringOrganization: ORGANIZATION,
+    industry: vacancy.department || undefined,
+    directApply: true,
+    url: absoluteUrl(`/careers/${vacancy.id}`),
+    ...(jobLocation ? { jobLocation } : {}),
+    ...(isRemote
+      ? {
+          jobLocationType: "TELECOMMUTE",
+          applicantLocationRequirements: {
+            "@type": "Country",
+            name: vacancy.location?.replace(/remote/i, "").replace(/[-—,]/g, "").trim() || "Worldwide",
+          },
+        }
+      : {}),
+  }
+}
+
+/** Description text for meta + structured data, drawn from the rich body. */
+function vacancyDescription(vacancy: Vacancy): string {
+  const brief = vacancy.brief_description?.trim()
+  const full = [
+    richContentToPlainText(vacancy.description),
+    richContentToPlainText(vacancy.requirements),
+  ]
+    .filter(Boolean)
+    .join(" ")
+  return brief || full
+}
+
+export async function generateMetadata(
+  props: { params: Promise<{ id: string }> }
+): Promise<Metadata> {
+  const { id } = await props.params
+  const vacancy = await getVacancy(id)
+
+  if (!vacancy) {
+    return { title: "Position not found", robots: { index: false, follow: false } }
+  }
+
+  const description = clampDescription(vacancyDescription(vacancy))
+  const url = absoluteUrl(`/careers/${vacancy.id}`)
+  const titleParts = [vacancy.title, vacancy.location].filter(Boolean).join(" · ")
+
+  return {
+    title: titleParts || vacancy.title,
+    description,
+    alternates: { canonical: url },
+    openGraph: {
+      type: "website",
+      title: `${vacancy.title} — Careers at ${SITE_NAME}`,
+      description,
+      url,
+    },
+    twitter: { card: "summary", title: vacancy.title, description },
+  }
+}
 
 /**
  * Render a Rich_Editor JSONB block into HTML elements.
@@ -290,6 +395,7 @@ export default async function VacancyDetailPage(props: { params: Promise<{ id: s
       <Navbar />
       <main className="flex-1 px-6 py-24">
         <div className="max-w-3xl mx-auto">
+          <JsonLd data={jobPostingJsonLd(vacancy, clampDescription(vacancyDescription(vacancy), 500))} />
           {/* Back link */}
           <Link
             href="/careers"

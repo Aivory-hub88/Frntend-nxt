@@ -1,7 +1,22 @@
+import type { Metadata } from "next"
 import Link from "next/link"
 import Navbar from "@/components/home/Navbar";
 import Footer from "@/components/Footer";
 import { getBlogPosts, BlogPost, BlogPostsResponse } from "@/lib/blog-api"
+
+export const metadata: Metadata = {
+  title: "Blog",
+  description:
+    "Insights, guides, and updates on AI adoption, automation, and business transformation from the Aivory team.",
+  alternates: { canonical: "/blog" },
+  openGraph: {
+    type: "website",
+    title: "Aivory Blog",
+    description:
+      "Insights, guides, and updates on AI adoption, automation, and business transformation.",
+    url: "/blog",
+  },
+}
 
 function formatDate(dateString: string): string {
   const date = new Date(dateString)

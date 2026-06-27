@@ -1,7 +1,21 @@
+import type { Metadata } from "next"
 import Link from "next/link"
 import Navbar from "@/components/home/Navbar";
 import Footer from "@/components/Footer";
 import { getVacancies, type Vacancy } from "@/lib/careers-api"
+
+export const metadata: Metadata = {
+  title: "Careers",
+  description:
+    "Join Aivory. Explore open roles and help build the platform that brings AI into everyday business operations.",
+  alternates: { canonical: "/careers" },
+  openGraph: {
+    type: "website",
+    title: "Careers at Aivory",
+    description: "Explore open roles and join the team building AI for business.",
+    url: "/careers",
+  },
+}
 
 /**
  * Extract a brief plain-text description from the rich editor JSONB output.
