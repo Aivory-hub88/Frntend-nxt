@@ -21,11 +21,11 @@ function SpotlightCard({ children, className = '' }: { children: React.ReactNode
     <div
       ref={cardRef}
       onMouseMove={handleMouseMove}
-      className={`spotlight-card rounded-2xl border border-white/20 shadow-2xl ${className}`}
+      className={`spotlight-card rounded-[24px] border-t border-l border-white/10 border-b border-r border-black/20 shadow-[0_8px_32px_rgba(0,0,0,0.4)] ${className}`}
       style={{
-        backgroundColor: 'rgba(255, 255, 255, 0.15)', // Lighter, more translucent white
-        backdropFilter: 'blur(32px)', // Stronger blur
-        WebkitBackdropFilter: 'blur(32px)'
+        backgroundColor: 'rgba(30, 30, 35, 0.55)', // Apple dark frosted glass
+        backdropFilter: 'blur(40px) saturate(150%)',
+        WebkitBackdropFilter: 'blur(40px) saturate(150%)'
       }}
     >
       {children}
@@ -49,8 +49,8 @@ function AutonomousAgentAnimation() {
     {
       name: 'Slack',
       icon: '/integrations/icons/slack.svg',
-      bg: 'rgba(255, 255, 255, 0.05)',
-      headerBg: 'rgba(255, 255, 255, 0.1)',
+      bg: 'rgba(26, 26, 46, 0.4)',
+      headerBg: 'rgba(45, 45, 63, 0.5)',
       channel: '#sales-leads',
       messages: [
         { from: 'user', text: 'New lead from contact form — urgent' },
@@ -60,8 +60,8 @@ function AutonomousAgentAnimation() {
     {
       name: 'WhatsApp',
       icon: '/integrations/icons/whatsapp.svg',
-      bg: 'rgba(255, 255, 255, 0.05)',
-      headerBg: 'rgba(255, 255, 255, 0.1)',
+      bg: 'rgba(11, 20, 26, 0.4)',
+      headerBg: 'rgba(31, 44, 51, 0.5)',
       channel: 'Customer Support',
       messages: [
         { from: 'user', text: 'Hi, I need help with my order #4821' },
@@ -71,8 +71,8 @@ function AutonomousAgentAnimation() {
     {
       name: 'Telegram',
       icon: '/integrations/icons/telegram.svg',
-      bg: 'rgba(255, 255, 255, 0.05)',
-      headerBg: 'rgba(255, 255, 255, 0.1)',
+      bg: 'rgba(23, 33, 43, 0.4)',
+      headerBg: 'rgba(36, 47, 61, 0.5)',
       channel: 'Ops Notifications',
       messages: [
         { from: 'user', text: 'Schedule a follow-up with prospect ABC Corp' },
@@ -229,7 +229,7 @@ function TemplateLibraryAnimation() {
       {templates.map((tmpl, i) => (
         <div
           key={tmpl.label}
-          className="flex flex-col items-center justify-center gap-2 bg-white/[0.05] border border-white/10 rounded-xl p-3 hover:border-white/20 hover:bg-white/[0.1] transition-all duration-300 cursor-default group"
+          className="flex flex-col items-center justify-center gap-2 bg-black/20 border border-white/5 rounded-xl p-3 hover:border-white/10 hover:bg-black/40 transition-all duration-300 cursor-default group"
           style={{ animationDelay: `${i * 0.1}s` }}
         >
           <div className="text-white/40 group-hover:text-white/70 transition-colors duration-300">
@@ -780,7 +780,7 @@ function AgentCard({ agent }: { agent: typeof NEW_AGENTS[0] }) {
       </div>
 
       {/* Animation Element */}
-      <div className="relative z-10 flex-1 min-h-[300px] bg-white/[0.05] border border-white/10 rounded-xl mt-auto overflow-hidden flex flex-col pt-10">
+      <div className="relative z-10 flex-1 min-h-[300px] bg-black/20 border border-white/5 rounded-xl mt-auto overflow-hidden flex flex-col pt-10">
         
         {/* Status Header */}
         <div className="absolute top-4 left-4 flex items-center gap-2 z-20">
