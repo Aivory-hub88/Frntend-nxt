@@ -57,9 +57,12 @@ export function richContentToPlainText(content: unknown): string {
     }
     if (typeof node === "object") {
       const obj = node as Record<string, unknown>;
+      // Different editors store text under different keys; cover them all.
       if (typeof obj.text === "string") parts.push(obj.text);
-      if (Array.isArray(obj.items)) obj.items.forEach(walk);
+      if (typeof obj.content === "string") parts.push(obj.content);
       if (Array.isArray(obj.content)) obj.content.forEach(walk);
+      if (Array.isArray(obj.items)) obj.items.forEach(walk);
+      if (Array.isArray(obj.blocks)) obj.blocks.forEach(walk);
     }
   };
 
