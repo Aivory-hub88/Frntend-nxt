@@ -80,7 +80,7 @@ export default function HeroSection() {
         defaultMuted
         loop
         playsInline
-        preload="auto"
+        preload="metadata"
         poster="/hero-video-poster.jpg"
         onCanPlay={(e) => {
           e.currentTarget.play().catch(() => {});
