@@ -9,6 +9,19 @@ body,
   font-family: var(--font-manrope), 'Manrope', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 }
 
+/* ─── Mobile perf: drop the GPU-expensive frosted-glass blur ───
+   backdrop-filter: blur() on the feature cards forces the browser to re-blur the
+   animated WebGL megamendung backdrop on EVERY frame — brutal on mobile GPUs. On
+   small dark screens the clouds behind the cards are barely visible anyway, so we
+   swap the blur for a near-opaque solid tint: visually almost identical, far cheaper.
+   Desktop keeps the real frosted glass. */
+@media (max-width: 1023px) {
+  .spotlight-card {
+    --card-frost: none;
+    --card-bg: rgba(18, 18, 22, 0.92);
+  }
+}
+
 /* ─── Scroll Animation Utility ─── */
 .animate-on-scroll {
   opacity: 0;

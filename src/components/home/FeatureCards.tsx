@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
 import { InteractiveShowcase } from '@/components/product/InteractiveShowcase';
 import { InteractiveGridShowcase } from '@/components/product/InteractiveGridShowcase';
@@ -9,6 +9,20 @@ import { InteractiveGrid } from '@/components/product/InteractiveGrid';
 /* ─── Main Component ─── */
 export default function FeatureCards() {
   const { ref: animRef, isVisible } = useScrollAnimation();
+
+  // Both showcases used to mount on every device (CSS `hidden` only hides them — the
+  // component still mounts and keeps ~20 setInterval animation loops running off-screen).
+  // We render BOTH until mounted (so the SSR HTML keeps the marketing copy for SEO and
+  // there's no hydration mismatch), then unmount the one for the other breakpoint. Since
+  // it was already display:none, dropping it is invisible — but its timers/DOM go away.
+  const [isLg, setIsLg] = useState<boolean | null>(null);
+  useEffect(() => {
+    const mq = window.matchMedia('(min-width: 1024px)');
+    const update = () => setIsLg(mq.matches);
+    update();
+    mq.addEventListener('change', update);
+    return () => mq.removeEventListener('change', update);
+  }, []);
 
   return (
     <>
@@ -29,10 +43,10 @@ export default function FeatureCards() {
       {/* Replaced GSAP Cards with Product Page Components */}
       <div className="relative w-full">
         <div className="hidden lg:block">
-          <InteractiveShowcase />
+          {(isLg === null || isLg) && <InteractiveShowcase />}
         </div>
         <div className="block lg:hidden">
-          <InteractiveGridShowcase />
+          {(isLg === null || !isLg) && <InteractiveGridShowcase />}
         </div>
         <InteractiveGrid />
       </div>

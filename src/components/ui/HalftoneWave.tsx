@@ -225,7 +225,9 @@ export function HalftoneWave() {
     observer.observe(renderer.domElement);
 
     let lastRenderTime = 0;
-    const fpsInterval = 1000 / 30; // 30 FPS throttle
+    // The clouds drift slowly, so 20 FPS on mobile is visually indistinguishable from
+    // 30 but meaningfully lighter on battery/GPU for a full-screen fragment shader.
+    const fpsInterval = 1000 / (isMobile ? 20 : 30); // FPS throttle
 
     const renderLoop = (timestamp: number) => {
       animationFrameId = requestAnimationFrame(renderLoop);

@@ -23,9 +23,19 @@ function SpotlightCard({ children, className = '' }: { children: React.ReactNode
       onMouseMove={handleMouseMove}
       className={`spotlight-card rounded-[24px] border-t border-l border-white/10 border-b border-r border-black/20 shadow-[0_8px_32px_rgba(0,0,0,0.4)] ${className}`}
       style={{
-        backgroundColor: 'rgba(30, 30, 35, 0.55)', // Apple dark frosted glass
-        backdropFilter: 'blur(40px) saturate(150%)',
-        WebkitBackdropFilter: 'blur(40px) saturate(150%)'
+        // Apple-style dark frosted glass. The tint is kept semi-transparent so the
+        // animated megamendung backdrop shows through; `brightness` lifts the very dim
+        // clouds just enough that the blur reads as frost rather than a flat dark panel.
+        // NOTE: for this backdrop-filter to actually sample the page background, no
+        // ancestor of this card may carry a transform/will-change (that would turn the
+        // ancestor into a "backdrop root"). See revealGrids() in useGsapScrollReveal.ts.
+        // Driven by CSS custom properties so the mobile override (globals.css) can
+        // switch the blur off via a single var — robust against the CSS minifier, which
+        // otherwise drops the unprefixed `backdrop-filter` from a plain media-query rule
+        // and leaves Chrome-Android still blurring. The var fallbacks are the desktop look.
+        backgroundColor: 'var(--card-bg, rgba(28, 28, 34, 0.45))',
+        backdropFilter: 'var(--card-frost, blur(24px) saturate(160%) brightness(1.12))',
+        WebkitBackdropFilter: 'var(--card-frost, blur(24px) saturate(160%) brightness(1.12))'
       }}
     >
       {children}
@@ -428,8 +438,8 @@ function IntegrationsMarquee() {
   const marqueeItems = [...logos, ...logos];
 
   return (
-    <div className="w-full mt-10 md:mt-12 mb-0">
-      <div className="text-center mb-8 px-6">
+    <div className="w-full mt-20 md:mt-28 mb-0">
+      <div className="text-center mb-10 md:mb-12 px-6">
         <h3 className="text-[22px] md:text-[32px] font-light text-[#c4c9b8] mb-3 tracking-tight" style={{ fontFamily: "'Manrope', sans-serif" }}>
           Every Aivory agent speaks your customer&apos;s language. Literally.
         </h3>
