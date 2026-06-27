@@ -292,7 +292,7 @@ function AppIntegrationsAnimation() {
             width={22}
             height={22}
             className={`transition-opacity duration-300 ${
-              app.name === 'GitHub' || app.name === 'OpenAI' || app.name === 'HTTP API' || app.name === 'Notion' 
+              app.name === 'GitHub' || app.name === 'Notion' 
                 ? 'invert opacity-70 group-hover:opacity-100' 
                 : 'opacity-70 group-hover:opacity-100'
             }`}
