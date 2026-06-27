@@ -34,10 +34,8 @@ function SpotlightCard({ children, className = '' }: { children: React.ReactNode
         // otherwise drops the unprefixed `backdrop-filter` from a plain media-query rule
         // and leaves Chrome-Android still blurring. The var fallbacks are the desktop look.
         backgroundColor: 'var(--card-bg, rgba(28, 28, 34, 0.45))',
-        backdropFilter: 'var(--card-frost, blur(24px) saturate(160%) brightness(1.12))',
-        WebkitBackdropFilter: 'var(--card-frost, blur(24px) saturate(160%) brightness(1.12))',
-        willChange: 'transform, backdrop-filter',
-        transform: 'translateZ(0)'
+        backdropFilter: 'var(--card-frost, blur(15px))',
+        WebkitBackdropFilter: 'var(--card-frost, blur(15px))'
       }}
     >
       {children}
