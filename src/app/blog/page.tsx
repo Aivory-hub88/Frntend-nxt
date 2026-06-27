@@ -3,6 +3,7 @@ import Link from "next/link"
 import Navbar from "@/components/home/Navbar";
 import Footer from "@/components/Footer";
 import { getBlogPosts, BlogPost, BlogPostsResponse } from "@/lib/blog-api"
+import { DEFAULT_OG_IMAGE } from "@/lib/seo"
 
 export const metadata: Metadata = {
   title: "Blog",
@@ -15,7 +16,9 @@ export const metadata: Metadata = {
     description:
       "Insights, guides, and updates on AI adoption, automation, and business transformation.",
     url: "/blog",
+    images: [DEFAULT_OG_IMAGE],
   },
+  twitter: { card: "summary_large_image", images: [DEFAULT_OG_IMAGE] },
 }
 
 function formatDate(dateString: string): string {

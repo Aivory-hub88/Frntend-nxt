@@ -21,6 +21,13 @@ export const SITE_URL = (
 /** Human-readable site/brand name. */
 export const SITE_NAME = "Aivory";
 
+/**
+ * Default social/share image. Next.js does NOT inherit parent
+ * `openGraph.images` into a page that defines its own `openGraph`, so pages
+ * use this explicitly as a fallback when they have no image of their own.
+ */
+export const DEFAULT_OG_IMAGE = "/hero-video-poster.jpg";
+
 /** Build an absolute URL from a site-relative path. */
 export function absoluteUrl(path = "/"): string {
   return `${SITE_URL}${path.startsWith("/") ? path : `/${path}`}`;

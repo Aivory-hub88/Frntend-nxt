@@ -3,6 +3,7 @@ import Link from "next/link"
 import Navbar from "@/components/home/Navbar";
 import Footer from "@/components/Footer";
 import { getVacancies, type Vacancy } from "@/lib/careers-api"
+import { DEFAULT_OG_IMAGE } from "@/lib/seo"
 
 export const metadata: Metadata = {
   title: "Careers",
@@ -14,7 +15,9 @@ export const metadata: Metadata = {
     title: "Careers at Aivory",
     description: "Explore open roles and join the team building AI for business.",
     url: "/careers",
+    images: [DEFAULT_OG_IMAGE],
   },
+  twitter: { card: "summary_large_image", images: [DEFAULT_OG_IMAGE] },
 }
 
 /**

@@ -7,6 +7,7 @@ import { getVacancy, type Vacancy } from "@/lib/careers-api"
 import {
   ORGANIZATION,
   SITE_NAME,
+  DEFAULT_OG_IMAGE,
   absoluteUrl,
   richContentToPlainText,
   clampDescription,
@@ -104,8 +105,9 @@ export async function generateMetadata(
       title: `${vacancy.title} — Careers at ${SITE_NAME}`,
       description,
       url,
+      images: [DEFAULT_OG_IMAGE],
     },
-    twitter: { card: "summary", title: vacancy.title, description },
+    twitter: { card: "summary_large_image", title: vacancy.title, description, images: [DEFAULT_OG_IMAGE] },
   }
 }
 

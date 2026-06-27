@@ -7,6 +7,7 @@ import { notFound } from "next/navigation"
 import {
   SITE_URL,
   ORGANIZATION,
+  DEFAULT_OG_IMAGE,
   absoluteUrl,
   richContentToPlainText,
   clampDescription,
@@ -36,7 +37,7 @@ export async function generateMetadata(
 
   const description = postDescription(post)
   const url = absoluteUrl(`/blog/${post.slug}`)
-  const images = post.thumbnail_url ? [post.thumbnail_url] : undefined
+  const images = [post.thumbnail_url || DEFAULT_OG_IMAGE]
 
   return {
     title: post.title,
