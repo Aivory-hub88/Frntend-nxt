@@ -23,7 +23,7 @@ function SpotlightCard({ children, className = '' }: { children: React.ReactNode
       onMouseMove={handleMouseMove}
       className={`spotlight-card rounded-2xl border border-white/10 shadow-xl ${className}`}
       style={{
-        backgroundColor: 'rgba(0, 0, 0, 0.4)',
+        backgroundColor: 'rgba(255, 255, 255, 0.02)',
         backdropFilter: 'blur(24px)',
         WebkitBackdropFilter: 'blur(24px)'
       }}
@@ -49,8 +49,8 @@ function AutonomousAgentAnimation() {
     {
       name: 'Slack',
       icon: '/integrations/icons/slack.svg',
-      bg: 'rgba(26, 26, 46, 0.8)',
-      headerBg: 'rgba(45, 45, 63, 0.9)',
+      bg: 'rgba(26, 26, 46, 0.5)',
+      headerBg: 'rgba(45, 45, 63, 0.65)',
       channel: '#sales-leads',
       messages: [
         { from: 'user', text: 'New lead from contact form — urgent' },
@@ -60,8 +60,8 @@ function AutonomousAgentAnimation() {
     {
       name: 'WhatsApp',
       icon: '/integrations/icons/whatsapp.svg',
-      bg: 'rgba(11, 20, 26, 0.8)',
-      headerBg: 'rgba(31, 44, 51, 0.9)',
+      bg: 'rgba(11, 20, 26, 0.5)',
+      headerBg: 'rgba(31, 44, 51, 0.65)',
       channel: 'Customer Support',
       messages: [
         { from: 'user', text: 'Hi, I need help with my order #4821' },
@@ -71,8 +71,8 @@ function AutonomousAgentAnimation() {
     {
       name: 'Telegram',
       icon: '/integrations/icons/telegram.svg',
-      bg: 'rgba(23, 33, 43, 0.8)',
-      headerBg: 'rgba(36, 47, 61, 0.9)',
+      bg: 'rgba(23, 33, 43, 0.5)',
+      headerBg: 'rgba(36, 47, 61, 0.65)',
       channel: 'Ops Notifications',
       messages: [
         { from: 'user', text: 'Schedule a follow-up with prospect ABC Corp' },
@@ -229,7 +229,7 @@ function TemplateLibraryAnimation() {
       {templates.map((tmpl, i) => (
         <div
           key={tmpl.label}
-          className="flex flex-col items-center justify-center gap-2 bg-black/40 border border-white/5 rounded-xl p-3 hover:border-white/15 hover:bg-black/60 transition-all duration-300 cursor-default group"
+          className="flex flex-col items-center justify-center gap-2 bg-white/[0.03] border border-white/5 rounded-xl p-3 hover:border-white/15 hover:bg-white/[0.06] transition-all duration-300 cursor-default group"
           style={{ animationDelay: `${i * 0.1}s` }}
         >
           <div className="text-white/40 group-hover:text-white/70 transition-colors duration-300">
@@ -780,7 +780,7 @@ function AgentCard({ agent }: { agent: typeof NEW_AGENTS[0] }) {
       </div>
 
       {/* Animation Element */}
-      <div className="relative z-10 flex-1 min-h-[300px] bg-black/60 border border-white/5 rounded-xl mt-auto overflow-hidden flex flex-col pt-10">
+      <div className="relative z-10 flex-1 min-h-[300px] bg-white/[0.03] border border-white/5 rounded-xl mt-auto overflow-hidden flex flex-col pt-10">
         
         {/* Status Header */}
         <div className="absolute top-4 left-4 flex items-center gap-2 z-20">
