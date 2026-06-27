@@ -31,7 +31,7 @@ export default function HomePage() {
             <FeatureCards />
             
             {/* Scaled down content (85%) */}
-            <div style={{ zoom: 0.85, marginTop: '-150px' }}>
+            <div style={{ zoom: 0.85 }}>
               <StatsSection />
             </div>
 
