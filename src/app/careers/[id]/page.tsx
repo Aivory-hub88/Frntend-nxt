@@ -396,6 +396,17 @@ export default async function VacancyDetailPage(props: { params: Promise<{ id: s
       <main className="flex-1 px-6 py-24">
         <div className="max-w-3xl mx-auto">
           <JsonLd data={jobPostingJsonLd(vacancy, clampDescription(vacancyDescription(vacancy), 500))} />
+          <JsonLd
+            data={{
+              "@context": "https://schema.org",
+              "@type": "BreadcrumbList",
+              itemListElement: [
+                { "@type": "ListItem", position: 1, name: "Home", item: absoluteUrl("/") },
+                { "@type": "ListItem", position: 2, name: "Careers", item: absoluteUrl("/careers") },
+                { "@type": "ListItem", position: 3, name: vacancy.title, item: absoluteUrl(`/careers/${vacancy.id}`) },
+              ],
+            }}
+          />
           {/* Back link */}
           <Link
             href="/careers"

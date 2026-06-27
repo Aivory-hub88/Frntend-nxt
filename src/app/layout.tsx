@@ -14,6 +14,9 @@ const SITE_TITLE = 'Aivory — AI-Powered Business Transformation';
 const SITE_DESCRIPTION =
   'From diagnostic to deployment — everything you need to integrate AI into your business operations.';
 
+// Default social/share image used by any page that doesn't set its own.
+const DEFAULT_OG_IMAGE = '/hero-video-poster.jpg';
+
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
@@ -31,11 +34,13 @@ export const metadata: Metadata = {
     title: SITE_TITLE,
     description: SITE_DESCRIPTION,
     url: SITE_URL,
+    images: [{ url: DEFAULT_OG_IMAGE, width: 1200, height: 630, alt: SITE_TITLE }],
   },
   twitter: {
     card: 'summary_large_image',
     title: SITE_TITLE,
     description: SITE_DESCRIPTION,
+    images: [DEFAULT_OG_IMAGE],
   },
 };
 
