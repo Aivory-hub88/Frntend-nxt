@@ -11,3 +11,6 @@ public/hero-video/*.aep
 public/hero-video/Adobe After Effects Auto-Save
 public/hero-video/Fills
 traefik
+
+# dashboards are separate apps — exclude from the landing build context
+frontend/

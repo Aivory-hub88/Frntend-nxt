@@ -43,3 +43,7 @@ next-env.d.ts
 # Adobe After Effects files
 *.aep
 **/Adobe After Effects Auto-Save/
+
+# dashboards live in their own repos (decoupled) — never nest here
+/frontend/avry-admin-dashboard/
+/frontend/avry-user-dashboard/
