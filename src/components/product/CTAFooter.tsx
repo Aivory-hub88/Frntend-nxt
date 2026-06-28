@@ -20,7 +20,7 @@ export function CTAFooter({ title, subtitle, primaryCta, secondaryCta }: CTAFoot
     const isContact = cta.href === '#contact';
     const baseClasses = "w-full sm:w-auto inline-flex justify-center items-center gap-3 no-underline uppercase cursor-pointer transition-all duration-[250ms] min-h-[44px]";
     const primaryClasses = "text-[#494949] bg-[#a3aa96] hover:bg-[#8f9681]";
-    const secondaryClasses = "text-white border border-white/20 bg-black/60 hover:bg-white hover:text-black hover:border-white";
+    const secondaryClasses = "text-white border border-white/20 bg-black/60 hover:border-[#a3aa96] hover:bg-white/5";
     const className = `${baseClasses} ${isPrimary ? primaryClasses : secondaryClasses}`;
     
     const inlineStyle = {
