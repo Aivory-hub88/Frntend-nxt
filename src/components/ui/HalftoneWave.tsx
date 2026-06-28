@@ -84,7 +84,7 @@ export function HalftoneWave() {
         uniform float uFarDim;
         uniform float uNearBright;
 
-        float getCloudLayer(sampler2D tex, vec2 cell, float scale, float speed, vec2 offset, float time) {
+        vec3 getCloudLayer(sampler2D tex, vec2 cell, float scale, float speed, vec2 offset, float time) {
             // Base continuous coordinates
             float baseMovingX = cell.x * scale + offset.x - time * speed;
             float baseY = cell.y * (scale * 1.21) + offset.y;
@@ -119,7 +119,8 @@ export function HalftoneWave() {
             edgeMask *= smoothstep(0.0, 0.1, localY) * smoothstep(1.0, 0.9, localY);
             
             float texVal = texture2D(tex, vec2(localX, croppedY)).r;
-            return (1.0 - texVal) * edgeMask;
+            float density = (1.0 - texVal) * edgeMask;
+            return vec3(density, localX, localY);
         }
 
         void main() {
@@ -136,22 +137,23 @@ export function HalftoneWave() {
           // cloud survives -> higher = more open sky (less "padat").
           float density = 0.0;
           float depth = 0.0;
+          vec2 cloudLocal = vec2(0.5);
 
 #if IS_MOBILE == 1
-          float r1 = getCloudLayer(uTexture, cell, 0.071, 0.015, vec2(0.0, 0.0), uTime);
-          float r4 = getCloudLayer(uTexture, cell, 0.016, 0.08, vec2(0.1, 0.5), uTime);
-          float a1 = smoothstep(uDensityFloor, uDensityFloor + 0.2, r1); density = mix(density, r1, a1); depth = mix(depth, 0.0, a1);
-          float a4 = smoothstep(uDensityFloor, uDensityFloor + 0.2, r4); density = mix(density, r4, a4); depth = mix(depth, 1.0, a4);
+          vec3 r1 = getCloudLayer(uTexture, cell, 0.071, 0.015, vec2(0.0, 0.0), uTime);
+          vec3 r4 = getCloudLayer(uTexture, cell, 0.016, 0.08, vec2(0.1, 0.5), uTime);
+          float a1 = smoothstep(uDensityFloor, uDensityFloor + 0.2, r1.x); density = mix(density, r1.x, a1); depth = mix(depth, 0.0, a1); cloudLocal = mix(cloudLocal, r1.yz, a1);
+          float a4 = smoothstep(uDensityFloor, uDensityFloor + 0.2, r4.x); density = mix(density, r4.x, a4); depth = mix(depth, 1.0, a4); cloudLocal = mix(cloudLocal, r4.yz, a4);
 #else
-          float r1 = getCloudLayer(uTexture, cell, 0.071, 0.015, vec2(0.0, 0.0), uTime);  // far
-          float r2 = getCloudLayer(uTexture, cell, 0.048, 0.03, vec2(0.33, 0.7), uTime);
-          float r3 = getCloudLayer(uTexture, cell, 0.028, 0.05, vec2(0.66, 0.2), uTime);
-          float r4 = getCloudLayer(uTexture, cell, 0.016, 0.08, vec2(0.1, 0.5), uTime);   // near
+          vec3 r1 = getCloudLayer(uTexture, cell, 0.071, 0.015, vec2(0.0, 0.0), uTime);  // far
+          vec3 r2 = getCloudLayer(uTexture, cell, 0.048, 0.03, vec2(0.33, 0.7), uTime);
+          vec3 r3 = getCloudLayer(uTexture, cell, 0.028, 0.05, vec2(0.66, 0.2), uTime);
+          vec3 r4 = getCloudLayer(uTexture, cell, 0.016, 0.08, vec2(0.1, 0.5), uTime);   // near
 
-          float a1 = smoothstep(uDensityFloor, uDensityFloor + 0.2, r1); density = mix(density, r1, a1); depth = mix(depth, 0.00, a1);
-          float a2 = smoothstep(uDensityFloor, uDensityFloor + 0.2, r2); density = mix(density, r2, a2); depth = mix(depth, 0.40, a2);
-          float a3 = smoothstep(uDensityFloor, uDensityFloor + 0.2, r3); density = mix(density, r3, a3); depth = mix(depth, 0.70, a3);
-          float a4 = smoothstep(uDensityFloor, uDensityFloor + 0.2, r4); density = mix(density, r4, a4); depth = mix(depth, 1.00, a4);
+          float a1 = smoothstep(uDensityFloor, uDensityFloor + 0.2, r1.x); density = mix(density, r1.x, a1); depth = mix(depth, 0.00, a1); cloudLocal = mix(cloudLocal, r1.yz, a1);
+          float a2 = smoothstep(uDensityFloor, uDensityFloor + 0.2, r2.x); density = mix(density, r2.x, a2); depth = mix(depth, 0.40, a2); cloudLocal = mix(cloudLocal, r2.yz, a2);
+          float a3 = smoothstep(uDensityFloor, uDensityFloor + 0.2, r3.x); density = mix(density, r3.x, a3); depth = mix(depth, 0.70, a3); cloudLocal = mix(cloudLocal, r3.yz, a3);
+          float a4 = smoothstep(uDensityFloor, uDensityFloor + 0.2, r4.x); density = mix(density, r4.x, a4); depth = mix(depth, 1.00, a4); cloudLocal = mix(cloudLocal, r4.yz, a4);
 #endif
 
           // Map the surviving density into the ASCII character ramp.
@@ -198,12 +200,26 @@ export function HalftoneWave() {
           vec3 nearColor = uColor * uNearBright;  // foreground: bright
           vec3 base = mix(farColor, nearColor, depth);
 
+          // 4. ANALOG 3D GRADIENT (VOLUMETRIC SHADING)
+          // local.y is ~1.0 at the top (brighter), ~0.0 at the bottom (darker)
+          // local.x is ~1.0 at the right, ~0.0 at the left
+          // This creates a smooth gradient across the ASCII characters!
+          float gradientY = smoothstep(0.1, 0.9, cloudLocal.y);
+          float gradientX = smoothstep(0.2, 0.8, cloudLocal.x);
+          
+          // Combine for a volumetric light effect (e.g. light from Top-Right)
+          float volumetricShadow = mix(0.35, 1.45, gradientY * 0.7 + gradientX * 0.3);
+
           float pop = pow(density, 1.5);
           vec3 finalColor = base * (0.65 + 0.55 * pop);
+          
+          // Apply the 3D analog gradient
+          finalColor *= volumetricShadow;
 
-          // Rim light only on thick, NEAR clouds -> crisp 3D edge without flooding the BG
+          // Rim light: Make it respect the directional light so it only shines on the lit edges!
           float rim = smoothstep(0.45, 0.75, density) * depth;
-          finalColor += uColor * rim * 0.35;
+          float directionalRim = rim * smoothstep(0.4, 0.9, gradientY);
+          finalColor += uColor * directionalRim * 0.6;
 
           gl_FragColor = vec4(finalColor, 1.0);
         }
