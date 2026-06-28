@@ -128,7 +128,7 @@ export default function HeroSection() {
         <div className="animate-slide-up-3" style={{ animationDelay: '0.6s' }}>
           <a
             href="/free-diagnostic"
-            className="inline-flex items-center gap-3 text-white no-underline uppercase cursor-pointer transition-all duration-[250ms] border border-white/20 bg-black/60 hover:bg-white hover:text-black hover:border-white animate-gentle-bounce min-h-[44px]"
+            className="inline-flex items-center gap-3 text-white no-underline uppercase cursor-pointer transition-all duration-[250ms] border border-white/20 bg-black/60 hover:border-[#a3aa96] hover:bg-white/5 animate-gentle-bounce min-h-[44px]"
             style={{
               padding: '0.75rem 1.5rem',
               fontFamily: "'Manrope', sans-serif",
@@ -139,7 +139,7 @@ export default function HeroSection() {
             }}
           >
             <svg
-              className="w-4 h-4"
+              className="w-4 h-4 text-[#a3aa96]"
               viewBox="0 0 24 24"
               fill="none"
               stroke="currentColor"
