@@ -238,7 +238,7 @@ export default async function BlogPostPage(props: { params: Promise<{ slug: stri
             <p className="text-red-400 mb-4">{error}</p>
             <Link
               href="/blog"
-              className="inline-flex items-center justify-center gap-3 text-white no-underline uppercase cursor-pointer transition-all duration-[250ms] border border-white/20 bg-black/60 hover:bg-white hover:text-black hover:border-white min-h-[44px]"
+              className="inline-flex items-center justify-center gap-3 text-white no-underline uppercase cursor-pointer transition-all duration-[250ms] border border-white/20 bg-black/60 hover:border-[#a3aa96] hover:bg-white/5 min-h-[44px]"
               style={{
                 padding: '0.75rem 1.5rem',
                 fontFamily: "'Manrope', sans-serif",
