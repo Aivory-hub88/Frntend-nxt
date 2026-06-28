@@ -169,7 +169,7 @@ export default function ContactPage() {
               </p>
               <button
                 onClick={() => setIsSubmitted(false)}
-                className="flex items-center justify-center gap-2 mx-auto px-8 py-3.5 border border-white text-white font-semibold hover:bg-white hover:text-black transition-all text-sm"
+                className="flex items-center justify-center gap-2 mx-auto px-8 py-3.5 border border-white/20 text-white font-semibold hover:border-[#a3aa96] hover:bg-white/5 transition-all text-sm"
               >
                 <svg
                   width="14"
