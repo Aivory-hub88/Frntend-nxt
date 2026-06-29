@@ -113,9 +113,10 @@ export function HalftoneWave() {
             // The original image has huge empty margins. Crop to the middle 82.5% (0.0875 to 0.9125)
             float croppedY = mix(0.0875, 0.9125, localY);
             
-            // Soften the edges to prevent any hard seams if the cloud touches the tile boundary
-            float edgeMask = smoothstep(0.0, 0.05, localX) * smoothstep(1.0, 0.95, localX);
-            edgeMask *= smoothstep(0.0, 0.1, localY) * smoothstep(1.0, 0.9, localY);
+            // Soften the edges significantly so clouds fading at the tile boundaries don't form hard geometric shapes
+            // This prevents the "aneh" / chopped-off rectangular look when random offsets push clouds to the edge.
+            float edgeMask = smoothstep(0.0, 0.25, localX) * smoothstep(1.0, 0.75, localX);
+            edgeMask *= smoothstep(0.0, 0.3, localY) * smoothstep(1.0, 0.7, localY);
             
             float texVal = texture2D(tex, vec2(localX, croppedY)).r;
             
