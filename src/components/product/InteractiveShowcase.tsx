@@ -18,8 +18,13 @@ function SpotlightCard({ children, className = '', style }: { children: React.Re
     <div
       ref={cardRef}
       onMouseMove={handleMouseMove}
-      className={`relative spotlight-card border border-white/10 transition-colors bg-[#0a0a0a] overflow-hidden rounded-3xl ${className}`}
-      style={style}
+      className={`relative spotlight-card border-t border-l border-white/10 border-b border-r border-black/20 shadow-[0_8px_32px_rgba(0,0,0,0.4)] overflow-hidden rounded-[24px] ${className}`}
+      style={{
+        backgroundColor: 'var(--card-bg, rgba(28, 28, 34, 0.45))',
+        backdropFilter: 'var(--card-frost, blur(2.5px))',
+        WebkitBackdropFilter: 'var(--card-frost, blur(2.5px))',
+        ...style
+      }}
     >
       {children}
     </div>
