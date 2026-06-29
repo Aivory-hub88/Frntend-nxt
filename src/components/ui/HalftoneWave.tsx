@@ -199,69 +199,86 @@ export function HalftoneWave() {
           // Map the surviving density into the ASCII character ramp.
           density = smoothstep(0.0, 0.85, density);
 
-          // 3. ASCII / BITMAP RENDERER
-          // Map density to 6 distinct levels (0 = empty, 5 = solid)
-          int charIndex = int(floor(density * 5.99));
+          // 3. GEOMETRIC PIXEL / SDF RENDERER
+          if (density < 0.01) discard;
 
-          // Create a 5x5 pixel-art grid inside this cell
-          vec2 p5 = floor(local * 5.0); 
-          float shape = 0.0;
+          // Shift local to [-0.5, 0.5] for SDF math
+          vec2 uv = local - 0.5;
+          
+          // --- PROCEDURAL ANIMATION ---
+          // Unique phase per cell
+          float rotPhase = fract(sin(dot(cell, vec2(12.9898, 78.233))) * 43758.5453);
+          
+          // Rotation angle: slowly spins, alternating direction based on phase
+          float angle = uTime * (rotPhase - 0.5) * 4.0 + rotPhase * 6.2831;
+          
+          // 2D Rotation Matrix
+          float c = cos(angle);
+          float s = sin(angle);
+          mat2 rot = mat2(c, -s, s, c);
+          
+          // Apply rotation and breathing scale
+          vec2 rotUV = rot * uv;
+          float scalePulse = 1.0 + 0.15 * sin(uTime * 3.0 + rotPhase * 10.0);
+          rotUV *= scalePulse;
 
-          if (charIndex == 1) {
-              // Level 1: '.' (center dot)
-              if (p5.x == 2.0 && p5.y == 2.0) shape = 1.0;
-          } else if (charIndex == 2) {
-              // Level 2: '+' (plus)
-              if (p5.x == 2.0 && p5.y > 0.0 && p5.y < 4.0) shape = 1.0;
-              if (p5.y == 2.0 && p5.x > 0.0 && p5.x < 4.0) shape = 1.0;
-          } else if (charIndex == 3) {
-              // Level 3: 'x' (cross)
-              if (p5.x == p5.y && p5.x > 0.0 && p5.x < 4.0) shape = 1.0;
-              if (p5.x == (4.0 - p5.y) && p5.x > 0.0 && p5.x < 4.0) shape = 1.0;
-          } else if (charIndex == 4) {
-              // Level 4: '[]' (square outline / 'o')
-              if ((p5.x == 1.0 || p5.x == 3.0) && p5.y >= 1.0 && p5.y <= 3.0) shape = 1.0;
-              if ((p5.y == 1.0 || p5.y == 3.0) && p5.x >= 1.0 && p5.x <= 3.0) shape = 1.0;
-          } else if (charIndex >= 5) {
-              // Level 5: '■' (solid block)
-              if (p5.x >= 1.0 && p5.x <= 3.0 && p5.y >= 1.0 && p5.y <= 3.0) shape = 1.0;
+          // --- SDF MORPHING LOGIC ---
+          float d = 0.0;
+          float threshold = 0.0;
+          
+          if (density < 0.33) {
+              // Morph from dot to circle
+              float t = density / 0.33; 
+              d = length(rotUV);
+              threshold = mix(0.0, 0.35, t);
+          } else if (density < 0.66) {
+              // Morph from circle to rhombus/diamond
+              float t = (density - 0.33) / 0.33; 
+              float circleDist = length(rotUV);
+              float rhombusDist = (abs(rotUV.x) + abs(rotUV.y)) * 0.8; // scale adjustment
+              d = mix(circleDist, rhombusDist, t);
+              threshold = mix(0.35, 0.42, t);
+          } else {
+              // Morph from rhombus to square block
+              float t = (density - 0.66) / 0.34; 
+              float rhombusDist = (abs(rotUV.x) + abs(rotUV.y)) * 0.8;
+              float squareDist = max(abs(rotUV.x), abs(rotUV.y));
+              d = mix(rhombusDist, squareDist, t);
+              threshold = mix(0.42, 0.45, t);
           }
+          
+          // Anti-aliased shape
+          float shape = smoothstep(threshold + 0.05, threshold - 0.05, d);
+          
+          if (shape < 0.01) discard;
 
-          if (shape == 0.0) {
-            discard;
-          }
+          // SDF Edge for 3D Volumetric Rim Lighting (0.0 at center, 1.0 at edge)
+          float innerEdge = smoothstep(threshold - 0.15, threshold, d);
 
           // 3D shading via ATMOSPHERIC PERSPECTIVE.
-          // Brightness is driven primarily by DEPTH (which layer won this pixel),
-          // not just density: far clouds stay dim (and readable behind text),
-          // near clouds pop. Density then adds a secondary highlight on the peaks,
-          // so a near cloud clearly reads as "in front of" a far one.
-          vec3 farColor  = uColor * uFarDim;      // background: dim
-          vec3 nearColor = uColor * uNearBright;  // foreground: bright
+          vec3 farColor  = uColor * uFarDim;      
+          vec3 nearColor = uColor * uNearBright;  
           vec3 base = mix(farColor, nearColor, depth);
 
           // 4. ANALOG 3D GRADIENT (VOLUMETRIC SHADING)
-          // local.y is ~1.0 at the top (brighter), ~0.0 at the bottom (darker)
-          // local.x is ~1.0 at the right, ~0.0 at the left
-          // This creates a smooth gradient across the ASCII characters!
           float gradientY = smoothstep(0.1, 0.9, cloudLocal.y);
           float gradientX = smoothstep(0.2, 0.8, cloudLocal.x);
           
-          // Combine for a volumetric light effect (e.g. light from Top-Right)
-          float volumetricShadow = mix(0.35, 1.45, gradientY * 0.7 + gradientX * 0.3);
+          // Base Volumetric Shadow
+          float volumetricShadow = mix(0.4, 1.4, gradientY * 0.7 + gradientX * 0.3);
 
           float pop = pow(density, 1.5);
           vec3 finalColor = base * (0.65 + 0.55 * pop);
-          
-          // Apply the 3D analog gradient
           finalColor *= volumetricShadow;
 
-          // Rim light: Make it respect the directional light so it only shines on the lit edges!
-          float rim = smoothstep(0.45, 0.75, density) * depth;
-          float directionalRim = rim * smoothstep(0.4, 0.9, gradientY);
-          finalColor += uColor * directionalRim * 0.6;
-
-          gl_FragColor = vec4(finalColor, 1.0);
+          // 3D Bevel/Rim Light using the SDF Inner Edge!
+          // We combine the macro gradient with the micro innerEdge to make the shapes look like extruded 3D blocks
+          float rim = smoothstep(0.4, 0.8, density) * depth;
+          float bevelLight = innerEdge * smoothstep(0.3, 0.9, gradientY) * rim;
+          finalColor += uColor * bevelLight * 0.8;
+          
+          // Apply shape anti-aliasing alpha
+          gl_FragColor = vec4(finalColor, shape);
         }
       `,
       transparent: true,
