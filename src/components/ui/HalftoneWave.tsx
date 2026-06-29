@@ -25,6 +25,7 @@ export function HalftoneWave() {
     
     // EXTREME OPTIMIZATION: Reduce render resolution by 50% universally.
     // For Geometric Pixel shaders, lower resolution is fine and it cuts GPU load by 75%!
+    const isMobile = window.innerWidth < 1024;
     renderer.setPixelRatio(isMobile ? 0.4 : 0.5);
     
     mountRef.current.appendChild(renderer.domElement);
