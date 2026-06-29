@@ -114,8 +114,8 @@ export function HalftoneWave() {
             float croppedY = mix(0.0875, 0.9125, localY);
             
             // Soften the edges significantly so clouds fading at the tile boundaries don't form hard geometric shapes
-            // CRITICAL FIX: The row jumps at `baseY` boundaries, so we MUST mask Y using `fract(baseY)`. 
-            // The column jumps at `finalX` boundaries, so we mask X using `localX` (`fract(finalX)`).
+            // CRITICAL FIX: The row jumps at baseY boundaries, so we MUST mask Y using fract(baseY). 
+            // The column jumps at finalX boundaries, so we mask X using localX (fract(finalX)).
             float physicalLocalY = fract(baseY);
             float edgeMask = smoothstep(0.0, 0.25, localX) * smoothstep(1.0, 0.75, localX);
             edgeMask *= smoothstep(0.0, 0.3, physicalLocalY) * smoothstep(1.0, 0.7, physicalLocalY);
