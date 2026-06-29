@@ -230,21 +230,21 @@ export function HalftoneWave() {
               // Morph from dot to circle
               float t = density / 0.33; 
               d = length(rotUV);
-              threshold = mix(0.0, 0.35, t);
+              threshold = mix(0.0, 0.25, t); // Reduced from 0.35
           } else if (density < 0.66) {
               // Morph from circle to rhombus/diamond
               float t = (density - 0.33) / 0.33; 
               float circleDist = length(rotUV);
-              float rhombusDist = (abs(rotUV.x) + abs(rotUV.y)) * 0.8; // scale adjustment
+              float rhombusDist = (abs(rotUV.x) + abs(rotUV.y)) * 0.8; 
               d = mix(circleDist, rhombusDist, t);
-              threshold = mix(0.35, 0.42, t);
+              threshold = mix(0.25, 0.3, t); // Reduced from 0.42
           } else {
               // Morph from rhombus to square block
               float t = (density - 0.66) / 0.34; 
               float rhombusDist = (abs(rotUV.x) + abs(rotUV.y)) * 0.8;
               float squareDist = max(abs(rotUV.x), abs(rotUV.y));
               d = mix(rhombusDist, squareDist, t);
-              threshold = mix(0.42, 0.45, t);
+              threshold = mix(0.3, 0.33, t); // Reduced from 0.45. A 0.33 square fits perfectly in a 0.5 radius circle when rotated!
           }
           
           // Anti-aliased shape
@@ -258,24 +258,36 @@ export function HalftoneWave() {
           // 3D shading via ATMOSPHERIC PERSPECTIVE.
           vec3 farColor  = uColor * uFarDim;      
           vec3 nearColor = uColor * uNearBright;  
-          vec3 base = mix(farColor, nearColor, depth);
+          
+          // Introduce macro-gradient variations based on screen position (cloudLocal)
+          // to make the greys less flat and more dynamic.
+          float macroGrad = smoothstep(0.0, 1.0, cloudLocal.x + cloudLocal.y * 0.5);
+          vec3 gradTint = mix(vec3(0.85, 0.9, 1.0), vec3(1.0, 0.95, 0.85), macroGrad); // subtle cool to warm grey
+          
+          // Add micro-variation per cell to break monotony
+          float cellTone = mix(0.85, 1.15, rotPhase); // random brightness per pixel
+          
+          vec3 base = mix(farColor, nearColor, depth) * gradTint * cellTone;
 
           // 4. ANALOG 3D GRADIENT (VOLUMETRIC SHADING)
           float gradientY = smoothstep(0.1, 0.9, cloudLocal.y);
           float gradientX = smoothstep(0.2, 0.8, cloudLocal.x);
           
           // Base Volumetric Shadow
-          float volumetricShadow = mix(0.4, 1.4, gradientY * 0.7 + gradientX * 0.3);
+          float volumetricShadow = mix(0.3, 1.5, gradientY * 0.7 + gradientX * 0.3);
 
-          float pop = pow(density, 1.5);
-          vec3 finalColor = base * (0.65 + 0.55 * pop);
+          float pop = pow(density, 1.2); // softer pop
+          vec3 finalColor = base * (0.6 + 0.6 * pop);
           finalColor *= volumetricShadow;
 
           // 3D Bevel/Rim Light using the SDF Inner Edge!
           // We combine the macro gradient with the micro innerEdge to make the shapes look like extruded 3D blocks
-          float rim = smoothstep(0.4, 0.8, density) * depth;
-          float bevelLight = innerEdge * smoothstep(0.3, 0.9, gradientY) * rim;
-          finalColor += uColor * bevelLight * 0.8;
+          float rim = smoothstep(0.3, 0.9, density) * (depth * 0.8 + 0.2);
+          float bevelLight = innerEdge * smoothstep(0.2, 1.0, gradientY) * rim;
+          
+          // Highlight uses white for better contrast
+          vec3 highlightColor = vec3(1.0, 1.0, 1.0);
+          finalColor += highlightColor * bevelLight * 0.6;
           
           // Apply shape anti-aliasing alpha
           gl_FragColor = vec4(finalColor, shape);
