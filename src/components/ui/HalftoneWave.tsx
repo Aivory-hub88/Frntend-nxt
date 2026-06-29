@@ -23,9 +23,9 @@ export function HalftoneWave() {
     const renderer = new THREE.WebGLRenderer({ antialias: false, alpha: true });
     renderer.setSize(width, height);
     
-    // EXTREME MOBILE OPTIMIZATION: Reduce render resolution by 50% on mobile (saves 75% fragments!)
-    const isMobile = window.innerWidth < 1024;
-    renderer.setPixelRatio(isMobile ? 0.5 : 1);
+    // EXTREME OPTIMIZATION: Reduce render resolution by 50% universally.
+    // For Geometric Pixel shaders, lower resolution is fine and it cuts GPU load by 75%!
+    renderer.setPixelRatio(isMobile ? 0.4 : 0.5);
     
     mountRef.current.appendChild(renderer.domElement);
 
@@ -42,7 +42,7 @@ export function HalftoneWave() {
       uTime: { value: 0.0 },
       uColor: { value: new THREE.Color('#444444') },
       uResolution: { value: new THREE.Vector2(width, height) },
-      uPixelSize: { value: 18.0 }, // Larger geometric pixels (easier to see shapes, fewer objects)
+      uPixelSize: { value: 14.0 }, // Sweet spot: not too small to clutter, not too big
       uTexture: { value: defaultTexture },
       // ── depth / density tuning knobs (tweak freely & redeploy) ──
       uDensityFloor: { value: 0.70 }, // Massively increased to severely thin out the clouds (less visual clutter)
@@ -118,10 +118,8 @@ export function HalftoneWave() {
             float edgeMask = smoothstep(0.0, 0.25, localX) * smoothstep(1.0, 0.75, localX);
             edgeMask *= smoothstep(0.0, 0.3, physicalLocalY) * smoothstep(1.0, 0.7, physicalLocalY);
             
-            // --- BLOOMING & SHATTERING LIFE CYCLE ---
-            // 1. Bloom: Organically grows from the center outwards (Radial Mask)
-            // 2. Stable: Idle and moving
-            // 3. Shatter: Dissolves into noise and drifts upwards (Dandelion erosion)
+            // 1. Stable: Idle and moving
+            // 2. Shatter: Dissolves into noise and drifts upwards (Dandelion erosion)
             
             // Unique phase for this cloud
             float phase = fract(sin(col * 12.33 + row * 45.67) * 78.91);
@@ -130,13 +128,7 @@ export function HalftoneWave() {
             float cycle = fract(cycleTime + phase);
             
             // Stages
-            float bloomProgress = smoothstep(0.0, 0.25, cycle);       // 25% of cycle
             float shatterProgress = smoothstep(0.70, 1.0, cycle);     // 30% of cycle
-            
-            // 1. Bloom Radial Mask (Grows from center 0.5, 0.5)
-            float distToCenter = distance(vec2(localX, localY), vec2(0.5, 0.5));
-            float bloomRadius = bloomProgress * 0.85; // Expands to cover the tile
-            float bloomMask = smoothstep(bloomRadius + 0.15, bloomRadius - 0.05, distToCenter);
             
             // 2. Dandelion Shatter / Dissolve Effect
             // High frequency noise for organic disintegration
@@ -157,8 +149,8 @@ export function HalftoneWave() {
             float croppedY = mix(0.0875, 0.9125, sampleY);
             float texVal = texture2D(tex, vec2(sampleX, croppedY)).r;
             
-            // Combine all masks
-            float lifeAlpha = bloomMask * shatterMask;
+            // Combine all masks (Removed bloom to improve performance and visuals)
+            float lifeAlpha = shatterMask;
             float density = (1.0 - texVal) * edgeMask * lifeAlpha * uvBoundsMask;
             return vec3(density, localX, localY);
         }
@@ -241,10 +233,10 @@ export function HalftoneWave() {
 
           // 3D shading via ATMOSPHERIC PERSPECTIVE & MULTI-TONE GREY PALETTE
           // Stealthy, ultra-dark palette to ensure text remains highly legible and background isn't blinding
-          vec3 darkGunmetal = vec3(0.01, 0.01, 0.01); // Almost black
-          vec3 charcoal     = vec3(0.03, 0.04, 0.05); // Very dark
-          vec3 ashGrey      = vec3(0.08, 0.09, 0.10); // Dim grey
-          vec3 silver       = vec3(0.14, 0.15, 0.16); // Muted highlights
+          vec3 darkGunmetal = vec3(0.005, 0.005, 0.005); // Pure stealth
+          vec3 charcoal     = vec3(0.015, 0.020, 0.025); // Very dark
+          vec3 ashGrey      = vec3(0.035, 0.040, 0.045); // Dim grey
+          vec3 silver       = vec3(0.080, 0.090, 0.100); // Muted highlights
           
           // Interpolate based on depth (layer) and density (thickness of cloud)
           float paletteMix = depth * 0.6 + density * 0.4;
@@ -281,8 +273,8 @@ export function HalftoneWave() {
           float bevelLight = innerEdge * smoothstep(0.2, 1.0, gradientY) * rim;
           
           // Highlight is extremely muted to prevent glare
-          vec3 highlightColor = vec3(0.25, 0.26, 0.28);
-          finalColor += highlightColor * bevelLight * 0.3;
+          vec3 highlightColor = vec3(0.15, 0.16, 0.18);
+          finalColor += highlightColor * bevelLight * 0.15;
           
           // Apply shape anti-aliasing alpha
           gl_FragColor = vec4(finalColor, shape);
