@@ -9,6 +9,7 @@ import PreFooterCTA from '@/components/home/PreFooterCTA';
 import Footer from '@/components/Footer';
 import ScrollRevealProvider from '@/components/home/ScrollRevealProvider';
 import { HalftoneWaveWrapper } from '@/components/ui/HalftoneWaveWrapper';
+import { DarkSectionSpotlight } from '@/components/ui/DarkSectionSpotlight';
 
 export default function HomePage() {
   return (
@@ -19,7 +20,7 @@ export default function HomePage() {
         <HeroSection />
         
         {/* Unscaled content (100% scale to match product page) */}
-        <div className="relative bg-black">
+        <DarkSectionSpotlight className="relative bg-black">
           {/* Global seamless background for all these sections */}
           <div className="absolute inset-0 z-0 pointer-events-none">
             <div className="sticky top-0 w-full h-screen">
@@ -46,7 +47,7 @@ export default function HomePage() {
               <PreFooterCTA />
             </div>
           </div>
-        </div>
+        </DarkSectionSpotlight>
         
         <Footer />
       </section>
