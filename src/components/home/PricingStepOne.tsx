@@ -150,11 +150,13 @@ export default function PricingStepOne({ currency }: { currency?: 'IDR' | 'USD' 
               {/* Title area */}
               <div className="flex-grow flex flex-col">
                 <div className="min-h-[96px] pb-6">
-                  {card.mostPopular && (
-                    <span className="inline-block mb-4 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.15em] text-[#494949] border border-[#494949] rounded-full">
-                      Most Popular
-                    </span>
-                  )}
+                  <div className="h-7 mb-4">
+                    {card.mostPopular && (
+                      <span className="inline-flex items-center px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.15em] text-[#494949] border border-[#494949] rounded-full">
+                        Most Popular
+                      </span>
+                    )}
+                  </div>
                   <h3 className="max-w-[410px] text-[22px] md:text-[24px] lg:text-[26px] font-normal leading-[1.05] text-[#494949] whitespace-pre-line">
                     {card.title}
                   </h3>
