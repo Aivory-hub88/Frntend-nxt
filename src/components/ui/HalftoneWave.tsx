@@ -120,18 +120,59 @@ export function HalftoneWave() {
             float edgeMask = smoothstep(0.0, 0.25, localX) * smoothstep(1.0, 0.75, localX);
             edgeMask *= smoothstep(0.0, 0.3, physicalLocalY) * smoothstep(1.0, 0.7, physicalLocalY);
             
-            float texVal = texture2D(tex, vec2(localX, croppedY)).r;
+            // --- BLOOMING & SHATTERING LIFE CYCLE ---
+            // Each cloud goes through a cycle: 
+            // 1. Bloom (scale up radially, fade in)
+            // 2. Stable (idle and moving)
+            // 3. Shatter (disintegrate into wind-blown chunks, fade out)
             
-            // --- DISSIPATING / MIST EFFECT ---
-            // Instead of warping the UVs (which destroys the Megamendung pattern),
-            // we apply an organic, slowly moving noise mask to the *density*.
-            // This makes the clouds organically fade in and out as if passing through mist.
-            float mistTime = time * 0.2;
-            float mist = sin(finalX * 1.8 + mistTime) * cos(finalY * 2.2 - mistTime * 0.8);
-            float mist2 = cos(finalX * 2.5 - mistTime * 1.1) * sin(finalY * 1.5 + mistTime * 0.7);
-            float organicFade = 0.75 + 0.25 * (mist + mist2);
+            // Generate a unique, stable phase for this specific cloud using its structural col and row
+            float phase = fract(sin(col * 12.33 + row * 45.67) * 78.91);
+            float cycleTime = time * 0.15; // Speed of the life cycle
+            float cycle = fract(cycleTime + phase);
             
-            float density = (1.0 - texVal) * edgeMask * organicFade;
+            // Calculate cycle stages
+            float bloomProgress = smoothstep(0.0, 0.15, cycle);       // 0->1
+            float shatterProgress = smoothstep(0.75, 1.0, cycle);     // 0->1
+            
+            // 1. Bloom Scale & Alpha
+            float currentScale = mix(0.001, 1.0, bloomProgress);
+            // Slight expansion during shatter
+            currentScale *= mix(1.0, 1.2, shatterProgress);
+            
+            float lifeAlpha = bloomProgress * (1.0 - shatterProgress);
+            
+            // 2. Center-based UV manipulation for scaling
+            vec2 centeredLocal = vec2(localX, localY) - vec2(0.5, 0.5);
+            centeredLocal /= currentScale;
+            
+            // 3. Shatter / Dandelion Disintegration Effect
+            // Break the cloud into chunks that drift independently
+            // We use floor() on the unscaled UVs to group pixels into solid chunks
+            vec2 chunkPos = floor(vec2(localX, localY) * 15.0); // 15x15 chunks per tile
+            float chunkNoise = fract(sin(dot(chunkPos + vec2(col, row), vec2(12.9898, 78.233))) * 43758.5453);
+            
+            // Wind blows the chunks mostly to the right (positive X) and scatters in Y
+            float windX = shatterProgress * (chunkNoise * 0.8 + 0.2); 
+            float windY = shatterProgress * (chunkNoise - 0.5) * 0.6;
+            
+            // Apply wind (subtracting means texture coordinate moves left, so visually the cloud moves right)
+            centeredLocal.x -= windX;
+            centeredLocal.y -= windY;
+            
+            // Back to 0..1 space
+            float sampleX = centeredLocal.x + 0.5;
+            float sampleY = centeredLocal.y + 0.5;
+            
+            // Mask out anything that scales or blows outside the [0,1] logical texture space
+            // This prevents wrapping artifacts when the cloud is small or shattered
+            float uvBoundsMask = step(0.0, sampleX) * step(sampleX, 1.0) * step(0.0, sampleY) * step(sampleY, 1.0);
+            
+            float croppedY = mix(0.0875, 0.9125, sampleY);
+            float texVal = texture2D(tex, vec2(sampleX, croppedY)).r;
+            
+            // Calculate final density combining the structural edge mask, lifecycle alpha, and bounds mask
+            float density = (1.0 - texVal) * edgeMask * lifeAlpha * uvBoundsMask;
             return vec3(density, localX, localY);
         }
 
