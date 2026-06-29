@@ -2,6 +2,30 @@
 
 import { useState, useEffect, useRef } from 'react';
 
+function SpotlightCard({ children, className = '', style }: { children: React.ReactNode; className?: string; style?: React.CSSProperties }) {
+  const cardRef = useRef<HTMLDivElement>(null);
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (!cardRef.current) return;
+    const rect = cardRef.current.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    cardRef.current.style.setProperty('--mouse-x', `${x}px`);
+    cardRef.current.style.setProperty('--mouse-y', `${y}px`);
+  };
+
+  return (
+    <div
+      ref={cardRef}
+      onMouseMove={handleMouseMove}
+      className={`relative spotlight-card border border-white/10 transition-colors bg-[#0a0a0a] overflow-hidden rounded-3xl ${className}`}
+      style={style}
+    >
+      {children}
+    </div>
+  );
+}
+
 // Product data with simplified context
 const showcaseProducts = [
   {
@@ -329,7 +353,7 @@ function WorkflowAnimation() {
 
         {/* Generated Flow */}
         {(phase === 'generated' || phase === 'buttons') && (
-          <div className="w-full bg-[#111111] border border-white/5 rounded-2xl p-4 sm:p-5 flex flex-col gap-4 sm:gap-5 relative overflow-hidden shadow-2xl animate-fade-in-up">
+          <SpotlightCard className="w-full p-4 sm:p-5 flex flex-col gap-4 sm:gap-5 relative shadow-2xl animate-fade-in-up">
             <div className="text-[9px] sm:text-[10px] text-white uppercase tracking-widest text-center font-light z-10" style={{ fontFamily: "'Doto', 'Courier New', monospace" }}>
               Workflow Generated
             </div>
@@ -389,7 +413,7 @@ function WorkflowAnimation() {
                 </button>
               </div>
             )}
-          </div>
+          </SpotlightCard>
         )}
       </div>
 
@@ -520,7 +544,7 @@ function RoadmapAnimation() {
       </div>
 
       {/* Deliverables list */}
-      <div className="bg-[#111111] border border-white/5 rounded-2xl p-6 mx-auto w-full max-w-md space-y-4 shadow-lg transition-all duration-500">
+      <SpotlightCard className="p-6 mx-auto w-full max-w-md space-y-4 shadow-lg transition-all duration-500">
         <div className="text-[13.5px] text-white uppercase tracking-widest font-light transition-all duration-500" style={{ fontFamily: "'Doto', 'Courier New', monospace" }}>
           {currentData.title}
         </div>
@@ -539,7 +563,7 @@ function RoadmapAnimation() {
             );
           })}
         </div>
-      </div>
+      </SpotlightCard>
     </div>
   );
 }
@@ -578,7 +602,7 @@ function IntroAnimation() {
   };
 
   return (
-    <div ref={containerRef} className="w-full h-full bg-[#151515] border border-white/5 rounded-3xl p-8 relative shadow-2xl flex flex-col justify-center items-center text-center">
+    <div ref={containerRef} className="w-full h-full relative flex flex-col justify-center items-center text-center p-8">
       {/* Agent Label */}
       <div className={`transition-all duration-1000 ease-out absolute top-12 ${step >= 1 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
         <img src="/aivory-logo.svg" alt="Aivory Agent" className="h-6 w-auto opacity-80 mx-auto" />
@@ -635,7 +659,7 @@ function IntroAnimation() {
 function BlueprintAnimation() {
   return (
     <div className="flex-1 flex flex-col justify-center items-center w-full h-full opacity-0 animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
-      <div className="w-full bg-[#111111] border border-white/5 rounded-2xl p-8 relative shadow-lg">
+      <SpotlightCard className="w-full p-8 relative shadow-lg">
         <div className="text-[10px] text-white uppercase tracking-widest text-center font-light mb-10 opacity-0 animate-fade-in" style={{ animationDelay: '0.6s', fontFamily: "'Doto', 'Courier New', monospace" }}>
           System Architecture Pipeline
         </div>
@@ -667,7 +691,7 @@ function BlueprintAnimation() {
             </div>
           ))}
         </div>
-      </div>
+      </SpotlightCard>
     </div>
   );
 }
@@ -803,7 +827,7 @@ export function InteractiveShowcase() {
                 </ul>
 
                 {/* Mobile Inline Visualizer */}
-                <div className="flex lg:hidden w-full aspect-[4/3] sm:aspect-[16/11] bg-[#181818] rounded-3xl mt-10 relative overflow-hidden border border-[#b2cca2]/40 shadow-[0_0_30px_rgba(178,204,162,0.08)]">
+                <SpotlightCard className={`flex lg:hidden w-full aspect-[4/3] sm:aspect-[16/11] mt-10 shadow-[0_0_30px_rgba(178,204,162,0.08)] ${idx === connectedIndex ? '!border-[#b2cca2]/40' : ''}`}>
                   <div className="absolute inset-0 p-4 md:p-6 flex flex-col">
                     {idx === 0 && <div className="flex-1 relative w-full h-full"><DiagnosticAnimation /></div>}
                     {idx === 1 && <BlueprintAnimation />}
@@ -811,17 +835,16 @@ export function InteractiveShowcase() {
                     {idx === 3 && <div className="flex-1 w-full h-full relative"><ConsoleAnimation /></div>}
                     {idx === 4 && <div className="w-full flex flex-col gap-4 h-full justify-center relative"><WorkflowAnimation /></div>}
                   </div>
-                </div>
+                </SpotlightCard>
               </div>
             ))}
           </div>
 
           {/* Right Column: Sticky Mockup Visualizer Area */}
           <div className="hidden lg:col-span-7 lg:sticky lg:top-[12vh] lg:flex items-center justify-center z-20 mx-auto w-full max-w-[850px] aspect-[4/3] lg:aspect-[16/11]">
-            <div 
-              ref={stickyBoxRef}
-              className={`w-full h-full bg-[#181818] border transition-all duration-500 rounded-3xl p-6 md:p-8 flex flex-col relative overflow-hidden shadow-2xl ${
-                connectedIndex !== -1 ? 'border-[#b2cca2]/40 shadow-[0_0_30px_rgba(178,204,162,0.08)]' : 'border-white/5'
+            <SpotlightCard 
+              className={`w-full h-full transition-all duration-500 p-6 md:p-8 flex flex-col shadow-2xl ${
+                connectedIndex !== -1 ? '!border-[#b2cca2]/40 shadow-[0_0_30px_rgba(178,204,162,0.08)]' : ''
               }`}
             >
               
@@ -911,7 +934,7 @@ export function InteractiveShowcase() {
 
               </div>
 
-            </div>
+            </SpotlightCard>
           </div>
 
         </div>
