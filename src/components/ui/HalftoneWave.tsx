@@ -110,16 +110,32 @@ export function HalftoneWave() {
             float localX = fract(finalX);
             float localY = fract(finalY);
             
+            // --- BILLOWING & CONVECTING EFFECT ---
+            // Warp the UVs organically over time using pseudo-noise based on the cloud's absolute position.
+            // This creates a hypnotic, boiling/morphing distortion that moves *with* the cloud.
+            float warpTime = time * 0.4;
+            float warpX = sin(finalY * 3.14 + warpTime) * cos(finalX * 2.7 + warpTime * 0.8) * 0.15;
+            float warpY = cos(finalX * 3.8 - warpTime * 1.2) * sin(finalY * 2.1 + warpTime * 0.9) * 0.15;
+            
+            // Apply warp, but clamp to avoid sampling outside the tile bounds unintentionally
+            float sampleX = clamp(localX + warpX, 0.0, 1.0);
+            float sampleY = clamp(localY + warpY, 0.0, 1.0);
+            
             // The original image has huge empty margins. Crop to the middle 82.5% (0.0875 to 0.9125)
-            float croppedY = mix(0.0875, 0.9125, localY);
+            float croppedY = mix(0.0875, 0.9125, sampleY);
             
             // Soften the edges to prevent any hard seams if the cloud touches the tile boundary
-            // Use the unwarped local coordinates for the mask so the boundary stays rigid and safe!
-            float edgeMask = smoothstep(0.0, 0.05, localX) * smoothstep(1.0, 0.95, localX);
-            edgeMask *= smoothstep(0.0, 0.1, localY) * smoothstep(1.0, 0.9, localY);
+            // Use the UNWARPED local coordinates for the mask so the boundary stays rigid and safe!
+            float edgeMask = smoothstep(0.0, 0.15, localX) * smoothstep(1.0, 0.85, localX);
+            edgeMask *= smoothstep(0.0, 0.2, localY) * smoothstep(1.0, 0.8, localY);
             
-            float texVal = texture2D(tex, vec2(localX, croppedY)).r;
-            float density = (1.0 - texVal) * edgeMask;
+            float texVal = texture2D(tex, vec2(sampleX, croppedY)).r;
+            
+            // --- DISSIPATING / BREATHING EFFECT ---
+            // Clouds gently fade and condense over time
+            float breathe = 0.8 + 0.2 * sin(finalX * 1.5 + finalY * 2.2 + time * 0.5);
+            
+            float density = (1.0 - texVal) * edgeMask * breathe;
             return vec3(density, localX, localY);
         }
 
