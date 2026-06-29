@@ -45,7 +45,7 @@ export function HalftoneWave() {
       uPixelSize: { value: 10.0 }, // 10px cells for clear ASCII characters
       uTexture: { value: defaultTexture },
       // ── depth / density tuning knobs (tweak freely & redeploy) ──
-      uDensityFloor: { value: 0.25 }, // higher = more open sky (less dense)
+      uDensityFloor: { value: 0.45 }, // Increased for more open sky (less clustered, better performance)
       uFarDim: { value: 0.02 },       // background brightness — keep low for text legibility
       uNearBright: { value: 0.5 }     // foreground cloud "pop"
     };
@@ -222,30 +222,14 @@ export function HalftoneWave() {
           float scalePulse = 1.0 + 0.15 * sin(uTime * 3.0 + rotPhase * 10.0);
           rotUV *= scalePulse;
 
-          // --- SDF MORPHING LOGIC ---
-          float d = 0.0;
-          float threshold = 0.0;
+          // --- ULTRA-FAST SDF MORPHING LOGIC ---
+          // Interpolate between a Rhombus (Manhattan distance) and a Square (Chebyshev distance)
+          // No branches, no square roots (length()), highly optimized for Macbook Ultras
+          float rhombusDist = (abs(rotUV.x) + abs(rotUV.y)) * 0.85;
+          float squareDist = max(abs(rotUV.x), abs(rotUV.y));
           
-          if (density < 0.33) {
-              // Morph from dot to circle
-              float t = density / 0.33; 
-              d = length(rotUV);
-              threshold = mix(0.0, 0.25, t); // Reduced from 0.35
-          } else if (density < 0.66) {
-              // Morph from circle to rhombus/diamond
-              float t = (density - 0.33) / 0.33; 
-              float circleDist = length(rotUV);
-              float rhombusDist = (abs(rotUV.x) + abs(rotUV.y)) * 0.8; 
-              d = mix(circleDist, rhombusDist, t);
-              threshold = mix(0.25, 0.3, t); // Reduced from 0.42
-          } else {
-              // Morph from rhombus to square block
-              float t = (density - 0.66) / 0.34; 
-              float rhombusDist = (abs(rotUV.x) + abs(rotUV.y)) * 0.8;
-              float squareDist = max(abs(rotUV.x), abs(rotUV.y));
-              d = mix(rhombusDist, squareDist, t);
-              threshold = mix(0.3, 0.33, t); // Reduced from 0.45. A 0.33 square fits perfectly in a 0.5 radius circle when rotated!
-          }
+          float d = mix(rhombusDist, squareDist, density);
+          float threshold = density * 0.35; // Size scales linearly based on density
           
           // Anti-aliased shape
           float shape = smoothstep(threshold + 0.05, threshold - 0.05, d);
@@ -256,11 +240,11 @@ export function HalftoneWave() {
           float innerEdge = smoothstep(threshold - 0.15, threshold, d);
 
           // 3D shading via ATMOSPHERIC PERSPECTIVE & MULTI-TONE GREY PALETTE
-          // Instead of just one flat grey, we interpolate across a rich palette of cinematic greys!
-          vec3 darkGunmetal = vec3(0.12, 0.15, 0.16); // Deepest shadows
-          vec3 charcoal     = vec3(0.25, 0.28, 0.31); // Mid-dark cool
-          vec3 ashGrey      = vec3(0.45, 0.44, 0.43); // Mid-light warm
-          vec3 silver       = vec3(0.65, 0.67, 0.69); // Bright highlights
+          // Darkened palette to ensure text remains highly legible and background isn't blinding
+          vec3 darkGunmetal = vec3(0.02, 0.03, 0.04); // Deepest shadows
+          vec3 charcoal     = vec3(0.08, 0.10, 0.12); // Mid-dark cool
+          vec3 ashGrey      = vec3(0.18, 0.18, 0.19); // Mid-light warm
+          vec3 silver       = vec3(0.32, 0.34, 0.36); // Bright highlights
           
           // Interpolate based on depth (layer) and density (thickness of cloud)
           float paletteMix = depth * 0.6 + density * 0.4;
