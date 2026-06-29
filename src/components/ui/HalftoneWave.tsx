@@ -110,9 +110,7 @@ export function HalftoneWave() {
             float localX = fract(finalX);
             float localY = fract(finalY);
             
-            // The original image has huge empty margins. Crop to the middle 82.5% (0.0875 to 0.9125)
-            float croppedY = mix(0.0875, 0.9125, localY);
-            
+
             // Soften the edges significantly so clouds fading at the tile boundaries don't form hard geometric shapes
             // CRITICAL FIX: The row jumps at baseY boundaries, so we MUST mask Y using fract(baseY). 
             // The column jumps at finalX boundaries, so we mask X using localX (fract(finalX)).
