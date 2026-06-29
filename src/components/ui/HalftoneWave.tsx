@@ -23,9 +23,9 @@ export function HalftoneWave() {
     const renderer = new THREE.WebGLRenderer({ antialias: false, alpha: true });
     renderer.setSize(width, height);
     
-    // Performance: cap pixel ratio below native to reduce fragment count
+    // Performance: 0.5 pixelRatio universally — halves resolution, cuts GPU load 75%
     const isMobile = window.innerWidth < 1024;
-    renderer.setPixelRatio(isMobile ? 0.5 : 0.75);
+    renderer.setPixelRatio(0.5);
     
     mountRef.current.appendChild(renderer.domElement);
 
@@ -42,12 +42,11 @@ export function HalftoneWave() {
       uTime: { value: 0.0 },
       uColor: { value: new THREE.Color('#444444') },
       uResolution: { value: new THREE.Vector2(width, height) },
-      uPixelSize: { value: 10.0 },
+      uPixelSize: { value: 8.0 },
       uTexture: { value: defaultTexture },
-      // ── depth / density tuning knobs ──
-      uDensityFloor: { value: 0.55 }, // Higher = fewer clouds visible = less clutter
+      uDensityFloor: { value: 0.60 },
       uFarDim: { value: 0.01 },
-      uNearBright: { value: 0.3 }
+      uNearBright: { value: 0.2 }
     };
 
     // Load the authentic Megamendung texture mask
@@ -188,55 +187,27 @@ export function HalftoneWave() {
           // Map the surviving density into the ASCII character ramp.
           density = smoothstep(0.0, 0.85, density);
 
-          // 3. GEOMETRIC PIXEL / SDF RENDERER
+          // 3. STATIC GEOMETRIC PIXEL RENDERER — NO ROTATION, NO PULSE, NO MORPHING
           if (density < 0.01) discard;
 
-          // Shift local to [-0.5, 0.5] for SDF math
           vec2 uv = local - 0.5;
-          
-          // --- PROCEDURAL ANIMATION ---
-          // Unique phase per cell
-          float rotPhase = fract(sin(dot(cell, vec2(12.9898, 78.233))) * 43758.5453);
-          
-          // Rotation angle: slowly spins, alternating direction based on phase
-          float angle = uTime * (rotPhase - 0.5) * 4.0 + rotPhase * 6.2831;
-          
-          // 2D Rotation Matrix
-          float c = cos(angle);
-          float s = sin(angle);
-          mat2 rot = mat2(c, -s, s, c);
-          
-          // Apply rotation and breathing scale
-          vec2 rotUV = rot * uv;
-          float scalePulse = 1.0 + 0.15 * sin(uTime * 3.0 + rotPhase * 10.0);
-          rotUV *= scalePulse;
 
-          // --- ULTRA-FAST SDF MORPHING LOGIC ---
-          // Interpolate between a Rhombus (Manhattan distance) and a Square (Chebyshev distance)
-          // No branches, no square roots (length()), highly optimized for Macbook Ultras
-          float rhombusDist = (abs(rotUV.x) + abs(rotUV.y)) * 0.85;
-          float squareDist = max(abs(rotUV.x), abs(rotUV.y));
-          
-          float d = mix(rhombusDist, squareDist, density);
-          float threshold = density * 0.35; // Size scales linearly based on density
-          
-          // Anti-aliased shape
-          float shape = smoothstep(threshold + 0.05, threshold - 0.05, d);
-          
+          // Simple static square SDF — NO cos/sin/rotation/scale (kills GPU)
+          float d = max(abs(uv.x), abs(uv.y));
+          float threshold = density * 0.32;
+          float shape = smoothstep(threshold + 0.04, threshold - 0.04, d);
           if (shape < 0.01) discard;
 
-          // SDF Edge for 3D Volumetric Rim Lighting (0.0 at center, 1.0 at edge)
-          float innerEdge = smoothstep(threshold - 0.15, threshold, d);
+          // Unique phase per cell (cheap — computed once per cell, no trig per pixel)
+          float cellPhase = fract(sin(dot(cell, vec2(12.9898, 78.233))) * 43758.5453);
 
-          // MULTI-TONE GREY PALETTE — dark but with visible variation between tones
-          vec3 tone1 = vec3(0.02, 0.025, 0.03);  // Deepest shadow (near-black)
-          vec3 tone2 = vec3(0.05, 0.06, 0.075);   // Dark cool grey
-          vec3 tone3 = vec3(0.09, 0.10, 0.12);    // Medium dark grey
-          vec3 tone4 = vec3(0.14, 0.16, 0.19);    // Lightest (still very dark)
-          
-          // Interpolate based on depth (layer) and density
+          // ULTRA-DARK 4-TONE PALETTE — barely visible, like a watermark
+          vec3 tone1 = vec3(0.01, 0.012, 0.015);
+          vec3 tone2 = vec3(0.025, 0.03, 0.04);
+          vec3 tone3 = vec3(0.04, 0.05, 0.06);
+          vec3 tone4 = vec3(0.06, 0.07, 0.085);
+
           float paletteMix = depth * 0.6 + density * 0.4;
-          
           vec3 base;
           if (paletteMix < 0.33) {
               base = mix(tone1, tone2, paletteMix / 0.33);
@@ -246,19 +217,14 @@ export function HalftoneWave() {
               base = mix(tone3, tone4, (paletteMix - 0.66) / 0.34);
           }
 
-          // Micro-variation per cell (cool/warm shift)
-          vec3 tint = mix(vec3(0.92, 0.96, 1.0), vec3(1.0, 0.96, 0.92), rotPhase);
-          base *= tint;
+          // Tiny cool/warm micro-shift per cell
+          base *= mix(vec3(0.95, 0.97, 1.0), vec3(1.0, 0.97, 0.95), cellPhase);
 
-          vec3 finalColor = base;
-          
-          // Subtle 3D bevel — just enough to see shape, not enough to glow
-          float gradientY = (rotUV.y + 0.5); 
-          float rim = smoothstep(0.3, 0.9, density) * (depth * 0.8 + 0.2);
-          float bevelLight = innerEdge * smoothstep(0.2, 1.0, gradientY) * rim;
-          finalColor += vec3(0.12, 0.14, 0.16) * bevelLight * 0.4;
-          
-          gl_FragColor = vec4(finalColor, shape);
+          // Minimal edge highlight for 3D hint — almost invisible
+          float innerEdge = smoothstep(threshold - 0.1, threshold, d);
+          base += vec3(0.03) * innerEdge * density * 0.3;
+
+          gl_FragColor = vec4(base, shape);
         }
       `,
       transparent: true,
@@ -280,7 +246,7 @@ export function HalftoneWave() {
     let lastRenderTime = 0;
     // The clouds drift slowly, so 20 FPS on mobile is visually indistinguishable from
     // 30 but meaningfully lighter on battery/GPU for a full-screen fragment shader.
-    const fpsInterval = 1000 / (isMobile ? 15 : 24); // Throttle: 24fps desktop, 15fps mobile
+    const fpsInterval = 1000 / 15; // 15 FPS universal — clouds drift slowly, no need for more
 
     const renderLoop = (timestamp: number) => {
       animationFrameId = requestAnimationFrame(renderLoop);
