@@ -42,12 +42,12 @@ export function HalftoneWave() {
       uTime: { value: 0.0 },
       uColor: { value: new THREE.Color('#444444') },
       uResolution: { value: new THREE.Vector2(width, height) },
-      uPixelSize: { value: 10.0 }, // 10px cells for clear ASCII characters
+      uPixelSize: { value: 18.0 }, // Larger geometric pixels (easier to see shapes, fewer objects)
       uTexture: { value: defaultTexture },
       // ── depth / density tuning knobs (tweak freely & redeploy) ──
-      uDensityFloor: { value: 0.45 }, // Increased for more open sky (less clustered, better performance)
-      uFarDim: { value: 0.02 },       // background brightness — keep low for text legibility
-      uNearBright: { value: 0.5 }     // foreground cloud "pop"
+      uDensityFloor: { value: 0.70 }, // Massively increased to severely thin out the clouds (less visual clutter)
+      uFarDim: { value: 0.01 },       // background brightness
+      uNearBright: { value: 0.2 }     // foreground cloud "pop" reduced
     };
 
     // Load the authentic Megamendung texture mask
@@ -240,11 +240,11 @@ export function HalftoneWave() {
           float innerEdge = smoothstep(threshold - 0.15, threshold, d);
 
           // 3D shading via ATMOSPHERIC PERSPECTIVE & MULTI-TONE GREY PALETTE
-          // Darkened palette to ensure text remains highly legible and background isn't blinding
-          vec3 darkGunmetal = vec3(0.02, 0.03, 0.04); // Deepest shadows
-          vec3 charcoal     = vec3(0.08, 0.10, 0.12); // Mid-dark cool
-          vec3 ashGrey      = vec3(0.18, 0.18, 0.19); // Mid-light warm
-          vec3 silver       = vec3(0.32, 0.34, 0.36); // Bright highlights
+          // Stealthy, ultra-dark palette to ensure text remains highly legible and background isn't blinding
+          vec3 darkGunmetal = vec3(0.01, 0.01, 0.01); // Almost black
+          vec3 charcoal     = vec3(0.03, 0.04, 0.05); // Very dark
+          vec3 ashGrey      = vec3(0.08, 0.09, 0.10); // Dim grey
+          vec3 silver       = vec3(0.14, 0.15, 0.16); // Muted highlights
           
           // Interpolate based on depth (layer) and density (thickness of cloud)
           float paletteMix = depth * 0.6 + density * 0.4;
@@ -280,9 +280,9 @@ export function HalftoneWave() {
           float rim = smoothstep(0.3, 0.9, density) * (depth * 0.8 + 0.2);
           float bevelLight = innerEdge * smoothstep(0.2, 1.0, gradientY) * rim;
           
-          // Highlight uses a bright silver, not pure glaring white, to keep it classy
-          vec3 highlightColor = mix(silver, vec3(1.0), 0.5);
-          finalColor += highlightColor * bevelLight * 0.5; // reduced intensity to avoid "terlalu terang"
+          // Highlight is extremely muted to prevent glare
+          vec3 highlightColor = vec3(0.25, 0.26, 0.28);
+          finalColor += highlightColor * bevelLight * 0.3;
           
           // Apply shape anti-aliasing alpha
           gl_FragColor = vec4(finalColor, shape);
