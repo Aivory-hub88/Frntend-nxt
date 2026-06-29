@@ -43,7 +43,7 @@ export function HalftoneWave() {
       uTime: { value: 0.0 },
       uColor: { value: new THREE.Color('#444444') },
       uResolution: { value: new THREE.Vector2(width, height) },
-      uPixelSize: { value: 14.0 }, // Sweet spot: not too small to clutter, not too big
+      uPixelSize: { value: 5.0 }, // Compensate for 0.5 pixelRatio so objects are small and detailed again
       uTexture: { value: defaultTexture },
       // ── depth / density tuning knobs (tweak freely & redeploy) ──
       uDensityFloor: { value: 0.70 }, // Massively increased to severely thin out the clouds (less visual clutter)
