@@ -110,9 +110,7 @@ export function HalftoneWave() {
             float localX = fract(finalX);
             float localY = fract(finalY);
             
-            // The original image has huge empty margins. Crop to the middle 82.5% (0.0875 to 0.9125)
-            float croppedY = mix(0.0875, 0.9125, localY);
-            
+
             // Soften the edges significantly so clouds fading at the tile boundaries don't form hard geometric shapes
             // CRITICAL FIX: The row jumps at baseY boundaries, so we MUST mask Y using fract(baseY). 
             // The column jumps at finalX boundaries, so we mask X using localX (fract(finalX)).
@@ -120,18 +118,48 @@ export function HalftoneWave() {
             float edgeMask = smoothstep(0.0, 0.25, localX) * smoothstep(1.0, 0.75, localX);
             edgeMask *= smoothstep(0.0, 0.3, physicalLocalY) * smoothstep(1.0, 0.7, physicalLocalY);
             
-            float texVal = texture2D(tex, vec2(localX, croppedY)).r;
+            // --- BLOOMING & SHATTERING LIFE CYCLE ---
+            // 1. Bloom: Organically grows from the center outwards (Radial Mask)
+            // 2. Stable: Idle and moving
+            // 3. Shatter: Dissolves into noise and drifts upwards (Dandelion erosion)
             
-            // --- DISSIPATING / MIST EFFECT ---
-            // Instead of warping the UVs (which destroys the Megamendung pattern),
-            // we apply an organic, slowly moving noise mask to the *density*.
-            // This makes the clouds organically fade in and out as if passing through mist.
-            float mistTime = time * 0.2;
-            float mist = sin(finalX * 1.8 + mistTime) * cos(finalY * 2.2 - mistTime * 0.8);
-            float mist2 = cos(finalX * 2.5 - mistTime * 1.1) * sin(finalY * 1.5 + mistTime * 0.7);
-            float organicFade = 0.75 + 0.25 * (mist + mist2);
+            // Unique phase for this cloud
+            float phase = fract(sin(col * 12.33 + row * 45.67) * 78.91);
+            // Slower cycle: 20 seconds
+            float cycleTime = time * 0.05; 
+            float cycle = fract(cycleTime + phase);
             
-            float density = (1.0 - texVal) * edgeMask * organicFade;
+            // Stages
+            float bloomProgress = smoothstep(0.0, 0.25, cycle);       // 25% of cycle
+            float shatterProgress = smoothstep(0.70, 1.0, cycle);     // 30% of cycle
+            
+            // 1. Bloom Radial Mask (Grows from center 0.5, 0.5)
+            float distToCenter = distance(vec2(localX, localY), vec2(0.5, 0.5));
+            float bloomRadius = bloomProgress * 0.85; // Expands to cover the tile
+            float bloomMask = smoothstep(bloomRadius + 0.15, bloomRadius - 0.05, distToCenter);
+            
+            // 2. Dandelion Shatter / Dissolve Effect
+            // High frequency noise for organic disintegration
+            float dissolveNoise = fract(sin(dot(vec2(localX, localY) * 8.0 + vec2(time * 0.1), vec2(12.9898, 78.233))) * 43758.5453);
+            // Shatter mask drops to 0 organically based on noise
+            float shatterMask = smoothstep(shatterProgress - 0.15, shatterProgress + 0.15, 1.0 - dissolveNoise);
+            
+            // Subtle upward and rightward drift during shatter
+            float windX = shatterProgress * 0.15;
+            float windY = shatterProgress * -0.3; // Negative Y = texture moves UP
+            
+            float sampleX = localX - windX;
+            float sampleY = localY - windY;
+            
+            // Mask out anything that blows outside the [0,1] logical texture space
+            float uvBoundsMask = step(0.0, sampleX) * step(sampleX, 1.0) * step(0.0, sampleY) * step(sampleY, 1.0);
+            
+            float croppedY = mix(0.0875, 0.9125, sampleY);
+            float texVal = texture2D(tex, vec2(sampleX, croppedY)).r;
+            
+            // Combine all masks
+            float lifeAlpha = bloomMask * shatterMask;
+            float density = (1.0 - texVal) * edgeMask * lifeAlpha * uvBoundsMask;
             return vec3(density, localX, localY);
         }
 
