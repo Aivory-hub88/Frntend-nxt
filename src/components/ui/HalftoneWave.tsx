@@ -255,39 +255,50 @@ export function HalftoneWave() {
           // SDF Edge for 3D Volumetric Rim Lighting (0.0 at center, 1.0 at edge)
           float innerEdge = smoothstep(threshold - 0.15, threshold, d);
 
-          // 3D shading via ATMOSPHERIC PERSPECTIVE.
-          vec3 farColor  = uColor * uFarDim;      
-          vec3 nearColor = uColor * uNearBright;  
+          // 3D shading via ATMOSPHERIC PERSPECTIVE & MULTI-TONE GREY PALETTE
+          // Instead of just one flat grey, we interpolate across a rich palette of cinematic greys!
+          vec3 darkGunmetal = vec3(0.12, 0.15, 0.16); // Deepest shadows
+          vec3 charcoal     = vec3(0.25, 0.28, 0.31); // Mid-dark cool
+          vec3 ashGrey      = vec3(0.45, 0.44, 0.43); // Mid-light warm
+          vec3 silver       = vec3(0.65, 0.67, 0.69); // Bright highlights
+          
+          // Interpolate based on depth (layer) and density (thickness of cloud)
+          float paletteMix = depth * 0.6 + density * 0.4;
+          
+          vec3 base;
+          if (paletteMix < 0.33) {
+              base = mix(darkGunmetal, charcoal, paletteMix / 0.33);
+          } else if (paletteMix < 0.66) {
+              base = mix(charcoal, ashGrey, (paletteMix - 0.33) / 0.33);
+          } else {
+              base = mix(ashGrey, silver, (paletteMix - 0.66) / 0.34);
+          }
           
           // Introduce macro-gradient variations based on screen position (cloudLocal)
-          // to make the greys less flat and more dynamic.
           float macroGrad = smoothstep(0.0, 1.0, cloudLocal.x + cloudLocal.y * 0.5);
-          vec3 gradTint = mix(vec3(0.85, 0.9, 1.0), vec3(1.0, 0.95, 0.85), macroGrad); // subtle cool to warm grey
+          vec3 gradTint = mix(vec3(0.85, 0.9, 1.05), vec3(1.05, 0.95, 0.85), macroGrad); // subtle cool/warm shift
           
           // Add micro-variation per cell to break monotony
-          float cellTone = mix(0.85, 1.15, rotPhase); // random brightness per pixel
+          float cellTone = mix(0.9, 1.1, rotPhase); 
           
-          vec3 base = mix(farColor, nearColor, depth) * gradTint * cellTone;
+          base = base * gradTint * cellTone;
 
           // 4. ANALOG 3D GRADIENT (VOLUMETRIC SHADING)
           float gradientY = smoothstep(0.1, 0.9, cloudLocal.y);
           float gradientX = smoothstep(0.2, 0.8, cloudLocal.x);
           
-          // Base Volumetric Shadow
-          float volumetricShadow = mix(0.3, 1.5, gradientY * 0.7 + gradientX * 0.3);
+          // Volumetric Shadow limits excessive brightness
+          float volumetricShadow = mix(0.5, 1.3, gradientY * 0.7 + gradientX * 0.3);
 
-          float pop = pow(density, 1.2); // softer pop
-          vec3 finalColor = base * (0.6 + 0.6 * pop);
-          finalColor *= volumetricShadow;
+          vec3 finalColor = base * volumetricShadow;
 
           // 3D Bevel/Rim Light using the SDF Inner Edge!
-          // We combine the macro gradient with the micro innerEdge to make the shapes look like extruded 3D blocks
           float rim = smoothstep(0.3, 0.9, density) * (depth * 0.8 + 0.2);
           float bevelLight = innerEdge * smoothstep(0.2, 1.0, gradientY) * rim;
           
-          // Highlight uses white for better contrast
-          vec3 highlightColor = vec3(1.0, 1.0, 1.0);
-          finalColor += highlightColor * bevelLight * 0.6;
+          // Highlight uses a bright silver, not pure glaring white, to keep it classy
+          vec3 highlightColor = mix(silver, vec3(1.0), 0.5);
+          finalColor += highlightColor * bevelLight * 0.5; // reduced intensity to avoid "terlalu terang"
           
           // Apply shape anti-aliasing alpha
           gl_FragColor = vec4(finalColor, shape);
