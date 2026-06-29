@@ -23,10 +23,9 @@ export function HalftoneWave() {
     const renderer = new THREE.WebGLRenderer({ antialias: false, alpha: true });
     renderer.setSize(width, height);
     
-    // EXTREME OPTIMIZATION: Reduce render resolution by 50% universally.
-    // For Geometric Pixel shaders, lower resolution is fine and it cuts GPU load by 75%!
+    // EXTREME OPTIMIZATION: Cap pixel ratio to 1.0 to prevent Retina lag, 0.5 for mobile
     const isMobile = window.innerWidth < 1024;
-    renderer.setPixelRatio(isMobile ? 0.4 : 0.5);
+    renderer.setPixelRatio(isMobile ? 0.5 : Math.min(window.devicePixelRatio, 1.0));
     
     mountRef.current.appendChild(renderer.domElement);
 
@@ -43,12 +42,12 @@ export function HalftoneWave() {
       uTime: { value: 0.0 },
       uColor: { value: new THREE.Color('#444444') },
       uResolution: { value: new THREE.Vector2(width, height) },
-      uPixelSize: { value: 5.0 }, // Compensate for 0.5 pixelRatio so objects are small and detailed again
+      uPixelSize: { value: 12.0 }, // Restored to a balanced size so it's not huge but not tiny noise
       uTexture: { value: defaultTexture },
       // ── depth / density tuning knobs (tweak freely & redeploy) ──
-      uDensityFloor: { value: 0.70 }, // Massively increased to severely thin out the clouds (less visual clutter)
-      uFarDim: { value: 0.01 },       // background brightness
-      uNearBright: { value: 0.2 }     // foreground cloud "pop" reduced
+      uDensityFloor: { value: 0.35 }, // Restored to let the Megamendung shape actually form!
+      uFarDim: { value: 0.02 },       
+      uNearBright: { value: 0.5 }     
     };
 
     // Load the authentic Megamendung texture mask
@@ -178,14 +177,11 @@ export function HalftoneWave() {
           float a1 = smoothstep(uDensityFloor, uDensityFloor + 0.2, r1.x); density = mix(density, r1.x, a1); depth = mix(depth, 0.0, a1); cloudLocal = mix(cloudLocal, r1.yz, a1);
           float a4 = smoothstep(uDensityFloor, uDensityFloor + 0.2, r4.x); density = mix(density, r4.x, a4); depth = mix(depth, 1.0, a4); cloudLocal = mix(cloudLocal, r4.yz, a4);
 #else
-          vec3 r1 = getCloudLayer(uTexture, cell, 0.071, 0.015, vec2(0.0, 0.0), uTime);  // far
-          vec3 r2 = getCloudLayer(uTexture, cell, 0.048, 0.03, vec2(0.33, 0.7), uTime);
-          vec3 r3 = getCloudLayer(uTexture, cell, 0.028, 0.05, vec2(0.66, 0.2), uTime);
-          vec3 r4 = getCloudLayer(uTexture, cell, 0.016, 0.08, vec2(0.1, 0.5), uTime);   // near
+          // REDUCED FROM 4 LAYERS TO 2 LAYERS TO STOP MACBOOK GLITCHING & LAG!
+          vec3 r1 = getCloudLayer(uTexture, cell, 0.06, 0.02, vec2(0.0, 0.0), uTime);  // far
+          vec3 r4 = getCloudLayer(uTexture, cell, 0.02, 0.06, vec2(0.3, 0.5), uTime);  // near
 
           float a1 = smoothstep(uDensityFloor, uDensityFloor + 0.2, r1.x); density = mix(density, r1.x, a1); depth = mix(depth, 0.00, a1); cloudLocal = mix(cloudLocal, r1.yz, a1);
-          float a2 = smoothstep(uDensityFloor, uDensityFloor + 0.2, r2.x); density = mix(density, r2.x, a2); depth = mix(depth, 0.40, a2); cloudLocal = mix(cloudLocal, r2.yz, a2);
-          float a3 = smoothstep(uDensityFloor, uDensityFloor + 0.2, r3.x); density = mix(density, r3.x, a3); depth = mix(depth, 0.70, a3); cloudLocal = mix(cloudLocal, r3.yz, a3);
           float a4 = smoothstep(uDensityFloor, uDensityFloor + 0.2, r4.x); density = mix(density, r4.x, a4); depth = mix(depth, 1.00, a4); cloudLocal = mix(cloudLocal, r4.yz, a4);
 #endif
 
@@ -233,11 +229,11 @@ export function HalftoneWave() {
           float innerEdge = smoothstep(threshold - 0.15, threshold, d);
 
           // 3D shading via ATMOSPHERIC PERSPECTIVE & MULTI-TONE GREY PALETTE
-          // Stealthy, ultra-dark palette to ensure text remains highly legible and background isn't blinding
-          vec3 darkGunmetal = vec3(0.005, 0.005, 0.005); // Pure stealth
-          vec3 charcoal     = vec3(0.015, 0.020, 0.025); // Very dark
-          vec3 ashGrey      = vec3(0.035, 0.040, 0.045); // Dim grey
-          vec3 silver       = vec3(0.080, 0.090, 0.100); // Muted highlights
+          // Restored rich multi-tone to fix the "single color tone" issue and bring back 3D!
+          vec3 darkGunmetal = vec3(0.05, 0.06, 0.08); // Base shadow
+          vec3 charcoal     = vec3(0.12, 0.15, 0.18); // Mid cool
+          vec3 ashGrey      = vec3(0.20, 0.22, 0.25); // Mid warm
+          vec3 silver       = vec3(0.30, 0.35, 0.40); // Highlight
           
           // Interpolate based on depth (layer) and density (thickness of cloud)
           float paletteMix = depth * 0.6 + density * 0.4;
@@ -250,32 +246,28 @@ export function HalftoneWave() {
           } else {
               base = mix(ashGrey, silver, (paletteMix - 0.66) / 0.34);
           }
-          
-          // Introduce macro-gradient variations based on screen position (cloudLocal)
-          float macroGrad = smoothstep(0.0, 1.0, cloudLocal.x + cloudLocal.y * 0.5);
-          vec3 gradTint = mix(vec3(0.85, 0.9, 1.05), vec3(1.05, 0.95, 0.85), macroGrad); // subtle cool/warm shift
-          
-          // Add micro-variation per cell to break monotony
-          float cellTone = mix(0.9, 1.1, rotPhase); 
-          
-          base = base * gradTint * cellTone;
 
-          // 4. ANALOG 3D GRADIENT (VOLUMETRIC SHADING)
-          float gradientY = smoothstep(0.1, 0.9, cloudLocal.y);
-          float gradientX = smoothstep(0.2, 0.8, cloudLocal.x);
+          // Add cell-local micro-variation (cool/warm shift based on rotPhase)
+          vec3 tint = mix(vec3(0.9, 0.95, 1.0), vec3(1.0, 0.95, 0.9), rotPhase);
+          base *= tint;
           
-          // Volumetric Shadow limits excessive brightness
-          float volumetricShadow = mix(0.5, 1.3, gradientY * 0.7 + gradientX * 0.3);
+          // Distance fade to make the background melt into pitch black
+          float distToCenter = length(cloudLocal - 0.5);
+          float vignette = smoothstep(0.7, 0.2, distToCenter);
+          base *= vignette;
 
-          vec3 finalColor = base * volumetricShadow;
-
-          // 3D Bevel/Rim Light using the SDF Inner Edge!
+          vec3 finalColor = base;
+          
+          // RESTORE THE 3D BEVEL EFFECT!
+          float gradientY = (rotUV.y + 0.5); 
           float rim = smoothstep(0.3, 0.9, density) * (depth * 0.8 + 0.2);
           float bevelLight = innerEdge * smoothstep(0.2, 1.0, gradientY) * rim;
           
-          // Highlight is extremely muted to prevent glare
-          vec3 highlightColor = vec3(0.15, 0.16, 0.18);
-          finalColor += highlightColor * bevelLight * 0.15;
+          vec3 highlightColor = vec3(0.5, 0.55, 0.6);
+          finalColor += highlightColor * bevelLight * 0.8;
+          
+          // DIM EVERYTHING DOWN TO FIX "TERLALU TERANG" WITHOUT CRUSHING THE CONTRAST!
+          finalColor *= 0.6; 
           
           // Apply shape anti-aliasing alpha
           gl_FragColor = vec4(finalColor, shape);
