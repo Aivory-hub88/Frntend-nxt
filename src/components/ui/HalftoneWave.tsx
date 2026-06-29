@@ -23,9 +23,9 @@ export function HalftoneWave() {
     const renderer = new THREE.WebGLRenderer({ antialias: false, alpha: true });
     renderer.setSize(width, height);
     
-    // EXTREME OPTIMIZATION: Cap pixel ratio to 1.0 to prevent Retina lag, 0.5 for mobile
+    // Performance: cap pixel ratio below native to reduce fragment count
     const isMobile = window.innerWidth < 1024;
-    renderer.setPixelRatio(isMobile ? 0.5 : Math.min(window.devicePixelRatio, 1.0));
+    renderer.setPixelRatio(isMobile ? 0.5 : 0.75);
     
     mountRef.current.appendChild(renderer.domElement);
 
@@ -42,12 +42,12 @@ export function HalftoneWave() {
       uTime: { value: 0.0 },
       uColor: { value: new THREE.Color('#444444') },
       uResolution: { value: new THREE.Vector2(width, height) },
-      uPixelSize: { value: 12.0 }, // Restored to a balanced size so it's not huge but not tiny noise
+      uPixelSize: { value: 10.0 },
       uTexture: { value: defaultTexture },
-      // ── depth / density tuning knobs (tweak freely & redeploy) ──
-      uDensityFloor: { value: 0.35 }, // Restored to let the Megamendung shape actually form!
-      uFarDim: { value: 0.02 },       
-      uNearBright: { value: 0.5 }     
+      // ── depth / density tuning knobs ──
+      uDensityFloor: { value: 0.55 }, // Higher = fewer clouds visible = less clutter
+      uFarDim: { value: 0.01 },
+      uNearBright: { value: 0.3 }
     };
 
     // Load the authentic Megamendung texture mask
@@ -228,48 +228,36 @@ export function HalftoneWave() {
           // SDF Edge for 3D Volumetric Rim Lighting (0.0 at center, 1.0 at edge)
           float innerEdge = smoothstep(threshold - 0.15, threshold, d);
 
-          // 3D shading via ATMOSPHERIC PERSPECTIVE & MULTI-TONE GREY PALETTE
-          // Restored rich multi-tone to fix the "single color tone" issue and bring back 3D!
-          vec3 darkGunmetal = vec3(0.05, 0.06, 0.08); // Base shadow
-          vec3 charcoal     = vec3(0.12, 0.15, 0.18); // Mid cool
-          vec3 ashGrey      = vec3(0.20, 0.22, 0.25); // Mid warm
-          vec3 silver       = vec3(0.30, 0.35, 0.40); // Highlight
+          // MULTI-TONE GREY PALETTE — dark but with visible variation between tones
+          vec3 tone1 = vec3(0.02, 0.025, 0.03);  // Deepest shadow (near-black)
+          vec3 tone2 = vec3(0.05, 0.06, 0.075);   // Dark cool grey
+          vec3 tone3 = vec3(0.09, 0.10, 0.12);    // Medium dark grey
+          vec3 tone4 = vec3(0.14, 0.16, 0.19);    // Lightest (still very dark)
           
-          // Interpolate based on depth (layer) and density (thickness of cloud)
+          // Interpolate based on depth (layer) and density
           float paletteMix = depth * 0.6 + density * 0.4;
           
           vec3 base;
           if (paletteMix < 0.33) {
-              base = mix(darkGunmetal, charcoal, paletteMix / 0.33);
+              base = mix(tone1, tone2, paletteMix / 0.33);
           } else if (paletteMix < 0.66) {
-              base = mix(charcoal, ashGrey, (paletteMix - 0.33) / 0.33);
+              base = mix(tone2, tone3, (paletteMix - 0.33) / 0.33);
           } else {
-              base = mix(ashGrey, silver, (paletteMix - 0.66) / 0.34);
+              base = mix(tone3, tone4, (paletteMix - 0.66) / 0.34);
           }
 
-          // Add cell-local micro-variation (cool/warm shift based on rotPhase)
-          vec3 tint = mix(vec3(0.9, 0.95, 1.0), vec3(1.0, 0.95, 0.9), rotPhase);
+          // Micro-variation per cell (cool/warm shift)
+          vec3 tint = mix(vec3(0.92, 0.96, 1.0), vec3(1.0, 0.96, 0.92), rotPhase);
           base *= tint;
-          
-          // Distance fade to make the background melt into pitch black
-          float distToCenter = length(cloudLocal - 0.5);
-          float vignette = smoothstep(0.7, 0.2, distToCenter);
-          base *= vignette;
 
           vec3 finalColor = base;
           
-          // RESTORE THE 3D BEVEL EFFECT!
+          // Subtle 3D bevel — just enough to see shape, not enough to glow
           float gradientY = (rotUV.y + 0.5); 
           float rim = smoothstep(0.3, 0.9, density) * (depth * 0.8 + 0.2);
           float bevelLight = innerEdge * smoothstep(0.2, 1.0, gradientY) * rim;
+          finalColor += vec3(0.12, 0.14, 0.16) * bevelLight * 0.4;
           
-          vec3 highlightColor = vec3(0.5, 0.55, 0.6);
-          finalColor += highlightColor * bevelLight * 0.8;
-          
-          // DIM EVERYTHING DOWN TO FIX "TERLALU TERANG" WITHOUT CRUSHING THE CONTRAST!
-          finalColor *= 0.6; 
-          
-          // Apply shape anti-aliasing alpha
           gl_FragColor = vec4(finalColor, shape);
         }
       `,
@@ -292,7 +280,7 @@ export function HalftoneWave() {
     let lastRenderTime = 0;
     // The clouds drift slowly, so 20 FPS on mobile is visually indistinguishable from
     // 30 but meaningfully lighter on battery/GPU for a full-screen fragment shader.
-    const fpsInterval = 1000 / (isMobile ? 20 : 30); // FPS throttle
+    const fpsInterval = 1000 / (isMobile ? 15 : 24); // Throttle: 24fps desktop, 15fps mobile
 
     const renderLoop = (timestamp: number) => {
       animationFrameId = requestAnimationFrame(renderLoop);
