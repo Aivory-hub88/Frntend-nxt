@@ -23,9 +23,9 @@ export function HalftoneWave() {
     const renderer = new THREE.WebGLRenderer({ antialias: false, alpha: true });
     renderer.setSize(width, height);
     
-    // Performance: 0.5 pixelRatio universally — halves resolution, cuts GPU load 75%
+    // EXTREME MOBILE OPTIMIZATION: Reduce render resolution by 50% on mobile (saves 75% fragments!)
     const isMobile = window.innerWidth < 1024;
-    renderer.setPixelRatio(0.5);
+    renderer.setPixelRatio(isMobile ? 0.5 : 1);
     
     mountRef.current.appendChild(renderer.domElement);
 
@@ -42,11 +42,12 @@ export function HalftoneWave() {
       uTime: { value: 0.0 },
       uColor: { value: new THREE.Color('#444444') },
       uResolution: { value: new THREE.Vector2(width, height) },
-      uPixelSize: { value: 8.0 },
+      uPixelSize: { value: 10.0 }, // 10px cells for clear ASCII characters
       uTexture: { value: defaultTexture },
-      uDensityFloor: { value: 0.60 },
-      uFarDim: { value: 0.01 },
-      uNearBright: { value: 0.2 }
+      // ── depth / density tuning knobs (tweak freely & redeploy) ──
+      uDensityFloor: { value: 0.25 }, // higher = more open sky (less dense)
+      uFarDim: { value: 0.02 },       // background brightness — keep low for text legibility
+      uNearBright: { value: 0.5 }     // foreground cloud "pop"
     };
 
     // Load the authentic Megamendung texture mask
@@ -109,48 +110,16 @@ export function HalftoneWave() {
             float localX = fract(finalX);
             float localY = fract(finalY);
             
-
-            // Soften the edges significantly so clouds fading at the tile boundaries don't form hard geometric shapes
-            // CRITICAL FIX: The row jumps at baseY boundaries, so we MUST mask Y using fract(baseY). 
-            // The column jumps at finalX boundaries, so we mask X using localX (fract(finalX)).
-            float physicalLocalY = fract(baseY);
-            float edgeMask = smoothstep(0.0, 0.25, localX) * smoothstep(1.0, 0.75, localX);
-            edgeMask *= smoothstep(0.0, 0.3, physicalLocalY) * smoothstep(1.0, 0.7, physicalLocalY);
+            // The original image has huge empty margins. Crop to the middle 82.5% (0.0875 to 0.9125)
+            float croppedY = mix(0.0875, 0.9125, localY);
             
-            // 1. Stable: Idle and moving
-            // 2. Shatter: Dissolves into noise and drifts upwards (Dandelion erosion)
+            // Soften the edges to prevent any hard seams if the cloud touches the tile boundary
+            // Use the unwarped local coordinates for the mask so the boundary stays rigid and safe!
+            float edgeMask = smoothstep(0.0, 0.05, localX) * smoothstep(1.0, 0.95, localX);
+            edgeMask *= smoothstep(0.0, 0.1, localY) * smoothstep(1.0, 0.9, localY);
             
-            // Unique phase for this cloud
-            float phase = fract(sin(col * 12.33 + row * 45.67) * 78.91);
-            // Slower cycle: 20 seconds
-            float cycleTime = time * 0.05; 
-            float cycle = fract(cycleTime + phase);
-            
-            // Stages
-            float shatterProgress = smoothstep(0.70, 1.0, cycle);     // 30% of cycle
-            
-            // 2. Dandelion Shatter / Dissolve Effect
-            // High frequency noise for organic disintegration
-            float dissolveNoise = fract(sin(dot(vec2(localX, localY) * 8.0 + vec2(time * 0.1), vec2(12.9898, 78.233))) * 43758.5453);
-            // Shatter mask drops to 0 organically based on noise
-            float shatterMask = smoothstep(shatterProgress - 0.15, shatterProgress + 0.15, 1.0 - dissolveNoise);
-            
-            // Subtle upward and rightward drift during shatter
-            float windX = shatterProgress * 0.15;
-            float windY = shatterProgress * -0.3; // Negative Y = texture moves UP
-            
-            float sampleX = localX - windX;
-            float sampleY = localY - windY;
-            
-            // Mask out anything that blows outside the [0,1] logical texture space
-            float uvBoundsMask = step(0.0, sampleX) * step(sampleX, 1.0) * step(0.0, sampleY) * step(sampleY, 1.0);
-            
-            float croppedY = mix(0.0875, 0.9125, sampleY);
-            float texVal = texture2D(tex, vec2(sampleX, croppedY)).r;
-            
-            // Combine all masks (Removed bloom to improve performance and visuals)
-            float lifeAlpha = shatterMask;
-            float density = (1.0 - texVal) * edgeMask * lifeAlpha * uvBoundsMask;
+            float texVal = texture2D(tex, vec2(localX, croppedY)).r;
+            float density = (1.0 - texVal) * edgeMask;
             return vec3(density, localX, localY);
         }
 
@@ -176,55 +145,83 @@ export function HalftoneWave() {
           float a1 = smoothstep(uDensityFloor, uDensityFloor + 0.2, r1.x); density = mix(density, r1.x, a1); depth = mix(depth, 0.0, a1); cloudLocal = mix(cloudLocal, r1.yz, a1);
           float a4 = smoothstep(uDensityFloor, uDensityFloor + 0.2, r4.x); density = mix(density, r4.x, a4); depth = mix(depth, 1.0, a4); cloudLocal = mix(cloudLocal, r4.yz, a4);
 #else
-          // REDUCED FROM 4 LAYERS TO 2 LAYERS TO STOP MACBOOK GLITCHING & LAG!
-          vec3 r1 = getCloudLayer(uTexture, cell, 0.06, 0.02, vec2(0.0, 0.0), uTime);  // far
-          vec3 r4 = getCloudLayer(uTexture, cell, 0.02, 0.06, vec2(0.3, 0.5), uTime);  // near
+          vec3 r1 = getCloudLayer(uTexture, cell, 0.071, 0.015, vec2(0.0, 0.0), uTime);  // far
+          vec3 r2 = getCloudLayer(uTexture, cell, 0.048, 0.03, vec2(0.33, 0.7), uTime);
+          vec3 r3 = getCloudLayer(uTexture, cell, 0.028, 0.05, vec2(0.66, 0.2), uTime);
+          vec3 r4 = getCloudLayer(uTexture, cell, 0.016, 0.08, vec2(0.1, 0.5), uTime);   // near
 
           float a1 = smoothstep(uDensityFloor, uDensityFloor + 0.2, r1.x); density = mix(density, r1.x, a1); depth = mix(depth, 0.00, a1); cloudLocal = mix(cloudLocal, r1.yz, a1);
+          float a2 = smoothstep(uDensityFloor, uDensityFloor + 0.2, r2.x); density = mix(density, r2.x, a2); depth = mix(depth, 0.40, a2); cloudLocal = mix(cloudLocal, r2.yz, a2);
+          float a3 = smoothstep(uDensityFloor, uDensityFloor + 0.2, r3.x); density = mix(density, r3.x, a3); depth = mix(depth, 0.70, a3); cloudLocal = mix(cloudLocal, r3.yz, a3);
           float a4 = smoothstep(uDensityFloor, uDensityFloor + 0.2, r4.x); density = mix(density, r4.x, a4); depth = mix(depth, 1.00, a4); cloudLocal = mix(cloudLocal, r4.yz, a4);
 #endif
 
           // Map the surviving density into the ASCII character ramp.
           density = smoothstep(0.0, 0.85, density);
 
-          // 3. STATIC GEOMETRIC PIXEL RENDERER — NO ROTATION, NO PULSE, NO MORPHING
-          if (density < 0.01) discard;
+          // 3. ASCII / BITMAP RENDERER
+          // Map density to 6 distinct levels (0 = empty, 5 = solid)
+          int charIndex = int(floor(density * 5.99));
 
-          vec2 uv = local - 0.5;
+          // Create a 5x5 pixel-art grid inside this cell
+          vec2 p5 = floor(local * 5.0); 
+          float shape = 0.0;
 
-          // Simple static square SDF — NO cos/sin/rotation/scale (kills GPU)
-          float d = max(abs(uv.x), abs(uv.y));
-          float threshold = density * 0.32;
-          float shape = smoothstep(threshold + 0.04, threshold - 0.04, d);
-          if (shape < 0.01) discard;
-
-          // Unique phase per cell (cheap — computed once per cell, no trig per pixel)
-          float cellPhase = fract(sin(dot(cell, vec2(12.9898, 78.233))) * 43758.5453);
-
-          // ULTRA-DARK 4-TONE PALETTE — barely visible, like a watermark
-          vec3 tone1 = vec3(0.01, 0.012, 0.015);
-          vec3 tone2 = vec3(0.025, 0.03, 0.04);
-          vec3 tone3 = vec3(0.04, 0.05, 0.06);
-          vec3 tone4 = vec3(0.06, 0.07, 0.085);
-
-          float paletteMix = depth * 0.6 + density * 0.4;
-          vec3 base;
-          if (paletteMix < 0.33) {
-              base = mix(tone1, tone2, paletteMix / 0.33);
-          } else if (paletteMix < 0.66) {
-              base = mix(tone2, tone3, (paletteMix - 0.33) / 0.33);
-          } else {
-              base = mix(tone3, tone4, (paletteMix - 0.66) / 0.34);
+          if (charIndex == 1) {
+              // Level 1: '.' (center dot)
+              if (p5.x == 2.0 && p5.y == 2.0) shape = 1.0;
+          } else if (charIndex == 2) {
+              // Level 2: '+' (plus)
+              if (p5.x == 2.0 && p5.y > 0.0 && p5.y < 4.0) shape = 1.0;
+              if (p5.y == 2.0 && p5.x > 0.0 && p5.x < 4.0) shape = 1.0;
+          } else if (charIndex == 3) {
+              // Level 3: 'x' (cross)
+              if (p5.x == p5.y && p5.x > 0.0 && p5.x < 4.0) shape = 1.0;
+              if (p5.x == (4.0 - p5.y) && p5.x > 0.0 && p5.x < 4.0) shape = 1.0;
+          } else if (charIndex == 4) {
+              // Level 4: '[]' (square outline / 'o')
+              if ((p5.x == 1.0 || p5.x == 3.0) && p5.y >= 1.0 && p5.y <= 3.0) shape = 1.0;
+              if ((p5.y == 1.0 || p5.y == 3.0) && p5.x >= 1.0 && p5.x <= 3.0) shape = 1.0;
+          } else if (charIndex >= 5) {
+              // Level 5: '■' (solid block)
+              if (p5.x >= 1.0 && p5.x <= 3.0 && p5.y >= 1.0 && p5.y <= 3.0) shape = 1.0;
           }
 
-          // Tiny cool/warm micro-shift per cell
-          base *= mix(vec3(0.95, 0.97, 1.0), vec3(1.0, 0.97, 0.95), cellPhase);
+          if (shape == 0.0) {
+            discard;
+          }
 
-          // Minimal edge highlight for 3D hint — almost invisible
-          float innerEdge = smoothstep(threshold - 0.1, threshold, d);
-          base += vec3(0.03) * innerEdge * density * 0.3;
+          // 3D shading via ATMOSPHERIC PERSPECTIVE.
+          // Brightness is driven primarily by DEPTH (which layer won this pixel),
+          // not just density: far clouds stay dim (and readable behind text),
+          // near clouds pop. Density then adds a secondary highlight on the peaks,
+          // so a near cloud clearly reads as "in front of" a far one.
+          vec3 farColor  = uColor * uFarDim;      // background: dim
+          vec3 nearColor = uColor * uNearBright;  // foreground: bright
+          vec3 base = mix(farColor, nearColor, depth);
 
-          gl_FragColor = vec4(base, shape);
+          // 4. ANALOG 3D GRADIENT (VOLUMETRIC SHADING)
+          // local.y is ~1.0 at the top (brighter), ~0.0 at the bottom (darker)
+          // local.x is ~1.0 at the right, ~0.0 at the left
+          // This creates a smooth gradient across the ASCII characters!
+          float gradientY = smoothstep(0.1, 0.9, cloudLocal.y);
+          float gradientX = smoothstep(0.2, 0.8, cloudLocal.x);
+          
+          // Combine for a volumetric light effect (e.g. light from Top-Right)
+          float volumetricShadow = mix(0.35, 1.45, gradientY * 0.7 + gradientX * 0.3);
+
+          float pop = pow(density, 1.5);
+          vec3 finalColor = base * (0.65 + 0.55 * pop);
+          
+          // Apply the 3D analog gradient
+          finalColor *= volumetricShadow;
+
+          // Rim light: Make it respect the directional light so it only shines on the lit edges!
+          float rim = smoothstep(0.45, 0.75, density) * depth;
+          float directionalRim = rim * smoothstep(0.4, 0.9, gradientY);
+          finalColor += uColor * directionalRim * 0.6;
+
+          gl_FragColor = vec4(finalColor, 1.0);
         }
       `,
       transparent: true,
@@ -246,7 +243,7 @@ export function HalftoneWave() {
     let lastRenderTime = 0;
     // The clouds drift slowly, so 20 FPS on mobile is visually indistinguishable from
     // 30 but meaningfully lighter on battery/GPU for a full-screen fragment shader.
-    const fpsInterval = 1000 / 15; // 15 FPS universal — clouds drift slowly, no need for more
+    const fpsInterval = 1000 / (isMobile ? 20 : 30); // FPS throttle
 
     const renderLoop = (timestamp: number) => {
       animationFrameId = requestAnimationFrame(renderLoop);
