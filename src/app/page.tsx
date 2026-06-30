@@ -15,19 +15,20 @@ export default function HomePage() {
   return (
     <main className="relative">
       <ScrollRevealProvider />
-      <section style={{ padding: 0 }} className="relative z-[1]">
+      <section style={{ padding: 0 }} className="relative z-[1] bg-black">
+        {/* Global seamless background for the ENTIRE page, down to the footer */}
+        <div className="absolute inset-0 z-0 pointer-events-none">
+          <div className="sticky top-0 w-full h-screen">
+            <HalftoneWaveWrapper />
+          </div>
+        </div>
+
         <Navbar />
         <HeroSection />
         
         {/* Unscaled content (100% scale to match product page) */}
-        <DarkSectionSpotlight className="relative bg-black">
-          {/* Global seamless background for all these sections */}
-          <div className="absolute inset-0 z-0 pointer-events-none">
-            <div className="sticky top-0 w-full h-screen">
-              <HalftoneWaveWrapper />
-            </div>
-          </div>
-          <div className="relative">
+        <DarkSectionSpotlight className="relative bg-transparent">
+          <div className="relative z-10">
             <AIReadySection />
             <FeatureCards />
             

@@ -1,56 +1,19 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
-import GridOverlay from './GridOverlay';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
 import RotatingText from './RotatingText';
 
 export default function HeroSection() {
-  const videoRef = useRef<HTMLVideoElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
-  const darkCellRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const CW = 120;
-    const CH = 120;
-
-    // Force video to play reliably
-    if (videoRef.current) {
-      videoRef.current.play().catch(error => {
-        console.log("Video autoplay failed:", error);
-      });
-    }
-
-    const positionDarkCell = () => {
-      const w = window.innerWidth;
-      const h = window.innerHeight;
-      const offsetX = (w / 2) % CW;
-      const offsetY = (h / 2) % CH;
-      const colCount = Math.ceil(w / CW);
-      const rowCount = Math.ceil(h / CH);
-      // last full cell x position
-      const cellX = (colCount - 1) * CW + offsetX;
-      const cellY = (rowCount - 1) * CH + offsetY;
-      if (darkCellRef.current) {
-        darkCellRef.current.style.left = `${cellX}px`;
-        darkCellRef.current.style.top = `${cellY}px`;
-        darkCellRef.current.style.width = `${CW}px`;
-        darkCellRef.current.style.height = `${CH}px`;
-      }
-    };
-
-    positionDarkCell();
-    window.addEventListener('resize', positionDarkCell);
-
     let ticking = false;
 
     const handleScroll = () => {
       if (!ticking) {
         requestAnimationFrame(() => {
           const y = window.scrollY;
-          if (videoRef.current) {
-            videoRef.current.style.transform = `translateY(${y * 0.6}px)`;
-          }
           if (contentRef.current) {
             contentRef.current.style.transform = `translateY(${y * -0.35}px)`;
           }
@@ -63,38 +26,14 @@ export default function HeroSection() {
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => {
       window.removeEventListener('scroll', handleScroll);
-      window.removeEventListener('resize', positionDarkCell);
     };
   }, []);
 
   return (
     <div
       className="relative w-full min-h-screen flex flex-col items-center justify-center overflow-hidden"
-      style={{ background: '#030408' }}
+      style={{ background: 'transparent' }}
     >
-      {/* Background Video */}
-      <video
-        ref={videoRef}
-        autoPlay
-        muted
-        defaultMuted
-        loop
-        playsInline
-        preload="auto"
-        poster="/hero-video-poster.jpg"
-        onCanPlay={(e) => {
-          e.currentTarget.play().catch(() => {});
-        }}
-        className="absolute inset-0 w-full h-full object-cover z-0"
-        style={{ willChange: 'transform' }}
-      >
-        <source src="/hero-video/hero-aivory-optimized.mp4" type="video/mp4" />
-      </video>
-
-      {/* Grid Overlay with random fade (hero only) */}
-      <GridOverlay />
-
-      {/* Content */}
       <div
         ref={contentRef}
         className="relative z-10 flex flex-col items-center justify-center text-center w-full max-w-4xl px-5 md:px-8 pt-16 pb-16 md:pt-24 md:pb-24"
@@ -165,16 +104,6 @@ export default function HeroSection() {
           <div className="w-[1px] h-10 md:h-16 bg-gradient-to-t from-transparent to-white/80" />
         </div>
       </div>
-      {/* Fixed dark grid cell — canvas is clipped to never draw here; CSS div is fully opaque */}
-      <div
-        ref={darkCellRef}
-        className="absolute pointer-events-none"
-        style={{
-          backgroundColor: '#030408', // matches hero background
-          opacity: 0.98,
-          zIndex: 2,
-        }}
-      />
     </div>
   );
 }
