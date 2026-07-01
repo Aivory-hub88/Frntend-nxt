@@ -285,11 +285,11 @@ export function HalftoneWave() {
         const floatRot = Math.cos(time * 0.8) * 0.08 * floatIntensity;
 
         // --- Smooth Drag Interpolation & Auto-Return ---
-        dragRotationX += (targetDragRotationX - dragRotationX) * 0.15;
-        dragRotationY += (targetDragRotationY - dragRotationY) * 0.15;
+        dragRotationX += (targetDragRotationX - dragRotationX) * 0.06;
+        dragRotationY += (targetDragRotationY - dragRotationY) * 0.06;
         if (!isDragging) {
-          targetDragRotationX *= 0.95; // Spring back gracefully to origin (slower, less bouncy)
-          targetDragRotationY *= 0.95;
+          targetDragRotationX *= 0.985; // Extremely smooth and slow spring back
+          targetDragRotationY *= 0.985;
         }
 
         // Lock the Y-axis facing direction, add mouse drag offset, spin on Z-axis (pinwheel)
