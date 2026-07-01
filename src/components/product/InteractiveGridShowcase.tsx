@@ -22,7 +22,7 @@ const showcaseProducts = [
   },
   {
     step: '05. BUILD', title: 'Workflow Builder',
-    description: 'Orchestrate operations visually. Link trigger conditions, processing layers, and applications. Simply type what you want in plain English, and the builder instantly generates executable workflows—zero code required.',
+    description: 'Say it, and it builds. Plain language becomes executable automation — no code, no complexity, just intent turned into action across your entire stack.',
   },
 ];
 
