@@ -115,7 +115,7 @@ export function HalftoneWave() {
           float r = length(vLocalPos.xy);
           
           // Scroll changes the pattern frequency/style
-          float freqMix = mix(45.0, 20.0, scrollT); 
+          float freqMix = mix(45.0, 35.0, scrollT); 
           
           // Animate the noise coordinates so the pattern flows from the center OUTWARD to the edges
           vec3 dir = normalize(vLocalPos + vec3(0.001)); // add epsilon to avoid normalize(0)
@@ -125,7 +125,7 @@ export function HalftoneWave() {
           float spots = sin(flowPos.x * freqMix) * sin(flowPos.y * freqMix) * sin(flowPos.z * freqMix);
           
           // Alternate noise variation for scroll transition (also flowing)
-          float spots2 = cos(flowPos.x * 20.0) * cos(flowPos.y * 20.0);
+          float spots2 = cos(flowPos.x * 35.0) * cos(flowPos.y * 35.0);
           float currentSpots = mix(spots, spots2, scrollT);
           
           // Low-frequency noise to create organic non-uniform clusters (Petal Blight / Botrytis look)
@@ -193,8 +193,8 @@ export function HalftoneWave() {
           float idleBloom = (sin(uTime * 1.5) * 0.5 + 0.5) * 0.1;
           float spread = smoothstep(0.0, 1.0, uScroll) + (idleBloom * (1.0 - smoothstep(0.0, 1.0, uScroll)));
           
-          float radius = 2.5 + (petalDepth * 2.0) + (petalDepth * spread * 3.0);
-          float bend = spread * 1.5;
+          float radius = 2.5 + (petalDepth * 2.0) + (petalDepth * spread * 1.5);
+          float bend = spread * 0.8;
           
           vec3 displacedPos = p * radius;
           displacedPos.y -= bend * petalDepth;
@@ -275,16 +275,14 @@ export function HalftoneWave() {
     };
 
     const onPointerMove = (e: PointerEvent) => {
-      if (isDragging) {
-        const deltaMove = {
-          x: e.clientX - previousMousePosition.x,
-          y: e.clientY - previousMousePosition.y
-        };
-        // Mouse direction translation to rotation
-        targetDragRotationY += deltaMove.x * 0.005;
-        targetDragRotationX += deltaMove.y * 0.005;
-        previousMousePosition = { x: e.clientX, y: e.clientY };
-      }
+      if (!isDragging) return;
+      const deltaX = e.clientX - previousMousePosition.x;
+      const deltaY = e.clientY - previousMousePosition.y;
+      
+      targetDragRotationY += deltaX * 0.003; // Base rotation speed (reduced for subtlety)
+      targetDragRotationX += deltaY * 0.003;
+      
+      previousMousePosition = { x: e.clientX, y: e.clientY };
     };
 
     const onPointerUp = () => {
@@ -317,11 +315,11 @@ export function HalftoneWave() {
         const floatRot = Math.cos(time * 0.8) * 0.08 * floatIntensity;
 
         // --- Smooth Drag Interpolation & Auto-Return ---
-        dragRotationX += (targetDragRotationX - dragRotationX) * 0.1;
-        dragRotationY += (targetDragRotationY - dragRotationY) * 0.1;
+        dragRotationX += (targetDragRotationX - dragRotationX) * 0.15;
+        dragRotationY += (targetDragRotationY - dragRotationY) * 0.15;
         if (!isDragging) {
-          targetDragRotationX *= 0.92; // Spring back gracefully to origin
-          targetDragRotationY *= 0.92;
+          targetDragRotationX *= 0.95; // Spring back gracefully to origin (slower, less bouncy)
+          targetDragRotationY *= 0.95;
         }
 
         // Lock the Y-axis facing direction, add mouse drag offset, spin on Z-axis (pinwheel)
