@@ -262,6 +262,45 @@ export function HalftoneWave() {
     let animationFrameId: number;
     let isVisible = true;
 
+    // --- Interactive Mouse Drag Setup ---
+    let isDragging = false;
+    let previousMousePosition = { x: 0, y: 0 };
+    let dragRotationX = 0;
+    let dragRotationY = 0;
+    let targetDragRotationX = 0;
+    let targetDragRotationY = 0;
+
+    const onPointerDown = (e: PointerEvent) => {
+      isDragging = true;
+      previousMousePosition = { x: e.clientX, y: e.clientY };
+      if (mountRef.current) mountRef.current.style.cursor = 'grabbing';
+    };
+
+    const onPointerMove = (e: PointerEvent) => {
+      if (isDragging) {
+        const deltaMove = {
+          x: e.clientX - previousMousePosition.x,
+          y: e.clientY - previousMousePosition.y
+        };
+        // Mouse direction translation to rotation
+        targetDragRotationY += deltaMove.x * 0.005;
+        targetDragRotationX += deltaMove.y * 0.005;
+        previousMousePosition = { x: e.clientX, y: e.clientY };
+      }
+    };
+
+    const onPointerUp = () => {
+      isDragging = false;
+      if (mountRef.current) mountRef.current.style.cursor = 'grab';
+    };
+
+    const canvas = renderer.domElement;
+    canvas.addEventListener('pointerdown', onPointerDown);
+    window.addEventListener('pointermove', onPointerMove);
+    window.addEventListener('pointerup', onPointerUp);
+    if (mountRef.current) mountRef.current.style.cursor = 'grab';
+    // -------------------------------------
+
     const observer = new IntersectionObserver(([entry]) => {
       isVisible = entry.isIntersecting;
     }, { threshold: 0.0 });
@@ -279,12 +318,20 @@ export function HalftoneWave() {
         const floatY = Math.sin(time * 1.5) * 0.2 * floatIntensity; 
         const floatRot = Math.cos(time * 0.8) * 0.08 * floatIntensity;
 
-        // Lock the Y-axis facing direction, spin on Z-axis (pinwheel), and remove X seesaw
-        group.rotation.y = (Math.PI / 1.5) + (floatRot * 0.5);
+        // --- Smooth Drag Interpolation & Auto-Return ---
+        dragRotationX += (targetDragRotationX - dragRotationX) * 0.1;
+        dragRotationY += (targetDragRotationY - dragRotationY) * 0.1;
+        if (!isDragging) {
+          targetDragRotationX *= 0.92; // Spring back gracefully to origin
+          targetDragRotationY *= 0.92;
+        }
+
+        // Lock the Y-axis facing direction, add mouse drag offset, spin on Z-axis (pinwheel)
+        group.rotation.y = (Math.PI / 1.5) + (floatRot * 0.5) + dragRotationY;
         group.rotation.z = time * 0.15; // Counter-clockwise pinwheel spin
         
         uniforms.uScroll.value += (targetScroll - uniforms.uScroll.value) * 0.05;
-        group.rotation.x += (targetRotationX - group.rotation.x) * 0.05; // Smooth X tilt on scroll, no seesaw
+        group.rotation.x += (targetRotationX - group.rotation.x) * 0.05 + dragRotationX; // Smooth X tilt on scroll + mouse drag
         
         // Smoothly interpolate position and scale
         group.position.x += (targetX - group.position.x) * 0.05;
@@ -312,6 +359,9 @@ export function HalftoneWave() {
       observer.disconnect();
       window.removeEventListener('scroll', handleScroll);
       window.removeEventListener('resize', handleResize);
+      canvas.removeEventListener('pointerdown', onPointerDown);
+      window.removeEventListener('pointermove', onPointerMove);
+      window.removeEventListener('pointerup', onPointerUp);
       if (mountRef.current) {
         mountRef.current.removeChild(renderer.domElement);
       }
