@@ -882,16 +882,16 @@ function BlueprintAnimation() {
               { name: 'Engine', active: true, delay: '0.4s', ping: true },
               { name: 'Action', active: true, delay: '0.6s' },
             ].map((node, i) => (
-              <div key={node.name} className="flex flex-col items-center gap-3 animate-fade-in-up relative" style={{ animationDelay: node.delay }}>
-                {node.ping && (
-                  <>
-                    <div className="absolute -top-1.5 -right-1.5 w-3 h-3 rounded-full bg-[#aec99d] animate-ping opacity-60 z-20" />
-                    <div className="absolute -top-1.5 -right-1.5 w-3 h-3 rounded-full bg-[#aec99d] z-20" />
-                  </>
-                )}
+              <div key={node.name} className="flex flex-col items-center gap-3 animate-fade-in-up" style={{ animationDelay: node.delay }}>
                 <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs relative z-10 ${
                   node.active ? 'bg-[#aec99d] text-black font-medium shadow-[0_0_15px_rgba(174,201,157,0.3)]' : 'bg-[#111111] border border-white/10 text-white/40 font-medium'
                 }`} style={{ fontFamily: "'Manrope', sans-serif" }}>
+                  {node.ping && (
+                    <>
+                      <div className="absolute -top-1 -right-1 w-3 h-3 rounded-full bg-[#aec99d] animate-ping opacity-60 z-20" />
+                      <div className="absolute -top-1 -right-1 w-3 h-3 rounded-full bg-[#aec99d] z-20" />
+                    </>
+                  )}
                   0{i + 1}
                 </div>
                 <span className="text-[10px] text-white/60 font-medium">{node.name}</span>
