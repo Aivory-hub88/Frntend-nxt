@@ -82,13 +82,13 @@ const DIAGNOSTIC_STEPS = [
 ];
 
 const DIMS = [
-  { label: 'Strategy', val: 80, delay: 0.2 },
-  { label: 'Data Readiness', val: 75, delay: 0.5 },
-  { label: 'Process Audit', val: 90, delay: 0.8 },
+  { label: 'Strategy', val: 65, delay: 0.2 },
+  { label: 'Data Readiness', val: 45, delay: 0.5 },
+  { label: 'Process Audit', val: 30, delay: 0.8 },
 ];
 
 function DiagnosticAnimation() {
-  const [phase, setPhase] = useState<'form' | 'thinking' | 'score'>('form');
+  const [phase, setPhase] = useState<'form' | 'thinking' | 'score' | 'improvements'>('form');
   const [stepIdx, setStepIdx] = useState(0);
   const [selectedIdx, setSelectedIdx] = useState<number | null>(null);
   const [dots, setDots] = useState('');
@@ -125,12 +125,15 @@ function DiagnosticAnimation() {
       t(() => {
         setPhase('score');
         let v = 0;
-        const step = () => { v += 2; setScoreVal(v); if (v < 78) timerRefs.current.push(setTimeout(step, 20)); };
+        const step = () => { v += 2; setScoreVal(v); if (v < 42) timerRefs.current.push(setTimeout(step, 20)); else setScoreVal(42); };
         step();
         timerRefs.current.push(setTimeout(() => setBarsVisible(true), 300));
       }, 7.0);
       
-      t(run, 12.0);
+      // Improvements
+      t(() => setPhase('improvements'), 10.5);
+      
+      t(run, 15.5);
     };
     run();
     return clearAll;
@@ -194,11 +197,11 @@ function DiagnosticAnimation() {
       </div>
 
       {/* Score */}
-      <div className={`absolute inset-0 flex flex-col justify-center items-center p-2 transition-all duration-500 delay-200 ${phase === 'score' ? 'opacity-100 scale-100' : 'opacity-0 scale-105 pointer-events-none'}`}>
+      <div className={`absolute inset-0 flex flex-col justify-center items-center p-2 transition-all duration-500 delay-200 ${phase === 'score' ? 'opacity-100 scale-100' : 'opacity-0 scale-95 pointer-events-none'}`}>
         <div className="relative w-16 h-16 flex items-center justify-center mb-4">
            <svg className="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
              <circle cx="50" cy="50" r="42" fill="none" stroke="rgba(255,255,255,0.05)" strokeWidth="8" />
-             <circle cx="50" cy="50" r="42" fill="none" stroke="#aec99d" strokeWidth="8" strokeDasharray={264} strokeDashoffset={barsVisible ? 264 - (264 * 0.78) : 264} className="transition-all duration-1000 ease-out" />
+             <circle cx="50" cy="50" r="42" fill="none" stroke="#aec99d" strokeWidth="8" strokeDasharray={264} strokeDashoffset={barsVisible ? 264 - (264 * 0.42) : 264} className="transition-all duration-1000 ease-out" />
            </svg>
            <div className="absolute flex flex-col items-center">
              <span className="text-xl font-light text-white" style={{ fontFamily: "'Doto', 'Courier New', monospace" }}>{scoreVal}</span>
@@ -214,6 +217,27 @@ function DiagnosticAnimation() {
             </div>
           ))}
         </div>
+      </div>
+
+      {/* Improvements */}
+      <div className={`absolute inset-0 flex flex-col justify-center items-center p-4 transition-all duration-500 delay-200 ${phase === 'improvements' ? 'opacity-100 scale-100' : 'opacity-0 scale-105 pointer-events-none'}`}>
+         <div className="w-full max-w-[220px] flex flex-col gap-3">
+           <div className="text-center mb-1">
+             <span className="text-[10px] text-[#ff7a7a] font-medium tracking-wider uppercase block mb-0.5">Critical Bottlenecks</span>
+           </div>
+           {[
+             { title: 'Manual Data Entry', desc: 'Siloed data causing sync delays' },
+             { title: 'Workflow Inefficiency', desc: 'High overhead to scale ops' }
+           ].map((item, i) => (
+             <div key={i} className="flex gap-2 items-start bg-red-500/5 border border-red-500/10 rounded-md p-2 animate-fade-in-up" style={{ animationDelay: `${i * 0.3}s` }}>
+               <div className="w-1.5 h-1.5 mt-1 rounded-full bg-[#ff7a7a] shrink-0 animate-pulse" />
+               <div className="flex flex-col">
+                 <span className="text-[10px] text-white/90 font-medium">{item.title}</span>
+                 <span className="text-[8px] text-white/50">{item.desc}</span>
+               </div>
+             </div>
+           ))}
+         </div>
       </div>
     </div>
   );
@@ -245,25 +269,25 @@ function BlueprintAnimation() {
       <div className={`absolute inset-0 flex flex-col items-center justify-center transition-all duration-500 ${phase === 'blueprint' ? 'opacity-0 scale-95 pointer-events-none' : 'opacity-100 scale-100'}`}>
         
         {phase === 'import' && (
-          <div className="flex flex-col items-center gap-4 animate-fade-in-up">
-            <span className="text-[10px] text-[#aec99d] uppercase tracking-widest font-medium">Deep Diagnostic Results</span>
-            <div className="flex flex-col items-center gap-2">
-              <span className="text-[9px] text-white/50">Engine processing results...</span>
-              <div className="flex flex-wrap justify-center gap-2 max-w-[200px]">
-                <div className="bg-white/5 border border-white/10 rounded px-2 py-1 text-[9px] text-white/80">Goal: Scale Ops</div>
-                <div className="bg-white/5 border border-white/10 rounded px-2 py-1 text-[9px] text-white/80">Data: Partially Centralized</div>
-                <div className="bg-[#aec99d]/10 border border-[#aec99d]/30 rounded px-2 py-1 text-[9px] text-[#aec99d]">Score: 78%</div>
+          <div className="flex flex-col items-center justify-center gap-4 animate-fade-in-up mt-2">
+            <span className="text-[11px] text-[#aec99d] uppercase tracking-widest font-medium">Deep Diagnostic Results</span>
+            <div className="flex flex-col items-center gap-3">
+              <span className="text-[10px] text-white/50">Engine processing results...</span>
+              <div className="flex flex-wrap justify-center gap-3 max-w-[240px]">
+                <div className="bg-white/5 border border-white/10 rounded px-3 py-1.5 text-[10px] text-white/80">Goal: Scale Ops</div>
+                <div className="bg-white/5 border border-white/10 rounded px-3 py-1.5 text-[10px] text-white/80">Data: Partially Centralized</div>
+                <div className="bg-[#aec99d]/10 border border-[#aec99d]/30 rounded px-3 py-1.5 text-[10px] text-[#aec99d] shadow-[0_0_10px_rgba(174,201,157,0.15)] font-medium">Score: 42%</div>
               </div>
             </div>
           </div>
         )}
 
         {phase === 'generate' && (
-          <div className="flex flex-col items-center gap-4 animate-fade-in-up">
-            <div className="relative w-12 h-12 flex items-center justify-center">
+          <div className="flex flex-col items-center justify-center gap-4 animate-fade-in-up mt-2">
+            <div className="relative w-14 h-14 flex items-center justify-center">
               <div className="absolute inset-0 border-2 border-[#aec99d] rounded-full animate-ping opacity-20" />
-              <div className="w-8 h-8 bg-[#aec99d]/10 border border-[#aec99d]/50 rounded-full flex items-center justify-center">
-                <svg className="w-4 h-4 text-[#aec99d]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" /></svg>
+              <div className="w-10 h-10 bg-[#aec99d]/10 border border-[#aec99d]/50 rounded-full flex items-center justify-center">
+                <svg className="w-5 h-5 text-[#aec99d]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" /></svg>
               </div>
             </div>
             <span className="text-[10px] text-[#aec99d] animate-pulse uppercase tracking-widest font-medium">Synthesizing Blueprint</span>
