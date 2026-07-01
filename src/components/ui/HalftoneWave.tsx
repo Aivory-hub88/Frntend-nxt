@@ -223,11 +223,11 @@ export function HalftoneWave() {
     scene.add(group);
 
     // Scroll Transition Setup
-    // Start position: Shifted down gently
+    // Start position: Shifted up slightly
     const startX = 0;
-    const startY = isMobile ? -0.5 : -1.0; 
+    const startY = isMobile ? -0.2 : -0.3; 
     const endX = isMobile ? 0 : 5;
-    const endY = isMobile ? 3 : -1;
+    const endY = isMobile ? 3 : -0.2;
 
     // Initial positioning (Immersive, framing the text from below)
     group.position.set(startX, startY, 0);
