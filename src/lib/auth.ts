@@ -13,7 +13,6 @@
  * sites; `getCurrentUser` performs a fresh async fetch.
  */
 
-import { supabase } from "./supabase";
 import { getServiceUrl } from "./services";
 
 const STORAGE_KEY = "aivory_auth";
@@ -273,8 +272,18 @@ export async function logout(redirect: boolean = true): Promise<void> {
   }
 }
 
-/** Fetch the current user fresh from Supabase (async). */
+/**
+ * Fetch the current user fresh from Supabase (async).
+ *
+ * The Supabase client (~230KB) is imported dynamically here so it is code-split
+ * into its own async chunk. This keeps `@supabase/supabase-js` out of the
+ * initial bundle of every page that only needs the synchronous localStorage
+ * helpers (`isAuthenticated`, `getUser`, `getToken`) — e.g. the marketing
+ * homepage's navbar — and only downloads it when a fresh server fetch is
+ * actually requested.
+ */
 export async function getCurrentUser(): Promise<User | null> {
+  const { supabase } = await import("./supabase");
   const { data, error } = await supabase.auth.getUser();
   if (error || !data.user) {
     return null;
