@@ -264,13 +264,26 @@ function BlueprintAnimation() {
 
   return (
     <div className="w-full flex-1 relative overflow-hidden grid place-items-center p-4">
+      <style>{`
+        @keyframes data-flow {
+          0% { transform: translateY(-100%); opacity: 0; }
+          20% { opacity: 1; }
+          80% { opacity: 1; }
+          100% { transform: translateY(200%); opacity: 0; }
+        }
+      `}</style>
       
       {/* Import & Generate Phases */}
       <div className={`col-start-1 row-start-1 flex flex-col items-center justify-center transition-all duration-500 w-full h-full ${phase === 'blueprint' ? 'opacity-0 scale-95 pointer-events-none' : 'opacity-100 scale-100'}`}>
         
         {phase === 'import' && (
-          <div className="flex flex-col items-center justify-center gap-4 animate-fade-in-up mt-2">
-            <span className="text-[11px] text-[#aec99d] uppercase tracking-widest font-medium">Deep Diagnostic Results</span>
+          <div className="flex flex-col items-center justify-center gap-4 animate-fade-in-up mt-1">
+            <div className="flex flex-col items-center">
+               <div className="h-10 w-px bg-gradient-to-b from-transparent to-[#aec99d]/30 relative overflow-hidden mb-3">
+                  <div className="absolute top-0 left-0 w-full h-1/2 bg-gradient-to-b from-transparent via-[#aec99d] to-transparent animate-[data-flow_1.5s_linear_infinite]" />
+               </div>
+               <span className="text-[11px] text-[#aec99d] uppercase tracking-widest font-medium">Deep Diagnostic Results</span>
+            </div>
             <div className="flex flex-col items-center gap-3">
               <span className="text-[10px] text-white/50">Engine processing from deep diagnostic result</span>
               <div className="flex flex-wrap justify-center gap-3 max-w-[240px]">
