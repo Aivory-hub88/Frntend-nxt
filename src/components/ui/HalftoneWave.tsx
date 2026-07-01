@@ -206,6 +206,7 @@ export function HalftoneWave() {
     // Scroll mapping state
     let targetScroll = 0;
     let targetRotationX = 0.5; 
+    let currentScrollRotationX = 0.5;
     let targetX = startX;
     let targetY = startY;
     let targetScale = 1.6;
@@ -285,11 +286,11 @@ export function HalftoneWave() {
         const floatRot = Math.cos(time * 0.8) * 0.08 * floatIntensity;
 
         // --- Smooth Drag Interpolation & Auto-Return ---
-        dragRotationX += (targetDragRotationX - dragRotationX) * 0.06;
-        dragRotationY += (targetDragRotationY - dragRotationY) * 0.06;
+        dragRotationX += (targetDragRotationX - dragRotationX) * 0.08;
+        dragRotationY += (targetDragRotationY - dragRotationY) * 0.08;
         if (!isDragging) {
-          targetDragRotationX *= 0.985; // Extremely smooth and slow spring back
-          targetDragRotationY *= 0.985;
+          targetDragRotationX *= 0.95; // Graceful auto-center
+          targetDragRotationY *= 0.95;
         }
 
         // Lock the Y-axis facing direction, add mouse drag offset, spin on Z-axis (pinwheel)
@@ -297,7 +298,10 @@ export function HalftoneWave() {
         group.rotation.z = time * 0.15; // Counter-clockwise pinwheel spin
         
         uniforms.uScroll.value += (targetScroll - uniforms.uScroll.value) * 0.05;
-        group.rotation.x += (targetRotationX - group.rotation.x) * 0.05 + dragRotationX; // Smooth X tilt on scroll + mouse drag
+        
+        // Smoothly interpolate scroll rotation separately, then add drag as a positional offset
+        currentScrollRotationX += (targetRotationX - currentScrollRotationX) * 0.05;
+        group.rotation.x = currentScrollRotationX + dragRotationX;
         
         // Smoothly interpolate position and scale
         group.position.x += (targetX - group.position.x) * 0.05;
