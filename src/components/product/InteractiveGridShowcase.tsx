@@ -595,11 +595,24 @@ function RoadmapAnimation() {
         <div className={`absolute top-1/2 left-[36px] right-1/2 h-[1px] bg-[#aec99d] -translate-y-1/2 -z-10 origin-left transition-all duration-700 ${step >= 5 ? 'scale-x-100 opacity-100' : 'scale-x-0 opacity-0'}`} />
         <div className={`absolute top-1/2 left-1/2 right-[36px] h-[1px] bg-[#aec99d] -translate-y-1/2 -z-10 origin-left transition-all duration-700 ${step >= 9 ? 'scale-x-100 opacity-100' : 'scale-x-0 opacity-0'}`} />
 
-        {waves.map((wave) => {
+        {step >= 5 && (
+          <span className="absolute top-1/2 left-[36px] right-1/2 -translate-y-1/2 h-[3px] overflow-hidden pointer-events-none">
+            <span className="roadmap-comet" />
+          </span>
+        )}
+        {step >= 9 && (
+          <span className="absolute top-1/2 left-1/2 right-[36px] -translate-y-1/2 h-[3px] overflow-hidden pointer-events-none">
+            <span className="roadmap-comet" />
+          </span>
+        )}
+
+        {waves.map((wave, wi) => {
           const isActive = step >= wave.activeStep;
+          const isCurrent = wi === currentWaveIdx && isActive;
           return (
             <div key={wave.name} className="flex flex-col items-center gap-1 transition-all duration-500">
               <div className={`w-8 h-8 rounded-full border flex items-center justify-center text-[10px] transition-all duration-500 relative z-10 ${isActive ? 'border-[#aec99d] bg-[#111111] text-[#aec99d] font-semibold scale-110 shadow-[0_0_10px_rgba(174,201,157,0.3)]' : 'border-white/10 bg-[#111111] text-white/40 scale-100'}`} style={{ fontFamily: "'Doto', 'Courier New', monospace" }}>
+                {isCurrent && <span className="roadmap-ping" />}
                 {wave.num}
               </div>
             </div>
@@ -607,24 +620,29 @@ function RoadmapAnimation() {
         })}
       </div>
       
-      <div className="bg-[#111111] border border-white/5 rounded-xl p-4 mx-auto w-full max-w-[90%] space-y-3 shadow-lg transition-all duration-500">
-        <div className="text-[9px] text-[#c4c9b8] uppercase tracking-[0.15em] font-medium font-manrope">
-          {currentData.title}
-        </div>
-        <div className="flex flex-col gap-2">
-          {currentData.tasks.map((task, idx) => {
-            const isChecked = idx < checkedCount;
-            return (
-              <div key={idx} className="flex items-center gap-2.5 transition-all duration-300">
-                <div className={`w-3.5 h-3.5 rounded flex items-center justify-center shrink-0 border transition-colors duration-300 ${isChecked ? 'bg-[#aec99d]/20 border-[#aec99d] text-[#aec99d]' : 'border-white/10 text-transparent'}`}>
-                  <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3"><path d="M5 13l4 4L19 7" strokeLinecap="round" strokeLinejoin="round"/></svg>
+      <div className="relative mx-auto w-full max-w-[90%]">
+        <div aria-hidden className="roadmap-glow absolute -inset-3 -z-10 rounded-2xl blur-lg" style={{ background: 'radial-gradient(circle at 50% 38%, rgba(174,201,157,0.16), transparent 70%)' }} />
+        <div className="bg-[#111111] border border-white/5 rounded-xl p-4 w-full space-y-3 shadow-lg transition-all duration-500">
+          <div key={currentWaveIdx} className="roadmap-title-in text-[9px] text-[#c4c9b8] uppercase tracking-[0.15em] font-medium font-manrope">
+            {currentData.title}
+          </div>
+          <div className="flex flex-col gap-2">
+            {currentData.tasks.map((task, idx) => {
+              const isChecked = idx < checkedCount;
+              return (
+                <div key={idx} className="flex items-center gap-2.5 transition-all duration-300">
+                  <div className={`w-3.5 h-3.5 rounded flex items-center justify-center shrink-0 border transition-colors duration-300 ${isChecked ? 'bg-[#aec99d]/20 border-[#aec99d]' : 'border-white/10'}`}>
+                    {isChecked && (
+                      <svg key={`gchk-${currentWaveIdx}-${idx}`} className="roadmap-check-draw" width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="#aec99d" strokeWidth="3"><path d="M5 13l4 4L19 7" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                    )}
+                  </div>
+                  <span className={`text-[10px] transition-all duration-300 font-light ${isChecked ? 'text-white/30 line-through' : 'text-white/80'}`}>
+                    {task}
+                  </span>
                 </div>
-                <span className={`text-[10px] transition-all duration-300 font-light ${isChecked ? 'text-white/30 line-through' : 'text-white/80'}`}>
-                  {task}
-                </span>
-              </div>
-            );
-          })}
+              );
+            })}
+          </div>
         </div>
       </div>
     </div>

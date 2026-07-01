@@ -739,13 +739,27 @@ function RoadmapAnimation() {
         {/* Progress Line W2 to W3 */}
         <div className={`absolute top-1/2 left-1/2 right-[52px] h-[1px] bg-[#aec99d] -translate-y-1/2 -z-10 origin-left transition-all duration-700 ${step >= 9 ? 'scale-x-100 opacity-100' : 'scale-x-0 opacity-0'}`} />
 
-        {waves.map((wave) => {
+        {/* Traveling light pulses that ride the connectors as each wave unlocks */}
+        {step >= 5 && (
+          <span className="absolute top-1/2 left-[52px] right-1/2 -translate-y-1/2 h-[3px] overflow-hidden pointer-events-none">
+            <span className="roadmap-comet" />
+          </span>
+        )}
+        {step >= 9 && (
+          <span className="absolute top-1/2 left-1/2 right-[52px] -translate-y-1/2 h-[3px] overflow-hidden pointer-events-none">
+            <span className="roadmap-comet" />
+          </span>
+        )}
+
+        {waves.map((wave, wi) => {
           const isActive = step >= wave.activeStep;
+          const isCurrent = wi === currentWaveIdx && isActive;
           return (
             <div key={wave.name} className="flex flex-col items-center gap-2 transition-all duration-500">
               <div className={`w-10 h-10 rounded-full border flex items-center justify-center text-xs transition-all duration-500 relative z-10 ${
                 isActive ? 'border-[#aec99d] bg-[#111111] text-[#aec99d] font-semibold scale-110 shadow-[0_0_15px_rgba(174,201,157,0.3)]' : 'border-white/10 bg-[#111111] text-white/40 scale-100'
               }`} style={{ fontFamily: "'Doto', 'Courier New', monospace" }}>
+                {isCurrent && <span className="roadmap-ping" />}
                 {wave.num}
               </div>
               <span className={`text-[10px] font-light transition-colors duration-500 ${isActive ? 'text-white/80' : 'text-white/50'}`}>{wave.name}</span>
@@ -755,26 +769,33 @@ function RoadmapAnimation() {
       </div>
 
       {/* Deliverables list */}
-      <SpotlightCard className="p-6 mx-auto w-full max-w-md space-y-4 shadow-lg transition-all duration-500">
-        <div className="text-[13.5px] text-white uppercase tracking-widest font-light transition-all duration-500" style={{ fontFamily: "'Doto', 'Courier New', monospace" }}>
-          {currentData.title}
-        </div>
-        <div className="space-y-3 relative overflow-hidden">
-          {currentData.tasks.map((text, i) => {
-            const isDone = i < checkedCount;
-            return (
-              <div key={`${currentWaveIdx}-${i}`} className="flex items-center gap-4 text-xs font-light transition-all duration-500 animate-fade-in-up" style={{ animationDelay: `${i * 0.1}s` }}>
-                <span className={`w-5 h-5 rounded border flex items-center justify-center text-[10px] transition-colors duration-500 ${
-                  isDone ? 'border-[#aec99d] text-[#aec99d] bg-[#aec99d]/10' : 'border-white/10 text-transparent'
-                }`}>
-                  ✓
-                </span>
-                <span className={`transition-all duration-500 ${isDone ? 'line-through text-white/40' : 'text-white/80'}`}>{text}</span>
-              </div>
-            );
-          })}
-        </div>
-      </SpotlightCard>
+      <div className="relative mx-auto w-full max-w-md">
+        <div aria-hidden className="roadmap-glow absolute -inset-4 -z-10 rounded-3xl blur-xl" style={{ background: 'radial-gradient(circle at 50% 38%, rgba(174,201,157,0.18), transparent 70%)' }} />
+        <SpotlightCard className="p-6 w-full space-y-4 shadow-lg transition-all duration-500">
+          <div key={currentWaveIdx} className="roadmap-title-in text-[13.5px] text-white uppercase tracking-widest font-light" style={{ fontFamily: "'Doto', 'Courier New', monospace" }}>
+            {currentData.title}
+          </div>
+          <div className="space-y-3 relative overflow-hidden">
+            {currentData.tasks.map((text, i) => {
+              const isDone = i < checkedCount;
+              return (
+                <div key={`${currentWaveIdx}-${i}`} className="flex items-center gap-4 text-xs font-light transition-all duration-500 animate-fade-in-up" style={{ animationDelay: `${i * 0.1}s` }}>
+                  <span className={`w-5 h-5 rounded border flex items-center justify-center shrink-0 transition-colors duration-500 ${
+                    isDone ? 'border-[#aec99d] bg-[#aec99d]/10' : 'border-white/10'
+                  }`}>
+                    {isDone && (
+                      <svg key={`chk-${currentWaveIdx}-${i}`} className="roadmap-check-draw" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#aec99d" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M5 13l4 4L19 7" />
+                      </svg>
+                    )}
+                  </span>
+                  <span className={`transition-all duration-500 ${isDone ? 'line-through text-white/40' : 'text-white/80'}`}>{text}</span>
+                </div>
+              );
+            })}
+          </div>
+        </SpotlightCard>
+      </div>
     </div>
   );
 }

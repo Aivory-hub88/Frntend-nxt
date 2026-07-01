@@ -843,3 +843,69 @@ body,
 .spotlight-section:hover::after {
   opacity: 1;
 }
+
+
+/* ── Roadmap section polish ── */
+@keyframes roadmap-comet {
+  0%   { left: -12%; opacity: 0; }
+  20%  { opacity: 1; }
+  80%  { opacity: 1; }
+  100% { left: 100%; opacity: 0; }
+}
+@keyframes roadmap-ping {
+  0%   { transform: scale(0.85); opacity: 0.55; }
+  70%  { transform: scale(1.85); opacity: 0; }
+  100% { transform: scale(1.85); opacity: 0; }
+}
+@keyframes roadmap-check-draw {
+  from { stroke-dashoffset: 26; }
+  to   { stroke-dashoffset: 0; }
+}
+@keyframes roadmap-title-in {
+  0%   { opacity: 0; transform: translateY(6px); filter: blur(5px); }
+  100% { opacity: 1; transform: translateY(0); filter: blur(0); }
+}
+@keyframes roadmap-glow-pulse {
+  0%, 100% { opacity: 0.25; }
+  50%      { opacity: 0.5; }
+}
+.roadmap-comet {
+  position: absolute;
+  top: 50%;
+  width: 40px;
+  height: 3px;
+  margin-top: -1.5px;
+  border-radius: 9999px;
+  background: linear-gradient(90deg, rgba(174, 201, 157, 0) 0%, rgba(174, 201, 157, 0.9) 65%, #ffffff 100%);
+  box-shadow: 0 0 12px 2px rgba(174, 201, 157, 0.6);
+  animation: roadmap-comet 1.1s ease-in-out;
+  pointer-events: none;
+}
+.roadmap-ping {
+  position: absolute;
+  inset: 0;
+  border-radius: 9999px;
+  border: 1px solid rgba(174, 201, 157, 0.6);
+  animation: roadmap-ping 2s ease-out infinite;
+  pointer-events: none;
+}
+.roadmap-check-draw path {
+  stroke-dasharray: 26;
+  animation: roadmap-check-draw 0.45s ease-out forwards;
+}
+.roadmap-title-in {
+  animation: roadmap-title-in 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.roadmap-glow {
+  animation: roadmap-glow-pulse 4s ease-in-out infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .roadmap-comet,
+  .roadmap-ping,
+  .roadmap-check-draw path,
+  .roadmap-title-in,
+  .roadmap-glow {
+    animation: none;
+  }
+  .roadmap-comet { display: none; }
+}
