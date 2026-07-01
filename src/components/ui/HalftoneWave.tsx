@@ -96,9 +96,9 @@ export function HalftoneWave() {
           vec3 origIndigo = vec3(0.12, 0.0, 0.25);
           
           // Hero Colors (Premium Elegance: Midnight Core / Deep Blue-Purple Edges)
-          vec3 heroCore = vec3(0.01, 0.015, 0.03); // Deep midnight core
-          vec3 heroEdge = vec3(0.10, 0.02, 0.45);  // Deep blue-purple edges (less red, more indigo)
-          vec3 heroIndigo = vec3(0.1, 0.05, 0.2);  // Subtle purple/indigo glow
+          vec3 heroCore = vec3(0.02, 0.03, 0.06); // Deep midnight core (slightly brighter)
+          vec3 heroEdge = vec3(0.15, 0.08, 0.65);  // Deep blue-purple edges (brighter blue)
+          vec3 heroIndigo = vec3(0.2, 0.1, 0.4);  // Subtle purple/indigo glow (brighter)
           
           vec3 coreColor = mix(heroCore, origCore, scrollT);
           vec3 edgeColor = mix(heroEdge, origEdge, scrollT);
