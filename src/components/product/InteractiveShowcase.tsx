@@ -78,11 +78,36 @@ const showcaseProducts = [
   },
 ];
 
-const QUESTIONS = [
-  { q: 'Define your business goals', a: 'Scale operations without headcount growth.' },
-  { q: 'Identify potential risks', a: 'Data privacy compliance, change management.' },
-  { q: 'Assess data infrastructure', a: 'Fragmented databases, manual reporting.' },
+const DIAGNOSTIC_STEPS = [
+  {
+    phase: '1/3 Business Objective',
+    q: 'What is your primary business objective?',
+    options: [
+      'Reduce operational costs',
+      'Scale without headcount growth',
+      'Improve customer experience'
+    ]
+  },
+  {
+    phase: '2/3 Data Readiness',
+    q: 'How centralized is your data?',
+    options: [
+      'Fully centralized',
+      'Partially centralized',
+      'Siloed across departments'
+    ]
+  },
+  {
+    phase: '3/3 Risk & Constraints',
+    q: 'What is your risk tolerance?',
+    options: [
+      'High - willing to experiment',
+      'Moderate - balanced approach',
+      'Low - prefer proven solutions'
+    ]
+  }
 ];
+
 const DIMS = [
   { label: 'Strategy', val: 80, delay: 0.2 },
   { label: 'Data Readiness', val: 75, delay: 0.5 },
@@ -90,8 +115,9 @@ const DIMS = [
 ];
 
 function DiagnosticAnimation() {
-  const [phase, setPhase] = useState<'qa' | 'thinking' | 'score'>('qa');
-  const [visibleQ, setVisibleQ] = useState(0);
+  const [phase, setPhase] = useState<'form' | 'thinking' | 'score'>('form');
+  const [stepIdx, setStepIdx] = useState(0);
+  const [selectedIdx, setSelectedIdx] = useState<number | null>(null);
   const [dots, setDots] = useState('');
   const [scoreVal, setScoreVal] = useState(0);
   const [barsVisible, setBarsVisible] = useState(false);
@@ -102,9 +128,27 @@ function DiagnosticAnimation() {
 
   useEffect(() => {
     const run = () => {
-      setPhase('qa'); setVisibleQ(0); setScoreVal(0); setBarsVisible(false);
-      QUESTIONS.forEach((_, i) => t(() => setVisibleQ(i + 1), 0.6 + i * 1.5));
-      t(() => setPhase('thinking'), 5.1);
+      setPhase('form'); 
+      setStepIdx(0); 
+      setSelectedIdx(null);
+      setScoreVal(0); 
+      setBarsVisible(false);
+      
+      // Step 0
+      t(() => setSelectedIdx(1), 0.8);
+      
+      // Step 1
+      t(() => { setStepIdx(1); setSelectedIdx(null); }, 1.6);
+      t(() => setSelectedIdx(1), 2.4);
+      
+      // Step 2
+      t(() => { setStepIdx(2); setSelectedIdx(null); }, 3.2);
+      t(() => setSelectedIdx(1), 4.0);
+      
+      // Thinking
+      t(() => setPhase('thinking'), 4.8);
+      
+      // Score
       t(() => {
         setPhase('score');
         let v = 0;
@@ -112,7 +156,8 @@ function DiagnosticAnimation() {
         step();
         timerRefs.current.push(setTimeout(() => setBarsVisible(true), 300));
       }, 7.0);
-      t(run, 11.5);
+      
+      t(run, 12.0);
     };
     run();
     return clearAll;
@@ -125,25 +170,54 @@ function DiagnosticAnimation() {
     return () => clearInterval(id);
   }, [phase]);
 
+  const currentStep = DIAGNOSTIC_STEPS[stepIdx];
+
   return (
     <div className="w-full h-full relative overflow-hidden flex items-center justify-center">
-      {/* QA & Thinking */}
-      <div className={`absolute inset-0 flex flex-col justify-center p-2 transition-all duration-500 ${phase === 'score' ? 'opacity-0 scale-95 pointer-events-none' : 'opacity-100 scale-100'}`}>
-        <div className="flex flex-col gap-4 mx-auto w-full max-w-[90%] md:max-w-[70%]">
-          {QUESTIONS.slice(0, visibleQ).map((item, i) => (
-            <div key={i} className="flex flex-col gap-2 animate-fade-in-up">
-              <span className="text-xs text-white/50 font-medium">Q: {item.q}</span>
-              <div className="bg-[#1E1E1E] border border-white/5 rounded-lg px-4 py-3 w-fit shadow-md">
-                <p className="text-sm text-white/80 font-light">{item.a}</p>
-              </div>
+      {/* Form & Thinking */}
+      <div className={`absolute inset-0 flex flex-col justify-center p-4 transition-all duration-500 ${phase === 'score' ? 'opacity-0 scale-95 pointer-events-none' : 'opacity-100 scale-100'}`}>
+        
+        {phase === 'form' && (
+          <div className="flex flex-col gap-4 w-full max-w-[320px] mx-auto animate-fade-in-up">
+            <div className="flex items-center justify-between">
+               <span className="text-[10px] sm:text-xs text-[#aec99d] font-medium tracking-wider uppercase">{currentStep.phase}</span>
             </div>
-          ))}
-          {phase === 'thinking' && (
-            <div className="flex items-center gap-2 mt-4 animate-fade-in-up">
-               <span className="text-sm text-[#aec99d] font-medium tracking-wide">Aivory is analyzing{dots}</span>
+            <span className="text-sm sm:text-base text-white/90 font-medium leading-snug">{currentStep.q}</span>
+            
+            <div className="flex flex-col gap-2 mt-2">
+              {currentStep.options.map((opt, i) => (
+                <div 
+                  key={i} 
+                  className={`flex items-center gap-3 rounded-lg px-4 py-3 border transition-all duration-300 ${
+                    selectedIdx === i 
+                      ? 'bg-[#aec99d]/10 border-[#aec99d]/30 shadow-[0_0_10px_rgba(174,201,157,0.1)]' 
+                      : 'bg-white/5 border-white/5'
+                  }`}
+                >
+                  <div className={`w-4 h-4 rounded-full border flex items-center justify-center transition-colors shrink-0 ${
+                    selectedIdx === i ? 'border-[#aec99d]' : 'border-white/30'
+                  }`}>
+                    {selectedIdx === i && <div className="w-2 h-2 bg-[#aec99d] rounded-full" />}
+                  </div>
+                  <span className={`text-xs sm:text-sm ${selectedIdx === i ? 'text-[#aec99d]' : 'text-white/60'}`}>
+                    {opt}
+                  </span>
+                </div>
+              ))}
             </div>
-          )}
-        </div>
+          </div>
+        )}
+
+        {phase === 'thinking' && (
+          <div className="flex flex-col items-center justify-center gap-4 animate-fade-in-up">
+            <div className="flex -space-x-2 opacity-80 mb-2">
+              <div className="w-6 h-6 sm:w-8 sm:h-8 rounded-full bg-[#556B2F] border-2 border-[#181818] relative z-30 animate-pulse" style={{ animationDelay: '0ms' }} />
+              <div className="w-6 h-6 sm:w-8 sm:h-8 rounded-full bg-[#6B8E23] border-2 border-[#181818] relative z-20 animate-pulse" style={{ animationDelay: '150ms' }} />
+              <div className="w-6 h-6 sm:w-8 sm:h-8 rounded-full bg-[#9ACD32] border-2 border-[#181818] relative z-10 animate-pulse" style={{ animationDelay: '300ms' }} />
+            </div>
+            <span className="text-sm sm:text-base text-[#aec99d] font-medium tracking-wide">Aivory is analyzing responses{dots}</span>
+          </div>
+        )}
       </div>
 
       {/* Score */}
