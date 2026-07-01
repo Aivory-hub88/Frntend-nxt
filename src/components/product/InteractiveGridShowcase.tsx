@@ -254,9 +254,9 @@ function BlueprintAnimation() {
   useEffect(() => {
     const run = () => {
       setPhase('import');
-      t(() => setPhase('generate'), 3.5);
-      t(() => setPhase('blueprint'), 7.0);
-      t(run, 15.0);
+      t(() => setPhase('generate'), 4.5);
+      t(() => setPhase('blueprint'), 8.0);
+      t(run, 16.0);
     };
     run();
     return clearAll;
@@ -267,28 +267,28 @@ function BlueprintAnimation() {
       <style>{`
         @keyframes document-drop-suck {
           0% { transform: translateY(-60px) scale(1); opacity: 0; }
-          15% { transform: translateY(0) scale(1); opacity: 1; }
-          45% { transform: translateY(0) scale(1); opacity: 1; }
-          60% { transform: translateY(30px) scale(0); opacity: 0; }
+          10% { transform: translateY(0) scale(1); opacity: 1; }
+          30% { transform: translateY(0) scale(1); opacity: 1; }
+          45% { transform: translateY(30px) scale(0); opacity: 0; }
           100% { transform: translateY(30px) scale(0); opacity: 0; }
         }
         @keyframes receiver-scan {
-          0%, 45% { border-color: rgba(255,255,255,0.05); transform: scaleY(0.25) scaleX(1); background: transparent; }
-          55%, 75% { border-color: rgba(174,201,157,0.8); box-shadow: 0 0 20px rgba(174,201,157,0.5), inset 0 0 10px rgba(174,201,157,0.5); transform: scaleY(0.25) scaleX(1.1); background: rgba(174,201,157,0.1); }
+          0%, 35% { border-color: rgba(255,255,255,0.05); transform: scaleY(0.25) scaleX(1); background: transparent; }
+          45%, 85% { border-color: rgba(174,201,157,0.8); box-shadow: 0 0 20px rgba(174,201,157,0.5), inset 0 0 10px rgba(174,201,157,0.5); transform: scaleY(0.25) scaleX(1.1); background: rgba(174,201,157,0.1); }
           100% { border-color: rgba(174,201,157,0.3); box-shadow: 0 0 10px rgba(174,201,157,0.2); transform: scaleY(0.25) scaleX(1); background: rgba(174,201,157,0.05); }
         }
         @keyframes receiver-glow {
-          0%, 45% { opacity: 0; }
-          55%, 75% { opacity: 0.8; }
+          0%, 35% { opacity: 0; }
+          45%, 85% { opacity: 0.8; }
           100% { opacity: 0.3; }
         }
         @keyframes fade-in-text {
-          0%, 65% { opacity: 0; transform: translateY(15px); }
-          100% { opacity: 1; transform: translateY(0); }
+          0%, 45% { opacity: 0; transform: translateY(15px); }
+          55%, 100% { opacity: 1; transform: translateY(0); }
         }
         @keyframes fade-in-pills {
-          0%, 80% { opacity: 0; transform: translateY(15px); }
-          100% { opacity: 1; transform: translateY(0); }
+          0%, 75% { opacity: 0; transform: translateY(15px); }
+          85%, 100% { opacity: 1; transform: translateY(0); }
         }
       `}</style>
       
@@ -298,7 +298,7 @@ function BlueprintAnimation() {
         {phase === 'import' && (
           <div className="flex flex-col items-center justify-start w-full pt-2">
             
-            <div className="flex flex-col items-center animate-[document-drop-suck_3s_ease-in-out_forwards] z-10 relative">
+            <div className="flex flex-col items-center animate-[document-drop-suck_4.5s_ease-in-out_forwards] z-10 relative">
                <div className="mb-2 text-[#aec99d] bg-[#111111] p-2.5 rounded-lg border border-[#aec99d]/30 shadow-[0_0_15px_rgba(174,201,157,0.15)]">
                   <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
@@ -308,14 +308,14 @@ function BlueprintAnimation() {
             </div>
             
             <div className="relative w-full flex items-center justify-center z-0 h-0">
-               <div className="absolute top-[-60px] w-32 h-32 rounded-full border border-white/10 animate-[receiver-scan_3s_ease-in-out_forwards] flex items-center justify-center pointer-events-none">
-                  <div className="w-16 h-16 bg-[#aec99d] rounded-full blur-xl opacity-0 animate-[receiver-glow_3s_ease-in-out_forwards]" />
+               <div className="absolute top-[-60px] w-32 h-32 rounded-full border border-white/10 animate-[receiver-scan_4.5s_ease-in-out_forwards] flex items-center justify-center pointer-events-none">
+                  <div className="w-16 h-16 bg-[#aec99d] rounded-full blur-xl opacity-0 animate-[receiver-glow_4.5s_ease-in-out_forwards]" />
                </div>
             </div>
 
             <div className="flex flex-col items-center gap-3 z-10 relative mt-6 w-full">
-              <span className="text-[10px] text-white/50 bg-[#111111]/80 px-3 py-1 rounded-full backdrop-blur-sm opacity-0 animate-[fade-in-text_3s_ease-out_forwards]">Engine processing from deep diagnostic result</span>
-              <div className="flex flex-wrap justify-center gap-3 max-w-[240px] opacity-0 animate-[fade-in-pills_3s_ease-out_forwards]">
+              <span className="text-[10px] text-white/50 bg-[#111111]/80 px-3 py-1 rounded-full backdrop-blur-sm opacity-0 animate-[fade-in-text_4.5s_ease-out_forwards]">Engine processing from deep diagnostic result</span>
+              <div className="flex flex-wrap justify-center gap-3 max-w-[240px] opacity-0 animate-[fade-in-pills_4.5s_ease-out_forwards]">
                 <div className="bg-white/5 border border-white/10 rounded px-3 py-1.5 text-[10px] text-white/80 whitespace-nowrap">Goal: Scale Ops</div>
                 <div className="bg-white/5 border border-white/10 rounded px-3 py-1.5 text-[10px] text-white/80 whitespace-nowrap">Data: Partially Centralized</div>
                 <div className="bg-[#aec99d]/10 border border-[#aec99d]/30 rounded px-3 py-1.5 text-[10px] text-[#aec99d] shadow-[0_0_15px_rgba(174,201,157,0.15)] font-medium whitespace-nowrap">Score: 42%</div>

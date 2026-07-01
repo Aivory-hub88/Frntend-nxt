@@ -848,9 +848,9 @@ function BlueprintAnimation() {
   useEffect(() => {
     const run = () => {
       setPhase('import');
-      t(() => setPhase('generate'), 3.5);
-      t(() => setPhase('blueprint'), 7.0);
-      t(run, 15.0);
+      t(() => setPhase('generate'), 4.5);
+      t(() => setPhase('blueprint'), 8.0);
+      t(run, 16.0);
     };
     run();
     return clearAll;
@@ -861,28 +861,28 @@ function BlueprintAnimation() {
       <style>{`
         @keyframes document-drop-suck {
           0% { transform: translateY(-80px) scale(1); opacity: 0; }
-          15% { transform: translateY(0) scale(1); opacity: 1; }
-          45% { transform: translateY(0) scale(1); opacity: 1; }
-          60% { transform: translateY(40px) scale(0); opacity: 0; }
+          10% { transform: translateY(0) scale(1); opacity: 1; }
+          30% { transform: translateY(0) scale(1); opacity: 1; }
+          45% { transform: translateY(40px) scale(0); opacity: 0; }
           100% { transform: translateY(40px) scale(0); opacity: 0; }
         }
         @keyframes receiver-scan {
-          0%, 45% { border-color: rgba(255,255,255,0.05); transform: scaleY(0.25) scaleX(1); background: transparent; }
-          55%, 75% { border-color: rgba(174,201,157,0.8); box-shadow: 0 0 40px rgba(174,201,157,0.6), inset 0 0 20px rgba(174,201,157,0.6); transform: scaleY(0.25) scaleX(1.1); background: rgba(174,201,157,0.1); }
+          0%, 35% { border-color: rgba(255,255,255,0.05); transform: scaleY(0.25) scaleX(1); background: transparent; }
+          45%, 85% { border-color: rgba(174,201,157,0.8); box-shadow: 0 0 40px rgba(174,201,157,0.6), inset 0 0 20px rgba(174,201,157,0.6); transform: scaleY(0.25) scaleX(1.1); background: rgba(174,201,157,0.1); }
           100% { border-color: rgba(174,201,157,0.3); box-shadow: 0 0 15px rgba(174,201,157,0.2); transform: scaleY(0.25) scaleX(1); background: rgba(174,201,157,0.05); }
         }
         @keyframes receiver-glow {
-          0%, 45% { opacity: 0; }
-          55%, 75% { opacity: 0.8; }
+          0%, 35% { opacity: 0; }
+          45%, 85% { opacity: 0.8; }
           100% { opacity: 0.3; }
         }
         @keyframes fade-in-text {
-          0%, 65% { opacity: 0; transform: translateY(15px); }
-          100% { opacity: 1; transform: translateY(0); }
+          0%, 45% { opacity: 0; transform: translateY(15px); }
+          55%, 100% { opacity: 1; transform: translateY(0); }
         }
         @keyframes fade-in-pills {
-          0%, 80% { opacity: 0; transform: translateY(15px); }
-          100% { opacity: 1; transform: translateY(0); }
+          0%, 75% { opacity: 0; transform: translateY(15px); }
+          85%, 100% { opacity: 1; transform: translateY(0); }
         }
       `}</style>
       <SpotlightCard className="w-full p-6 sm:p-8 relative shadow-lg min-h-[320px] grid overflow-hidden">
@@ -894,7 +894,7 @@ function BlueprintAnimation() {
             <div className="flex flex-col items-center justify-start w-full pt-4">
               
               {/* Document falling */}
-              <div className="flex flex-col items-center animate-[document-drop-suck_3s_ease-in-out_forwards] z-10 relative">
+              <div className="flex flex-col items-center animate-[document-drop-suck_4.5s_ease-in-out_forwards] z-10 relative">
                  <div className="mb-3 text-[#aec99d] bg-[#111111] p-3 rounded-xl border border-[#aec99d]/30 shadow-[0_0_20px_rgba(174,201,157,0.15)]">
                     <svg className="w-8 h-8 sm:w-10 sm:h-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
@@ -905,15 +905,15 @@ function BlueprintAnimation() {
               
               {/* Receiver Portal (0 height wrapper, positioned right below document) */}
               <div className="relative w-full flex items-center justify-center z-0 h-0">
-                 <div className="absolute top-[-80px] w-40 h-40 rounded-full border-2 border-white/10 animate-[receiver-scan_3s_ease-in-out_forwards] flex items-center justify-center pointer-events-none">
-                    <div className="w-20 h-20 bg-[#aec99d] rounded-full blur-2xl opacity-0 animate-[receiver-glow_3s_ease-in-out_forwards]" />
+                 <div className="absolute top-[-80px] w-40 h-40 rounded-full border-2 border-white/10 animate-[receiver-scan_4.5s_ease-in-out_forwards] flex items-center justify-center pointer-events-none">
+                    <div className="w-20 h-20 bg-[#aec99d] rounded-full blur-2xl opacity-0 animate-[receiver-glow_4.5s_ease-in-out_forwards]" />
                  </div>
               </div>
 
               {/* Engine Context */}
               <div className="flex flex-col items-center gap-4 z-10 relative mt-8 w-full max-w-[420px]">
-                <span className="text-xs sm:text-sm text-white/50 bg-[#111111]/80 px-4 py-1 rounded-full backdrop-blur-sm opacity-0 animate-[fade-in-text_3s_ease-out_forwards]">Engine processing from deep diagnostic result</span>
-                <div className="flex flex-wrap justify-center gap-3 sm:gap-4 w-full opacity-0 animate-[fade-in-pills_3s_ease-out_forwards]">
+                <span className="text-xs sm:text-sm text-white/50 bg-[#111111]/80 px-4 py-1 rounded-full backdrop-blur-sm opacity-0 animate-[fade-in-text_4.5s_ease-out_forwards]">Engine processing from deep diagnostic result</span>
+                <div className="flex flex-wrap justify-center gap-3 sm:gap-4 w-full opacity-0 animate-[fade-in-pills_4.5s_ease-out_forwards]">
                   <div className="bg-white/5 border border-white/10 rounded-md px-3 py-1.5 sm:px-4 sm:py-2 text-[10px] sm:text-sm text-white/80 whitespace-nowrap">Goal: Scale Ops</div>
                   <div className="bg-white/5 border border-white/10 rounded-md px-3 py-1.5 sm:px-4 sm:py-2 text-[10px] sm:text-sm text-white/80 whitespace-nowrap">Data: Partially Centralized</div>
                   <div className="bg-[#aec99d]/10 border border-[#aec99d]/30 rounded-md px-3 py-1.5 sm:px-4 sm:py-2 text-[10px] sm:text-sm text-[#aec99d] shadow-[0_0_15px_rgba(174,201,157,0.15)] font-medium whitespace-nowrap">Score: 42%</div>
