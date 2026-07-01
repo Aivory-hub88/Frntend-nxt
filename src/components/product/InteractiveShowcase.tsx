@@ -551,7 +551,7 @@ function WorkflowAnimation() {
               Workflow Generated
             </div>
 
-            <div className="flex items-center justify-between w-full max-w-[330px] mx-auto z-10 relative">
+            <div className="flex items-center justify-between w-full max-w-[400px] mx-auto z-10 relative">
               <style>{`
                 @keyframes node-flow-a { 0%{left:22%;opacity:0} 12%{opacity:1} 88%{opacity:1} 100%{left:50%;opacity:0} }
                 @keyframes node-flow-b { 0%{left:50%;opacity:0} 12%{opacity:1} 88%{opacity:1} 100%{left:78%;opacity:0} }
