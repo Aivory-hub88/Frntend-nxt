@@ -31,12 +31,12 @@ export default function HeroSection() {
 
   return (
     <div
-      className="relative w-full min-h-screen flex flex-col items-center justify-center overflow-hidden"
+      className="relative w-full min-h-screen flex flex-col items-center justify-center overflow-hidden pointer-events-none"
       style={{ background: 'transparent' }}
     >
       <div
         ref={contentRef}
-        className="relative z-10 flex flex-col items-center justify-center text-center w-full max-w-4xl px-5 md:px-8 pt-16 pb-16 md:pt-24 md:pb-24"
+        className="relative z-10 flex flex-col items-center justify-center text-center w-full max-w-4xl px-5 md:px-8 pt-16 pb-16 md:pt-24 md:pb-24 pointer-events-auto"
         style={{ willChange: 'transform' }}
       >
         <h1
