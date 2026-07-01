@@ -876,69 +876,55 @@ function BlueprintAnimation() {
               </div>
             </div>
           )}
-
           {phase === 'generate' && (
-            <div className="flex flex-col items-center justify-center gap-6 animate-fade-in-up mt-8">
-              <div className="relative w-20 h-20 sm:w-24 sm:h-24 flex items-center justify-center">
+            <div className="flex flex-col items-center justify-center gap-6 animate-fade-in-up">
+              <div className="relative w-24 h-24 sm:w-28 sm:h-28 flex items-center justify-center">
                 <div className="absolute inset-0 border-2 border-[#aec99d] rounded-full animate-ping opacity-20" />
-                <div className="w-12 h-12 sm:w-14 sm:h-14 bg-[#aec99d]/10 border border-[#aec99d]/50 rounded-full flex items-center justify-center">
-                  <svg className="w-6 h-6 sm:w-7 sm:h-7 text-[#aec99d]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" /></svg>
+                <div className="w-14 h-14 sm:w-16 sm:h-16 bg-[#aec99d]/10 border border-[#aec99d]/50 rounded-full flex items-center justify-center">
+                  <svg className="w-7 h-7 sm:w-8 sm:h-8 text-[#aec99d]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" /></svg>
                 </div>
               </div>
-              <span className="text-xs sm:text-sm text-[#aec99d] animate-pulse uppercase tracking-widest font-medium">Synthesizing Blueprint</span>
+              <span className="text-sm sm:text-base text-[#aec99d] animate-pulse uppercase tracking-widest font-medium">Synthesizing Blueprint</span>
             </div>
           )}
         </div>
 
         {/* Blueprint Layout */}
         <div className={`absolute inset-0 flex flex-col justify-center p-8 transition-all duration-500 delay-200 ${phase === 'blueprint' ? 'opacity-100 scale-100' : 'opacity-0 scale-105 pointer-events-none'}`}>
-          <div className="text-[10px] text-white uppercase tracking-widest text-center font-light mb-10" style={{ fontFamily: "'Doto', 'Courier New', monospace" }}>
-            System Architecture Pipeline
-          </div>
-          
-          {/* Visual pipeline stages */}
-          <div className="flex justify-between items-center relative w-full px-4">
-            <div className="absolute top-[16px] left-[15%] right-[15%] h-[1px] bg-white/10 -z-10" />
-            <div className="absolute top-[16px] left-[15%] right-[15%] h-[2px] bg-[#aec99d] -z-10 origin-left animate-scale-x" />
-            
-            {[
-              { name: 'Ingest', active: true, delay: '0s' },
-              { name: 'Process', active: true, delay: '0.2s' },
-              { name: 'Engine', active: true, delay: '0.4s', ping: true },
-              { name: 'Action', active: true, delay: '0.6s' },
-            ].map((node, i) => (
-              <div key={node.name} className="flex flex-col items-center gap-3 animate-fade-in-up" style={{ animationDelay: node.delay }}>
-                <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs relative z-10 ${
-                  node.active ? 'bg-[#aec99d] text-black font-medium shadow-[0_0_15px_rgba(174,201,157,0.3)]' : 'bg-[#111111] border border-white/10 text-white/40 font-medium'
-                }`} style={{ fontFamily: "'Manrope', sans-serif" }}>
-                  {node.ping && (
-                    <>
-                      <div className="absolute -top-1 -right-1 w-3 h-3 rounded-full bg-[#aec99d] animate-ping opacity-60 z-20" />
-                      <div className="absolute -top-1 -right-1 w-3 h-3 rounded-full bg-[#aec99d] z-20" />
-                    </>
-                  )}
-                  0{i + 1}
-                </div>
-                <span className="text-[10px] text-white/60 font-medium">{node.name}</span>
-              </div>
-            ))}
+          <div className="flex flex-col items-center mb-8">
+            <span className="text-[10px] sm:text-xs text-[#aec99d] uppercase tracking-widest font-medium mb-1">Tailored Blueprint</span>
+            <span className="text-lg sm:text-xl text-white font-light text-center">Ops Scaling Architecture</span>
           </div>
 
-          {/* Modules List */}
-          <div className="mt-10 flex flex-col gap-2 w-full max-w-[280px] mx-auto">
-             <span className="text-[9px] sm:text-[10px] text-white/40 font-medium uppercase tracking-wider mb-1">Recommended Modules</span>
-             {[
-               { name: 'Data Sync Agent', type: 'Integration', delay: '0.8s' },
-               { name: 'Lead Triage Flow', type: 'Workflow', delay: '1.0s' }
-             ].map((mod, i) => (
-               <div key={i} className="flex items-center justify-between bg-white/5 border border-white/5 rounded-lg px-3 py-2 animate-fade-in-up" style={{ animationDelay: mod.delay }}>
-                 <div className="flex items-center gap-2">
-                    <div className="w-1.5 h-1.5 rounded-full bg-[#aec99d]" />
-                    <span className="text-[10px] sm:text-[11px] text-white/80 font-medium">{mod.name}</span>
-                 </div>
-                 <span className="text-[9px] sm:text-[10px] text-[#aec99d] px-1.5 py-0.5 bg-[#aec99d]/10 rounded-md">{mod.type}</span>
-               </div>
-             ))}
+          {/* Contextual Mapping */}
+          <div className="flex flex-col gap-5 w-full max-w-[420px] mx-auto">
+             <div className="flex justify-between items-center gap-4 bg-white/5 border border-white/10 rounded-xl p-4 animate-fade-in-up" style={{ animationDelay: '0.1s' }}>
+                <div className="flex flex-col flex-1">
+                   <span className="text-[10px] sm:text-xs text-white/50 mb-1">Constraint Detected</span>
+                   <span className="text-xs sm:text-sm text-white/90">Partially Centralized Data</span>
+                </div>
+                <div className="text-[#aec99d] shrink-0">→</div>
+                <div className="flex flex-col flex-1 text-right">
+                   <span className="text-[10px] sm:text-xs text-[#aec99d] mb-1">Resolution Layer</span>
+                   <span className="text-xs sm:text-sm text-white/90 font-medium">Autonomous Data Sync</span>
+                </div>
+             </div>
+
+             <div className="flex justify-between items-center gap-4 bg-white/5 border border-white/10 rounded-xl p-4 animate-fade-in-up" style={{ animationDelay: '0.3s' }}>
+                <div className="flex flex-col flex-1">
+                   <span className="text-[10px] sm:text-xs text-white/50 mb-1">Objective Targeted</span>
+                   <span className="text-xs sm:text-sm text-white/90">Scale Ops (No Headcount)</span>
+                </div>
+                <div className="text-[#aec99d] shrink-0">→</div>
+                <div className="flex flex-col flex-1 text-right">
+                   <span className="text-[10px] sm:text-xs text-[#aec99d] mb-1">Action Engine</span>
+                   <span className="text-xs sm:text-sm text-white/90 font-medium">Automated Triage Flow</span>
+                </div>
+             </div>
+          </div>
+          
+          <div className="mt-8 text-center animate-fade-in-up" style={{ animationDelay: '0.6s' }}>
+             <span className="text-[9px] sm:text-[10px] text-white/40 uppercase tracking-widest font-medium">Aivory Engine Processing Capacity: 98% Efficiency</span>
           </div>
         </div>
       </SpotlightCard>

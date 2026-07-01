@@ -284,54 +284,53 @@ function BlueprintAnimation() {
 
         {phase === 'generate' && (
           <div className="flex flex-col items-center justify-center gap-4 animate-fade-in-up mt-2">
-            <div className="relative w-14 h-14 flex items-center justify-center">
+            <div className="relative w-16 h-16 flex items-center justify-center">
               <div className="absolute inset-0 border-2 border-[#aec99d] rounded-full animate-ping opacity-20" />
               <div className="w-10 h-10 bg-[#aec99d]/10 border border-[#aec99d]/50 rounded-full flex items-center justify-center">
                 <svg className="w-5 h-5 text-[#aec99d]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" /></svg>
               </div>
             </div>
-            <span className="text-[10px] text-[#aec99d] animate-pulse uppercase tracking-widest font-medium">Synthesizing Blueprint</span>
+            <span className="text-[11px] text-[#aec99d] animate-pulse uppercase tracking-widest font-medium">Synthesizing Blueprint</span>
           </div>
         )}
       </div>
 
       {/* Blueprint Layout */}
       <div className={`absolute inset-0 flex flex-col justify-center p-4 transition-all duration-500 delay-200 ${phase === 'blueprint' ? 'opacity-100 scale-100' : 'opacity-0 scale-105 pointer-events-none'}`}>
-        <div className="text-[9px] text-[#c4c9b8] uppercase tracking-widest font-medium mb-3 text-center w-full">AI System Architecture</div>
-        
-        <div className="flex justify-between items-center relative w-full px-2 mt-1">
-          <div className="absolute top-[12px] left-[10%] right-[10%] h-[1px] bg-white/10 -z-10" />
-          <div className="absolute top-[12px] left-[10%] right-[10%] h-[1px] bg-[#aec99d] -z-10 origin-left animate-[scale-x_3s_ease-in-out_infinite]" />
-          {[
-            { name: 'Ingest', active: true, delay: '0s' },
-            { name: 'Process', active: true, delay: '0.2s' },
-            { name: 'Engine', active: true, delay: '0.4s' },
-            { name: 'Action', active: true, delay: '0.6s' }
-          ].map((node, i) => (
-            <div key={node.name} className="flex flex-col items-center gap-1.5 animate-fade-in-up" style={{ animationDelay: node.delay }}>
-              <div className={`w-6 h-6 rounded-full border flex items-center justify-center text-[8px] shadow-[0_0_10px_rgba(174,201,157,0.15)] bg-[#111111] ${node.active ? 'border-[#aec99d] text-[#aec99d] font-semibold scale-110' : 'border-white/10 text-white/40 scale-100'}`} style={{ fontFamily: "'Doto', 'Courier New', monospace" }}>
-                0{i + 1}
-              </div>
-              <span className={`text-[7px] font-medium tracking-wide ${node.active ? 'text-white/80' : 'text-white/40'}`}>{node.name}</span>
-            </div>
-          ))}
+        <div className="flex flex-col items-center mb-4">
+          <span className="text-[9px] text-[#aec99d] uppercase tracking-widest font-medium mb-0.5">Tailored Blueprint</span>
+          <span className="text-xs text-white font-light text-center">Ops Scaling Architecture</span>
         </div>
 
-        {/* Modules List */}
-        <div className="mt-5 flex flex-col gap-1.5 w-full">
-           <span className="text-[8px] text-white/40 font-medium uppercase tracking-wider mb-0.5">Recommended Modules</span>
-           {[
-             { name: 'Data Sync Agent', type: 'Integration', delay: '0.8s' },
-             { name: 'Lead Triage Flow', type: 'Workflow', delay: '1.0s' }
-           ].map((mod, i) => (
-             <div key={i} className="flex items-center justify-between bg-white/5 border border-white/5 rounded px-2 py-1.5 animate-fade-in-up" style={{ animationDelay: mod.delay }}>
-               <div className="flex items-center gap-1.5">
-                  <div className="w-1 h-1 rounded-full bg-[#aec99d]" />
-                  <span className="text-[9px] text-white/80">{mod.name}</span>
-               </div>
-               <span className="text-[7px] text-[#aec99d] px-1 py-0.5 bg-[#aec99d]/10 rounded">{mod.type}</span>
-             </div>
-           ))}
+        {/* Contextual Mapping */}
+        <div className="flex flex-col gap-3 w-full max-w-[260px] mx-auto">
+           <div className="flex justify-between items-center gap-2 bg-white/5 border border-white/10 rounded-lg p-2.5 animate-fade-in-up" style={{ animationDelay: '0.1s' }}>
+              <div className="flex flex-col flex-1">
+                 <span className="text-[8px] text-white/50 mb-0.5">Constraint Detected</span>
+                 <span className="text-[10px] text-white/90">Partially Centralized Data</span>
+              </div>
+              <div className="text-[#aec99d] text-[10px] shrink-0">→</div>
+              <div className="flex flex-col flex-1 text-right">
+                 <span className="text-[8px] text-[#aec99d] mb-0.5">Resolution Layer</span>
+                 <span className="text-[10px] text-white/90 font-medium">Autonomous Data Sync</span>
+              </div>
+           </div>
+
+           <div className="flex justify-between items-center gap-2 bg-white/5 border border-white/10 rounded-lg p-2.5 animate-fade-in-up" style={{ animationDelay: '0.3s' }}>
+              <div className="flex flex-col flex-1">
+                 <span className="text-[8px] text-white/50 mb-0.5">Objective Targeted</span>
+                 <span className="text-[10px] text-white/90">Scale Ops (No Headcount)</span>
+              </div>
+              <div className="text-[#aec99d] text-[10px] shrink-0">→</div>
+              <div className="flex flex-col flex-1 text-right">
+                 <span className="text-[8px] text-[#aec99d] mb-0.5">Action Engine</span>
+                 <span className="text-[10px] text-white/90 font-medium">Automated Triage Flow</span>
+              </div>
+           </div>
+        </div>
+        
+        <div className="mt-4 text-center animate-fade-in-up" style={{ animationDelay: '0.6s' }}>
+           <span className="text-[7px] sm:text-[8px] text-white/40 uppercase tracking-widest font-medium">Aivory Engine Processing Capacity: 98% Efficiency</span>
         </div>
       </div>
     </div>
