@@ -859,11 +859,9 @@ function BlueprintAnimation() {
   return (
     <div className="flex-1 flex flex-col justify-center w-full opacity-0 animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
       <style>{`
-        @keyframes data-flow {
-          0% { transform: translateY(-100%); opacity: 0; }
-          20% { opacity: 1; }
-          80% { opacity: 1; }
-          100% { transform: translateY(200%); opacity: 0; }
+        @keyframes document-drop {
+          0% { transform: translateY(-40px); opacity: 0; }
+          100% { transform: translateY(0); opacity: 1; }
         }
       `}</style>
       <SpotlightCard className="w-full p-6 sm:p-8 relative shadow-lg min-h-[320px] grid overflow-hidden">
@@ -872,14 +870,16 @@ function BlueprintAnimation() {
         <div className={`col-start-1 row-start-1 flex flex-col items-center justify-center transition-all duration-500 w-full h-full ${phase === 'blueprint' ? 'opacity-0 scale-95 pointer-events-none' : 'opacity-100 scale-100'}`}>
           
           {phase === 'import' && (
-            <div className="flex flex-col items-center justify-center gap-6 animate-fade-in-up mt-2">
-              <div className="flex flex-col items-center">
-                 <div className="h-12 sm:h-16 w-px bg-gradient-to-b from-transparent to-[#aec99d]/30 relative overflow-hidden mb-4">
-                    <div className="absolute top-0 left-0 w-full h-1/2 bg-gradient-to-b from-transparent via-[#aec99d] to-transparent animate-[data-flow_1.5s_linear_infinite]" />
+            <div className="flex flex-col items-center justify-center gap-6 mt-2">
+              <div className="flex flex-col items-center animate-[document-drop_0.8s_ease-out_forwards]">
+                 <div className="mb-3 text-[#aec99d] opacity-80">
+                    <svg className="w-8 h-8 sm:w-10 sm:h-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    </svg>
                  </div>
                  <span className="text-sm sm:text-base text-[#aec99d] uppercase tracking-widest font-medium">Deep Diagnostic Results</span>
               </div>
-              <div className="flex flex-col items-center gap-4">
+              <div className="flex flex-col items-center gap-4 opacity-0 animate-[fade-in-up_0.8s_ease-out_0.4s_forwards]">
                 <span className="text-xs sm:text-sm text-white/50">Engine processing from deep diagnostic result</span>
                 <div className="flex flex-wrap justify-center gap-4 max-w-[400px]">
                   <div className="bg-white/5 border border-white/10 rounded-md px-4 py-2 text-xs sm:text-sm text-white/80">Goal: Scale Ops</div>
