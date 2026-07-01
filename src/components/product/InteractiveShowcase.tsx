@@ -73,8 +73,8 @@ const showcaseProducts = [
     step: '05. BUILD',
     title: 'Workflow Builder',
     description:
-      'Orchestrate operations visually. Link trigger conditions, processing layers, and applications together. The builder maps language commands into executable flows, automating tasks across your software stack.',
-    features: ['Visual Flow Canvas', 'Multi-app Connections', 'Natural Language Translation'],
+      'Orchestrate operations visually. Link trigger conditions, processing layers, and applications together. Simply type what you want in plain English, and the builder instantly generates executable workflows—zero code required.',
+    features: ['Visual Flow Canvas', 'Multi-app Connections', '100% No-Code (Prompt to Workflow)'],
   },
 ];
 
