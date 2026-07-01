@@ -111,40 +111,10 @@ export function HalftoneWave() {
           float indigoGradient = smoothstep(0.2, 0.8, normalizedDepth + rim);
           finalColor += indigoColor * indigoGradient * 0.4;
           
-          // 4. SPECTACULAR ORCHID PATTERN (Outward Flowing Dots)
-          float r = length(vLocalPos.xy);
+          // 4. SPECTACULAR ORCHID PATTERN (Removed per user request)
+          // The flower is now purely a smooth, elegant geometric 3D shape
+          // without any halftone dots or stripping overlay.
           
-          // Scroll changes the pattern frequency/style
-          float freqMix = mix(45.0, 35.0, scrollT); 
-          
-          // Animate the noise coordinates so the pattern flows from the center OUTWARD to the edges
-          vec3 dir = normalize(vLocalPos + vec3(0.001)); // add epsilon to avoid normalize(0)
-          vec3 flowPos = vLocalPos - dir * (uTime * 0.15);
-          
-          // Pure Dots (cellular high-frequency noise), using the flowing coordinates
-          float spots = sin(flowPos.x * freqMix) * sin(flowPos.y * freqMix) * sin(flowPos.z * freqMix);
-          
-          // Alternate noise variation for scroll transition (also flowing)
-          float spots2 = cos(flowPos.x * 35.0) * cos(flowPos.y * 35.0);
-          float currentSpots = mix(spots, spots2, scrollT);
-          
-          // Low-frequency noise to create organic non-uniform clusters (Petal Blight / Botrytis look)
-          // We don't animate the clump so the spots appear to travel THROUGH the organic clusters
-          float clump = sin(vLocalPos.x * 4.0) * sin(vLocalPos.y * 4.0) * sin(vLocalPos.z * 4.0);
-          
-          // Final pattern thresholding (No stripping, purely dots that flow outward)
-          float orchidPattern = smoothstep(0.7 - clump * 0.4, 1.0, currentSpots);
-          
-          // Premium Pattern Color: Elegant Deep Copper/Amber
-          vec3 heroPatternColor = vec3(0.4, 0.15, 0.05); // Rich, subtle copper
-          
-          // Fade pattern near the edges/rim for depth, AND fade out completely on scroll
-          float patternIntensity = orchidPattern * (1.0 - rim) * smoothstep(0.9, 0.1, normalizedDepth);
-          patternIntensity *= (1.0 - scrollT); // Disappears entirely when scrolling down
-          
-          // Mix the elegant pattern into the flower
-          finalColor = mix(finalColor, heroPatternColor, patternIntensity * 0.85);
-
           gl_FragColor = vec4(finalColor, 1.0);
         }
     `;
