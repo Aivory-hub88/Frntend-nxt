@@ -111,31 +111,41 @@ export function HalftoneWave() {
           float indigoGradient = smoothstep(0.2, 0.8, normalizedDepth + rim);
           finalColor += indigoColor * indigoGradient * 0.4;
           
-          // 4. SPECTACULAR ORCHID PATTERN (Animated & Scroll-Reactive)
+          // 4. SPECTACULAR ORCHID PATTERN (Pulsing & Morphing)
           float r = length(vLocalPos.xy);
           float angle = atan(vLocalPos.y, vLocalPos.x);
           
-          // Animate outwards: subtract uTime from radius
-          float outwardFlow = r - (uTime * 1.5); 
+          // Animate outwards and inwards smoothly (pulsing)
+          float pulseOffset = sin(uTime * 1.5) * 2.0; 
           
           // Scroll changes the pattern frequency/style
-          float freqMix = mix(45.0, 20.0, scrollT); // Pattern becomes larger on scroll
+          float freqMix = mix(45.0, 20.0, scrollT); 
           
-          // Striations (stripes radiating from center)
-          float striations = sin(angle * 25.0 + outwardFlow * 10.0);
+          // Striations (stripes/stripping radiating from center)
+          float striations = sin(angle * 30.0 + r * 15.0 - pulseOffset * 5.0);
           
-          // Spots (cellular high-frequency noise)
-          float spots = sin(vLocalPos.x * freqMix) * sin(vLocalPos.y * freqMix) * sin(vLocalPos.z * freqMix);
-          
-          // Low-frequency noise to create organic non-uniform clusters (Petal Blight / Botrytis look)
-          float clump = sin(vLocalPos.x * 4.0) * sin(vLocalPos.y * 4.0) * sin(vLocalPos.z * 4.0);
+          // Spots (cellular high-frequency noise), pulsing outwards/inwards
+          float spots = sin(vLocalPos.x * freqMix + pulseOffset) * sin(vLocalPos.y * freqMix - pulseOffset) * sin(vLocalPos.z * freqMix);
           
           // Alternate noise variation for scroll transition
           float spots2 = cos(vLocalPos.x * 20.0 + uTime) * cos(vLocalPos.y * 20.0 + uTime);
           float currentSpots = mix(spots, spots2, scrollT);
           
-          // Combine spots and striations, modulating threshold with clump to make irregular sizes
-          float orchidPattern = smoothstep(0.7 - clump * 0.4, 1.0, currentSpots + striations * 0.15);
+          // Morphing factor based on distance from center
+          float edgeFactor = smoothstep(0.2, 0.7, r);
+          
+          // Center: mostly spots. Edges: morphs into stripping (striations)
+          float combinedPattern = mix(
+             currentSpots + striations * 0.15, 
+             striations + currentSpots * 0.25, 
+             edgeFactor
+          );
+          
+          // Low-frequency noise to create organic non-uniform clusters (Petal Blight / Botrytis look)
+          float clump = sin(vLocalPos.x * 4.0) * sin(vLocalPos.y * 4.0) * sin(vLocalPos.z * 4.0);
+          
+          // Final pattern thresholding using the exact original math that looked elegant
+          float orchidPattern = smoothstep(0.7 - clump * 0.4, 1.0, combinedPattern);
           
           // Premium Pattern Color: Elegant Deep Copper/Amber
           vec3 heroPatternColor = vec3(0.4, 0.15, 0.05); // Rich, subtle copper
