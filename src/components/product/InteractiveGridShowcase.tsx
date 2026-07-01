@@ -149,9 +149,9 @@ function DiagnosticAnimation() {
   const currentStep = DIAGNOSTIC_STEPS[stepIdx];
 
   return (
-    <div className="w-full h-full relative overflow-hidden flex items-center justify-center p-4">
+    <div className="w-full flex-1 relative overflow-hidden grid place-items-center p-4">
       {/* Form & Thinking */}
-      <div className={`absolute inset-0 flex flex-col justify-center p-4 transition-all duration-500 ${phase === 'score' ? 'opacity-0 scale-95 pointer-events-none' : 'opacity-100 scale-100'}`}>
+      <div className={`col-start-1 row-start-1 flex flex-col justify-center w-full h-full transition-all duration-500 ${phase === 'score' || phase === 'improvements' ? 'opacity-0 scale-95 pointer-events-none' : 'opacity-100 scale-100'}`}>
         
         {phase === 'form' && (
           <div className="flex flex-col gap-3 w-full max-w-[220px] mx-auto animate-fade-in-up">
@@ -197,7 +197,7 @@ function DiagnosticAnimation() {
       </div>
 
       {/* Score */}
-      <div className={`absolute inset-0 flex flex-col justify-center items-center p-2 transition-all duration-500 delay-200 ${phase === 'score' ? 'opacity-100 scale-100' : 'opacity-0 scale-95 pointer-events-none'}`}>
+      <div className={`col-start-1 row-start-1 flex flex-col justify-center items-center p-2 w-full h-full transition-all duration-500 delay-200 ${phase === 'score' ? 'opacity-100 scale-100' : 'opacity-0 scale-95 pointer-events-none'}`}>
         <div className="relative w-16 h-16 flex items-center justify-center mb-4">
            <svg className="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
              <circle cx="50" cy="50" r="42" fill="none" stroke="rgba(255,255,255,0.05)" strokeWidth="8" />
@@ -220,7 +220,7 @@ function DiagnosticAnimation() {
       </div>
 
       {/* Improvements */}
-      <div className={`absolute inset-0 flex flex-col justify-center items-center p-4 transition-all duration-500 delay-200 ${phase === 'improvements' ? 'opacity-100 scale-100' : 'opacity-0 scale-105 pointer-events-none'}`}>
+      <div className={`col-start-1 row-start-1 flex flex-col justify-center items-center p-4 w-full h-full transition-all duration-500 delay-200 ${phase === 'improvements' ? 'opacity-100 scale-100' : 'opacity-0 scale-105 pointer-events-none'}`}>
          <div className="w-full max-w-[220px] flex flex-col gap-3">
            <div className="text-center mb-1">
              <span className="text-[10px] text-[#ff7a7a] font-medium tracking-wider uppercase block mb-0.5">Critical Bottlenecks</span>
@@ -263,10 +263,10 @@ function BlueprintAnimation() {
   }, []);
 
   return (
-    <div className="w-full h-full relative overflow-hidden flex items-center justify-center p-2">
+    <div className="w-full flex-1 relative overflow-hidden grid place-items-center p-4">
       
       {/* Import & Generate Phases */}
-      <div className={`absolute inset-0 flex flex-col items-center justify-center transition-all duration-500 ${phase === 'blueprint' ? 'opacity-0 scale-95 pointer-events-none' : 'opacity-100 scale-100'}`}>
+      <div className={`col-start-1 row-start-1 flex flex-col items-center justify-center transition-all duration-500 w-full h-full ${phase === 'blueprint' ? 'opacity-0 scale-95 pointer-events-none' : 'opacity-100 scale-100'}`}>
         
         {phase === 'import' && (
           <div className="flex flex-col items-center justify-center gap-4 animate-fade-in-up mt-2">
@@ -296,7 +296,7 @@ function BlueprintAnimation() {
       </div>
 
       {/* Blueprint Layout */}
-      <div className={`absolute inset-0 flex flex-col justify-center p-4 transition-all duration-500 delay-200 ${phase === 'blueprint' ? 'opacity-100 scale-100' : 'opacity-0 scale-105 pointer-events-none'}`}>
+      <div className={`col-start-1 row-start-1 flex flex-col justify-center transition-all duration-500 delay-200 w-full h-full ${phase === 'blueprint' ? 'opacity-100 scale-100' : 'opacity-0 scale-105 pointer-events-none'}`}>
         <div className="flex flex-col items-center mb-4">
           <span className="text-[9px] text-[#aec99d] uppercase tracking-widest font-medium mb-0.5">Tailored Blueprint</span>
           <span className="text-xs text-white font-light text-center">Ops Scaling Architecture</span>
