@@ -367,12 +367,16 @@ function ConsoleAnimation() {
 
 // ── 05. Workflow ──
 function WorkflowAnimation() {
-  const [phase, setPhase] = useState<'typing' | 'sent' | 'generating' | 'generated' | 'buttons'>('typing');
+  const [phase, setPhase] = useState<
+    'typing' | 'sent' | 'ai_typing' | 'ai_confirm' | 'user_typing_yes' | 'user_yes' | 'generating' | 'generated' | 'buttons'
+  >('typing');
   const [typedText, setTypedText] = useState('');
+  const [typedYes, setTypedYes] = useState('');
   const [dots, setDots] = useState('');
   const timerRefs = useRef<ReturnType<typeof setTimeout>[]>([]);
 
   const fullText = "Create workflow to extract email leads and send them to Slack.";
+  const yesText = "Yes, please.";
 
   const clearAll = () => { timerRefs.current.forEach(clearTimeout); timerRefs.current = []; };
   const t = (fn: () => void, s: number) => timerRefs.current.push(setTimeout(fn, s * 1000));
@@ -381,6 +385,7 @@ function WorkflowAnimation() {
     const run = () => {
       setPhase('typing');
       setTypedText('');
+      setTypedYes('');
       
       let currentText = '';
       const typeChar = (i: number) => {
@@ -390,10 +395,25 @@ function WorkflowAnimation() {
           timerRefs.current.push(setTimeout(() => typeChar(i + 1), 30));
         } else {
           t(() => setPhase('sent'), 0.4);
-          t(() => setPhase('generating'), 0.8);
-          t(() => setPhase('generated'), 2.8);
-          t(() => setPhase('buttons'), 4.0);
-          t(run, 11.0);
+          t(() => setPhase('ai_typing'), 0.8);
+          t(() => setPhase('ai_confirm'), 2.0);
+          
+          let currentYes = '';
+          const typeYes = (j: number) => {
+            if (j < yesText.length) {
+              currentYes += yesText[j];
+              setTypedYes(currentYes);
+              timerRefs.current.push(setTimeout(() => typeYes(j + 1), 40));
+            } else {
+              t(() => setPhase('user_yes'), 0.4);
+              t(() => setPhase('generating'), 0.8);
+              t(() => setPhase('generated'), 2.8);
+              t(() => setPhase('buttons'), 3.5);
+              t(run, 9.0);
+            }
+          };
+          
+          t(() => { setPhase('user_typing_yes'); typeYes(0); }, 3.5);
         }
       };
       t(() => typeChar(0), 0.5);
@@ -403,7 +423,7 @@ function WorkflowAnimation() {
   }, []);
 
   useEffect(() => {
-    if (phase !== 'generating') return;
+    if (phase !== 'generating' && phase !== 'ai_typing') return;
     let i = 0;
     const id = setInterval(() => { i = (i + 1) % 4; setDots('.'.repeat(i)); }, 400);
     return () => clearInterval(id);
@@ -411,16 +431,40 @@ function WorkflowAnimation() {
 
   return (
     <div className="w-full flex flex-col gap-4 h-full justify-end relative px-6 pb-8 pt-4 font-light">
-      <div className="flex flex-col gap-4 sm:gap-6 w-full max-w-[100%] mx-auto mb-4">
-        {/* User Message */}
+      <div className="flex flex-col gap-3 sm:gap-4 w-full max-w-[100%] mx-auto mb-4">
+        
+        {/* User Message 1 */}
         <div className={`flex justify-end transition-all duration-300 ease-out ${phase !== 'typing' ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
            <div className="bg-[#2A2A2A] rounded-3xl rounded-tr-md px-4 py-2 sm:px-5 sm:py-3 text-white/90 text-[12px] sm:text-[14px] max-w-[95%] sm:max-w-[90%] leading-relaxed shadow-md">
              {fullText}
            </div>
         </div>
+        
+        {/* AI Typing Indicator */}
+        <div className={`flex items-center gap-2 transition-all duration-300 ease-out ${phase === 'ai_typing' ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 hidden'}`}>
+           <div className="bg-[#111111] border border-white/5 rounded-3xl rounded-tl-md px-4 py-3 text-white/50 text-[12px] shadow-sm flex items-center gap-1">
+             <div className="w-1.5 h-1.5 bg-white/40 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
+             <div className="w-1.5 h-1.5 bg-white/40 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
+             <div className="w-1.5 h-1.5 bg-white/40 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
+           </div>
+        </div>
+
+        {/* AI Confirmation */}
+        <div className={`flex justify-start transition-all duration-300 ease-out ${['ai_confirm', 'user_typing_yes', 'user_yes', 'generating', 'generated', 'buttons'].includes(phase) ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 hidden'}`}>
+           <div className="bg-[#111111] border border-white/5 rounded-3xl rounded-tl-md px-4 py-2 sm:px-5 sm:py-3 text-white/80 text-[12px] sm:text-[14px] max-w-[95%] sm:max-w-[90%] leading-relaxed shadow-md">
+             I can help with that. I will configure a <b>Gmail</b> trigger, an AI extractor agent, and a <b>Slack</b> action. Proceed?
+           </div>
+        </div>
+
+        {/* User Message 2 (Yes) */}
+        <div className={`flex justify-end transition-all duration-300 ease-out ${['user_yes', 'generating', 'generated', 'buttons'].includes(phase) ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 hidden'}`}>
+           <div className="bg-[#2A2A2A] rounded-3xl rounded-tr-md px-4 py-2 sm:px-5 sm:py-3 text-white/90 text-[12px] sm:text-[14px] max-w-[95%] sm:max-w-[90%] leading-relaxed shadow-md">
+             {yesText}
+           </div>
+        </div>
 
         {/* Generating Indicator */}
-        <div className={`flex items-center gap-2.5 transition-all duration-300 ${phase === 'generating' || phase === 'generated' ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 hidden'}`}>
+        <div className={`flex items-center gap-2.5 transition-all duration-300 ${phase === 'generating' || phase === 'generated' || phase === 'buttons' ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 hidden'}`}>
            {phase === 'generating' ? (
              <>
                <div className="w-4 h-4 rounded-full border-2 border-white/10 border-t-[#c1ccc8] animate-spin shrink-0" />
