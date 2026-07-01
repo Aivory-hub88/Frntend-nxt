@@ -173,12 +173,16 @@ function DiagnosticAnimation() {
 }
 
 function ConsoleAnimation() {
-  const [phase, setPhase] = useState<'typing' | 'sent' | 'thinking' | 'response'>('typing');
+  const [phase, setPhase] = useState<
+    'typing' | 'sent' | 'ai_typing' | 'ai_confirm' | 'user_typing_yes' | 'user_yes' | 'thinking' | 'response'
+  >('typing');
   const [typedText, setTypedText] = useState('');
+  const [typedYes, setTypedYes] = useState('');
   const [dots, setDots] = useState('');
   const timerRefs = useRef<ReturnType<typeof setTimeout>[]>([]);
 
   const fullText = "Can you analyze my current lead generation process?";
+  const yesText = "Run a full end-to-end audit please.";
 
   const clearAll = () => { timerRefs.current.forEach(clearTimeout); timerRefs.current = []; };
   const t = (fn: () => void, s: number) => timerRefs.current.push(setTimeout(fn, s * 1000));
@@ -187,21 +191,35 @@ function ConsoleAnimation() {
     const run = () => {
       setPhase('typing');
       setTypedText('');
-      
+      setTypedYes('');
       let currentText = '';
       const typeChar = (i: number) => {
         if (i < fullText.length) {
           currentText += fullText[i];
           setTypedText(currentText);
-          timerRefs.current.push(setTimeout(() => typeChar(i + 1), 40));
+          timerRefs.current.push(setTimeout(() => typeChar(i + 1), 30));
         } else {
           t(() => setPhase('sent'), 0.4);
-          t(() => setPhase('thinking'), 0.8);
-          t(() => setPhase('response'), 2.8);
-          t(run, 10.0);
+          t(() => setPhase('ai_typing'), 0.8);
+          t(() => setPhase('ai_confirm'), 2.0);
+          
+          let currentYes = '';
+          const typeYes = (j: number) => {
+            if (j < yesText.length) {
+              currentYes += yesText[j];
+              setTypedYes(currentYes);
+              timerRefs.current.push(setTimeout(() => typeYes(j + 1), 40));
+            } else {
+              t(() => setPhase('user_yes'), 0.4);
+              t(() => setPhase('thinking'), 0.8);
+              t(() => setPhase('response'), 2.8);
+              t(run, 14.0);
+            }
+          };
+          
+          t(() => { setPhase('user_typing_yes'); typeYes(0); }, 4.0);
         }
       };
-      
       t(() => typeChar(0), 0.5);
     };
     run();
@@ -209,56 +227,73 @@ function ConsoleAnimation() {
   }, []);
 
   useEffect(() => {
-    if (phase !== 'thinking') return;
+    if (phase !== 'thinking' && phase !== 'ai_typing') return;
     let i = 0;
     const id = setInterval(() => { i = (i + 1) % 4; setDots('.'.repeat(i)); }, 400);
     return () => clearInterval(id);
   }, [phase]);
 
   return (
-    <div className="w-full h-full flex flex-col justify-end p-4 font-light relative pb-20">
-      <div className="flex flex-col gap-6 w-full max-w-[100%] mx-auto mb-4">
-        
-        {/* User Message */}
+    <div className="w-full h-full flex flex-col justify-end pb-6 sm:pb-20 p-4 font-light relative">
+      <div className="flex flex-col gap-3 w-full max-w-[100%] mx-auto mb-2">
+        {/* User Message 1 */}
         <div className={`flex justify-end transition-all duration-300 ease-out ${phase !== 'typing' ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
-          <div className="bg-[#2A2A2A] rounded-3xl rounded-tr-md px-5 py-3 text-white/90 text-[14px] max-w-[85%] leading-relaxed shadow-md">
+          <div className="bg-[#2A2A2A] rounded-2xl rounded-tr-sm px-4 py-2 sm:px-5 sm:py-2.5 text-white/90 text-[12px] sm:text-[14px] max-w-[90%] shadow-md">
             {fullText}
           </div>
         </div>
         
-        {/* AI Thinking & Response Area */}
+        {/* AI Typing Indicator */}
+        <div className={`flex items-center gap-2 transition-all duration-300 ease-out ${phase === 'ai_typing' ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 hidden'}`}>
+           <div className="bg-[#111111] border border-white/5 rounded-2xl rounded-tl-sm px-4 py-3 text-white/50 text-[12px] shadow-sm flex items-center gap-1">
+             <div className="w-1.5 h-1.5 bg-white/40 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
+             <div className="w-1.5 h-1.5 bg-white/40 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
+             <div className="w-1.5 h-1.5 bg-white/40 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
+           </div>
+        </div>
+
+        {/* AI Confirmation */}
+        <div className={`flex justify-start transition-all duration-300 ease-out ${['ai_confirm', 'user_typing_yes', 'user_yes', 'thinking', 'response'].includes(phase) ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 hidden'}`}>
+           <div className="bg-[#111111] border border-white/5 rounded-2xl rounded-tl-sm px-4 py-2 sm:px-4 sm:py-3 text-white/80 text-[12px] sm:text-[14px] max-w-[90%] leading-relaxed shadow-md">
+             Sure. Should I focus on a specific pipeline, or run a comprehensive end-to-end audit?
+           </div>
+        </div>
+
+        {/* User Message 2 (Yes) */}
+        <div className={`flex justify-end transition-all duration-300 ease-out ${['user_yes', 'thinking', 'response'].includes(phase) ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 hidden'}`}>
+           <div className="bg-[#2A2A2A] rounded-2xl rounded-tr-sm px-4 py-2 sm:px-5 sm:py-2.5 text-white/90 text-[12px] sm:text-[14px] max-w-[90%] shadow-md">
+             {yesText}
+           </div>
+        </div>
+
+        {/* AI Thinking & Response */}
         <div className={`flex flex-col gap-3 transition-all duration-300 ${phase === 'thinking' || phase === 'response' ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 hidden'}`}>
-          {/* Thinking Indicator */}
           {phase === 'thinking' && (
-            <div className="flex items-center gap-2.5">
+            <div className="flex items-center gap-2 mt-1">
               <div className="flex -space-x-1.5 opacity-80">
-                <div className="w-4 h-4 rounded-full bg-[#556B2F] border border-[#181818] relative z-30" />
-                <div className="w-4 h-4 rounded-full bg-[#6B8E23] border border-[#181818] relative z-20" />
-                <div className="w-4 h-4 rounded-full bg-[#9ACD32] border border-[#181818] relative z-10" />
+                <div className="w-3.5 h-3.5 sm:w-4 sm:h-4 rounded-full bg-[#556B2F] border border-[#181818] relative z-30" />
+                <div className="w-3.5 h-3.5 sm:w-4 sm:h-4 rounded-full bg-[#6B8E23] border border-[#181818] relative z-20" />
+                <div className="w-3.5 h-3.5 sm:w-4 sm:h-4 rounded-full bg-[#9ACD32] border border-[#181818] relative z-10" />
               </div>
-              <div className="text-white/50 text-[13px] font-medium flex items-center gap-1.5">
-                Aivory is thinking <span className="animate-pulse">{dots}</span>
-              </div>
+              <div className="text-white/50 text-[11px] sm:text-[12px] font-medium">Analyzing systems{dots}</div>
             </div>
           )}
 
-          {/* Response Text */}
           {phase === 'response' && (
-            <div className="flex flex-col gap-3 pl-1 animate-fade-in-up">
-              <div className="text-white/60 text-[14px] leading-relaxed">
-                Analysis complete:
-              </div>
-              <div className="flex flex-col gap-3">
-                {[
-                  { text: 'Queried CRM records: 520 leads analyzed.', delay: '0s' },
-                  { text: 'Flow analysis: 12 bottlenecks identified in triage.', delay: '0.4s' },
-                ].map((item, i) => (
-                  <div key={i} className="flex items-start gap-2.5 opacity-0 animate-fade-in-up" style={{ animationDelay: item.delay }}>
-                    <div className="w-1.5 h-1.5 rounded-full bg-[#aec99d] mt-1.5 shrink-0" />
-                    <span className="text-white/80 text-[14px] leading-relaxed">{item.text}</span>
+            <div className="flex flex-col gap-2.5 pl-1 animate-fade-in-up mt-1">
+              <div className="text-white/90 text-[12px] sm:text-[13px] font-medium">Comprehensive audit complete:</div>
+              {[
+                { title: 'CRM Sync', desc: '520 leads analyzed. 45 entries delayed by >2hrs.', delay: '0s' },
+                { title: 'Triage Flow', desc: '12 bottlenecks detected in manual validation step.', delay: '0.4s' },
+                { title: 'Conversion', desc: 'Drop-off rate at stage 3 is 18% higher than benchmark.', delay: '0.8s' },
+              ].map((item, i) => (
+                <div key={i} className="flex items-start gap-2 opacity-0 animate-fade-in-up" style={{ animationDelay: item.delay }}>
+                  <div className="w-1.5 h-1.5 rounded-full bg-[#aec99d] mt-1.5 shrink-0" />
+                  <div className="flex flex-col">
+                    <span className="text-white/80 text-[12px] sm:text-[13px] leading-snug">{item.title}: <span className="text-white/60">{item.desc}</span></span>
                   </div>
-                ))}
-              </div>
+                </div>
+              ))}
             </div>
           )}
         </div>
