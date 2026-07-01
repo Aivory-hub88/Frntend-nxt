@@ -17,7 +17,7 @@ export default function HomePage() {
       <ScrollRevealProvider />
       <section style={{ padding: 0 }} className="relative z-[1] bg-black">
         {/* Global seamless background for the ENTIRE page, down to the footer */}
-        <div className="absolute inset-0 z-0 pointer-events-none">
+        <div className="absolute inset-0 z-0">
           <div className="sticky top-0 w-full h-screen">
             <HalftoneWaveWrapper />
           </div>
