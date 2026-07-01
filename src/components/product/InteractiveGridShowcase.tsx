@@ -221,25 +221,94 @@ function DiagnosticAnimation() {
 
 // ── 02. Blueprint ──
 function BlueprintAnimation() {
+  const [phase, setPhase] = useState<'import' | 'generate' | 'blueprint'>('import');
+  const timerRefs = useRef<ReturnType<typeof setTimeout>[]>([]);
+
+  const clearAll = () => { timerRefs.current.forEach(clearTimeout); timerRefs.current = []; };
+  const t = (fn: () => void, s: number) => timerRefs.current.push(setTimeout(fn, s * 1000));
+
+  useEffect(() => {
+    const run = () => {
+      setPhase('import');
+      t(() => setPhase('generate'), 2.5);
+      t(() => setPhase('blueprint'), 5.5);
+      t(run, 14.0);
+    };
+    run();
+    return clearAll;
+  }, []);
+
   return (
-    <div className="w-full h-full flex flex-col items-center justify-center p-2">
-      <div className="text-[9px] text-[#c4c9b8] uppercase tracking-widest font-light mb-6 text-center w-full font-manrope">Architecture Pipeline</div>
-      <div className="flex justify-between items-center relative w-full px-4 mt-2">
-        <div className="absolute top-[16px] left-[15%] right-[15%] h-[1px] bg-white/10 -z-10" />
-        <div className="absolute top-[16px] left-[15%] right-[15%] h-[1px] bg-[#aec99d] -z-10 origin-left animate-[scale-x_3s_ease-in-out_infinite]" />
-        {[
-          { name: 'Ingest', active: true, delay: '0s' },
-          { name: 'Process', active: true, delay: '0.2s' },
-          { name: 'Engine', active: true, delay: '0.4s' },
-          { name: 'Action', active: true, delay: '0.6s' }
-        ].map((node, i) => (
-          <div key={node.name} className="flex flex-col items-center gap-2 animate-fade-in-up" style={{ animationDelay: node.delay }}>
-            <div className={`w-8 h-8 rounded-full border flex items-center justify-center text-[10px] shadow-[0_0_10px_rgba(174,201,157,0.15)] bg-[#111111] ${node.active ? 'border-[#aec99d] text-[#aec99d] font-semibold scale-110' : 'border-white/10 text-white/40 scale-100'}`} style={{ fontFamily: "'Doto', 'Courier New', monospace" }}>
-              0{i + 1}
+    <div className="w-full h-full relative overflow-hidden flex items-center justify-center p-2">
+      
+      {/* Import & Generate Phases */}
+      <div className={`absolute inset-0 flex flex-col items-center justify-center transition-all duration-500 ${phase === 'blueprint' ? 'opacity-0 scale-95 pointer-events-none' : 'opacity-100 scale-100'}`}>
+        
+        {phase === 'import' && (
+          <div className="flex flex-col items-center gap-4 animate-fade-in-up">
+            <span className="text-[10px] text-[#aec99d] uppercase tracking-widest font-medium">Deep Diagnostic Results</span>
+            <div className="flex flex-col items-center gap-2">
+              <span className="text-[9px] text-white/50">Engine processing results...</span>
+              <div className="flex flex-wrap justify-center gap-2 max-w-[200px]">
+                <div className="bg-white/5 border border-white/10 rounded px-2 py-1 text-[9px] text-white/80">Goal: Scale Ops</div>
+                <div className="bg-white/5 border border-white/10 rounded px-2 py-1 text-[9px] text-white/80">Data: Partially Centralized</div>
+                <div className="bg-[#aec99d]/10 border border-[#aec99d]/30 rounded px-2 py-1 text-[9px] text-[#aec99d]">Score: 78%</div>
+              </div>
             </div>
-            <span className={`text-[8px] font-medium tracking-wide ${node.active ? 'text-white/80' : 'text-white/40'}`}>{node.name}</span>
           </div>
-        ))}
+        )}
+
+        {phase === 'generate' && (
+          <div className="flex flex-col items-center gap-4 animate-fade-in-up">
+            <div className="relative w-12 h-12 flex items-center justify-center">
+              <div className="absolute inset-0 border-2 border-[#aec99d] rounded-full animate-ping opacity-20" />
+              <div className="w-8 h-8 bg-[#aec99d]/10 border border-[#aec99d]/50 rounded-full flex items-center justify-center">
+                <svg className="w-4 h-4 text-[#aec99d]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" /></svg>
+              </div>
+            </div>
+            <span className="text-[10px] text-[#aec99d] animate-pulse uppercase tracking-widest font-medium">Synthesizing Blueprint</span>
+          </div>
+        )}
+      </div>
+
+      {/* Blueprint Layout */}
+      <div className={`absolute inset-0 flex flex-col justify-center p-4 transition-all duration-500 delay-200 ${phase === 'blueprint' ? 'opacity-100 scale-100' : 'opacity-0 scale-105 pointer-events-none'}`}>
+        <div className="text-[9px] text-[#c4c9b8] uppercase tracking-widest font-medium mb-3 text-center w-full">AI System Architecture</div>
+        
+        <div className="flex justify-between items-center relative w-full px-2 mt-1">
+          <div className="absolute top-[12px] left-[10%] right-[10%] h-[1px] bg-white/10 -z-10" />
+          <div className="absolute top-[12px] left-[10%] right-[10%] h-[1px] bg-[#aec99d] -z-10 origin-left animate-[scale-x_3s_ease-in-out_infinite]" />
+          {[
+            { name: 'Ingest', active: true, delay: '0s' },
+            { name: 'Process', active: true, delay: '0.2s' },
+            { name: 'Engine', active: true, delay: '0.4s' },
+            { name: 'Action', active: true, delay: '0.6s' }
+          ].map((node, i) => (
+            <div key={node.name} className="flex flex-col items-center gap-1.5 animate-fade-in-up" style={{ animationDelay: node.delay }}>
+              <div className={`w-6 h-6 rounded-full border flex items-center justify-center text-[8px] shadow-[0_0_10px_rgba(174,201,157,0.15)] bg-[#111111] ${node.active ? 'border-[#aec99d] text-[#aec99d] font-semibold scale-110' : 'border-white/10 text-white/40 scale-100'}`} style={{ fontFamily: "'Doto', 'Courier New', monospace" }}>
+                0{i + 1}
+              </div>
+              <span className={`text-[7px] font-medium tracking-wide ${node.active ? 'text-white/80' : 'text-white/40'}`}>{node.name}</span>
+            </div>
+          ))}
+        </div>
+
+        {/* Modules List */}
+        <div className="mt-5 flex flex-col gap-1.5 w-full">
+           <span className="text-[8px] text-white/40 font-medium uppercase tracking-wider mb-0.5">Recommended Modules</span>
+           {[
+             { name: 'Data Sync Agent', type: 'Integration', delay: '0.8s' },
+             { name: 'Lead Triage Flow', type: 'Workflow', delay: '1.0s' }
+           ].map((mod, i) => (
+             <div key={i} className="flex items-center justify-between bg-white/5 border border-white/5 rounded px-2 py-1.5 animate-fade-in-up" style={{ animationDelay: mod.delay }}>
+               <div className="flex items-center gap-1.5">
+                  <div className="w-1 h-1 rounded-full bg-[#aec99d]" />
+                  <span className="text-[9px] text-white/80">{mod.name}</span>
+               </div>
+               <span className="text-[7px] text-[#aec99d] px-1 py-0.5 bg-[#aec99d]/10 rounded">{mod.type}</span>
+             </div>
+           ))}
+        </div>
       </div>
     </div>
   );

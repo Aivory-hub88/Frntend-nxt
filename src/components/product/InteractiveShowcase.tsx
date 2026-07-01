@@ -840,9 +840,9 @@ function BlueprintAnimation() {
           
           {phase === 'import' && (
             <div className="flex flex-col items-center gap-6 animate-fade-in-up">
-              <span className="text-xs sm:text-sm text-[#aec99d] uppercase tracking-widest font-medium">Diagnostic Complete</span>
+              <span className="text-xs sm:text-sm text-[#aec99d] uppercase tracking-widest font-medium">Deep Diagnostic Results</span>
               <div className="flex flex-col items-center gap-3">
-                <span className="text-[10px] sm:text-xs text-white/50">Extracting context...</span>
+                <span className="text-[10px] sm:text-xs text-white/50">Engine processing results...</span>
                 <div className="flex flex-wrap justify-center gap-3 max-w-[300px]">
                   <div className="bg-white/5 border border-white/10 rounded-md px-3 py-1.5 text-[10px] sm:text-xs text-white/80">Goal: Scale Ops</div>
                   <div className="bg-white/5 border border-white/10 rounded-md px-3 py-1.5 text-[10px] sm:text-xs text-white/80">Data: Partially Centralized</div>
