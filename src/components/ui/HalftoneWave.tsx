@@ -23,7 +23,7 @@ export function HalftoneWave() {
     renderer.setSize(width, height);
     
     const isMobile = window.innerWidth < 1024;
-    renderer.setPixelRatio(isMobile ? 0.75 : Math.min(window.devicePixelRatio, 1.5));
+    renderer.setPixelRatio(isMobile ? 0.5 : Math.min(window.devicePixelRatio, 1));
     
     mountRef.current.appendChild(renderer.domElement);
 
@@ -122,7 +122,7 @@ export function HalftoneWave() {
     // ==========================================
     // 1. MAIN 6-LOBE FLOWER (Base)
     // ==========================================
-    const geometry = new THREE.SphereGeometry(1, 256, 256);
+    const geometry = new THREE.SphereGeometry(1, 96, 96);
     const material = new THREE.ShaderMaterial({
       uniforms,
       side: THREE.FrontSide, 
@@ -217,12 +217,47 @@ export function HalftoneWave() {
       // Calculate transition progress (0 to 1 over 800px scroll)
       const progress = Math.min(scrollY / 800, 1.0);
       
-      targetX = startX + (endX - startX) * progress;
       targetY = startY + (endY - startY) * progress;
       targetScale = 1.6 - (0.6 * progress); // Shrink perfectly back from 1.6 to 1.0
 
       targetScroll = Math.min(scrollY / 1500, 1.0);
       targetRotationX = 0.5 + (scrollY * 0.001);
+
+      // ── Section-aware horizontal choreography ──────────────────────────
+      // Hero exit → flower drifts right. As the "Operational Framework"
+      // section (#showcase) becomes active, the flower returns to CENTER.
+      // As the "Your AI Operations Stack" section (#ops-stack) becomes
+      // active, it moves back to the RIGHT.
+      if (endX === 0) {
+        targetX = startX; // Mobile: keep centered throughout
+        return;
+      }
+      const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
+      const smooth = (e0: number, e1: number, v: number) => {
+        if (e1 <= e0) return v >= e1 ? 1 : 0;
+        const t = Math.min(Math.max((v - e0) / (e1 - e0), 0), 1);
+        return t * t * (3 - 2 * t);
+      };
+      const heroX = startX + (endX - startX) * progress; // hero → right
+      let x = heroX;
+      const showcaseEl = document.getElementById('showcase');
+      const opsEl = document.getElementById('ops-stack');
+      if (showcaseEl && opsEl) {
+        const vh = window.innerHeight;
+        const scTop = showcaseEl.getBoundingClientRect().top + scrollY;
+        const opTop = opsEl.getBoundingClientRect().top + scrollY;
+        const centerAt = scTop - vh * 0.45; // Operational Framework active
+        const rightAt = opTop - vh * 0.45;  // AI Operations Stack active
+        if (scrollY >= rightAt) {
+          x = endX; // AI Operations Stack → right
+        } else if (scrollY >= centerAt) {
+          x = lerp(0, endX, smooth(centerAt, rightAt, scrollY)); // center → right
+        } else {
+          const band = Math.min(600, Math.max(1, centerAt));
+          x = lerp(heroX, 0, smooth(centerAt - band, centerAt, scrollY)); // right → center
+        }
+      }
+      targetX = x;
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });

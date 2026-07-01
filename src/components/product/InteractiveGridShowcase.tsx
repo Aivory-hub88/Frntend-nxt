@@ -1,6 +1,17 @@
 'use client';
 
 import { useState, useEffect, useRef, MouseEvent } from 'react';
+import dynamic from 'next/dynamic';
+
+const RetroMacCanvas = dynamic(
+  () => import('./RetroMac3D').then((mod) => mod.RetroMacCanvas),
+  { ssr: false }
+);
+
+const LabFlaskCanvas = dynamic(
+  () => import('./LabFlask3D').then((mod) => mod.LabFlaskCanvas),
+  { ssr: false }
+);
 
 // Product context text
 const showcaseProducts = [
@@ -265,60 +276,170 @@ function BlueprintAnimation() {
   return (
     <div className="w-full flex-1 relative overflow-hidden grid place-items-center p-4">
       <style>{`
-        @keyframes document-drop-suck {
-          0% { transform: translateY(-60px) scale(1); opacity: 0; }
-          10% { transform: translateY(0) scale(1); opacity: 1; }
-          30% { transform: translateY(0) scale(1); opacity: 1; }
-          45% { transform: translateY(30px) scale(0); opacity: 0; }
-          100% { transform: translateY(30px) scale(0); opacity: 0; }
+        @keyframes doc-ingest {
+          0%   { transform: translate(-50%, -40px) scale(0.9) rotateX(-14deg); opacity: 0; }
+          13%  { transform: translate(-50%, 0px) scale(1) rotateX(0deg); opacity: 1; }
+          40%  { transform: translate(-50%, 6px) scale(1) rotateX(0deg); opacity: 1; }
+          56%  { transform: translate(-50%, 0px) scale(1) rotateX(0deg); opacity: 1; }
+          80%  { transform: translate(-50%, 64px) scale(0.48); opacity: 0.9; }
+          92%  { transform: translate(-50%, 92px) scale(0.12); opacity: 0.35; }
+          100% { transform: translate(-50%, 96px) scale(0); opacity: 0; }
         }
-        @keyframes receiver-scan {
-          0%, 35% { border-color: rgba(255,255,255,0.05); transform: scaleY(0.25) scaleX(1); background: transparent; }
-          45%, 85% { border-color: rgba(174,201,157,0.8); box-shadow: 0 0 20px rgba(174,201,157,0.5), inset 0 0 10px rgba(174,201,157,0.5); transform: scaleY(0.25) scaleX(1.1); background: rgba(174,201,157,0.1); }
-          100% { border-color: rgba(174,201,157,0.3); box-shadow: 0 0 10px rgba(174,201,157,0.2); transform: scaleY(0.25) scaleX(1); background: rgba(174,201,157,0.05); }
+        @keyframes beam-charge {
+          0%, 12% { opacity: 0; }
+          35% { opacity: 0.18; }
+          72% { opacity: 0.5; }
+          90% { opacity: 0.72; }
+          100% { opacity: 0.12; }
         }
-        @keyframes receiver-glow {
-          0%, 35% { opacity: 0; }
-          45%, 85% { opacity: 0.8; }
-          100% { opacity: 0.3; }
+        @keyframes beam-sweep {
+          0%, 30% { transform: translateY(-120%); opacity: 0; }
+          55% { opacity: 0.8; }
+          88% { transform: translateY(120%); opacity: 0.4; }
+          100% { transform: translateY(120%); opacity: 0; }
+        }
+        @keyframes mac-glow {
+          0%, 58% { opacity: 0.12; transform: scale(0.9); }
+          88% { opacity: 0.9; transform: scale(1.18); }
+          100% { opacity: 0.32; transform: scale(1); }
+        }
+        @keyframes pulse-ring {
+          0%, 82% { opacity: 0; transform: scale(0.4); }
+          87% { opacity: 0.7; transform: scale(0.6); }
+          100% { opacity: 0; transform: scale(1.75); }
+        }
+        @keyframes doc-scan {
+          0% { transform: translateY(-24px); opacity: 0; }
+          25% { opacity: 1; }
+          75% { opacity: 1; }
+          100% { transform: translateY(84px); opacity: 0; }
+        }
+        @keyframes doc-float {
+          0%, 100% { transform: translateY(0) rotate(-0.6deg); }
+          50% { transform: translateY(-3px) rotate(0.6deg); }
         }
         @keyframes fade-in-text {
-          0%, 45% { opacity: 0; transform: translateY(15px); }
-          55%, 100% { opacity: 1; transform: translateY(0); }
+          0%, 65% { opacity: 0; transform: translateY(15px); }
+          75%, 100% { opacity: 1; transform: translateY(0); }
         }
-        @keyframes fade-in-pills {
-          0%, 75% { opacity: 0; transform: translateY(15px); }
-          85%, 100% { opacity: 1; transform: translateY(0); }
+        @keyframes pop-in-pill {
+          0% { opacity: 0; transform: translateY(20px) scale(0.9); }
+          60% { opacity: 1; transform: translateY(-3px) scale(1.02); }
+          100% { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        @keyframes loading-bar {
+          0% { width: 0%; }
+          100% { width: 100%; }
+        }
+        @keyframes blueprint-card-enter {
+          0% { opacity: 0; transform: translateY(30px) scale(0.95); filter: blur(4px); }
+          60% { opacity: 1; transform: translateY(-4px) scale(1.02); filter: blur(0px); }
+          100% { opacity: 1; transform: translateY(0) scale(1); filter: blur(0px); }
+        }
+        @keyframes blueprint-header-enter {
+          0% { opacity: 0; transform: translateY(-20px); letter-spacing: -2px; }
+          100% { opacity: 1; transform: translateY(0); letter-spacing: 0.1em; }
         }
       `}</style>
       
+
       {/* Import & Generate Phases */}
-      <div className={`col-start-1 row-start-1 flex flex-col items-center justify-center transition-all duration-500 w-full h-full ${phase === 'blueprint' ? 'opacity-0 scale-95 pointer-events-none' : 'opacity-100 scale-100'}`}>
+      <div className={`col-start-1 row-start-1 flex flex-col items-center justify-center transition-all duration-500 w-full h-full z-10 ${phase === 'blueprint' ? 'opacity-0 scale-95 pointer-events-none' : 'opacity-100 scale-100'}`}>
         
         {phase === 'import' && (
-          <div className="flex flex-col items-center justify-start w-full pt-2">
-            
-            <div className="flex flex-col items-center animate-[document-drop-suck_4.5s_ease-in-out_forwards] z-10 relative">
-               <div className="mb-2 text-[#aec99d] bg-[#111111] p-2.5 rounded-lg border border-[#aec99d]/30 shadow-[0_0_15px_rgba(174,201,157,0.15)]">
-                  <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                  </svg>
-               </div>
-               <span className="text-[11px] text-[#aec99d] uppercase tracking-widest font-medium px-3 py-1 bg-[#111111] rounded shadow-sm">Deep Diagnostic Results</span>
-            </div>
-            
-            <div className="relative w-full flex items-center justify-center z-0 h-0">
-               <div className="absolute top-[-60px] w-32 h-32 rounded-full border border-white/10 animate-[receiver-scan_4.5s_ease-in-out_forwards] flex items-center justify-center pointer-events-none">
-                  <div className="w-16 h-16 bg-[#aec99d] rounded-full blur-xl opacity-0 animate-[receiver-glow_4.5s_ease-in-out_forwards]" />
-               </div>
+          <div className="flex flex-col items-center justify-center w-full">
+
+            {/* Ingest stage: document glides down a beam into the Mac */}
+            <div className="relative flex items-center justify-center w-full" style={{ height: '175px', perspective: '600px' }}>
+
+              {/* Tractor beam funnel */}
+              <div
+                className="absolute left-1/2 -translate-x-1/2 top-[4px] w-14 h-[120px] pointer-events-none overflow-hidden"
+                style={{
+                  background: 'linear-gradient(to bottom, rgba(174,201,157,0) 0%, rgba(174,201,157,0.28) 65%, rgba(174,201,157,0.04) 100%)',
+                  clipPath: 'polygon(38% 0, 62% 0, 100% 100%, 0% 100%)',
+                  filter: 'blur(1.5px)',
+                  opacity: 0,
+                  animation: 'beam-charge 3.8s ease-in-out forwards',
+                }}
+              >
+                <div
+                  className="absolute inset-x-0 h-6"
+                  style={{
+                    background: 'linear-gradient(to bottom, transparent, rgba(174,201,157,0.6), transparent)',
+                    animation: 'beam-sweep 3.8s ease-in forwards',
+                  }}
+                />
+              </div>
+
+              {/* Falling document */}
+              <div
+                className="absolute left-1/2 top-0 z-20 flex flex-col items-center gap-2"
+                style={{ animation: 'doc-ingest 3.8s cubic-bezier(0.45,0,0.2,1) forwards', willChange: 'transform, opacity' }}
+              >
+                {/* Diagnostic report card */}
+                <div
+                  className="relative w-[128px] rounded-lg overflow-hidden bg-gradient-to-b from-[#171b16] to-[#0c0e0b] border border-[#aec99d]/25"
+                  style={{
+                    boxShadow: '0 12px 28px -10px rgba(0,0,0,0.75), 0 0 18px rgba(174,201,157,0.14), inset 0 1px 0 rgba(255,255,255,0.06)',
+                    animation: 'doc-float 3.2s ease-in-out infinite',
+                  }}
+                >
+                  <div className="h-[3px] w-full bg-gradient-to-r from-[#aec99d]/40 via-[#aec99d] to-[#aec99d]/40" />
+                  <div className="flex items-center gap-1.5 px-2.5 pt-2 pb-1">
+                    <div className="w-5 h-5 rounded-md bg-[#aec99d]/12 border border-[#aec99d]/40 flex items-center justify-center text-[#aec99d] shrink-0">
+                      <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                      </svg>
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="h-[5px] w-[64%] rounded-full bg-[#aec99d]/70" />
+                      <div className="h-[3px] w-[40%] rounded-full bg-white/20 mt-1" />
+                    </div>
+                  </div>
+                  <div className="px-2.5 pb-2.5 pt-0.5 space-y-[6px]">
+                    <div className="h-[3px] w-full rounded-full bg-white/12" />
+                    <div className="h-[3px] w-[86%] rounded-full bg-white/10" />
+                    <div className="h-[3px] w-[68%] rounded-full bg-white/10" />
+                    <div className="flex items-center gap-1.5 pt-0.5">
+                      <span className="text-[6px] leading-none font-semibold text-[#aec99d] bg-[#aec99d]/12 border border-[#aec99d]/30 rounded px-1 py-[2px]">42%</span>
+                      <div className="h-[3px] flex-1 rounded-full bg-white/10 overflow-hidden">
+                        <div className="h-full w-[42%] rounded-full bg-[#aec99d]/70" />
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    className="absolute inset-x-0 h-6 pointer-events-none"
+                    style={{ background: 'linear-gradient(to bottom, transparent, rgba(174,201,157,0.28), transparent)', animation: 'doc-scan 2.4s ease-in-out infinite' }}
+                  />
+                </div>
+                <span className="text-[9px] text-[#aec99d]/90 uppercase tracking-[0.2em] font-medium px-2.5 py-0.5 bg-[#0d0d0d]/80 border border-white/5 rounded whitespace-nowrap backdrop-blur-sm">Deep Diagnostic Results</span>
+              </div>
+
+              {/* Mac receiver anchored at bottom center */}
+              <div className="absolute left-1/2 -translate-x-1/2 bottom-0 w-36 h-36 flex items-center justify-center pointer-events-none">
+                <div
+                  className="absolute w-16 h-16 rounded-full border border-[#aec99d]/60"
+                  style={{ animation: 'pulse-ring 3.8s ease-out forwards' }}
+                />
+                <div
+                  className="absolute w-16 h-16 rounded-full border border-[#aec99d]/40"
+                  style={{ animation: 'pulse-ring 3.8s ease-out forwards', animationDelay: '0.18s' }}
+                />
+                <div
+                  className="absolute w-20 h-20 bg-[#aec99d] rounded-full blur-2xl z-[-1]"
+                  style={{ animation: 'mac-glow 3.8s ease-in-out forwards' }}
+                />
+                <RetroMacCanvas />
+              </div>
             </div>
 
-            <div className="flex flex-col items-center gap-3 z-10 relative mt-6 w-full">
+            <div className="flex flex-col items-center gap-3 z-10 relative mt-1 w-full">
               <span className="text-[10px] text-white/50 bg-[#111111]/80 px-3 py-1 rounded-full backdrop-blur-sm opacity-0 animate-[fade-in-text_4.5s_ease-out_forwards]">Engine processing from deep diagnostic result</span>
-              <div className="flex flex-wrap justify-center gap-3 max-w-[240px] opacity-0 animate-[fade-in-pills_4.5s_ease-out_forwards]">
-                <div className="bg-white/5 border border-white/10 rounded px-3 py-1.5 text-[10px] text-white/80 whitespace-nowrap">Goal: Scale Ops</div>
-                <div className="bg-white/5 border border-white/10 rounded px-3 py-1.5 text-[10px] text-white/80 whitespace-nowrap">Data: Partially Centralized</div>
-                <div className="bg-[#aec99d]/10 border border-[#aec99d]/30 rounded px-3 py-1.5 text-[10px] text-[#aec99d] shadow-[0_0_15px_rgba(174,201,157,0.15)] font-medium whitespace-nowrap">Score: 42%</div>
+              <div className="flex flex-wrap justify-center gap-3 max-w-[240px]">
+                <div className="bg-white/5 border border-white/10 rounded px-3 py-1.5 text-[10px] text-white/80 whitespace-nowrap opacity-0 animate-[pop-in-pill_0.6s_ease-out_forwards]" style={{ animationDelay: '3.0s' }}>Goal: Scale Ops</div>
+                <div className="bg-white/5 border border-white/10 rounded px-3 py-1.5 text-[10px] text-white/80 whitespace-nowrap opacity-0 animate-[pop-in-pill_0.6s_ease-out_forwards]" style={{ animationDelay: '3.2s' }}>Data: Partially Centralized</div>
+                <div className="bg-[#aec99d]/10 border border-[#aec99d]/30 rounded px-3 py-1.5 text-[10px] text-[#aec99d] shadow-[0_0_15px_rgba(174,201,157,0.15)] font-medium whitespace-nowrap opacity-0 animate-[pop-in-pill_0.6s_ease-out_forwards]" style={{ animationDelay: '3.4s' }}>Score: 42%</div>
               </div>
             </div>
           </div>
@@ -326,53 +447,96 @@ function BlueprintAnimation() {
 
         {phase === 'generate' && (
           <div className="flex flex-col items-center justify-center gap-4 animate-fade-in-up mt-2">
-            <div className="relative w-16 h-16 flex items-center justify-center">
-              <div className="absolute inset-0 border-2 border-[#aec99d] rounded-full animate-ping opacity-20" />
-              <div className="w-10 h-10 bg-[#aec99d]/10 border border-[#aec99d]/50 rounded-full flex items-center justify-center">
-                <svg className="w-5 h-5 text-[#aec99d]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" /></svg>
+            <div className="relative w-24 h-24 flex items-center justify-center">
+              <div className="absolute inset-[-10px] border border-[#aec99d]/20 rounded-full animate-ping opacity-20" />
+              <div className="absolute inset-0 bg-[#aec99d]/5 rounded-full blur-xl" />
+              <div className="w-full h-full flex items-center justify-center z-10">
+                <LabFlaskCanvas />
               </div>
             </div>
-            <span className="text-[11px] text-[#aec99d] animate-pulse uppercase tracking-widest font-medium">Brewing Blueprint</span>
+            <div className="flex flex-col items-center">
+              <span className="text-[11px] text-[#aec99d] uppercase tracking-widest font-medium">Brewing Blueprint</span>
+              <div className="w-24 h-1 bg-white/10 rounded-full mt-3 overflow-hidden relative">
+                <div className="h-full bg-[#aec99d] rounded-full animate-[loading-bar_3.5s_ease-in-out_forwards]" />
+              </div>
+            </div>
           </div>
         )}
       </div>
 
       {/* Blueprint Layout */}
-      <div className={`col-start-1 row-start-1 flex flex-col justify-center transition-all duration-500 delay-200 w-full h-full ${phase === 'blueprint' ? 'opacity-100 scale-100' : 'opacity-0 scale-105 pointer-events-none'}`}>
-        <div className="flex flex-col items-center mb-4">
-          <span className="text-[9px] text-[#aec99d] uppercase tracking-widest font-medium mb-0.5">Tailored Blueprint</span>
-          <span className="text-xs text-white font-light text-center">Ops Scaling Architecture</span>
+      <div className={`col-start-1 row-start-1 flex flex-col justify-center w-full h-full z-10 transition-opacity duration-300 ${phase === 'blueprint' ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}>
+        <div className={`flex flex-col items-center mb-6 ${phase === 'blueprint' ? 'animate-[blueprint-header-enter_0.8s_ease-out_forwards]' : 'opacity-0'}`}>
+          <span className="text-[10px] text-[#aec99d] uppercase tracking-[0.1em] font-medium mb-1 drop-shadow-[0_0_8px_rgba(174,201,157,0.5)]">Tailored Blueprint</span>
+          <span className="text-sm text-white font-light text-center">Ops Scaling Architecture</span>
         </div>
 
         {/* Contextual Mapping */}
-        <div className="flex flex-col gap-3 w-full max-w-[260px] mx-auto">
-           <div className="flex justify-between items-center gap-2 bg-white/5 border border-white/10 rounded-lg p-2.5 animate-fade-in-up" style={{ animationDelay: '0.1s' }}>
-              <div className="flex flex-col flex-1">
-                 <span className="text-[8px] text-white/50 mb-0.5">Constraint Detected</span>
-                 <span className="text-[10px] text-white/90">Partially Centralized Data</span>
+        <div className="flex flex-col gap-3.5 w-full max-w-[300px] mx-auto">
+           <style>{`
+             @keyframes bp-flow { 0%{left:0%;opacity:0} 20%{opacity:1} 80%{opacity:1} 100%{left:100%;opacity:0} }
+             @keyframes bp-chev { 0%,100%{opacity:0.4;transform:translateX(0)} 50%{opacity:1;transform:translateX(2px)} }
+           `}</style>
+
+           {/* Card 1 */}
+           <div className={`group relative flex items-center gap-2 rounded-2xl p-3 border border-white/10 overflow-hidden bg-gradient-to-br from-white/[0.055] to-white/[0.015] ${phase === 'blueprint' ? 'animate-[blueprint-card-enter_0.7s_ease-out_forwards]' : 'opacity-0'}`} style={{ boxShadow: '0 10px 26px -14px rgba(0,0,0,0.65), inset 0 1px 0 rgba(255,255,255,0.06)', animationDelay: phase === 'blueprint' ? '0.2s' : '0s' }}>
+              <div className="absolute left-0 top-2.5 bottom-2.5 w-[3px] rounded-full bg-white/20" />
+              <div className="flex items-center gap-2 w-[42%] min-w-0 relative z-10">
+                 <div className="w-6 h-6 rounded-lg bg-white/[0.06] border border-white/10 flex items-center justify-center text-white/50 shrink-0">
+                   <svg className="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><path strokeLinecap="round" strokeLinejoin="round" d="M12 9v4m0 4h.01M10.3 3.86L1.8 18a2 2 0 001.7 3h17a2 2 0 001.7-3L13.7 3.86a2 2 0 00-3.4 0z"/></svg>
+                 </div>
+                 <div className="flex flex-col min-w-0">
+                    <span className="text-[8px] text-white/45 uppercase tracking-wider mb-0.5">Constraint</span>
+                    <span className="text-[11px] text-white/90 font-medium leading-snug truncate">Centralized Data</span>
+                 </div>
               </div>
-              <div className="text-[#aec99d] text-[10px] shrink-0">→</div>
-              <div className="flex flex-col flex-1 text-right">
-                 <span className="text-[8px] text-[#aec99d] mb-0.5">Resolution Layer</span>
-                 <span className="text-[10px] text-white/90 font-medium">Autonomous Data Sync</span>
+              <div className="relative flex-1 min-w-[20px] h-3 z-10 flex items-center">
+                 <div className="h-[2px] w-full rounded-full" style={{ background: 'linear-gradient(to right, rgba(255,255,255,0.12), rgba(174,201,157,0.85))' }} />
+                 <span className="absolute top-1/2 -translate-y-1/2 w-1.5 h-1.5 rounded-full bg-[#aec99d]" style={{ boxShadow: '0 0 8px #aec99d', animation: 'bp-flow 1.9s ease-in-out infinite' }} />
+                 <svg className="absolute right-[-1px] top-1/2 -translate-y-1/2 w-2.5 h-2.5 text-[#aec99d]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.6"><path strokeLinecap="round" strokeLinejoin="round" d="M9 6l6 6-6 6"/></svg>
+              </div>
+              <div className="flex items-center gap-2 w-[42%] min-w-0 justify-end text-right relative z-10">
+                 <div className="flex flex-col items-end min-w-0">
+                    <span className="text-[8px] text-[#aec99d]/80 uppercase tracking-wider mb-0.5">Resolution</span>
+                    <span className="text-[11px] text-white/90 font-medium leading-snug truncate">Data Sync</span>
+                 </div>
+                 <div className="w-6 h-6 rounded-lg bg-[#aec99d]/12 border border-[#aec99d]/35 flex items-center justify-center text-[#aec99d] shrink-0">
+                   <svg className="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path strokeLinecap="round" strokeLinejoin="round" d="M20 6L9 17l-5-5"/></svg>
+                 </div>
               </div>
            </div>
 
-           <div className="flex justify-between items-center gap-2 bg-white/5 border border-white/10 rounded-lg p-2.5 animate-fade-in-up" style={{ animationDelay: '0.3s' }}>
-              <div className="flex flex-col flex-1">
-                 <span className="text-[8px] text-white/50 mb-0.5">Objective Targeted</span>
-                 <span className="text-[10px] text-white/90">Scale Ops (No Headcount)</span>
+           {/* Card 2 */}
+           <div className={`group relative flex items-center gap-2 rounded-2xl p-3 border border-white/10 overflow-hidden bg-gradient-to-br from-white/[0.055] to-white/[0.015] ${phase === 'blueprint' ? 'animate-[blueprint-card-enter_0.7s_ease-out_forwards]' : 'opacity-0'}`} style={{ boxShadow: '0 10px 26px -14px rgba(0,0,0,0.65), inset 0 1px 0 rgba(255,255,255,0.06)', animationDelay: phase === 'blueprint' ? '0.4s' : '0s' }}>
+              <div className="absolute left-0 top-2.5 bottom-2.5 w-[3px] rounded-full bg-white/20" />
+              <div className="flex items-center gap-2 w-[42%] min-w-0 relative z-10">
+                 <div className="w-6 h-6 rounded-lg bg-white/[0.06] border border-white/10 flex items-center justify-center text-white/50 shrink-0">
+                   <svg className="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3.2"/></svg>
+                 </div>
+                 <div className="flex flex-col min-w-0">
+                    <span className="text-[8px] text-white/45 uppercase tracking-wider mb-0.5">Objective</span>
+                    <span className="text-[11px] text-white/90 font-medium leading-snug truncate">Scale Ops</span>
+                 </div>
               </div>
-              <div className="text-[#aec99d] text-[10px] shrink-0">→</div>
-              <div className="flex flex-col flex-1 text-right">
-                 <span className="text-[8px] text-[#aec99d] mb-0.5">Action Engine</span>
-                 <span className="text-[10px] text-white/90 font-medium">Automated Triage Flow</span>
+              <div className="relative flex-1 min-w-[20px] h-3 z-10 flex items-center">
+                 <div className="h-[2px] w-full rounded-full" style={{ background: 'linear-gradient(to right, rgba(255,255,255,0.12), rgba(174,201,157,0.85))' }} />
+                 <span className="absolute top-1/2 -translate-y-1/2 w-1.5 h-1.5 rounded-full bg-[#aec99d]" style={{ boxShadow: '0 0 8px #aec99d', animation: 'bp-flow 1.9s ease-in-out infinite', animationDelay: '0.4s' }} />
+                 <svg className="absolute right-[-1px] top-1/2 -translate-y-1/2 w-2.5 h-2.5 text-[#aec99d]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.6"><path strokeLinecap="round" strokeLinejoin="round" d="M9 6l6 6-6 6"/></svg>
+              </div>
+              <div className="flex items-center gap-2 w-[42%] min-w-0 justify-end text-right relative z-10">
+                 <div className="flex flex-col items-end min-w-0">
+                    <span className="text-[8px] text-[#aec99d]/80 uppercase tracking-wider mb-0.5">Action</span>
+                    <span className="text-[11px] text-white/90 font-medium leading-snug truncate">Triage Flow</span>
+                 </div>
+                 <div className="w-6 h-6 rounded-lg bg-[#aec99d]/12 border border-[#aec99d]/35 flex items-center justify-center text-[#aec99d] shrink-0">
+                   <svg className="w-3 h-3" viewBox="0 0 24 24" fill="currentColor"><path d="M13 2L3 14h7l-1 8 10-12h-7l1-8z"/></svg>
+                 </div>
               </div>
            </div>
         </div>
         
-        <div className="mt-4 text-center animate-fade-in-up" style={{ animationDelay: '0.6s' }}>
-           <span className="text-[7px] sm:text-[8px] text-white/40 uppercase tracking-widest font-medium">Aivory Engine Processing Capacity: 98% Efficiency</span>
+        <div className={`mt-6 text-center ${phase === 'blueprint' ? 'animate-[blueprint-card-enter_0.7s_ease-out_forwards]' : 'opacity-0'}`} style={{ animationDelay: phase === 'blueprint' ? '0.6s' : '0s' }}>
+           <span className="text-[8px] sm:text-[9px] text-[#aec99d]/60 uppercase tracking-[0.15em] font-medium drop-shadow-sm">Aivory Engine Processing Capacity: 98% Efficiency</span>
         </div>
       </div>
     </div>
@@ -727,47 +891,60 @@ function WorkflowAnimation() {
               Workflow Generated
             </div>
 
-            <div className="flex items-center justify-between w-full max-w-[320px] mx-auto z-10 relative">
-              {/* Connecting Lines */}
-              <div className="absolute top-1/2 left-[15%] right-[15%] h-[1px] bg-white/10 -translate-y-1/2 -z-10" />
-              <div className="absolute top-1/2 left-[15%] right-[50%] h-[1px] bg-[#c1ccc8] -translate-y-1/2 -z-10 origin-left animate-scale-x" />
-              <div className="absolute top-1/2 left-[50%] right-[15%] h-[1px] bg-[#c1ccc8] -translate-y-1/2 -z-10 origin-left animate-scale-x" style={{ animationDelay: '0.4s' }} />
+            <div className="flex items-center justify-between w-full max-w-[330px] mx-auto z-10 relative">
+              <style>{`
+                @keyframes node-flow-a { 0%{left:22%;opacity:0} 12%{opacity:1} 88%{opacity:1} 100%{left:50%;opacity:0} }
+                @keyframes node-flow-b { 0%{left:50%;opacity:0} 12%{opacity:1} 88%{opacity:1} 100%{left:78%;opacity:0} }
+                @keyframes node-pop { 0%{opacity:0;transform:translateY(10px) scale(0.94)} 60%{opacity:1;transform:translateY(-2px) scale(1.015)} 100%{opacity:1;transform:translateY(0) scale(1)} }
+              `}</style>
 
-              {/* Node 1: Trigger */}
-              <div className="flex flex-col rounded-[12px] sm:rounded-[14px] border border-white/10 shadow-lg flex-shrink-0 w-[70px] sm:w-[90px] h-[70px] sm:h-[85px] overflow-hidden bg-[#2A2A2A] relative z-10">
-                <div className="h-[24px] sm:h-[28px] flex items-center justify-center bg-[#2A2A2A] border-b border-[#111]/50">
-                  <span className="text-[7px] sm:text-[8px] text-white/60 uppercase tracking-widest font-medium">Trigger</span>
+              {/* Connecting rail */}
+              <div className="absolute top-1/2 left-[16%] right-[16%] h-[2px] bg-white/8 -translate-y-1/2 -z-10 rounded-full" />
+              <div className="absolute top-1/2 left-[16%] right-[52%] h-[2px] -translate-y-1/2 -z-10 origin-left animate-scale-x rounded-full" style={{ background: 'linear-gradient(to right, rgba(174,201,157,0.15), rgba(174,201,157,0.9))' }} />
+              <div className="absolute top-1/2 left-[50%] right-[16%] h-[2px] -translate-y-1/2 -z-10 origin-left animate-scale-x rounded-full" style={{ background: 'linear-gradient(to right, rgba(174,201,157,0.9), rgba(193,204,200,0.15))', animationDelay: '0.4s' }} />
+              <span className="absolute top-1/2 -translate-y-1/2 w-1.5 h-1.5 rounded-full bg-[#aec99d] -z-10" style={{ boxShadow: '0 0 8px #aec99d', animation: 'node-flow-a 2.6s ease-in-out infinite' }} />
+              <span className="absolute top-1/2 -translate-y-1/2 w-1.5 h-1.5 rounded-full bg-[#c1ccc8] -z-10" style={{ boxShadow: '0 0 8px #c1ccc8', animation: 'node-flow-b 2.6s ease-in-out infinite', animationDelay: '0.5s' }} />
+
+              {/* Node 1: Trigger (Gmail) */}
+              <div className="relative flex flex-col items-center w-[82px] sm:w-[96px] rounded-2xl pt-2 pb-2.5 px-2 bg-gradient-to-b from-[#23262b] to-[#15171b] border border-white/10 z-10" style={{ boxShadow: '0 10px 24px -8px rgba(0,0,0,0.65), inset 0 1px 0 rgba(255,255,255,0.06)', animation: 'node-pop 0.6s ease-out both' }}>
+                <span className="absolute top-1/2 -translate-y-1/2 -right-[6px] w-3 h-3 rounded-full bg-[#0c0d0f] border-2 border-[#aec99d] z-20" />
+                <div className="flex items-center gap-1 mb-1.5">
+                  <span className="w-1 h-1 rounded-full bg-[#aec99d]" />
+                  <span className="text-[6.5px] sm:text-[8px] uppercase tracking-[0.14em] text-white/45 font-semibold">Trigger</span>
                 </div>
-                <div className="flex-1 bg-[#c1ccc8] flex flex-col items-center justify-center gap-1.5">
-                  <img src="/integrations/icons/gmail.svg" alt="Gmail" className="w-3.5 h-3.5 sm:w-4 sm:h-4 drop-shadow-sm" />
-                  <span className="text-[9px] sm:text-[11px] font-semibold text-[#111111]">Gmail</span>
+                <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl flex items-center justify-center bg-white shadow-[0_2px_6px_rgba(0,0,0,0.35)] mb-1.5">
+                  <img src="/integrations/icons/gmail.svg" alt="Gmail" className="w-[18px] h-[18px] sm:w-5 sm:h-5" />
                 </div>
-              </div>
-              
-              {/* Node 2: Agent */}
-              <div className="relative flex-shrink-0 animate-fade-in-up z-20" style={{ animationDelay: '0.2s' }}>
-                <div className="absolute top-[-3px] right-[-3px] w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-white/40 animate-ping z-30" />
-                <div className="absolute top-[-3px] right-[-3px] w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-white/60 z-30 border border-[#111]" />
-                
-                <div className="flex flex-col rounded-[12px] sm:rounded-[14px] border border-white/10 shadow-lg w-[70px] sm:w-[90px] h-[70px] sm:h-[85px] overflow-hidden bg-[#2A2A2A]">
-                  <div className="h-[24px] sm:h-[28px] flex items-center justify-center bg-[#2A2A2A] border-b border-[#111]">
-                    <span className="text-[7px] sm:text-[8px] text-white/60 uppercase tracking-widest font-medium">AI Agent</span>
-                  </div>
-                  <div className="flex-1 bg-[#111111] flex flex-col items-center justify-center">
-                    <span className="text-[9px] sm:text-[11px] font-medium text-white/60">Extract</span>
-                  </div>
-                </div>
+                <span className="text-[10px] sm:text-[12px] font-semibold text-white leading-none">Gmail</span>
               </div>
 
-              {/* Node 3: Action */}
-              <div className="flex flex-col rounded-[12px] sm:rounded-[14px] border border-white/10 shadow-lg flex-shrink-0 w-[70px] sm:w-[90px] h-[70px] sm:h-[85px] overflow-hidden bg-[#2A2A2A] relative z-10 animate-fade-in-up" style={{ animationDelay: '0.6s' }}>
-                <div className="h-[24px] sm:h-[28px] flex items-center justify-center bg-[#2A2A2A] border-b border-[#111]/50">
-                  <span className="text-[7px] sm:text-[8px] text-white/60 uppercase tracking-widest font-medium">Action</span>
+              {/* Node 2: AI Agent (Extract) */}
+              <div className="relative flex flex-col items-center w-[82px] sm:w-[96px] rounded-2xl pt-2 pb-2.5 px-2 z-20 border border-[#aec99d]/30 bg-gradient-to-b from-[#23262b] to-[#15171b]" style={{ boxShadow: '0 10px 26px -8px rgba(0,0,0,0.7), 0 0 20px rgba(174,201,157,0.16), inset 0 1px 0 rgba(255,255,255,0.06)', animation: 'node-pop 0.6s ease-out 0.2s both' }}>
+                <span className="absolute top-[-4px] right-[-4px] w-3 h-3 rounded-full bg-[#aec99d] animate-ping z-30" />
+                <span className="absolute top-[-4px] right-[-4px] w-3 h-3 rounded-full bg-[#aec99d] border border-[#0c0d0f] z-30" />
+                <span className="absolute top-1/2 -translate-y-1/2 -left-[6px] w-3 h-3 rounded-full bg-[#0c0d0f] border-2 border-[#aec99d] z-20" />
+                <span className="absolute top-1/2 -translate-y-1/2 -right-[6px] w-3 h-3 rounded-full bg-[#0c0d0f] border-2 border-[#c1ccc8] z-20" />
+                <div className="flex items-center gap-1 mb-1.5">
+                  <span className="w-1 h-1 rounded-full bg-[#aec99d]" />
+                  <span className="text-[6.5px] sm:text-[8px] uppercase tracking-[0.14em] text-[#aec99d]/80 font-semibold">AI Agent</span>
                 </div>
-                <div className="flex-1 bg-[#c1ccc8] flex flex-col items-center justify-center gap-1.5">
-                  <img src="/integrations/icons/slack.svg" alt="Slack" className="w-3.5 h-3.5 sm:w-4 sm:h-4 drop-shadow-sm" />
-                  <span className="text-[9px] sm:text-[11px] font-semibold text-[#111111]">Slack</span>
+                <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl flex items-center justify-center bg-gradient-to-br from-[#aec99d] to-[#7f9a6e] shadow-[0_2px_6px_rgba(0,0,0,0.35)] mb-1.5">
+                  <svg className="w-[18px] h-[18px] text-[#111]" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l1.6 4.6L18 8.2l-4.4 1.6L12 14l-1.6-4.2L6 8.2l4.4-1.6L12 2zm6 10l.9 2.5L21 15.4l-2.1.9L18 19l-.9-2.7L15 15.4l2.1-.9L18 12zM6 13l.8 2.2L9 16l-2.2.8L6 19l-.8-2.2L3 16l2.2-.8L6 13z"/></svg>
                 </div>
+                <span className="text-[10px] sm:text-[12px] font-semibold text-white leading-none">Extract</span>
+              </div>
+
+              {/* Node 3: Action (Slack) */}
+              <div className="relative flex flex-col items-center w-[82px] sm:w-[96px] rounded-2xl pt-2 pb-2.5 px-2 bg-gradient-to-b from-[#23262b] to-[#15171b] border border-white/10 z-10" style={{ boxShadow: '0 10px 24px -8px rgba(0,0,0,0.65), inset 0 1px 0 rgba(255,255,255,0.06)', animation: 'node-pop 0.6s ease-out 0.6s both' }}>
+                <span className="absolute top-1/2 -translate-y-1/2 -left-[6px] w-3 h-3 rounded-full bg-[#0c0d0f] border-2 border-[#c1ccc8] z-20" />
+                <div className="flex items-center gap-1 mb-1.5">
+                  <span className="w-1 h-1 rounded-full bg-[#c1ccc8]" />
+                  <span className="text-[6.5px] sm:text-[8px] uppercase tracking-[0.14em] text-white/45 font-semibold">Action</span>
+                </div>
+                <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl flex items-center justify-center bg-white shadow-[0_2px_6px_rgba(0,0,0,0.35)] mb-1.5">
+                  <img src="/integrations/icons/slack.svg" alt="Slack" className="w-[18px] h-[18px] sm:w-5 sm:h-5" />
+                </div>
+                <span className="text-[10px] sm:text-[12px] font-semibold text-white leading-none">Slack</span>
               </div>
             </div>
 
