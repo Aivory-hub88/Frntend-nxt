@@ -4,7 +4,7 @@ import { useFrame, Canvas } from '@react-three/fiber';
 import { RoundedBox, Float } from '@react-three/drei';
 import * as THREE from 'three';
 import { useInViewMount } from '@/hooks/useInViewMount';
-
+import { useCanvasQuality } from '@/hooks/useCanvasQuality';
 export function RetroMac3D() {
   const groupRef = useRef<THREE.Group>(null);
   useFrame((state) => {
@@ -16,11 +16,11 @@ export function RetroMac3D() {
   return (
     <group ref={groupRef} position={[0, -0.2, 0]}>
       {/* Mac Body — classic Macintosh beige/platinum */}
-      <RoundedBox args={[1.2, 1.4, 1.2]} radius={0.1} smoothness={4}>
+      <RoundedBox args={[1.2, 1.4, 1.2]} radius={0.1} smoothness={2}>
         <meshStandardMaterial color="#cabf9f" roughness={0.65} metalness={0.05} />
       </RoundedBox>
       {/* Screen Frame — slightly darker beige recess */}
-      <RoundedBox args={[1, 0.9, 0.1]} position={[0, 0.1, 0.6]} radius={0.02} smoothness={4}>
+      <RoundedBox args={[1, 0.9, 0.1]} position={[0, 0.1, 0.6]} radius={0.02} smoothness={2}>
         <meshStandardMaterial color="#8f866c" />
       </RoundedBox>
       {/* Screen (Glowing) */}
@@ -54,15 +54,15 @@ export function RetroMac3D() {
     </group>
   );
 }
-
 export function RetroMacCanvas() {
   const { ref, inView } = useInViewMount<HTMLDivElement>();
+  const { dpr } = useCanvasQuality();
   return (
     <div ref={ref} className="w-full h-full pointer-events-none">
       {inView && (
         <Canvas
           camera={{ position: [0, 0, 4.5], fov: 40 }}
-          dpr={[1, 1.5]}
+          dpr={dpr}
           gl={{ alpha: true, antialias: false, powerPreference: 'low-power' }}
         >
           <ambientLight intensity={0.8} />

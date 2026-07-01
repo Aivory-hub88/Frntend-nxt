@@ -4,7 +4,7 @@ import { useFrame, Canvas } from '@react-three/fiber';
 import { Float } from '@react-three/drei';
 import * as THREE from 'three';
 import { useInViewMount } from '@/hooks/useInViewMount';
-
+import { useCanvasQuality } from '@/hooks/useCanvasQuality';
 export function Flask3D() {
   const groupRef = useRef<THREE.Group>(null);
   useFrame((state) => {
@@ -17,7 +17,7 @@ export function Flask3D() {
     <group ref={groupRef} position={[0, -0.6, 0]}>
       {/* Flask Body (Cone-ish shape) - cheap glass, no transmission render pass */}
       <mesh position={[0, 0.4, 0]}>
-        <cylinderGeometry args={[0.3, 0.8, 1.2, 32]} />
+        <cylinderGeometry args={[0.3, 0.8, 1.2, 24]} />
         <meshPhysicalMaterial
           color="#ffffff"
           transparent
@@ -30,7 +30,7 @@ export function Flask3D() {
       </mesh>
       {/* Flask Neck */}
       <mesh position={[0, 1.2, 0]}>
-        <cylinderGeometry args={[0.3, 0.3, 0.5, 32]} />
+        <cylinderGeometry args={[0.3, 0.3, 0.5, 24]} />
         <meshPhysicalMaterial
           color="#ffffff"
           transparent
@@ -43,7 +43,7 @@ export function Flask3D() {
       </mesh>
       {/* Flask Rim */}
       <mesh position={[0, 1.45, 0]}>
-        <torusGeometry args={[0.32, 0.06, 16, 32]} />
+        <torusGeometry args={[0.32, 0.06, 12, 24]} />
         <meshPhysicalMaterial
           color="#ffffff"
           transparent
@@ -55,7 +55,7 @@ export function Flask3D() {
       </mesh>
       {/* Liquid inside — cone matched to the flask's inner taper so it never pokes through the glass */}
       <mesh position={[0, 0.1, 0]}>
-        <cylinderGeometry args={[0.5, 0.72, 0.62, 32]} />
+        <cylinderGeometry args={[0.5, 0.72, 0.62, 24]} />
         <meshStandardMaterial 
           color="#aec99d" 
           emissive="#aec99d" 
@@ -65,13 +65,12 @@ export function Flask3D() {
         />
       </mesh>
       {/* Bubbles */}
-      {[...Array(8)].map((_, i) => (
+      {[...Array(6)].map((_, i) => (
         <Bubble key={i} index={i} />
       ))}
     </group>
   );
 }
-
 function Bubble({ index }: { index: number }) {
   const bubbleRef = useRef<THREE.Mesh>(null);
   // Constrain bubbles to rise inside the liquid cone (y: -0.15 -> 0.35, radius tapers in)
@@ -90,20 +89,20 @@ function Bubble({ index }: { index: number }) {
   });
   return (
     <mesh ref={bubbleRef}>
-      <sphereGeometry args={[size, 16, 16]} />
+      <sphereGeometry args={[size, 8, 8]} />
       <meshStandardMaterial color="#ffffff" transparent opacity={0.6} emissive="#ffffff" emissiveIntensity={0.5} />
     </mesh>
   );
 }
-
 export function LabFlaskCanvas() {
   const { ref, inView } = useInViewMount<HTMLDivElement>();
+  const { dpr } = useCanvasQuality();
   return (
     <div ref={ref} className="w-full h-full pointer-events-none">
       {inView && (
         <Canvas
           camera={{ position: [0, 0, 4.5], fov: 40 }}
-          dpr={[1, 1.5]}
+          dpr={dpr}
           gl={{ alpha: true, antialias: false, powerPreference: 'low-power' }}
         >
           <ambientLight intensity={0.6} />
