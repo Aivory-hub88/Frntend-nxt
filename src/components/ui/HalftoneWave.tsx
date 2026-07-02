@@ -308,10 +308,10 @@ export function HalftoneWave() {
       // teal family) so petals vary in hue without clashing with the bloom.
       const petalPalette = [
         new THREE.Vector3(0.05, 0.17, 0.46), // blue-indigo (base)
-        new THREE.Vector3(0.19, 0.11, 0.46), // violet
         new THREE.Vector3(0.05, 0.21, 0.36), // teal
         new THREE.Vector3(0.10, 0.13, 0.52), // deep blue
-        new THREE.Vector3(0.24, 0.14, 0.42), // soft violet (flower accent)
+        new THREE.Vector3(0.05, 0.15, 0.44), // blue
+        new THREE.Vector3(0.12, 0.12, 0.44), // muted indigo (subtle violet hint)
       ];
       for (let i = 0; i < PETAL_COUNT; i++) {
         // Depth-varied size for a richer 3D feel: bigger overall with a higher
