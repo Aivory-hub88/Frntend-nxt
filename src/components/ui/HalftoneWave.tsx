@@ -19,7 +19,7 @@ export function HalftoneWave() {
     const camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 100);
     camera.position.z = 15;
 
-    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    const renderer = new THREE.WebGLRenderer({ antialias: false, alpha: true });
     renderer.setSize(width, height);
     
     const isMobile = window.innerWidth < 1024;
@@ -211,6 +211,24 @@ export function HalftoneWave() {
     let targetY = startY;
     let targetScale = 1.6;
 
+    // ── Cached section anchors (layout read only on mount / resize) ──
+    // Reading getBoundingClientRect() on every scroll event forced a
+    // synchronous reflow of the whole zoomed+sticky+WebGL page — the cause of
+    // the scroll stutter. We cache the anchor offsets instead.
+    let centerAt = Infinity;
+    let rightAt = Infinity;
+    const computeAnchors = () => {
+      const showcaseEl = document.getElementById('showcase');
+      const opsEl = document.getElementById('ops-stack');
+      if (showcaseEl && opsEl) {
+        const vh = window.innerHeight;
+        const scTop = showcaseEl.getBoundingClientRect().top + window.scrollY;
+        const opTop = opsEl.getBoundingClientRect().top + window.scrollY;
+        centerAt = scTop - vh * 0.45; // Operational Framework active
+        rightAt = opTop - vh * 0.45;  // AI Operations Stack active
+      }
+    };
+
     const handleScroll = () => {
       const scrollY = window.scrollY;
       
@@ -240,14 +258,7 @@ export function HalftoneWave() {
       };
       const heroX = startX + (endX - startX) * progress; // hero → right
       let x = heroX;
-      const showcaseEl = document.getElementById('showcase');
-      const opsEl = document.getElementById('ops-stack');
-      if (showcaseEl && opsEl) {
-        const vh = window.innerHeight;
-        const scTop = showcaseEl.getBoundingClientRect().top + scrollY;
-        const opTop = opsEl.getBoundingClientRect().top + scrollY;
-        const centerAt = scTop - vh * 0.45; // Operational Framework active
-        const rightAt = opTop - vh * 0.45;  // AI Operations Stack active
+      if (centerAt !== Infinity) {
         if (scrollY >= rightAt) {
           x = endX; // AI Operations Stack → right
         } else if (scrollY >= centerAt) {
@@ -260,7 +271,18 @@ export function HalftoneWave() {
       targetX = x;
     };
 
-    window.addEventListener('scroll', handleScroll, { passive: true });
+    let scrollTicking = false;
+    const onScroll = () => {
+      if (!scrollTicking) {
+        scrollTicking = true;
+        requestAnimationFrame(() => { scrollTicking = false; handleScroll(); });
+      }
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    computeAnchors();
+    handleScroll();
+    // Recompute once more after layout settles (fonts / lazy 3D canvases / images).
+    const anchorTimer = window.setTimeout(computeAnchors, 1200);
 
     const clock = new THREE.Clock();
     let animationFrameId: number;
@@ -356,13 +378,15 @@ export function HalftoneWave() {
       camera.aspect = rect.width / rect.height;
       camera.updateProjectionMatrix();
       uniforms.uResolution.value.set(rect.width, rect.height);
+      computeAnchors();
     };
     window.addEventListener('resize', handleResize);
 
     return () => {
       cancelAnimationFrame(animationFrameId);
+      clearTimeout(anchorTimer);
       observer.disconnect();
-      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('scroll', onScroll);
       window.removeEventListener('resize', handleResize);
       canvas.removeEventListener('pointerdown', onPointerDown);
       window.removeEventListener('pointermove', onPointerMove);
@@ -372,8 +396,6 @@ export function HalftoneWave() {
       }
       geometry.dispose();
       material.dispose();
-      petalGeo.dispose();
-      petalMat.dispose();
       renderer.dispose();
     };
   }, []);
