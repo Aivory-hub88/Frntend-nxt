@@ -1135,10 +1135,12 @@ function BlueprintAnimation() {
                    </div>
                 </div>
                 {/* connector */}
-                <div className="relative flex-1 min-w-[24px] h-3 z-10 flex items-center">
-                   <div className="h-[2px] w-full rounded-full" style={{ background: 'linear-gradient(to right, rgba(255,255,255,0.12), rgba(174,201,157,0.85))' }} />
-                   <span className="absolute top-1/2 -translate-y-1/2 w-1.5 h-1.5 rounded-full bg-[#aec99d]" style={{ boxShadow: '0 0 8px #aec99d', animation: 'bp-flow 1.9s ease-in-out infinite' }} />
-                   <svg className="absolute right-[-1px] top-1/2 -translate-y-1/2 w-3 h-3 text-[#aec99d]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.6"><path strokeLinecap="round" strokeLinejoin="round" d="M9 6l6 6-6 6"/></svg>
+                <div className="relative flex-1 min-w-[24px] h-3 z-10 flex items-center justify-center px-1.5">
+                   <div className="relative w-full max-w-[64px] flex items-center">
+                      <div className="h-[2px] flex-1 rounded-full" style={{ background: 'linear-gradient(to right, rgba(255,255,255,0.12), rgba(174,201,157,0.85))' }} />
+                      <svg className="w-3 h-3 shrink-0 -ml-[3px] text-[#aec99d]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.6"><path strokeLinecap="round" strokeLinejoin="round" d="M9 6l6 6-6 6"/></svg>
+                      <span className="absolute top-1/2 left-0 -translate-y-1/2 w-1.5 h-1.5 rounded-full bg-[#aec99d]" style={{ boxShadow: '0 0 8px #aec99d', animation: 'bp-flow 1.9s ease-in-out infinite' }} />
+                   </div>
                 </div>
                 {/* right */}
                 <div className="flex items-center gap-2.5 w-[42%] min-w-0 justify-end text-right relative z-10">
@@ -1165,10 +1167,12 @@ function BlueprintAnimation() {
                       <span className="text-xs sm:text-sm text-white/90 font-medium leading-snug truncate">Scale Ops (No Headcount)</span>
                    </div>
                 </div>
-                <div className="relative flex-1 min-w-[24px] h-3 z-10 flex items-center">
-                   <div className="h-[2px] w-full rounded-full" style={{ background: 'linear-gradient(to right, rgba(255,255,255,0.12), rgba(174,201,157,0.85))' }} />
-                   <span className="absolute top-1/2 -translate-y-1/2 w-1.5 h-1.5 rounded-full bg-[#aec99d]" style={{ boxShadow: '0 0 8px #aec99d', animation: 'bp-flow 1.9s ease-in-out infinite', animationDelay: '0.4s' }} />
-                   <svg className="absolute right-[-1px] top-1/2 -translate-y-1/2 w-3 h-3 text-[#aec99d]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.6"><path strokeLinecap="round" strokeLinejoin="round" d="M9 6l6 6-6 6"/></svg>
+                <div className="relative flex-1 min-w-[24px] h-3 z-10 flex items-center justify-center px-1.5">
+                   <div className="relative w-full max-w-[64px] flex items-center">
+                      <div className="h-[2px] flex-1 rounded-full" style={{ background: 'linear-gradient(to right, rgba(255,255,255,0.12), rgba(174,201,157,0.85))' }} />
+                      <svg className="w-3 h-3 shrink-0 -ml-[3px] text-[#aec99d]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.6"><path strokeLinecap="round" strokeLinejoin="round" d="M9 6l6 6-6 6"/></svg>
+                      <span className="absolute top-1/2 left-0 -translate-y-1/2 w-1.5 h-1.5 rounded-full bg-[#aec99d]" style={{ boxShadow: '0 0 8px #aec99d', animation: 'bp-flow 1.9s ease-in-out infinite', animationDelay: '0.4s' }} />
+                   </div>
                 </div>
                 <div className="flex items-center gap-2.5 w-[42%] min-w-0 justify-end text-right relative z-10">
                    <div className="flex flex-col items-end min-w-0">
