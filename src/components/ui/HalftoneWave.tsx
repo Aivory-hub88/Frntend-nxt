@@ -209,16 +209,38 @@ export function HalftoneWave() {
     // behind page content (z-0 background) so text stays readable.
     // ==========================================
     const petals: {
-      mesh: THREE.Mesh; sx: number; sy: number;
-      fall: number; swayAmp: number; swayFreq: number; phase: number;
-      rotX: number; rotY: number; rotZ: number;
+      mesh: THREE.Mesh;
+      mode: 'drift' | 'orbit';
+      // drift (floating fall)
+      sx: number; sy: number; fall: number;
+      swayAmp: number; swayFreq: number;
+      // orbit (satellite around the flower, on a tilted plane)
+      orbitR: number; inclSin: number; inclCos: number;
+      orbitSpeed: number; orbitPhase: number;
+      // shared
+      phase: number;
+      baseRotX: number; baseRotY: number; baseRotZ: number;
+      wobbleAmp: number; wobbleFreq: number;
     }[] = [];
     const petalUniforms = { uOpacity: { value: 0.0 }, uPixelSize: { value: isMobile ? 5.0 : 6.0 } };
     let petalGeo: THREE.PlaneGeometry | null = null;
     let petalMat: THREE.ShaderMaterial | null = null;
     let petalOpacity = 0;
     if (!isMobile) {
-      petalGeo = new THREE.PlaneGeometry(1, 1.5, 1, 1);
+      // Curved (cupped) petal geometry so it reads as a real 3D petal from
+      // any angle — not a flat coin. Bend across width + a soft lengthwise curl.
+      petalGeo = new THREE.PlaneGeometry(1, 1.5, 8, 10);
+      {
+        const pos = petalGeo.attributes.position;
+        for (let vi = 0; vi < pos.count; vi++) {
+          const vx = pos.getX(vi);
+          const vy = pos.getY(vi);
+          const z = -0.5 * vx * vx + 0.16 * Math.sin((vy / 1.5 + 0.5) * Math.PI);
+          pos.setZ(vi, z);
+        }
+        pos.needsUpdate = true;
+        petalGeo.computeVertexNormals();
+      }
       petalMat = new THREE.ShaderMaterial({
         transparent: true,
         depthWrite: false,
@@ -281,28 +303,49 @@ export function HalftoneWave() {
       const PETAL_COUNT = 18;
       for (let i = 0; i < PETAL_COUNT; i++) {
         const m = new THREE.Mesh(petalGeo, petalMat);
-        const sx = (Math.random() * 2 - 1) * 8.5;
-        const sy = Math.random() * 18;
-        // Depth-varied size for a richer 3D feel: a few large "near" petals
-        // and many smaller "far" ones (biased small via squared random).
+        // Depth-varied size for a richer 3D feel: a few large + many small.
         const r = Math.random();
         const size = 0.16 + r * r * 1.05;        // ~0.16 .. 1.21, skewed small
-        const depth = -3.5 + size * 4.5;          // bigger => nearer the camera
-        m.position.set(sx, sy - 9, depth + (Math.random() * 2 - 1));
         m.scale.setScalar(size);
-        m.rotation.set(Math.random() * 6.28, Math.random() * 6.28, Math.random() * 6.28);
+
+        // ~1/3 orbit the flower like satellites; the rest drift down.
+        const mode: 'drift' | 'orbit' = i < 6 ? 'orbit' : 'drift';
+
+        const sx = (Math.random() * 2 - 1) * 8.5;
+        const sy = Math.random() * 18;
+
+        // Each orbit sits on its own tilted plane so they cross in 3D.
+        const incl = Math.random() * Math.PI;
+        const orbitR = 4.0 + Math.random() * 3.0;   // 4.0 .. 7.0, outside bloom
+
+        // Base orientation faces the camera (+z) with a gentle tilt; in-plane
+        // spin (Z) is free, but X/Y tilt stays small and wobbles softly so the
+        // petal never turns fully edge-on (avoids the flat "coin" flip).
+        const baseRotX = (Math.random() - 0.5) * 0.7;
+        const baseRotY = (Math.random() - 0.5) * 0.7;
+        const baseRotZ = Math.random() * 6.28;
+
+        if (mode === 'drift') {
+          const depth = -3.5 + size * 4.5;          // bigger => nearer camera
+          m.position.set(sx, sy - 9, depth + (Math.random() * 2 - 1));
+        }
+        m.rotation.set(baseRotX, baseRotY, baseRotZ);
+
         petals.push({
-          mesh: m, sx, sy,
-          // Slow, near-floating descent. Larger (nearer) petals drift a touch
-          // faster for gentle parallax; all much slower than before so it
-          // reads as elegant and dramatic rather than "falling".
-          fall: 0.08 + size * 0.15,               // ~0.10 .. 0.26
-          swayAmp: 0.45 + Math.random() * 0.95,   // wider drift = more floaty
-          swayFreq: 0.16 + Math.random() * 0.32,  // slower, gentler sway
+          mesh: m, mode,
+          sx, sy,
+          fall: 0.08 + size * 0.15,               // ~0.10 .. 0.26 (floaty)
+          swayAmp: 0.45 + Math.random() * 0.95,
+          swayFreq: 0.16 + Math.random() * 0.32,
+          orbitR,
+          inclSin: Math.sin(incl),
+          inclCos: Math.cos(incl),
+          orbitSpeed: (0.10 + Math.random() * 0.14) * (Math.random() < 0.5 ? 1 : -1),
+          orbitPhase: Math.random() * 6.28,
           phase: Math.random() * 6.28,
-          rotX: (Math.random() - 0.5) * 0.32,
-          rotY: (Math.random() - 0.5) * 0.4,
-          rotZ: (Math.random() - 0.5) * 0.26,
+          baseRotX, baseRotY, baseRotZ,
+          wobbleAmp: 0.16 + Math.random() * 0.2,   // gentle, never edge-on
+          wobbleFreq: 0.28 + Math.random() * 0.45,
         });
         scene.add(m);
       }
@@ -506,15 +549,29 @@ export function HalftoneWave() {
           petalOpacity += (targetPetal - petalOpacity) * 0.06;
           petalUniforms.uOpacity.value = petalOpacity * 0.85;
           if (petalOpacity > 0.002) {
+            const cx = group.position.x;
+            const cy = group.position.y;
+            const cz = group.position.z;
             for (const pt of petals) {
               const m = pt.mesh;
-              let ny = (pt.sy - time * pt.fall) % 18;
-              if (ny < 0) ny += 18;
-              m.position.y = ny - 9; // wrap off-screen, top → bottom
-              m.position.x = pt.sx + Math.sin(time * pt.swayFreq + pt.phase) * pt.swayAmp;
-              m.rotation.x += pt.rotX * 0.006;
-              m.rotation.y += pt.rotY * 0.006;
-              m.rotation.z += pt.rotZ * 0.006;
+              if (pt.mode === 'orbit') {
+                // Satellite-style orbit around the flower on a tilted plane,
+                // so petals sweep in front of and behind the bloom in 3D.
+                const a = pt.orbitPhase + time * pt.orbitSpeed;
+                m.position.x = cx + Math.cos(a) * pt.orbitR;
+                m.position.y = cy + Math.sin(a) * pt.orbitR * pt.inclSin;
+                m.position.z = cz + Math.sin(a) * pt.orbitR * pt.inclCos;
+              } else {
+                let ny = (pt.sy - time * pt.fall) % 18;
+                if (ny < 0) ny += 18;
+                m.position.y = ny - 9; // wrap off-screen, top → bottom
+                m.position.x = pt.sx + Math.sin(time * pt.swayFreq + pt.phase) * pt.swayAmp;
+              }
+              // Gentle wobble around a camera-facing base — the curved petal
+              // sways in 3D but never goes flat/edge-on (no "coin" spin).
+              m.rotation.x = pt.baseRotX + Math.sin(time * pt.wobbleFreq + pt.phase) * pt.wobbleAmp;
+              m.rotation.y = pt.baseRotY + Math.cos(time * pt.wobbleFreq * 0.8 + pt.phase) * pt.wobbleAmp;
+              m.rotation.z = pt.baseRotZ + Math.sin(time * pt.wobbleFreq * 0.6 + pt.phase) * pt.wobbleAmp * 0.5;
             }
           }
         }
