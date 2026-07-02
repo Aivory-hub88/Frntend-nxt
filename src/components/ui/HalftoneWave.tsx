@@ -117,7 +117,10 @@ export function HalftoneWave() {
           vec3 accentB = vec3(0.08, 0.28, 0.42); // soft teal
           float shimmer = 0.5 + 0.5 * sin(uTime * 0.6 + vLocalPos.y * 3.0 + vLocalPos.x * 2.0);
           vec3 accent = mix(accentA, accentB, shimmer);
-          finalColor += accent * ((0.05 + uScroll * 0.06) * indigoGradient);
+          // More noticeable now: ~2x amount, and applied across the whole
+          // bloom (not just the rim) with edges still a touch stronger.
+          float accentGate = mix(0.5, 1.0, indigoGradient);
+          finalColor += accent * ((0.11 + uScroll * 0.12) * accentGate);
           
           // 4. SPECTACULAR ORCHID PATTERN (Removed per user request)
           // The flower is now purely a smooth, elegant geometric 3D shape
