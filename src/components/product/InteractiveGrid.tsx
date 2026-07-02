@@ -288,28 +288,90 @@ function AppIntegrationsAnimation() {
     { name: 'HTTP API', icon: '/integrations/icons/http-api.svg' },
   ];
 
+  // Connecting "circuit" lines that weave between the icon cells. Coordinates
+  // are the cell centres of the 7-col x 4-row grid (percent), drawn behind the
+  // icons so the glow reads as wires linking the apps. pathLength=100 keeps the
+  // travelling pulse even regardless of the actual segment lengths.
+  const wires = [
+    { d: 'M7.14 12.5 L21.43 12.5 L21.43 37.5 L35.71 37.5 L35.71 62.5 L50 62.5 L50 87.5', color: 'rgba(96,132,236,0.9)', delay: '0s', dur: '3.6s' },
+    { d: 'M92.86 12.5 L78.57 12.5 L78.57 37.5 L64.29 37.5 L64.29 62.5 L50 62.5', color: 'rgba(64,196,206,0.9)', delay: '1.2s', dur: '4.2s' },
+    { d: 'M7.14 62.5 L21.43 62.5 L21.43 87.5 L35.71 87.5 L50 87.5', color: 'rgba(120,120,236,0.9)', delay: '2.1s', dur: '3.9s' },
+    { d: 'M92.86 87.5 L78.57 87.5 L78.57 62.5 L64.29 62.5 L64.29 37.5', color: 'rgba(72,168,220,0.9)', delay: '0.6s', dur: '4.6s' },
+  ];
+
   return (
-    <div className="w-full h-full grid grid-cols-7 gap-2">
-      {apps.map((app, i) => (
-        <div
-          key={app.name}
-          className="flex items-center justify-center aspect-square bg-[#111111] border border-white/5 rounded-lg hover:border-white/15 hover:bg-white/[0.03] transition-all duration-300 cursor-default group"
-        >
-          {/* Using standard img for SVG to prevent Next.js Image lazy loading/optimization issues */}
-          <img
-            src={app.icon}
-            alt={app.name}
-            width={22}
-            height={22}
-            className={`transition-opacity duration-300 ${
-              app.name === 'GitHub' || app.name === 'Notion' 
-                ? 'invert opacity-70 group-hover:opacity-100' 
-                : 'opacity-70 group-hover:opacity-100'
-            }`}
-            loading="lazy"
-          />
-        </div>
-      ))}
+    <div className="relative w-full h-full">
+      <svg
+        className="pointer-events-none absolute inset-0 w-full h-full z-0"
+        viewBox="0 0 100 100"
+        preserveAspectRatio="none"
+        aria-hidden="true"
+      >
+        {wires.map((w, i) => (
+          <g key={i}>
+            {/* faint constant wire */}
+            <path
+              d={w.d}
+              fill="none"
+              stroke={w.color}
+              strokeWidth={1}
+              strokeOpacity={0.12}
+              vectorEffect="non-scaling-stroke"
+            />
+            {/* travelling glowing pulse */}
+            <path
+              d={w.d}
+              fill="none"
+              stroke={w.color}
+              strokeWidth={1.4}
+              strokeLinecap="round"
+              vectorEffect="non-scaling-stroke"
+              pathLength={100}
+              className="ig-flow"
+              style={{
+                filter: `drop-shadow(0 0 3px ${w.color})`,
+                animationDuration: w.dur,
+                animationDelay: w.delay,
+              }}
+            />
+          </g>
+        ))}
+      </svg>
+      <div className="relative z-10 w-full h-full grid grid-cols-7 gap-2">
+        {apps.map((app, i) => (
+          <div
+            key={app.name}
+            className="flex items-center justify-center aspect-square bg-[#111111] border border-white/5 rounded-lg hover:border-white/15 hover:bg-white/[0.03] transition-all duration-300 cursor-default group"
+          >
+            {/* Using standard img for SVG to prevent Next.js Image lazy loading/optimization issues */}
+            <img
+              src={app.icon}
+              alt={app.name}
+              width={22}
+              height={22}
+              className={`transition-opacity duration-300 ${
+                app.name === 'GitHub' || app.name === 'Notion' 
+                  ? 'invert opacity-70 group-hover:opacity-100' 
+                  : 'opacity-70 group-hover:opacity-100'
+              }`}
+              loading="lazy"
+            />
+          </div>
+        ))}
+      </div>
+      <style>{`
+        .ig-flow {
+          stroke-dasharray: 14 86;
+          stroke-dashoffset: 0;
+          animation-name: igFlow;
+          animation-timing-function: linear;
+          animation-iteration-count: infinite;
+        }
+        @keyframes igFlow { to { stroke-dashoffset: -100; } }
+        @media (prefers-reduced-motion: reduce) {
+          .ig-flow { animation: none; stroke-opacity: 0.35; stroke-dasharray: none; }
+        }
+      `}</style>
     </div>
   );
 }
