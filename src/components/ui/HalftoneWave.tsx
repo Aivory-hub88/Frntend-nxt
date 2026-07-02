@@ -110,6 +110,14 @@ export function HalftoneWave() {
           // Apply Indigo as a subtle additive glow
           float indigoGradient = smoothstep(0.2, 0.8, normalizedDepth + rim);
           finalColor += indigoColor * indigoGradient * 0.4;
+          // Subtle living color nuance — a soft violet <-> teal shimmer that
+          // harmonizes with the midnight / indigo palette. Kept low so it never
+          // looks monotone, and a touch stronger while the flower moves (scroll).
+          vec3 accentA = vec3(0.30, 0.16, 0.55); // soft violet
+          vec3 accentB = vec3(0.08, 0.28, 0.42); // soft teal
+          float shimmer = 0.5 + 0.5 * sin(uTime * 0.6 + vLocalPos.y * 3.0 + vLocalPos.x * 2.0);
+          vec3 accent = mix(accentA, accentB, shimmer);
+          finalColor += accent * ((0.05 + uScroll * 0.06) * indigoGradient);
           
           // 4. SPECTACULAR ORCHID PATTERN (Removed per user request)
           // The flower is now purely a smooth, elegant geometric 3D shape
@@ -146,9 +154,11 @@ export function HalftoneWave() {
             float taper = sin(phi);
             float breathing = sin(timeVal * 0.5 + phi * 2.0) * 0.1;
             
-            // Keep a touch of Sares fluid turbulence so it breathes organically
+            // Keep a touch of Sares fluid turbulence so it breathes organically.
             float noise = sin(p.x * 5.0 + timeVal) * sin(p.y * 6.0 - timeVal * 0.5) * sin(p.z * 4.0 + timeVal * 0.8);
-            float turbulence = noise * 0.08; // Tamed down for a more subtle organic feel
+            // Gentler amplitude, and it fades further as the flower spreads on
+            // scroll — keeps the petal silhouette clean and pretty in motion.
+            float turbulence = noise * 0.042 * (1.0 - uScroll * 0.78);
             
             return (petal * taper) + breathing + turbulence;
         }
