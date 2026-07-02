@@ -227,15 +227,15 @@ export function HalftoneWave() {
     let petalMat: THREE.ShaderMaterial | null = null;
     let petalOpacity = 0;
     if (!isMobile) {
-      // Curved (cupped) petal geometry so it reads as a real 3D petal from
-      // any angle — not a flat coin. Bend across width + a soft lengthwise curl.
-      petalGeo = new THREE.PlaneGeometry(1, 1.5, 8, 10);
+      // Near-round petal geometry (square plane) with a soft cup so it still
+      // reads as a 3D disc, not a flat coin.
+      petalGeo = new THREE.PlaneGeometry(1, 1, 8, 8);
       {
         const pos = petalGeo.attributes.position;
         for (let vi = 0; vi < pos.count; vi++) {
           const vx = pos.getX(vi);
           const vy = pos.getY(vi);
-          const z = -0.5 * vx * vx + 0.16 * Math.sin((vy / 1.5 + 0.5) * Math.PI);
+          const z = -0.45 * (vx * vx + vy * vy);
           pos.setZ(vi, z);
         }
         pos.needsUpdate = true;
@@ -259,13 +259,10 @@ export function HalftoneWave() {
           uniform float uPixelSize;
           void main() {
             vec2 pp = vUv - vec2(0.5);
-            float y = vUv.y; // 0 bottom .. 1 top
-            // Petal silhouette → density (denser at the core, sparse at edges)
-            float width = pow(sin(clamp(y, 0.0, 1.0) * 3.14159265), 0.75);
-            float edge = abs(pp.x) / (0.5 * max(width, 0.001));
-            float sil = smoothstep(1.0, 0.15, edge);
-            float vfade = smoothstep(0.0, 0.12, y) * smoothstep(1.0, 0.82, y);
-            float density = clamp(sil * vfade, 0.0, 1.0);
+            // Near-round silhouette → density (denser at the core, soft at the
+            // rim). Radial mask instead of the old petal-width profile.
+            float rad = length(pp) * 2.0;   // 0 center .. 1 edge
+            float density = smoothstep(1.0, 0.32, rad);
             if (density < 0.06) discard;
 
             // Same ASCII screen-space grid as the main flower, so petals share
