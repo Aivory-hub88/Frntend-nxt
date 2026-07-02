@@ -291,12 +291,17 @@ function AppIntegrationsAnimation() {
   // Connecting "circuit" lines that weave between the icon cells. Coordinates
   // are the cell centres of the 7-col x 4-row grid (percent), drawn behind the
   // icons so the glow reads as wires linking the apps. pathLength=100 keeps the
-  // travelling pulse even regardless of the actual segment lengths.
+  // travelling pulse even regardless of the actual segment lengths. More wires
+  // + diagonals/horizontals for a denser, more "massive" networked spread.
   const wires = [
-    { d: 'M7.14 12.5 L21.43 12.5 L21.43 37.5 L35.71 37.5 L35.71 62.5 L50 62.5 L50 87.5', color: 'rgba(96,132,236,0.9)', delay: '0s', dur: '3.6s' },
-    { d: 'M92.86 12.5 L78.57 12.5 L78.57 37.5 L64.29 37.5 L64.29 62.5 L50 62.5', color: 'rgba(64,196,206,0.9)', delay: '1.2s', dur: '4.2s' },
-    { d: 'M7.14 62.5 L21.43 62.5 L21.43 87.5 L35.71 87.5 L50 87.5', color: 'rgba(120,120,236,0.9)', delay: '2.1s', dur: '3.9s' },
-    { d: 'M92.86 87.5 L78.57 87.5 L78.57 62.5 L64.29 62.5 L64.29 37.5', color: 'rgba(72,168,220,0.9)', delay: '0.6s', dur: '4.6s' },
+    { d: 'M7.14 12.5 L21.43 12.5 L21.43 37.5 L35.71 37.5 L35.71 62.5 L50 62.5 L50 87.5', color: 'rgba(96,132,236,0.95)', delay: '0s', dur: '2.0s' },
+    { d: 'M92.86 12.5 L78.57 12.5 L78.57 37.5 L64.29 37.5 L64.29 62.5 L50 62.5', color: 'rgba(64,196,206,0.95)', delay: '0.4s', dur: '2.3s' },
+    { d: 'M7.14 62.5 L21.43 62.5 L21.43 87.5 L35.71 87.5 L50 87.5', color: 'rgba(120,120,236,0.95)', delay: '0.8s', dur: '1.9s' },
+    { d: 'M92.86 87.5 L78.57 87.5 L78.57 62.5 L64.29 62.5 L64.29 37.5', color: 'rgba(72,168,220,0.95)', delay: '0.2s', dur: '2.5s' },
+    { d: 'M7.14 12.5 L21.43 37.5 L35.71 62.5 L50 87.5', color: 'rgba(64,196,206,0.95)', delay: '1.0s', dur: '2.2s' },
+    { d: 'M92.86 12.5 L78.57 37.5 L64.29 62.5 L50 87.5', color: 'rgba(96,132,236,0.95)', delay: '0.6s', dur: '2.6s' },
+    { d: 'M7.14 12.5 L92.86 12.5', color: 'rgba(120,120,236,0.95)', delay: '1.3s', dur: '2.1s' },
+    { d: 'M7.14 37.5 L92.86 37.5', color: 'rgba(64,196,206,0.95)', delay: '0.3s', dur: '2.4s' },
   ];
 
   return (
@@ -309,21 +314,22 @@ function AppIntegrationsAnimation() {
       >
         {wires.map((w, i) => (
           <g key={i}>
-            {/* faint constant wire */}
+            {/* faint constant wire — gently pulses (breathes) */}
             <path
               d={w.d}
               fill="none"
               stroke={w.color}
               strokeWidth={1}
-              strokeOpacity={0.12}
               vectorEffect="non-scaling-stroke"
+              className="ig-wire"
+              style={{ animationDelay: w.delay }}
             />
-            {/* travelling glowing pulse */}
+            {/* multiple travelling glowing pulses along the wire */}
             <path
               d={w.d}
               fill="none"
               stroke={w.color}
-              strokeWidth={1.4}
+              strokeWidth={1.6}
               strokeLinecap="round"
               vectorEffect="non-scaling-stroke"
               pathLength={100}
@@ -361,15 +367,24 @@ function AppIntegrationsAnimation() {
       </div>
       <style>{`
         .ig-flow {
-          stroke-dasharray: 14 86;
+          stroke-dasharray: 8 22;
           stroke-dashoffset: 0;
           animation-name: igFlow;
           animation-timing-function: linear;
           animation-iteration-count: infinite;
         }
-        @keyframes igFlow { to { stroke-dashoffset: -100; } }
+        @keyframes igFlow { to { stroke-dashoffset: -30; } }
+        .ig-wire {
+          stroke-opacity: 0.12;
+          animation: igPulse 2.4s ease-in-out infinite alternate;
+        }
+        @keyframes igPulse {
+          from { stroke-opacity: 0.08; }
+          to   { stroke-opacity: 0.3; }
+        }
         @media (prefers-reduced-motion: reduce) {
-          .ig-flow { animation: none; stroke-opacity: 0.35; stroke-dasharray: none; }
+          .ig-flow { animation: none; stroke-opacity: 0.4; stroke-dasharray: none; }
+          .ig-wire { animation: none; stroke-opacity: 0.25; }
         }
       `}</style>
     </div>
