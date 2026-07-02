@@ -1,26 +1,22 @@
 'use client';
-
 import dynamic from 'next/dynamic';
 import { useState, useEffect } from 'react';
-
 /**
  * Page-wide ambient background.
  *
- * Perf strategy (P0):
- * - Mobile / tablet (< 1024px) or reduced-motion: render a pure-CSS gradient
- *   only. The heavy WebGL "halftone flower" (three.js, ~700KB) is NEVER
- *   downloaded on these devices — the dynamic chunk is only fetched when the
- *   WebGL component actually renders.
- * - Desktop: paint the CSS gradient immediately (instant ambient background,
- *   zero crash risk), then upgrade to the WebGL flower once the browser is
- *   idle so it never competes with LCP / hydration.
+ * Perf strategy:
+ * - Paint the pure-CSS gradient immediately (instant ambient background, zero
+ *   crash risk, nothing to download), then upgrade to the WebGL "halftone
+ *   flower" once the browser is idle so it never competes with LCP / hydration.
+ * - Runs on all devices. The flower itself renders lighter on mobile (0.5
+ *   device-pixel-ratio, larger ASCII cell, stays centered) so it stays smooth.
+ * - `prefers-reduced-motion` users keep the static CSS gradient and never
+ *   download the three.js chunk.
  */
-
 const HalftoneWave = dynamic(
   () => import('./HalftoneWave').then((mod) => mod.HalftoneWave),
   { ssr: false }
 );
-
 function CssGradientFallback() {
   return (
     <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
@@ -43,20 +39,15 @@ function CssGradientFallback() {
     </div>
   );
 }
-
 export function HalftoneWaveWrapper() {
   const [useWebgl, setUseWebgl] = useState(false);
-
   useEffect(() => {
-    const isDesktop = window.matchMedia('(min-width: 1024px)').matches;
     const prefersReduced = window.matchMedia(
       '(prefers-reduced-motion: reduce)'
     ).matches;
-
-    // Mobile / tablet / reduced-motion: stay on the CSS gradient forever.
-    if (!isDesktop || prefersReduced) return;
-
-    // Desktop: defer the heavy WebGL flower until the browser is idle.
+    // Reduced-motion: keep the static CSS gradient, skip the WebGL download.
+    if (prefersReduced) return;
+    // All devices: defer the WebGL flower until the browser is idle.
     const ric =
       window.requestIdleCallback ||
       ((cb: IdleRequestCallback) =>
@@ -65,7 +56,6 @@ export function HalftoneWaveWrapper() {
     const id = ric(() => setUseWebgl(true));
     return () => cic(id as number);
   }, []);
-
   if (useWebgl) return <HalftoneWave />;
   return <CssGradientFallback />;
 }
