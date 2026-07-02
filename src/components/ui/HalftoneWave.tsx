@@ -268,11 +268,12 @@ export function HalftoneWave() {
             }
             if (shape == 0.0) discard;
 
-            // Palette-matched color (same blue-violet family as the flower edges)
-            vec3 edgeC = vec3(0.15, 0.08, 0.65);
-            vec3 coreC = vec3(0.36, 0.22, 0.62);
+            // Palette-matched color — true blue-indigo, less purple.
+            // Red kept low so it reads as blue/azure, not violet.
+            vec3 edgeC = vec3(0.03, 0.16, 0.66);
+            vec3 coreC = vec3(0.08, 0.32, 0.90);
             vec3 col = mix(edgeC, coreC, density);
-            col += vec3(0.18, 0.12, 0.30) * pow(density, 2.0);
+            col += vec3(0.04, 0.20, 0.42) * pow(density, 2.0);
             gl_FragColor = vec4(col, uOpacity);
           }
         `,
