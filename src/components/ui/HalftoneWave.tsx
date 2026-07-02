@@ -216,12 +216,18 @@ export function HalftoneWave() {
     // synchronous reflow of the whole zoomed+sticky+WebGL page — the cause of
     // the scroll stutter. We cache the anchor offsets instead.
     let centerAt = Infinity;
+    let rightAt = Infinity;
     const computeAnchors = () => {
+      const vh = window.innerHeight;
       const showcaseEl = document.getElementById('showcase');
       if (showcaseEl) {
-        const vh = window.innerHeight;
         const scTop = showcaseEl.getBoundingClientRect().top + window.scrollY;
         centerAt = scTop - vh * 0.45; // Operational Framework becomes active → center
+      }
+      const langEl = document.getElementById('agent-language');
+      if (langEl) {
+        const lgTop = langEl.getBoundingClientRect().top + window.scrollY;
+        rightAt = lgTop - vh * 0.45; // "speaks your customer's language" → right
       }
     };
 
@@ -238,9 +244,10 @@ export function HalftoneWave() {
       targetRotationX = 0.5 + (scrollY * 0.001);
 
       // ── Section-aware horizontal choreography ──────────────────────────
-      // Hero exit → flower drifts right. As the "Operational Framework"
-      // section (#showcase) becomes active, the flower returns to CENTER and
-      // stays there. (A later section will move it back to the right.)
+      // Hero exit → flower drifts right. At the "Operational Framework"
+      // section (#showcase) it returns to CENTER, then eases back to the RIGHT
+      // as the "speaks your customer's language" section (#agent-language)
+      // becomes active.
       if (endX === 0) {
         targetX = startX; // Mobile: keep centered throughout
         return;
@@ -254,8 +261,17 @@ export function HalftoneWave() {
       const heroX = startX + (endX - startX) * progress; // hero → right
       let x = heroX;
       if (centerAt !== Infinity) {
-        if (scrollY >= centerAt) {
-          x = 0; // Operational Framework → center (stays centered)
+        if (rightAt !== Infinity && scrollY >= rightAt) {
+          x = endX; // "speaks your customer's language" section → right
+        } else if (scrollY >= centerAt) {
+          if (rightAt !== Infinity) {
+            // Stay centered through the middle, then ease center → right over
+            // the last stretch (max 600px) before the language section.
+            const band = Math.min(600, Math.max(1, rightAt - centerAt));
+            x = lerp(0, endX, smooth(rightAt - band, rightAt, scrollY));
+          } else {
+            x = 0; // Operational Framework → center (no right anchor found)
+          }
         } else {
           const band = Math.min(600, Math.max(1, centerAt));
           x = lerp(heroX, 0, smooth(centerAt - band, centerAt, scrollY)); // right → center

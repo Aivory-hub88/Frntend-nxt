@@ -438,7 +438,7 @@ function IntegrationsMarquee() {
   const marqueeItems = [...logos, ...logos];
 
   return (
-    <div className="w-full mt-20 md:mt-28 mb-0">
+    <div id="agent-language" className="w-full mt-20 md:mt-28 mb-0">
       <div className="text-center mb-10 md:mb-12 px-6">
         <h3 className="text-[22px] md:text-[32px] font-light text-[#c4c9b8] mb-3 tracking-tight" style={{ fontFamily: "'Manrope', sans-serif" }}>
           Every Aivory agent speaks your customer&apos;s language. Literally.
