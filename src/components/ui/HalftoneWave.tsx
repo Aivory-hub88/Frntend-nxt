@@ -278,23 +278,31 @@ export function HalftoneWave() {
           }
         `,
       });
-      const PETAL_COUNT = 16;
+      const PETAL_COUNT = 18;
       for (let i = 0; i < PETAL_COUNT; i++) {
         const m = new THREE.Mesh(petalGeo, petalMat);
         const sx = (Math.random() * 2 - 1) * 8.5;
         const sy = Math.random() * 18;
-        m.position.set(sx, sy - 9, Math.random() * 4 - 1);
-        m.scale.setScalar(0.32 + Math.random() * 0.5);
+        // Depth-varied size for a richer 3D feel: a few large "near" petals
+        // and many smaller "far" ones (biased small via squared random).
+        const r = Math.random();
+        const size = 0.16 + r * r * 1.05;        // ~0.16 .. 1.21, skewed small
+        const depth = -3.5 + size * 4.5;          // bigger => nearer the camera
+        m.position.set(sx, sy - 9, depth + (Math.random() * 2 - 1));
+        m.scale.setScalar(size);
         m.rotation.set(Math.random() * 6.28, Math.random() * 6.28, Math.random() * 6.28);
         petals.push({
           mesh: m, sx, sy,
-          fall: 0.35 + Math.random() * 0.5,
-          swayAmp: 0.25 + Math.random() * 0.7,
-          swayFreq: 0.35 + Math.random() * 0.6,
+          // Slow, near-floating descent. Larger (nearer) petals drift a touch
+          // faster for gentle parallax; all much slower than before so it
+          // reads as elegant and dramatic rather than "falling".
+          fall: 0.08 + size * 0.15,               // ~0.10 .. 0.26
+          swayAmp: 0.45 + Math.random() * 0.95,   // wider drift = more floaty
+          swayFreq: 0.16 + Math.random() * 0.32,  // slower, gentler sway
           phase: Math.random() * 6.28,
-          rotX: (Math.random() - 0.5) * 0.5,
-          rotY: (Math.random() - 0.5) * 0.6,
-          rotZ: (Math.random() - 0.5) * 0.4,
+          rotX: (Math.random() - 0.5) * 0.32,
+          rotY: (Math.random() - 0.5) * 0.4,
+          rotZ: (Math.random() - 0.5) * 0.26,
         });
         scene.add(m);
       }
@@ -504,9 +512,9 @@ export function HalftoneWave() {
               if (ny < 0) ny += 18;
               m.position.y = ny - 9; // wrap off-screen, top → bottom
               m.position.x = pt.sx + Math.sin(time * pt.swayFreq + pt.phase) * pt.swayAmp;
-              m.rotation.x += pt.rotX * 0.01;
-              m.rotation.y += pt.rotY * 0.01;
-              m.rotation.z += pt.rotZ * 0.01;
+              m.rotation.x += pt.rotX * 0.006;
+              m.rotation.y += pt.rotY * 0.006;
+              m.rotation.z += pt.rotZ * 0.006;
             }
           }
         }
