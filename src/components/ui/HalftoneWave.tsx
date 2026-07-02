@@ -197,13 +197,84 @@ export function HalftoneWave() {
     });
     const mesh = new THREE.Mesh(geometry, material);
 
-    // ==========================================
-    // (Flying petals have been completely removed per user request)
-    // ==========================================
-
     const group = new THREE.Group();
     group.add(mesh);
     scene.add(group);
+
+    // ==========================================
+    // Premium drifting petals — appear only while the "Operational Framework"
+    // section is active. Soft-edged, palette-matched orchid petals with a
+    // blue-violet → lavender gradient and a gentle inner sheen; they drift down
+    // with organic sway + slow tumble. Desktop only (kept light), and rendered
+    // behind page content (z-0 background) so text stays readable.
+    // ==========================================
+    const petals: {
+      mesh: THREE.Mesh; sx: number; sy: number;
+      fall: number; swayAmp: number; swayFreq: number; phase: number;
+      rotX: number; rotY: number; rotZ: number;
+    }[] = [];
+    const petalUniforms = { uOpacity: { value: 0.0 } };
+    let petalGeo: THREE.PlaneGeometry | null = null;
+    let petalMat: THREE.ShaderMaterial | null = null;
+    let petalOpacity = 0;
+    if (!isMobile) {
+      petalGeo = new THREE.PlaneGeometry(1, 1.5, 1, 1);
+      petalMat = new THREE.ShaderMaterial({
+        transparent: true,
+        depthWrite: false,
+        side: THREE.DoubleSide,
+        uniforms: petalUniforms,
+        vertexShader: `
+          varying vec2 vUv;
+          void main() {
+            vUv = uv;
+            gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+          }
+        `,
+        fragmentShader: `
+          varying vec2 vUv;
+          uniform float uOpacity;
+          void main() {
+            vec2 pp = vUv - vec2(0.5);
+            float y = vUv.y; // 0 bottom .. 1 top
+            // Petal silhouette: widest near the middle, tapering to a soft point
+            float width = pow(sin(clamp(y, 0.0, 1.0) * 3.14159265), 0.75);
+            float edge = abs(pp.x) / (0.5 * max(width, 0.001));
+            float alpha = smoothstep(1.0, 0.22, edge);
+            float vfade = smoothstep(0.0, 0.14, y) * smoothstep(1.0, 0.80, y);
+            alpha *= vfade;
+            alpha = pow(alpha, 1.25);
+            // Palette-matched gradient (deep blue-violet base → light lavender tip)
+            vec3 base = vec3(0.20, 0.12, 0.52);
+            vec3 tip  = vec3(0.62, 0.50, 0.92);
+            vec3 col = mix(base, tip, clamp(y, 0.0, 1.0));
+            // Soft inner sheen for a premium, luminous edge
+            col += vec3(0.34, 0.30, 0.46) * pow(alpha, 3.0);
+            gl_FragColor = vec4(col, alpha * uOpacity);
+          }
+        `,
+      });
+      const PETAL_COUNT = 16;
+      for (let i = 0; i < PETAL_COUNT; i++) {
+        const m = new THREE.Mesh(petalGeo, petalMat);
+        const sx = (Math.random() * 2 - 1) * 8.5;
+        const sy = Math.random() * 18;
+        m.position.set(sx, sy - 9, Math.random() * 4 - 1);
+        m.scale.setScalar(0.32 + Math.random() * 0.5);
+        m.rotation.set(Math.random() * 6.28, Math.random() * 6.28, Math.random() * 6.28);
+        petals.push({
+          mesh: m, sx, sy,
+          fall: 0.35 + Math.random() * 0.5,
+          swayAmp: 0.25 + Math.random() * 0.7,
+          swayFreq: 0.35 + Math.random() * 0.6,
+          phase: Math.random() * 6.28,
+          rotX: (Math.random() - 0.5) * 0.5,
+          rotY: (Math.random() - 0.5) * 0.6,
+          rotZ: (Math.random() - 0.5) * 0.4,
+        });
+        scene.add(m);
+      }
+    }
 
     // Scroll Transition Setup
     // Start position: Shifted up slightly
@@ -388,6 +459,34 @@ export function HalftoneWave() {
         const currentScale = group.scale.x + (targetScale - group.scale.x) * 0.05;
         group.scale.set(currentScale, currentScale, currentScale);
 
+        // ── Drifting petals (Operational Framework only) ──
+        if (petals.length) {
+          let targetPetal = 0;
+          if (centerAt !== Infinity) {
+            const sY = window.scrollY;
+            const fadeIn = Math.min(Math.max((sY - (centerAt - 550)) / 550, 0), 1);
+            let fadeOut = 1;
+            if (rightAt !== Infinity) {
+              fadeOut = 1 - Math.min(Math.max((sY - (rightAt - 250)) / 250, 0), 1);
+            }
+            targetPetal = fadeIn * fadeOut;
+          }
+          petalOpacity += (targetPetal - petalOpacity) * 0.06;
+          petalUniforms.uOpacity.value = petalOpacity * 0.85;
+          if (petalOpacity > 0.002) {
+            for (const pt of petals) {
+              const m = pt.mesh;
+              let ny = (pt.sy - time * pt.fall) % 18;
+              if (ny < 0) ny += 18;
+              m.position.y = ny - 9; // wrap off-screen, top → bottom
+              m.position.x = pt.sx + Math.sin(time * pt.swayFreq + pt.phase) * pt.swayAmp;
+              m.rotation.x += pt.rotX * 0.01;
+              m.rotation.y += pt.rotY * 0.01;
+              m.rotation.z += pt.rotZ * 0.01;
+            }
+          }
+        }
+
         renderer.render(scene, camera);
       }
     };
@@ -418,6 +517,9 @@ export function HalftoneWave() {
       }
       geometry.dispose();
       material.dispose();
+      petals.forEach((pt) => scene.remove(pt.mesh));
+      petalGeo?.dispose();
+      petalMat?.dispose();
       renderer.dispose();
     };
   }, []);
