@@ -216,16 +216,12 @@ export function HalftoneWave() {
     // synchronous reflow of the whole zoomed+sticky+WebGL page — the cause of
     // the scroll stutter. We cache the anchor offsets instead.
     let centerAt = Infinity;
-    let rightAt = Infinity;
     const computeAnchors = () => {
       const showcaseEl = document.getElementById('showcase');
-      const opsEl = document.getElementById('ops-stack');
-      if (showcaseEl && opsEl) {
+      if (showcaseEl) {
         const vh = window.innerHeight;
         const scTop = showcaseEl.getBoundingClientRect().top + window.scrollY;
-        const opTop = opsEl.getBoundingClientRect().top + window.scrollY;
-        centerAt = scTop - vh * 0.45; // Operational Framework active
-        rightAt = opTop - vh * 0.45;  // AI Operations Stack active
+        centerAt = scTop - vh * 0.45; // Operational Framework becomes active → center
       }
     };
 
@@ -243,9 +239,8 @@ export function HalftoneWave() {
 
       // ── Section-aware horizontal choreography ──────────────────────────
       // Hero exit → flower drifts right. As the "Operational Framework"
-      // section (#showcase) becomes active, the flower returns to CENTER.
-      // As the "Your AI Operations Stack" section (#ops-stack) becomes
-      // active, it moves back to the RIGHT.
+      // section (#showcase) becomes active, the flower returns to CENTER and
+      // stays there. (A later section will move it back to the right.)
       if (endX === 0) {
         targetX = startX; // Mobile: keep centered throughout
         return;
@@ -259,10 +254,8 @@ export function HalftoneWave() {
       const heroX = startX + (endX - startX) * progress; // hero → right
       let x = heroX;
       if (centerAt !== Infinity) {
-        if (scrollY >= rightAt) {
-          x = endX; // AI Operations Stack → right
-        } else if (scrollY >= centerAt) {
-          x = lerp(0, endX, smooth(centerAt, rightAt, scrollY)); // center → right
+        if (scrollY >= centerAt) {
+          x = 0; // Operational Framework → center (stays centered)
         } else {
           const band = Math.min(600, Math.max(1, centerAt));
           x = lerp(heroX, 0, smooth(centerAt - band, centerAt, scrollY)); // right → center
