@@ -213,7 +213,7 @@ export function HalftoneWave() {
       fall: number; swayAmp: number; swayFreq: number; phase: number;
       rotX: number; rotY: number; rotZ: number;
     }[] = [];
-    const petalUniforms = { uOpacity: { value: 0.0 } };
+    const petalUniforms = { uOpacity: { value: 0.0 }, uPixelSize: { value: isMobile ? 5.0 : 6.0 } };
     let petalGeo: THREE.PlaneGeometry | null = null;
     let petalMat: THREE.ShaderMaterial | null = null;
     let petalOpacity = 0;
@@ -234,23 +234,46 @@ export function HalftoneWave() {
         fragmentShader: `
           varying vec2 vUv;
           uniform float uOpacity;
+          uniform float uPixelSize;
           void main() {
             vec2 pp = vUv - vec2(0.5);
             float y = vUv.y; // 0 bottom .. 1 top
-            // Petal silhouette: widest near the middle, tapering to a soft point
+            // Petal silhouette → density (denser at the core, sparse at edges)
             float width = pow(sin(clamp(y, 0.0, 1.0) * 3.14159265), 0.75);
             float edge = abs(pp.x) / (0.5 * max(width, 0.001));
-            float alpha = smoothstep(1.0, 0.22, edge);
-            float vfade = smoothstep(0.0, 0.14, y) * smoothstep(1.0, 0.80, y);
-            alpha *= vfade;
-            alpha = pow(alpha, 1.25);
-            // Palette-matched gradient (deep blue-violet base → light lavender tip)
-            vec3 base = vec3(0.20, 0.12, 0.52);
-            vec3 tip  = vec3(0.62, 0.50, 0.92);
-            vec3 col = mix(base, tip, clamp(y, 0.0, 1.0));
-            // Soft inner sheen for a premium, luminous edge
-            col += vec3(0.34, 0.30, 0.46) * pow(alpha, 3.0);
-            gl_FragColor = vec4(col, alpha * uOpacity);
+            float sil = smoothstep(1.0, 0.15, edge);
+            float vfade = smoothstep(0.0, 0.12, y) * smoothstep(1.0, 0.82, y);
+            float density = clamp(sil * vfade, 0.0, 1.0);
+            if (density < 0.06) discard;
+
+            // Same ASCII screen-space grid as the main flower, so petals share
+            // its exact halftone character style (one continuous material feel).
+            vec2 localc = fract(gl_FragCoord.xy / uPixelSize);
+            vec2 p5 = floor(localc * 5.0);
+            int charIndex = int(floor(density * 5.99));
+            float shape = 0.0;
+            if (charIndex == 1) {
+                if (p5.x == 2.0 && p5.y == 2.0) shape = 1.0;
+            } else if (charIndex == 2) {
+                if (p5.x == 2.0 && p5.y > 0.0 && p5.y < 4.0) shape = 1.0;
+                if (p5.y == 2.0 && p5.x > 0.0 && p5.x < 4.0) shape = 1.0;
+            } else if (charIndex == 3) {
+                if (p5.x == p5.y && p5.x > 0.0 && p5.x < 4.0) shape = 1.0;
+                if (p5.x == (4.0 - p5.y) && p5.x > 0.0 && p5.x < 4.0) shape = 1.0;
+            } else if (charIndex == 4) {
+                if ((p5.x == 1.0 || p5.x == 3.0) && p5.y >= 1.0 && p5.y <= 3.0) shape = 1.0;
+                if ((p5.y == 1.0 || p5.y == 3.0) && p5.x >= 1.0 && p5.x <= 3.0) shape = 1.0;
+            } else if (charIndex >= 5) {
+                if (p5.x >= 1.0 && p5.x <= 3.0 && p5.y >= 1.0 && p5.y <= 3.0) shape = 1.0;
+            }
+            if (shape == 0.0) discard;
+
+            // Palette-matched color (same blue-violet family as the flower edges)
+            vec3 edgeC = vec3(0.15, 0.08, 0.65);
+            vec3 coreC = vec3(0.36, 0.22, 0.62);
+            vec3 col = mix(edgeC, coreC, density);
+            col += vec3(0.18, 0.12, 0.30) * pow(density, 2.0);
+            gl_FragColor = vec4(col, uOpacity);
           }
         `,
       });
