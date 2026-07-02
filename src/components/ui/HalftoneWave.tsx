@@ -222,7 +222,7 @@ export function HalftoneWave() {
       baseRotX: number; baseRotY: number; baseRotZ: number;
       wobbleAmp: number; wobbleFreq: number;
     }[] = [];
-    const petalUniforms = { uOpacity: { value: 0.0 }, uPixelSize: { value: isMobile ? 5.0 : 6.0 }, uBright: { value: 1.0 } };
+    const petalUniforms = { uOpacity: { value: 0.0 }, uPixelSize: { value: isMobile ? 5.0 : 6.0 }, uBright: { value: 1.0 }, uTint: { value: new THREE.Vector3(0.05, 0.17, 0.46) } };
     let petalGeo: THREE.PlaneGeometry | null = null;
     let petalMat: THREE.ShaderMaterial | null = null;
     let petalOpacity = 0;
@@ -258,6 +258,7 @@ export function HalftoneWave() {
           uniform float uOpacity;
           uniform float uPixelSize;
           uniform float uBright;
+          uniform vec3 uTint;
           void main() {
             vec2 pp = vUv - vec2(0.5);
             // Near-round silhouette → density (denser at the core, soft at the
@@ -288,12 +289,13 @@ export function HalftoneWave() {
             }
             if (shape == 0.0) discard;
 
-            // Palette-matched color — toned-down blue-indigo to match the
-            // dimmed flower tone (kept dark so petals don't glow too bright).
-            vec3 edgeC = vec3(0.02, 0.08, 0.30);
-            vec3 coreC = vec3(0.05, 0.17, 0.46);
+            // Per-petal tint drawn from the flower's palette family (blue-
+            // indigo / violet / teal) so the drift isn't monotone but still
+            // harmonizes with the bloom. Edge = darker rim, core = the tint.
+            vec3 coreC = uTint;
+            vec3 edgeC = uTint * 0.34;
             vec3 col = mix(edgeC, coreC, density);
-            col += vec3(0.02, 0.09, 0.20) * pow(density, 2.0);
+            col += uTint * 0.5 * pow(density, 2.0);
             // Atmospheric perspective: brightness scales with petal size so
             // small = far (dimmer/hazier), large = near (brighter).
             col *= uBright;
@@ -302,6 +304,15 @@ export function HalftoneWave() {
         `,
       });
       const PETAL_COUNT = 18;
+      // Palette harmonized with the flower (toned-down blue-indigo / violet /
+      // teal family) so petals vary in hue without clashing with the bloom.
+      const petalPalette = [
+        new THREE.Vector3(0.05, 0.17, 0.46), // blue-indigo (base)
+        new THREE.Vector3(0.19, 0.11, 0.46), // violet
+        new THREE.Vector3(0.05, 0.21, 0.36), // teal
+        new THREE.Vector3(0.10, 0.13, 0.52), // deep blue
+        new THREE.Vector3(0.24, 0.14, 0.42), // soft violet (flower accent)
+      ];
       for (let i = 0; i < PETAL_COUNT; i++) {
         // Depth-varied size for a richer 3D feel: bigger overall with a higher
         // floor so far petals still read as discs, never single dots.
@@ -311,9 +322,11 @@ export function HalftoneWave() {
         // perspective): small = far/dim, medium closer, large = near/brightest.
         const normSize = Math.min(Math.max((size - 0.55) / 1.5, 0), 1);
         const bright = 0.6 + normSize * 0.75;    // ~0.6 (far) .. 1.35 (near)
+        const tint = petalPalette[(Math.random() * petalPalette.length) | 0].clone();
         const mat = petalMat!.clone();
         mat.uniforms.uOpacity = petalUniforms.uOpacity; // share fade opacity
         mat.uniforms.uBright.value = bright;
+        mat.uniforms.uTint.value = tint;
         const m = new THREE.Mesh(petalGeo, mat);
         m.scale.setScalar(size);
 
