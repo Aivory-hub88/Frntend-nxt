@@ -213,7 +213,7 @@ function DiagnosticAnimation() {
                   }`}>
                     {selectedIdx === i && <div className="w-2 h-2 bg-[#aec99d] rounded-full" />}
                   </div>
-                  <span className={`text-xs sm:text-sm ${selectedIdx === i ? 'text-[#aec99d]' : 'text-white/60'}`}>
+                  <span className={`text-xs sm:text-sm ${selectedIdx === i ? 'text-[#aec99d]' : 'text-white/75'}`}>
                     {opt}
                   </span>
                 </div>
@@ -248,7 +248,7 @@ function DiagnosticAnimation() {
         <div className="w-full space-y-4 px-6 max-w-[80%] md:max-w-sm">
           {DIMS.map((dim) => (
             <div key={dim.label} className={`text-xs space-y-1.5 transition-all duration-500 ${barsVisible ? 'opacity-100' : 'opacity-0'}`} style={{ transitionDelay: `${dim.delay}s` }}>
-              <div className="flex justify-between text-white/70 font-light"><span>{dim.label}</span><span className="text-[#aec99d]">{dim.val}%</span></div>
+              <div className="flex justify-between text-white/85 font-light"><span>{dim.label}</span><span className="text-[#aec99d]">{dim.val}%</span></div>
               <div className="w-full h-1.5 bg-white/5 rounded-full overflow-hidden relative">
                 <div className="absolute left-0 top-0 h-full bg-[#aec99d] rounded-full transition-all duration-700 ease-out" style={{ width: barsVisible ? `${dim.val}%` : '0%', transitionDelay: `${dim.delay}s` }} />
               </div>
@@ -262,7 +262,7 @@ function DiagnosticAnimation() {
          <div className="w-full max-w-[80%] md:max-w-sm flex flex-col gap-4">
            <div className="text-center mb-2">
              <span className="text-sm sm:text-base text-[#ff7a7a] font-medium tracking-wider uppercase mb-1 block">Critical Bottlenecks</span>
-             <span className="text-xs text-white/50">Immediate action recommended</span>
+             <span className="text-xs text-white/70">Immediate action recommended</span>
            </div>
            {[
              { title: 'Manual Data Entry', desc: 'Siloed data causing sync delays' },
@@ -272,7 +272,7 @@ function DiagnosticAnimation() {
                <div className="w-2 h-2 mt-1.5 rounded-full bg-[#ff7a7a] shrink-0 animate-pulse" />
                <div className="flex flex-col gap-0.5">
                  <span className="text-sm text-white/90 font-medium">{item.title}</span>
-                 <span className="text-xs text-white/50">{item.desc}</span>
+                 <span className="text-xs text-white/70">{item.desc}</span>
                </div>
              </div>
            ))}
@@ -355,7 +355,7 @@ function ConsoleAnimation() {
         
         {/* AI Typing Indicator */}
         <div className={`flex items-center gap-2 transition-all duration-300 ease-out ${phase === 'ai_typing' ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 hidden'}`}>
-           <div className="bg-[#111111] border border-white/5 rounded-2xl rounded-tl-sm px-4 py-3 text-white/50 text-[12px] shadow-sm flex items-center gap-1">
+           <div className="bg-[#111111] border border-white/5 rounded-2xl rounded-tl-sm px-4 py-3 text-white/70 text-[12px] shadow-sm flex items-center gap-1">
              <div className="w-1.5 h-1.5 bg-white/40 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
              <div className="w-1.5 h-1.5 bg-white/40 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
              <div className="w-1.5 h-1.5 bg-white/40 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
@@ -385,7 +385,7 @@ function ConsoleAnimation() {
                 <div className="w-3.5 h-3.5 sm:w-4 sm:h-4 rounded-full bg-[#6B8E23] border border-[#181818] relative z-20" />
                 <div className="w-3.5 h-3.5 sm:w-4 sm:h-4 rounded-full bg-[#9ACD32] border border-[#181818] relative z-10" />
               </div>
-              <div className="text-white/50 text-[11px] sm:text-[12px] font-medium">Analyzing systems{dots}</div>
+              <div className="text-white/70 text-[11px] sm:text-[12px] font-medium">Analyzing systems{dots}</div>
             </div>
           )}
 
@@ -400,7 +400,7 @@ function ConsoleAnimation() {
                 <div key={i} className="flex items-start gap-2 opacity-0 animate-fade-in-up" style={{ animationDelay: item.delay }}>
                   <div className="w-1.5 h-1.5 rounded-full bg-[#aec99d] mt-1.5 shrink-0" />
                   <div className="flex flex-col">
-                    <span className="text-white/80 text-[12px] sm:text-[13px] leading-snug">{item.title}: <span className="text-white/60">{item.desc}</span></span>
+                    <span className="text-white/80 text-[12px] sm:text-[13px] leading-snug">{item.title}: <span className="text-white/75">{item.desc}</span></span>
                   </div>
                 </div>
               ))}
@@ -410,18 +410,18 @@ function ConsoleAnimation() {
       </div>
 
       <div className="absolute bottom-4 left-4 right-4 bg-[#222222] border border-white/5 rounded-full pl-3 pr-2 py-2 flex items-center gap-3 shadow-lg">
-        <button className="w-7 h-7 rounded-full flex items-center justify-center text-white/40 hover:text-white/70 transition-colors shrink-0">
+        <button className="w-7 h-7 rounded-full flex items-center justify-center text-white/60 hover:text-white/85 transition-colors shrink-0">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 5v14m-7-7h14" strokeLinecap="round" strokeLinejoin="round"/></svg>
         </button>
         <div className="flex-1 text-[14px] truncate flex items-center transition-colors">
           {phase === 'typing' ? (
             <span className="text-white/90">{typedText}<span className="ml-[2px] w-[2px] h-3.5 bg-white/60 animate-pulse inline-block align-middle" /></span>
           ) : (
-            <span className="text-white/30">What do you want to know?</span>
+            <span className="text-white/50">What do you want to know?</span>
           )}
         </div>
         <div className="flex items-center gap-1.5 shrink-0">
-          <button className="w-7 h-7 flex items-center justify-center text-white/50 hover:text-white/80 transition-colors hidden sm:flex">
+          <button className="w-7 h-7 flex items-center justify-center text-white/70 hover:text-white/80 transition-colors hidden sm:flex">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2M12 19v4M8 23h8" strokeLinecap="round" strokeLinejoin="round"/></svg>
           </button>
           <button className="w-8 h-8 rounded-full bg-[#a3aa96] flex items-center justify-center text-[#494949] hover:bg-[#8f9681] transition-colors">
@@ -513,7 +513,7 @@ function WorkflowAnimation() {
 
         {/* AI Typing Indicator */}
         <div className={`flex items-center gap-2 transition-all duration-300 ease-out ${phase === 'ai_typing' ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 hidden'}`}>
-           <div className="bg-[#111111] border border-white/5 rounded-3xl rounded-tl-md px-4 py-3 text-white/50 text-[12px] shadow-sm flex items-center gap-1">
+           <div className="bg-[#111111] border border-white/5 rounded-3xl rounded-tl-md px-4 py-3 text-white/70 text-[12px] shadow-sm flex items-center gap-1">
              <div className="w-1.5 h-1.5 bg-white/40 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
              <div className="w-1.5 h-1.5 bg-white/40 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
              <div className="w-1.5 h-1.5 bg-white/40 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
@@ -539,7 +539,7 @@ function WorkflowAnimation() {
            {phase === 'generating' ? (
              <>
                <div className="w-4 h-4 rounded-full border-2 border-white/10 border-t-[#c1ccc8] animate-spin shrink-0" />
-               <span className="text-white/50 text-[12px] sm:text-[13px] font-medium">Aivory is generating workflow<span className="animate-pulse">{dots}</span></span>
+               <span className="text-white/70 text-[12px] sm:text-[13px] font-medium">Aivory is generating workflow<span className="animate-pulse">{dots}</span></span>
              </>
            ) : null}
         </div>
@@ -572,7 +572,7 @@ function WorkflowAnimation() {
                 <span className="absolute top-1/2 -translate-y-1/2 -right-[6px] w-3 h-3 rounded-full bg-[#0c0d0f] border-2 border-[#aec99d] z-20" />
                 <div className="flex items-center gap-1 mb-1.5">
                   <span className="w-1 h-1 rounded-full bg-[#aec99d]" />
-                  <span className="text-[6.5px] sm:text-[8px] uppercase tracking-[0.14em] text-white/45 font-semibold">Trigger</span>
+                  <span className="text-[6.5px] sm:text-[8px] uppercase tracking-[0.14em] text-white/65 font-semibold">Trigger</span>
                 </div>
                 <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl flex items-center justify-center bg-white shadow-[0_2px_6px_rgba(0,0,0,0.35)] mb-1.5">
                   <img src="/integrations/icons/gmail.svg" alt="Gmail" className="w-5 h-5 sm:w-[22px] sm:h-[22px]" />
@@ -604,7 +604,7 @@ function WorkflowAnimation() {
                 <span className="absolute top-1/2 -translate-y-1/2 -left-[6px] w-3 h-3 rounded-full bg-[#0c0d0f] border-2 border-[#c1ccc8] z-20" />
                 <div className="flex items-center gap-1 mb-1.5">
                   <span className="w-1 h-1 rounded-full bg-[#c1ccc8]" />
-                  <span className="text-[6.5px] sm:text-[8px] uppercase tracking-[0.14em] text-white/45 font-semibold">Action</span>
+                  <span className="text-[6.5px] sm:text-[8px] uppercase tracking-[0.14em] text-white/65 font-semibold">Action</span>
                 </div>
                 <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl flex items-center justify-center bg-white shadow-[0_2px_6px_rgba(0,0,0,0.35)] mb-1.5">
                   <img src="/integrations/icons/slack.svg" alt="Slack" className="w-5 h-5 sm:w-[22px] sm:h-[22px]" />
@@ -629,14 +629,14 @@ function WorkflowAnimation() {
       </div>
 
       <div className="absolute bottom-4 left-4 right-4 bg-[#222222] border border-white/5 rounded-full pl-3 pr-2 py-2 flex items-center gap-3 shadow-lg">
-        <button className="w-7 h-7 rounded-full flex items-center justify-center text-white/40 hover:text-white/70 transition-colors shrink-0">
+        <button className="w-7 h-7 rounded-full flex items-center justify-center text-white/60 hover:text-white/85 transition-colors shrink-0">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 5v14m-7-7h14" strokeLinecap="round" strokeLinejoin="round"/></svg>
         </button>
         <div className="flex-1 text-[14px] truncate flex items-center transition-colors">
           {phase === 'typing' ? (
             <span className="text-white/90">{typedText}<span className="ml-[2px] w-[2px] h-3.5 bg-white/60 animate-pulse inline-block align-middle" /></span>
           ) : (
-            <span className="text-white/30">What do you want to automate?</span>
+            <span className="text-white/50">What do you want to automate?</span>
           )}
         </div>
         <div className="flex items-center gap-1.5 shrink-0">
@@ -757,12 +757,12 @@ function RoadmapAnimation() {
           return (
             <div key={wave.name} className="flex flex-col items-center gap-2 transition-all duration-500">
               <div className={`w-10 h-10 rounded-full border flex items-center justify-center text-xs transition-all duration-500 relative z-10 ${
-                isActive ? 'border-[#aec99d] bg-[#111111] text-[#aec99d] font-semibold scale-110 shadow-[0_0_15px_rgba(174,201,157,0.3)]' : 'border-white/10 bg-[#111111] text-white/40 scale-100'
+                isActive ? 'border-[#aec99d] bg-[#111111] text-[#aec99d] font-semibold scale-110 shadow-[0_0_15px_rgba(174,201,157,0.3)]' : 'border-white/10 bg-[#111111] text-white/60 scale-100'
               }`} style={{ fontFamily: "'Doto', 'Courier New', monospace" }}>
                 {isCurrent && <span className="roadmap-ping" />}
                 {wave.num}
               </div>
-              <span className={`text-[10px] font-light transition-colors duration-500 ${isActive ? 'text-white/80' : 'text-white/50'}`}>{wave.name}</span>
+              <span className={`text-[10px] font-light transition-colors duration-500 ${isActive ? 'text-white/80' : 'text-white/70'}`}>{wave.name}</span>
             </div>
           );
         })}
@@ -789,7 +789,7 @@ function RoadmapAnimation() {
                       </svg>
                     )}
                   </span>
-                  <span className={`transition-all duration-500 ${isDone ? 'line-through text-white/40' : 'text-white/80'}`}>{text}</span>
+                  <span className={`transition-all duration-500 ${isDone ? 'line-through text-white/60' : 'text-white/80'}`}>{text}</span>
                 </div>
               );
             })}
@@ -860,7 +860,7 @@ function IntroAnimation() {
 
         {/* Scroll indicator (replaces the text) */}
         <div className={`absolute inset-0 flex flex-col items-center justify-center transition-all duration-1000 ease-out ${step >= 6 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
-          <div className="text-[12px] text-[#c4c9b8] uppercase tracking-widest font-medium mb-3 mt-4 animate-text-bounce">
+          <div className="text-[12px] text-[#dfe2d8] uppercase tracking-widest font-medium mb-3 mt-4 animate-text-bounce">
             SCROLL TO EXPLORE
           </div>
           <style>{`
@@ -878,9 +878,9 @@ function IntroAnimation() {
             .animate-chevron-3 { animation: chevron-sequence 1.2s infinite ease-in-out 0.4s; }
           `}</style>
           <div className="flex flex-col items-center space-y-[-14px]">
-            <svg className="w-12 h-6 text-[#c4c9b8] animate-chevron-1" viewBox="0 0 48 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M4 9l20 6 20-6" strokeLinecap="round" strokeLinejoin="round"/></svg>
-            <svg className="w-12 h-6 text-[#c4c9b8] animate-chevron-2" viewBox="0 0 48 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M4 9l20 6 20-6" strokeLinecap="round" strokeLinejoin="round"/></svg>
-            <svg className="w-12 h-6 text-[#c4c9b8] animate-chevron-3" viewBox="0 0 48 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M4 9l20 6 20-6" strokeLinecap="round" strokeLinejoin="round"/></svg>
+            <svg className="w-12 h-6 text-[#dfe2d8] animate-chevron-1" viewBox="0 0 48 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M4 9l20 6 20-6" strokeLinecap="round" strokeLinejoin="round"/></svg>
+            <svg className="w-12 h-6 text-[#dfe2d8] animate-chevron-2" viewBox="0 0 48 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M4 9l20 6 20-6" strokeLinecap="round" strokeLinejoin="round"/></svg>
+            <svg className="w-12 h-6 text-[#dfe2d8] animate-chevron-3" viewBox="0 0 48 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M4 9l20 6 20-6" strokeLinecap="round" strokeLinejoin="round"/></svg>
           </div>
         </div>
       </div>
@@ -1078,7 +1078,7 @@ function BlueprintAnimation() {
 
               {/* Engine Context */}
               <div className="flex flex-col items-center gap-4 z-10 relative mt-2 w-full max-w-[420px]">
-                <span className="text-xs sm:text-sm text-white/50 bg-[#111111]/80 px-4 py-1 rounded-full backdrop-blur-sm opacity-0 animate-[fade-in-text_4.5s_ease-out_forwards]">Engine processing from deep diagnostic result</span>
+                <span className="text-xs sm:text-sm text-white/70 bg-[#111111]/80 px-4 py-1 rounded-full backdrop-blur-sm opacity-0 animate-[fade-in-text_4.5s_ease-out_forwards]">Engine processing from deep diagnostic result</span>
                 <div className="flex flex-wrap justify-center gap-3 sm:gap-4 w-full">
                   <div className="bg-white/5 border border-white/10 rounded-md px-3 py-1.5 sm:px-4 sm:py-2 text-[10px] sm:text-sm text-white/80 whitespace-nowrap opacity-0 animate-[pop-in-pill_0.6s_ease-out_forwards]" style={{ animationDelay: '3.0s' }}>Goal: Scale Ops</div>
                   <div className="bg-white/5 border border-white/10 rounded-md px-3 py-1.5 sm:px-4 sm:py-2 text-[10px] sm:text-sm text-white/80 whitespace-nowrap opacity-0 animate-[pop-in-pill_0.6s_ease-out_forwards]" style={{ animationDelay: '3.2s' }}>Data: Partially Centralized</div>
@@ -1126,11 +1126,11 @@ function BlueprintAnimation() {
                 <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[#aec99d]/10 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000" />
                 {/* left */}
                 <div className="flex items-center gap-2.5 w-[42%] min-w-0 relative z-10">
-                   <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-white/[0.06] border border-white/10 flex items-center justify-center text-white/50 shrink-0">
+                   <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-white/[0.06] border border-white/10 flex items-center justify-center text-white/70 shrink-0">
                      <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><path strokeLinecap="round" strokeLinejoin="round" d="M12 9v4m0 4h.01M10.3 3.86L1.8 18a2 2 0 001.7 3h17a2 2 0 001.7-3L13.7 3.86a2 2 0 00-3.4 0z"/></svg>
                    </div>
                    <div className="flex flex-col min-w-0">
-                      <span className="text-[9px] sm:text-[10px] text-white/45 uppercase tracking-wider mb-0.5">Constraint Detected</span>
+                      <span className="text-[9px] sm:text-[10px] text-white/65 uppercase tracking-wider mb-0.5">Constraint Detected</span>
                       <span className="text-xs sm:text-sm text-white/90 font-medium leading-snug truncate">Partially Centralized Data</span>
                    </div>
                 </div>
@@ -1159,11 +1159,11 @@ function BlueprintAnimation() {
                 <div className="absolute left-0 top-3 bottom-3 w-[3px] rounded-full bg-white/20" />
                 <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[#aec99d]/10 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000" />
                 <div className="flex items-center gap-2.5 w-[42%] min-w-0 relative z-10">
-                   <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-white/[0.06] border border-white/10 flex items-center justify-center text-white/50 shrink-0">
+                   <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-white/[0.06] border border-white/10 flex items-center justify-center text-white/70 shrink-0">
                      <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3.2"/></svg>
                    </div>
                    <div className="flex flex-col min-w-0">
-                      <span className="text-[9px] sm:text-[10px] text-white/45 uppercase tracking-wider mb-0.5">Objective Targeted</span>
+                      <span className="text-[9px] sm:text-[10px] text-white/65 uppercase tracking-wider mb-0.5">Objective Targeted</span>
                       <span className="text-xs sm:text-sm text-white/90 font-medium leading-snug truncate">Scale Ops (No Headcount)</span>
                    </div>
                 </div>
@@ -1272,13 +1272,13 @@ export function InteractiveShowcase() {
           {/* Left Column: Scrollable Description Blocks */}
           <div className="lg:col-span-5 flex flex-col gap-16 lg:gap-[30vh] lg:pb-[20vh]">
             <div ref={introRef} className="lg:min-h-[40vh] flex flex-col justify-center">
-              <h2 className="text-[#c4c9b8] uppercase tracking-widest text-xs font-manrope font-light mb-3">
+              <h2 className="text-[#dfe2d8] uppercase tracking-widest text-xs font-manrope font-light mb-3">
                 Operational Framework
               </h2>
               <h3 className="text-3xl md:text-4xl lg:text-5xl font-light tracking-tight mb-6 leading-tight">
                 From Assessment<br />to Staged Autonomy
               </h3>
-              <p className="text-white/60 max-w-lg font-light leading-relaxed">
+              <p className="text-white/75 max-w-lg font-light leading-relaxed">
                 We take you step-by-step from auditing bottlenecks to running customized, automated system workflows. Explore the core product layers.
               </p>
             </div>
@@ -1293,7 +1293,7 @@ export function InteractiveShowcase() {
                   activeIndex === idx ? 'opacity-100 scale-100' : 'opacity-30 scale-95 lg:opacity-20'
                 }`}
               >
-                <span className="text-[#c4c9b8] text-[15px] font-light tracking-[0.2em] mb-4 uppercase font-manrope">
+                <span className="text-[#dfe2d8] text-[15px] font-light tracking-[0.2em] mb-4 uppercase font-manrope">
                   {product.step}
                 </span>
                 <div className="flex items-center mb-6 relative w-full lg:w-[calc(100%+6rem)] z-10">
@@ -1313,7 +1313,7 @@ export function InteractiveShowcase() {
                     }`}
                   />
                 </div>
-                <p className="text-white/70 text-base font-light mb-8 leading-relaxed max-w-lg">
+                <p className="text-white/85 text-base font-light mb-8 leading-relaxed max-w-lg">
                   {product.description}
                 </p>
                 <ul className="space-y-3.5">
@@ -1370,7 +1370,7 @@ export function InteractiveShowcase() {
                   <div key={`diag-${activeIndex === 0 ? 'active' : 'inactive'}`} className="flex-1 relative w-full h-full">
                     {activeIndex === 0 && <DiagnosticAnimation />}
                   </div>
-                  <div className="text-[10px] text-white/30 text-center uppercase tracking-widest mt-6 pb-6 font-light">
+                  <div className="text-[10px] text-white/50 text-center uppercase tracking-widest mt-6 pb-6 font-light">
                     * Interactive assessment evaluating operational constraints.
                   </div>
                 </div>
@@ -1384,7 +1384,7 @@ export function InteractiveShowcase() {
                   <div key={`blue-${activeIndex === 1 ? 'active' : 'inactive'}`} className="flex-1 relative w-full h-full">
                     {activeIndex === 1 && <BlueprintAnimation />}
                   </div>
-                  <div className="text-[10px] text-white/30 text-center uppercase tracking-widest mt-6 pb-6 font-light">
+                  <div className="text-[10px] text-white/50 text-center uppercase tracking-widest mt-6 pb-6 font-light">
                     * Schematic mapping how databases interface with automation layers.
                   </div>
                 </div>
@@ -1398,7 +1398,7 @@ export function InteractiveShowcase() {
                   <div key={`road-${activeIndex === 2 ? 'active' : 'inactive'}`} className="flex-1 w-full h-full relative">
                     {activeIndex === 2 && <RoadmapAnimation />}
                   </div>
-                  <div className="text-[10px] text-[#c4c9b8] text-center uppercase tracking-widest mt-6 pb-6 font-manrope font-light">
+                  <div className="text-[10px] text-[#dfe2d8] text-center uppercase tracking-widest mt-6 pb-6 font-manrope font-light">
                     * Phased wave system mapping out operational integrations step-by-step.
                   </div>
                 </div>
@@ -1412,7 +1412,7 @@ export function InteractiveShowcase() {
                   <div key={`chat-${activeIndex === 3 ? 'active' : 'inactive'}`} className="flex-1 w-full h-full relative">
                     {activeIndex === 3 && <ConsoleAnimation />}
                   </div>
-                  <div className="text-[10px] text-white/30 text-center uppercase tracking-widest mt-6 pb-6 font-light">
+                  <div className="text-[10px] text-white/50 text-center uppercase tracking-widest mt-6 pb-6 font-light">
                     * Conversational interface for strategic operational insights.
                   </div>
                 </div>
@@ -1426,7 +1426,7 @@ export function InteractiveShowcase() {
                   <div key={`wf-${activeIndex === 4 ? 'active' : 'inactive'}`} className="w-full flex flex-col gap-4 h-full justify-center relative">
                     {activeIndex === 4 && <WorkflowAnimation />}
                   </div>
-                  <div className="text-[10px] text-white/30 text-center uppercase tracking-widest mt-6 pb-6 font-light">
+                  <div className="text-[10px] text-white/50 text-center uppercase tracking-widest mt-6 pb-6 font-light">
                     * Natural language command translated into execution nodes.
                   </div>
                 </div>

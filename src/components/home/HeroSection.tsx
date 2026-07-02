@@ -98,7 +98,7 @@ export default function HeroSection() {
       <div className="absolute bottom-0 left-1/2 -translate-x-1/2 flex flex-col items-center z-20 pointer-events-none opacity-0 animate-fade-in" style={{ animationDelay: '3.5s', animationFillMode: 'forwards' }}>
         <div className="flex flex-col items-center animate-pulse" style={{ animationDuration: '3s' }}>
           <div className="w-[1px] h-10 md:h-16 bg-gradient-to-b from-transparent to-white/80" />
-          <span className="text-[10px] text-[#c4c9b8] tracking-[0.35em] font-light uppercase my-4 font-manrope">
+          <span className="text-[10px] text-[#dfe2d8] tracking-[0.35em] font-light uppercase my-4 font-manrope">
             SCROLL TO EXPLORE
           </span>
           <div className="w-[1px] h-10 md:h-16 bg-gradient-to-t from-transparent to-white/80" />

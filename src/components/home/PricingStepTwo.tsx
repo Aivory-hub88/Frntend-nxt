@@ -205,7 +205,7 @@ export default function PricingStepTwo({ currency }: { currency?: 'IDR' | 'USD' 
 
               {/* Overage */}
               {overageText ? (
-                <div className="mt-4 text-[13px] font-semibold text-[#8a8f8e] transition-opacity duration-300">
+                <div className="mt-4 text-[13px] font-semibold text-[#c6c9c8] transition-opacity duration-300">
                   Overage: {overageText}
                 </div>
               ) : (

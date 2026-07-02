@@ -52,7 +52,7 @@ const ServiceCard = ({ service }: { service: typeof services[0] }) => {
       className="relative spotlight-card border border-white/10 p-8 transition-colors bg-[#0a0a0a] overflow-hidden rounded-xl"
     >
       <h3 className="text-xl font-normal text-white mb-3 relative z-10">{service.title}</h3>
-      <p className="text-[#b2b2b2] font-light leading-relaxed relative z-10">{service.description}</p>
+      <p className="text-[#dadada] font-light leading-relaxed relative z-10">{service.description}</p>
     </div>
   );
 };
@@ -72,7 +72,7 @@ export default function PreFooterCTA() {
           <p className="text-white text-xl md:text-2xl font-semibold mb-4">
             Some AI decisions are too important to leave to guesswork.
           </p>
-          <p className="text-[#b2b2b2] text-lg md:text-xl font-light mb-10 max-w-4xl">
+          <p className="text-[#dadada] text-lg md:text-xl font-light mb-10 max-w-4xl">
             Work directly with Aivory™ experts to validate your strategy, design custom AI systems, train your teams, and accelerate implementation.
           </p>
 

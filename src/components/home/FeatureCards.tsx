@@ -56,10 +56,10 @@ function DiagnosticStatItem({
         {prefix}{value}
         {suffix && <span style={{ fontSize: 'clamp(1.5rem, 2.5vw, 2.5rem)', marginLeft: '2px' }}>{suffix}</span>}
       </div>
-      <div className="text-[#a1a1a6] text-[13px] md:text-[15px] font-medium tracking-wide mb-1">
+      <div className="text-[#d0d0d4] text-[13px] md:text-[15px] font-medium tracking-wide mb-1">
         {title}
       </div>
-      <div className="text-[#6e6e73] text-[11px] md:text-[13px] font-normal">
+      <div className="text-[#b6b6ba] text-[11px] md:text-[13px] font-normal">
         {subtitle}
       </div>
     </div>
@@ -112,14 +112,14 @@ export default function FeatureCards() {
             <h2 className="text-4xl md:text-5xl font-light tracking-tight mb-6 leading-tight text-white max-w-3xl">
               Turn your AI Confusion<br />Into AI Execution
             </h2>
-            <p className="text-white/60 max-w-2xl font-light leading-relaxed mb-16">
+            <p className="text-white/75 max-w-2xl font-light leading-relaxed mb-16">
               Aivory™ helps organizations discover where AI creates value,
               design the right systems, and deploy AI with confidence
             </p>
 
             {/* Diagnostic Stats Section */}
             <div className="w-full max-w-[1000px] mx-auto flex flex-col items-center">
-              <div className="uppercase tracking-[0.2em] text-[#a1a1a6] text-[10px] md:text-xs font-semibold mb-3">
+              <div className="uppercase tracking-[0.2em] text-[#d0d0d4] text-[10px] md:text-xs font-semibold mb-3">
                 From Diagnostic to Deployment
               </div>
               <h3 className="text-xl md:text-3xl font-light text-white mb-12">

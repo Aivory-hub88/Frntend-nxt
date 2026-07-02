@@ -13,7 +13,7 @@ export default function AIReadySection() {
             Aivory&trade; exists because AI adoption needed to be fixed.
           </h2>
 
-          <p className="text-white/60 max-w-2xl font-light leading-relaxed mb-6">
+          <p className="text-white/75 max-w-2xl font-light leading-relaxed mb-6">
             Aivory&trade; helps you move from <span className="text-white">&ldquo;where do we start?&rdquo;</span> to AI that&rsquo;s working inside your business.<br />
             <span className="text-white">Most businesses don&rsquo;t fail at AI because of the technology.</span> They fail because there&rsquo;s no clear starting point. No map. No structure. No plan that actually fits how they operate. So they stall.<br />
             Aivory fixes that. Assess your readiness, surface what actually matters, and launch the right AI systems with one clear plan.<br />

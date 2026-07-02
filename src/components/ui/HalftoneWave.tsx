@@ -92,8 +92,8 @@ export function HalftoneWave() {
           
           // Original Colors (Dimmed amber / Cyan / Purple)
           vec3 origCore = vec3(0.5, 0.25, 0.05);
-          vec3 origEdge = vec3(0.02, 0.12, 0.22);
-          vec3 origIndigo = vec3(0.12, 0.0, 0.25);
+          vec3 origEdge = vec3(0.04, 0.18, 0.32);
+          vec3 origIndigo = vec3(0.16, 0.02, 0.32);
           
           // Hero Colors (Premium Elegance: Midnight Core / Deep Blue-Purple Edges)
           vec3 heroCore = vec3(0.02, 0.03, 0.06); // Deep midnight core (slightly brighter)

@@ -105,7 +105,7 @@ function AutonomousAgentAnimation() {
         </div>
         <div className="flex flex-col">
           <span className="text-[11px] text-white/90 font-medium">{current.name}</span>
-          <span className="text-[9px] text-white/40">{current.channel}</span>
+          <span className="text-[9px] text-white/60">{current.channel}</span>
         </div>
         <div className="ml-auto flex items-center gap-1.5">
           {platforms.map((p, i) => (
@@ -134,17 +134,17 @@ function AutonomousAgentAnimation() {
               className={`max-w-[85%] px-3 py-2 rounded-xl text-[11px] leading-relaxed ${
                 msg.from === 'user'
                   ? 'bg-white/10 text-white/90 rounded-br-sm'
-                  : 'bg-white/5 border border-white/10 text-white/70 rounded-bl-sm'
+                  : 'bg-white/5 border border-white/10 text-white/85 rounded-bl-sm'
               }`}
             >
               {msg.from === 'agent' && (
                 <div className="flex items-center gap-1.5 mb-1">
                   <div className="w-3 h-3 rounded-full bg-white/20 flex items-center justify-center">
-                    <svg className="w-2 h-2 text-white/60" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <svg className="w-2 h-2 text-white/75" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
                     </svg>
                   </div>
-                  <span className="text-[9px] text-white/40 font-medium uppercase tracking-wider">Aivory Agent</span>
+                  <span className="text-[9px] text-white/60 font-medium uppercase tracking-wider">Aivory Agent</span>
                 </div>
               )}
               {msg.text}
@@ -242,10 +242,10 @@ function TemplateLibraryAnimation() {
           className="flex flex-col items-center justify-center gap-2 bg-black/20 border border-white/5 rounded-xl p-3 hover:border-white/10 hover:bg-black/40 transition-all duration-300 cursor-default group"
           style={{ animationDelay: `${i * 0.1}s` }}
         >
-          <div className="text-white/40 group-hover:text-white/70 transition-colors duration-300">
+          <div className="text-white/60 group-hover:text-white/85 transition-colors duration-300">
             {tmpl.icon}
           </div>
-          <span className="text-[9px] text-white/40 group-hover:text-white/60 font-medium uppercase tracking-wider transition-colors duration-300 text-center leading-tight">
+          <span className="text-[9px] text-white/60 group-hover:text-white/75 font-medium uppercase tracking-wider transition-colors duration-300 text-center leading-tight">
             {tmpl.label}
           </span>
         </div>
@@ -322,13 +322,13 @@ export function InteractiveGrid() {
 
       <div className="max-w-6xl mx-auto relative">
         <div className="text-center mb-16">
-          <h2 className="text-[#c4c9b8] uppercase tracking-widest text-xs font-manrope font-light mb-3">
+          <h2 className="text-[#dfe2d8] uppercase tracking-widest text-xs font-manrope font-light mb-3">
             THE PLATFORM
           </h2>
           <h3 className="text-4xl md:text-5xl font-light tracking-tight mb-4">
             Your AI Operations Stack.
           </h3>
-          <p className="text-white/60 max-w-xl mx-auto font-light leading-relaxed">
+          <p className="text-white/75 max-w-xl mx-auto font-light leading-relaxed">
             Agents that act, integrations that connect, and templates that ship fast.
           </p>
         </div>
@@ -340,7 +340,7 @@ export function InteractiveGrid() {
           <SpotlightCard className="flex flex-col p-6">
             <div className="relative z-10 mb-5">
               <h4 className="text-lg font-medium text-white mb-2">Autonomous AI Agent</h4>
-              <p className="text-white/50 text-[13px] font-light leading-relaxed">
+              <p className="text-white/70 text-[13px] font-light leading-relaxed">
                 Deploy autonomous agents inside your communication hubs. They triage, respond, and update your CRM 24/7.
               </p>
             </div>
@@ -354,7 +354,7 @@ export function InteractiveGrid() {
           <SpotlightCard className="flex flex-col p-6">
             <div className="relative z-10 mb-5">
               <h4 className="text-lg font-medium text-white mb-2">App Integrations</h4>
-              <p className="text-white/50 text-[13px] font-light leading-relaxed">
+              <p className="text-white/70 text-[13px] font-light leading-relaxed">
                 Connect your external applications and seamlessly search across conversations, documents and emails.
               </p>
             </div>
@@ -368,7 +368,7 @@ export function InteractiveGrid() {
           <SpotlightCard className="flex flex-col p-6">
             <div className="relative z-10 mb-5">
               <h4 className="text-lg font-medium text-white mb-2">Template Library</h4>
-              <p className="text-white/50 text-[13px] font-light leading-relaxed">
+              <p className="text-white/70 text-[13px] font-light leading-relaxed">
                 Speed up deployment with pre-built template flows. Connect tools and route notifications instantly.
               </p>
             </div>
@@ -440,10 +440,10 @@ function IntegrationsMarquee() {
   return (
     <div id="agent-language" className="w-full mt-20 md:mt-28 mb-0">
       <div className="text-center mb-10 md:mb-12 px-6">
-        <h3 className="text-[22px] md:text-[32px] font-light text-[#c4c9b8] mb-3 tracking-tight" style={{ fontFamily: "'Manrope', sans-serif" }}>
+        <h3 className="text-[22px] md:text-[32px] font-light text-[#dfe2d8] mb-3 tracking-tight" style={{ fontFamily: "'Manrope', sans-serif" }}>
           Every Aivory agent speaks your customer&apos;s language. Literally.
         </h3>
-        <p className={`text-[20px] md:text-[22px] text-[#8a8f8e] font-light transition-opacity duration-500 ${isFading ? 'opacity-0' : 'opacity-100'}`} style={{ fontFamily: MULTILINGUAL_TEXTS[langIndex].font }}>
+        <p className={`text-[20px] md:text-[22px] text-[#c6c9c8] font-light transition-opacity duration-500 ${isFading ? 'opacity-0' : 'opacity-100'}`} style={{ fontFamily: MULTILINGUAL_TEXTS[langIndex].font }}>
           {MULTILINGUAL_TEXTS[langIndex].text}
         </p>
       </div>
@@ -527,7 +527,7 @@ function getBadgeColor(status: string) {
   if (s.includes('disqualified')) {
     return 'bg-red-400/10 text-red-400 border-red-400/20';
   }
-  return 'bg-white/10 text-white/70 border-white/20';
+  return 'bg-white/10 text-white/85 border-white/20';
 }
 
 function TypewriterText({ text, onComplete }: { text: string, onComplete?: () => void }) {
@@ -599,7 +599,7 @@ function AgentFlowVisual({ title }: { title: string }) {
   }, [inView, reducedMotion]);
 
   const arrowRight = (
-    <svg className="w-3 h-3 text-white/30 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+    <svg className="w-3 h-3 text-white/50 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
     </svg>
   );
@@ -632,7 +632,7 @@ function AgentFlowVisual({ title }: { title: string }) {
           </div>
           <div className="ml-0.5">{arrowRight}</div>
           <div className="ml-0.5">
-            <div className={`w-7 h-7 rounded-xl border flex items-center justify-center transition-colors duration-700 ${reducedMotion || csState.status === 'resolved' ? 'bg-[#aec99d]/10 text-[#aec99d] border-[#aec99d]/20' : 'bg-white/5 text-white/40 border-white/10'}`}>
+            <div className={`w-7 h-7 rounded-xl border flex items-center justify-center transition-colors duration-700 ${reducedMotion || csState.status === 'resolved' ? 'bg-[#aec99d]/10 text-[#aec99d] border-[#aec99d]/20' : 'bg-white/5 text-white/60 border-white/10'}`}>
               <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
               </svg>
@@ -651,7 +651,7 @@ function AgentFlowVisual({ title }: { title: string }) {
           {['BUDGET', 'AUTHORITY', 'NEED', 'TIME'].map((tag, i) => {
             const isLit = reducedMotion || lqPhase >= i;
             return (
-              <div key={tag} className={`px-2 py-1 text-[9px] font-mono rounded border transition-colors duration-300 ${isLit ? 'bg-[#aec99d]/10 text-[#aec99d] border-[#aec99d]/20' : 'bg-white/5 text-white/30 border-white/10'}`}>
+              <div key={tag} className={`px-2 py-1 text-[9px] font-mono rounded border transition-colors duration-300 ${isLit ? 'bg-[#aec99d]/10 text-[#aec99d] border-[#aec99d]/20' : 'bg-white/5 text-white/50 border-white/10'}`}>
                  {tag}
               </div>
             );
@@ -662,7 +662,7 @@ function AgentFlowVisual({ title }: { title: string }) {
       {title === 'Office Assistant' && (
         <div className="flex items-center w-full max-w-[85%]">
            <div className="w-8 h-8 flex items-center justify-center bg-[#111111] border border-white/5 rounded-xl z-10 shrink-0">
-              <svg className="w-4 h-4 text-white/60" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <svg className="w-4 h-4 text-white/75" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" />
               </svg>
            </div>
@@ -673,7 +673,7 @@ function AgentFlowVisual({ title }: { title: string }) {
               {reducedMotion && <div className="absolute top-0 left-full -translate-x-full h-full w-full bg-[#aec99d]/50" />}
            </div>
            <div className="w-8 h-8 flex items-center justify-center bg-[#111111] border border-white/5 rounded-xl z-10 shrink-0">
-              <svg className="w-4 h-4 text-white/60" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <svg className="w-4 h-4 text-white/75" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
               </svg>
            </div>
@@ -744,7 +744,7 @@ function TaskQueueAnimation({ tasks, offset }: { tasks: any[], offset: number })
           >
             {/* Header Row */}
             <div className="flex items-center justify-between mb-2">
-              <span className="text-[10px] text-white/40 uppercase tracking-wider font-mono truncate mr-2">
+              <span className="text-[10px] text-white/60 uppercase tracking-wider font-mono truncate mr-2">
                 {task.source}
               </span>
               <span className={`text-[9px] px-1.5 py-0.5 rounded-full border ${getBadgeColor(task.status)} font-medium uppercase tracking-wide`}>
@@ -788,7 +788,7 @@ function AgentCard({ agent }: { agent: typeof NEW_AGENTS[0] }) {
         <h4 className="text-lg font-medium text-white mb-2" style={{ fontFamily: "'Manrope', sans-serif" }}>
           {agent.title}
         </h4>
-        <p className="text-white/50 text-[13px] font-light leading-relaxed" style={{ fontFamily: "'Manrope', sans-serif" }}>
+        <p className="text-white/70 text-[13px] font-light leading-relaxed" style={{ fontFamily: "'Manrope', sans-serif" }}>
           {agent.description}
         </p>
       </div>
@@ -802,7 +802,7 @@ function AgentCard({ agent }: { agent: typeof NEW_AGENTS[0] }) {
             <span className="absolute inline-flex w-full h-full rounded-full bg-[#aec99d] opacity-75 animate-ping" />
             <span className="relative inline-flex w-2 h-2 rounded-full bg-[#aec99d]" />
           </div>
-          <span className="text-[9px] text-[#c4c9b8] uppercase tracking-widest font-mono">
+          <span className="text-[9px] text-[#dfe2d8] uppercase tracking-widest font-mono">
             {agent.status}
           </span>
         </div>
