@@ -222,7 +222,7 @@ export function HalftoneWave() {
       baseRotX: number; baseRotY: number; baseRotZ: number;
       wobbleAmp: number; wobbleFreq: number;
     }[] = [];
-    const petalUniforms = { uOpacity: { value: 0.0 }, uPixelSize: { value: isMobile ? 5.0 : 6.0 } };
+    const petalUniforms = { uOpacity: { value: 0.0 }, uPixelSize: { value: isMobile ? 5.0 : 6.0 }, uBright: { value: 1.0 } };
     let petalGeo: THREE.PlaneGeometry | null = null;
     let petalMat: THREE.ShaderMaterial | null = null;
     let petalOpacity = 0;
@@ -257,6 +257,7 @@ export function HalftoneWave() {
           varying vec2 vUv;
           uniform float uOpacity;
           uniform float uPixelSize;
+          uniform float uBright;
           void main() {
             vec2 pp = vUv - vec2(0.5);
             // Near-round silhouette → density (denser at the core, soft at the
@@ -293,17 +294,27 @@ export function HalftoneWave() {
             vec3 coreC = vec3(0.05, 0.17, 0.46);
             vec3 col = mix(edgeC, coreC, density);
             col += vec3(0.02, 0.09, 0.20) * pow(density, 2.0);
+            // Atmospheric perspective: brightness scales with petal size so
+            // small = far (dimmer/hazier), large = near (brighter).
+            col *= uBright;
             gl_FragColor = vec4(col, uOpacity);
           }
         `,
       });
       const PETAL_COUNT = 18;
       for (let i = 0; i < PETAL_COUNT; i++) {
-        const m = new THREE.Mesh(petalGeo, petalMat);
         // Depth-varied size for a richer 3D feel: bigger overall with a higher
         // floor so far petals still read as discs, never single dots.
         const r = Math.random();
         const size = 0.55 + r * r * 1.5;         // ~0.55 .. 2.05, skewed small
+        // Per-petal material so brightness can vary with size (atmospheric
+        // perspective): small = far/dim, medium closer, large = near/brightest.
+        const normSize = Math.min(Math.max((size - 0.55) / 1.5, 0), 1);
+        const bright = 0.6 + normSize * 0.75;    // ~0.6 (far) .. 1.35 (near)
+        const mat = petalMat!.clone();
+        mat.uniforms.uOpacity = petalUniforms.uOpacity; // share fade opacity
+        mat.uniforms.uBright.value = bright;
+        const m = new THREE.Mesh(petalGeo, mat);
         m.scale.setScalar(size);
 
         // ~1/3 orbit the flower like satellites; the rest drift down.
@@ -615,7 +626,10 @@ export function HalftoneWave() {
       }
       geometry.dispose();
       material.dispose();
-      petals.forEach((pt) => scene.remove(pt.mesh));
+      petals.forEach((pt) => {
+        scene.remove(pt.mesh);
+        (pt.mesh.material as THREE.Material).dispose();
+      });
       petalGeo?.dispose();
       petalMat?.dispose();
       renderer.dispose();
