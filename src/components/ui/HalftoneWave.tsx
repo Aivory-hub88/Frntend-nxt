@@ -300,9 +300,10 @@ export function HalftoneWave() {
       const PETAL_COUNT = 18;
       for (let i = 0; i < PETAL_COUNT; i++) {
         const m = new THREE.Mesh(petalGeo, petalMat);
-        // Depth-varied size for a richer 3D feel: a few large + many small.
+        // Depth-varied size for a richer 3D feel: bigger overall with a higher
+        // floor so far petals still read as discs, never single dots.
         const r = Math.random();
-        const size = 0.16 + r * r * 1.05;        // ~0.16 .. 1.21, skewed small
+        const size = 0.55 + r * r * 1.5;         // ~0.55 .. 2.05, skewed small
         m.scale.setScalar(size);
 
         // ~1/3 orbit the flower like satellites; the rest drift down.
@@ -323,7 +324,7 @@ export function HalftoneWave() {
         const baseRotZ = Math.random() * 6.28;
 
         if (mode === 'drift') {
-          const depth = -3.5 + size * 4.5;          // bigger => nearer camera
+          const depth = -4.0 + size * 2.6;          // bigger => nearer camera
           m.position.set(sx, sy - 9, depth + (Math.random() * 2 - 1));
         }
         m.rotation.set(baseRotX, baseRotY, baseRotZ);
@@ -373,6 +374,7 @@ export function HalftoneWave() {
     // the scroll stutter. We cache the anchor offsets instead.
     let centerAt = Infinity;
     let rightAt = Infinity;
+    let petalStartAt = Infinity;
     const computeAnchors = () => {
       const vh = window.innerHeight;
       const showcaseEl = document.getElementById('showcase');
@@ -384,6 +386,16 @@ export function HalftoneWave() {
       if (langEl) {
         const lgTop = langEl.getBoundingClientRect().top + window.scrollY;
         rightAt = lgTop - vh * 0.45; // "speaks your customer's language" → right
+      }
+      // Petals begin drifting when the "Turn your AI Confusion Into AI
+      // Execution" section (#features) scrolls into view. Fall back to the
+      // Operational Framework anchor on pages without that section.
+      const featEl = document.getElementById('features');
+      if (featEl) {
+        const ftTop = featEl.getBoundingClientRect().top + window.scrollY;
+        petalStartAt = ftTop - vh * 0.5;
+      } else {
+        petalStartAt = centerAt;
       }
     };
 
@@ -534,9 +546,9 @@ export function HalftoneWave() {
         // ── Drifting petals (Operational Framework only) ──
         if (petals.length) {
           let targetPetal = 0;
-          if (centerAt !== Infinity) {
+          if (petalStartAt !== Infinity) {
             const sY = window.scrollY;
-            const fadeIn = Math.min(Math.max((sY - (centerAt - 550)) / 550, 0), 1);
+            const fadeIn = Math.min(Math.max((sY - (petalStartAt - 300)) / 500, 0), 1);
             let fadeOut = 1;
             if (rightAt !== Infinity) {
               fadeOut = 1 - Math.min(Math.max((sY - (rightAt - 250)) / 250, 0), 1);
