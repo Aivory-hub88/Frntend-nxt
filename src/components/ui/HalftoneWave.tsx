@@ -92,15 +92,13 @@ export function HalftoneWave() {
           
           // Original Colors (Dimmed amber / Cyan / Purple)
           vec3 origCore = vec3(0.5, 0.25, 0.05);
-          vec3 origEdge = vec3(0.04, 0.18, 0.32);
-          vec3 origIndigo = vec3(0.16, 0.02, 0.32);
+          vec3 origEdge = vec3(0.02, 0.12, 0.22);
+          vec3 origIndigo = vec3(0.12, 0.0, 0.25);
           
           // Hero Colors (Premium Elegance: Midnight Core / Deep Blue-Purple Edges)
-          // Core stays deep/dark so centered hero text over it remains readable;
-          // the richer saturation lives on the petal edges / rim (outer areas).
-          vec3 heroCore = vec3(0.02, 0.03, 0.06); // Deep midnight core (kept dark for text contrast)
-          vec3 heroEdge = vec3(0.26, 0.14, 0.95);  // Richer blue-violet edges
-          vec3 heroIndigo = vec3(0.34, 0.17, 0.62);  // Brighter purple/indigo glow
+          vec3 heroCore = vec3(0.02, 0.03, 0.06); // Deep midnight core (slightly brighter)
+          vec3 heroEdge = vec3(0.15, 0.08, 0.65);  // Deep blue-purple edges (brighter blue)
+          vec3 heroIndigo = vec3(0.2, 0.1, 0.4);  // Subtle purple/indigo glow (brighter)
           
           vec3 coreColor = mix(heroCore, origCore, scrollT);
           vec3 edgeColor = mix(heroEdge, origEdge, scrollT);
@@ -109,15 +107,14 @@ export function HalftoneWave() {
           // Base mix between core and edge
           vec3 finalColor = mix(coreColor, edgeColor, normalizedDepth + rim * 0.5);
           
-          // Apply Indigo as a subtle additive glow (edges/rim only — keeps the
-          // dark center intact so text stays readable).
+          // Apply Indigo as a subtle additive glow
           float indigoGradient = smoothstep(0.2, 0.8, normalizedDepth + rim);
-          finalColor += indigoColor * indigoGradient * 0.55;
+          finalColor += indigoColor * indigoGradient * 0.4;
           // Subtle living color nuance — a soft violet <-> teal shimmer that
           // harmonizes with the midnight / indigo palette. Kept low so it never
           // looks monotone, and a touch stronger while the flower moves (scroll).
-          vec3 accentA = vec3(0.42, 0.22, 0.80); // richer violet
-          vec3 accentB = vec3(0.12, 0.42, 0.60); // richer teal
+          vec3 accentA = vec3(0.30, 0.16, 0.55); // soft violet
+          vec3 accentB = vec3(0.08, 0.28, 0.42); // soft teal
           float shimmer = 0.5 + 0.5 * sin(uTime * 0.6 + vLocalPos.y * 3.0 + vLocalPos.x * 2.0);
           vec3 accent = mix(accentA, accentB, shimmer);
           // More noticeable now: ~2x amount, and applied across the whole
