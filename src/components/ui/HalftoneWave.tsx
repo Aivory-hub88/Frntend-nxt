@@ -290,12 +290,12 @@ export function HalftoneWave() {
             }
             if (shape == 0.0) discard;
 
-            // Palette-matched color — true blue-indigo, less purple.
-            // Red kept low so it reads as blue/azure, not violet.
-            vec3 edgeC = vec3(0.03, 0.16, 0.66);
-            vec3 coreC = vec3(0.08, 0.32, 0.90);
+            // Palette-matched color — toned-down blue-indigo to match the
+            // dimmed flower tone (kept dark so petals don't glow too bright).
+            vec3 edgeC = vec3(0.02, 0.08, 0.30);
+            vec3 coreC = vec3(0.05, 0.17, 0.46);
             vec3 col = mix(edgeC, coreC, density);
-            col += vec3(0.04, 0.20, 0.42) * pow(density, 2.0);
+            col += vec3(0.02, 0.09, 0.20) * pow(density, 2.0);
             gl_FragColor = vec4(col, uOpacity);
           }
         `,
@@ -547,7 +547,7 @@ export function HalftoneWave() {
             targetPetal = fadeIn * fadeOut;
           }
           petalOpacity += (targetPetal - petalOpacity) * 0.06;
-          petalUniforms.uOpacity.value = petalOpacity * 0.85;
+          petalUniforms.uOpacity.value = petalOpacity * 0.72;
           if (petalOpacity > 0.002) {
             const cx = group.position.x;
             const cy = group.position.y;
