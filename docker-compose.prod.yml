@@ -126,6 +126,7 @@ services:
       - "traefik.http.routers.user-dashboard.rule=(Host(`aivory.id`) || Host(`www.aivory.id`) || Host(`stag.aivory.id`) || Host(`dashboard.aivory.id`) || Host(`app.aivory.id`)) && PathPrefix(`/dashboard`)"
       - "traefik.http.routers.user-dashboard.entrypoints=web,websecure"
       - "traefik.http.routers.user-dashboard.tls=true"
+      - "traefik.http.routers.user-dashboard.tls.certresolver=letsencrypt"
       - "traefik.http.routers.user-dashboard.priority=10"
       - "traefik.http.services.user-dashboard.loadbalancer.server.port=9001"
       # Browser-side fetches go to /api/* (without basePath). Traefik adds the
