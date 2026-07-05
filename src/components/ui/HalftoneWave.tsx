@@ -19,11 +19,12 @@ export function HalftoneWave() {
     const camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 100);
     camera.position.z = 15;
 
-    const renderer = new THREE.WebGLRenderer({ antialias: false, alpha: true, powerPreference: 'high-performance', stencil: false });
+    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: 'high-performance', stencil: false });
     renderer.setSize(width, height);
     
     const isMobile = window.innerWidth < 1024;
-    renderer.setPixelRatio(isMobile ? 0.5 : Math.min(window.devicePixelRatio, 1));
+    const baseDPR = isMobile ? 0.5 : Math.min(window.devicePixelRatio, 1);
+    renderer.setPixelRatio(baseDPR);
     
     mountRef.current.appendChild(renderer.domElement);
 
@@ -537,11 +538,22 @@ export function HalftoneWave() {
     };
 
     let scrollTicking = false;
+    let scrollBurstTimer: number | undefined;
+    let dprReduced = false;
     const onScroll = () => {
       if (!scrollTicking) {
         scrollTicking = true;
         requestAnimationFrame(() => { scrollTicking = false; handleScroll(); });
       }
+      if (!dprReduced) {
+        dprReduced = true;
+        renderer.setPixelRatio(baseDPR * 0.7);
+      }
+      window.clearTimeout(scrollBurstTimer);
+      scrollBurstTimer = window.setTimeout(() => {
+        dprReduced = false;
+        renderer.setPixelRatio(baseDPR);
+      }, 200);
     };
     window.addEventListener('scroll', onScroll, { passive: true });
     computeAnchors();
@@ -723,6 +735,7 @@ export function HalftoneWave() {
       cancelAnimationFrame(animationFrameId);
       clearTimeout(anchorTimer);
       observer.disconnect();
+      window.clearTimeout(scrollBurstTimer);
       window.removeEventListener('scroll', onScroll);
       window.removeEventListener('resize', handleResize);
       canvas.removeEventListener('pointerdown', onPointerDown);

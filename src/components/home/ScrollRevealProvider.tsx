@@ -17,6 +17,36 @@ import { useEffect } from 'react';
  * Mount this once in page.tsx.
  */
 export default function ScrollRevealProvider() {
+  // Perf: pause the frosted-glass card blur while actively scrolling. The
+  // WebGL flower keeps animating behind the cards, so backdrop-filter forces
+  // a fresh blur pass of that live layer every frame it's applied — the main
+  // cause of scroll jank through the card sections (Operational Framework /
+  // Your AI Operations Stack). Restored automatically ~150ms after the user
+  // stops scrolling. Runs regardless of reduced-motion (it's a perf toggle,
+  // not an animation).
+  useEffect(() => {
+    const root = document.documentElement;
+    let ticking = false;
+    let idleTimer: number | undefined;
+    const onScroll = () => {
+      if (!ticking) {
+        ticking = true;
+        requestAnimationFrame(() => {
+          root.classList.add('is-scrolling');
+          ticking = false;
+        });
+      }
+      window.clearTimeout(idleTimer);
+      idleTimer = window.setTimeout(() => root.classList.remove('is-scrolling'), 150);
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => {
+      window.removeEventListener('scroll', onScroll);
+      window.clearTimeout(idleTimer);
+      root.classList.remove('is-scrolling');
+    };
+  }, []);
+
   useEffect(() => {
     // Respect reduced motion — skip all animations (and skip loading GSAP).
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
