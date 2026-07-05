@@ -23,7 +23,8 @@ export function HalftoneWave() {
     renderer.setSize(width, height);
     
     const isMobile = window.innerWidth < 1024;
-    renderer.setPixelRatio(isMobile ? 0.5 : Math.min(window.devicePixelRatio, 1));
+    const baseDPR = isMobile ? 0.5 : Math.min(window.devicePixelRatio, 1);
+    renderer.setPixelRatio(baseDPR);
     
     mountRef.current.appendChild(renderer.domElement);
 
@@ -66,7 +67,7 @@ export function HalftoneWave() {
           float topLightDiff = max(0.0, dot(normal, topLightDir));
           // Fade spotlight heavily on scroll to protect readability in lower sections
           float spotlightFade = 1.0 - smoothstep(0.0, 0.4, uScroll);
-          float spotlight = pow(topLightDiff, 4.6) * 0.52 * spotlightFade;
+          float spotlight = pow(topLightDiff, 2.3) * 0.4 * spotlightFade;
           
           // Enhanced density for subtle but more 3D ASCII
           // Reduced spotlight influence on density to avoid solid bright blocks
@@ -78,7 +79,22 @@ export function HalftoneWave() {
           vec2 local = fract(gl_FragCoord.xy / uPixelSize);
           vec2 p5 = floor(local * 5.0); 
           
-          int charIndex = int(floor(density * 5.99));
+          // 4x4 Bayer dither (screen-space) to break up hard band edges
+          float bdx = mod(floor(gl_FragCoord.x * 0.33), 4.0);
+          float bdy = mod(floor(gl_FragCoord.y * 0.33), 4.0);
+          float bayer = 0.0;
+          if (bdx < 1.0) {
+            if (bdy < 1.0) bayer = 0.0; else if (bdy < 2.0) bayer = 0.75; else if (bdy < 3.0) bayer = 0.1875; else bayer = 0.9375;
+          } else if (bdx < 2.0) {
+            if (bdy < 1.0) bayer = 0.5; else if (bdy < 2.0) bayer = 0.25; else if (bdy < 3.0) bayer = 0.6875; else bayer = 0.4375;
+          } else if (bdx < 3.0) {
+            if (bdy < 1.0) bayer = 0.125; else if (bdy < 2.0) bayer = 0.875; else if (bdy < 3.0) bayer = 0.0625; else bayer = 0.8125;
+          } else {
+            if (bdy < 1.0) bayer = 0.625; else if (bdy < 2.0) bayer = 0.375; else if (bdy < 3.0) bayer = 0.5625; else bayer = 0.3125;
+          }
+          float ditheredDensity = clamp(density + (bayer - 0.5) * 0.16, 0.0, 0.9);
+
+          int charIndex = int(floor(ditheredDensity * 5.99));
           if (charIndex == 0) discard; // empty cell: skip glyph branches
           float shape = 0.0;
           
@@ -120,7 +136,7 @@ export function HalftoneWave() {
           vec3 finalColor = mix(coreColor, edgeColor, normalizedDepth + rim * 0.5);
           
           // Add elegant, slightly tinted spotlight to final color
-          finalColor += vec3(0.9, 0.95, 1.0) * spotlight * 0.95;
+          finalColor += vec3(0.9, 0.95, 1.0) * spotlight * 0.65;
           
           // Apply Indigo as a subtle additive glow
           float indigoGradient = smoothstep(0.2, 0.8, normalizedDepth + rim);
@@ -537,11 +553,22 @@ export function HalftoneWave() {
     };
 
     let scrollTicking = false;
+    let scrollBurstTimer: number | undefined;
+    let dprReduced = false;
     const onScroll = () => {
       if (!scrollTicking) {
         scrollTicking = true;
         requestAnimationFrame(() => { scrollTicking = false; handleScroll(); });
       }
+      if (!dprReduced) {
+        dprReduced = true;
+        renderer.setPixelRatio(baseDPR * 0.7);
+      }
+      window.clearTimeout(scrollBurstTimer);
+      scrollBurstTimer = window.setTimeout(() => {
+        dprReduced = false;
+        renderer.setPixelRatio(baseDPR);
+      }, 200);
     };
     window.addEventListener('scroll', onScroll, { passive: true });
     computeAnchors();
@@ -723,6 +750,7 @@ export function HalftoneWave() {
       cancelAnimationFrame(animationFrameId);
       clearTimeout(anchorTimer);
       observer.disconnect();
+      window.clearTimeout(scrollBurstTimer);
       window.removeEventListener('scroll', onScroll);
       window.removeEventListener('resize', handleResize);
       canvas.removeEventListener('pointerdown', onPointerDown);
