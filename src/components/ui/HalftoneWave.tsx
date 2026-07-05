@@ -30,7 +30,7 @@ export function HalftoneWave() {
 
     const uniforms = {
       uTime: { value: 0.0 },
-      uResolution: { value: new THREE.Vector2(width, height) },
+      uResolution: { value: new THREE.Vector2(width * baseDPR, height * baseDPR) },
       uPixelSize: { value: isMobile ? 5.0 : 6.0 }, 
       uScroll: { value: 0.0 }, // Used to trigger the spreading petals effect
       uMouse: { value: new THREE.Vector2(0, 0) }
@@ -548,11 +548,17 @@ export function HalftoneWave() {
       if (!dprReduced) {
         dprReduced = true;
         renderer.setPixelRatio(baseDPR * 0.7);
+        const rect = mountRef.current!.getBoundingClientRect();
+        uniforms.uResolution.value.set(rect.width * renderer.getPixelRatio(), rect.height * renderer.getPixelRatio());
       }
       window.clearTimeout(scrollBurstTimer);
       scrollBurstTimer = window.setTimeout(() => {
         dprReduced = false;
         renderer.setPixelRatio(baseDPR);
+        if (mountRef.current) {
+          const rect = mountRef.current.getBoundingClientRect();
+          uniforms.uResolution.value.set(rect.width * renderer.getPixelRatio(), rect.height * renderer.getPixelRatio());
+        }
       }, 200);
     };
     window.addEventListener('scroll', onScroll, { passive: true });
@@ -726,7 +732,7 @@ export function HalftoneWave() {
       renderer.setSize(rect.width, rect.height);
       camera.aspect = rect.width / rect.height;
       camera.updateProjectionMatrix();
-      uniforms.uResolution.value.set(rect.width, rect.height);
+      uniforms.uResolution.value.set(rect.width * renderer.getPixelRatio(), rect.height * renderer.getPixelRatio());
       computeAnchors();
     };
     window.addEventListener('resize', handleResize);
