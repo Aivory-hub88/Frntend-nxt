@@ -23,7 +23,7 @@ export function HalftoneWave() {
     renderer.setSize(width, height);
     
     const isMobile = window.innerWidth < 1024;
-    const baseDPR = isMobile ? 0.5 : Math.min(window.devicePixelRatio, 1);
+    const baseDPR = isMobile ? 1 : Math.min(window.devicePixelRatio, 2);
     renderer.setPixelRatio(baseDPR);
     
     mountRef.current.appendChild(renderer.domElement);
