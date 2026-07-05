@@ -146,7 +146,13 @@ export function HalftoneWave() {
           float vignette = smoothstep(0.85, 0.35, distFromCenter);
           finalColor *= vignette * 1.05; // 5% brighter
 
-          gl_FragColor = vec4(finalColor, 1.0);
+          // Soft alpha falloff at the true silhouette: fades opacity out as
+          // density approaches 0 (the outer edge of the bloom), instead of the
+          // dot grid winking off at full opacity. Purely alpha -- no color or
+          // glow change -- so it just smooths the blocky boundary.
+          float silhouetteAlpha = smoothstep(0.0, 0.12, density);
+
+          gl_FragColor = vec4(finalColor, silhouetteAlpha);
         }
     `;
 
