@@ -3,11 +3,6 @@
 import { useState, useEffect, useRef } from 'react';
 import dynamic from 'next/dynamic';
 
-const RetroMacCanvas = dynamic(
-  () => import('./RetroMac3D').then((mod) => mod.RetroMacCanvas),
-  { ssr: false }
-);
-
 const LabFlaskCanvas = dynamic(
   () => import('./LabFlask3D').then((mod) => mod.LabFlaskCanvas),
   { ssr: false }
