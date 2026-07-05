@@ -23,8 +23,7 @@ export function HalftoneWave() {
     renderer.setSize(width, height);
     
     const isMobile = window.innerWidth < 1024;
-    const baseDPR = isMobile ? 0.5 : Math.min(window.devicePixelRatio, 1);
-    renderer.setPixelRatio(baseDPR);
+    renderer.setPixelRatio(isMobile ? 0.5 : Math.min(window.devicePixelRatio, 1));
     
     mountRef.current.appendChild(renderer.domElement);
 
@@ -59,21 +58,16 @@ export function HalftoneWave() {
           float normalizedDepth = smoothstep(2.0, 6.0, vDepth);
           
           // Elegant Rim Lighting for 3D depth
-          float fresnel = 1.0 - max(0.0, dot(viewDir, normal));
-          float rim = smoothstep(0.5, 1.0, fresnel);
+          float rim = 1.0 - max(0.0, dot(viewDir, normal));
+          rim = smoothstep(0.5, 1.0, rim);
           
           // NEW: Top-down spotlight (sharper and more elegant)
-          vec3 topLightDir = normalize(vec3(0.14, 1.0, 0.3));
+          vec3 topLightDir = normalize(vec3(0.0, 1.0, 0.4));
           float topLightDiff = max(0.0, dot(normal, topLightDir));
           // Fade spotlight heavily on scroll to protect readability in lower sections
           float spotlightFade = 1.0 - smoothstep(0.0, 0.4, uScroll);
-          float spotlight = pow(topLightDiff, 2.3) * 0.4 * spotlightFade;
+          float spotlight = pow(topLightDiff, 3.2) * 0.42 * spotlightFade;
           
-          // Continuous fresnel glow (bridges the gaps in the ASCII dot grid
-          // near the rim instead of being gated by it — see below).
-          float glow = pow(fresnel, 2.6) * 0.9 * spotlightFade;
-          vec3 glowColor = vec3(0.5, 0.72, 1.0);
-
           // Enhanced density for subtle but more 3D ASCII
           // Reduced spotlight influence on density to avoid solid bright blocks
           float density = 1.0 - normalizedDepth + (rim * 0.5) + (spotlight * 0.2);
@@ -85,6 +79,7 @@ export function HalftoneWave() {
           vec2 p5 = floor(local * 5.0); 
           
           int charIndex = int(floor(density * 5.99));
+          if (charIndex == 0) discard; // empty cell: skip glyph branches
           float shape = 0.0;
           
           if (charIndex == 1) {
@@ -102,13 +97,7 @@ export function HalftoneWave() {
               if (p5.x >= 1.0 && p5.x <= 3.0 && p5.y >= 1.0 && p5.y <= 3.0) shape = 1.0;
           }
           
-          if (shape == 0.0) {
-            // Soft glow bridge: fill the dot grid's gaps near the silhouette
-            // with a smooth translucent glow instead of discarding outright.
-            if (glow < 0.05) discard;
-            gl_FragColor = vec4(glowColor * glow, glow * 0.85);
-            return;
-          }
+          if (shape == 0.0) discard;
           
           // 3. ELEGANT COLOR MAPPING (Transition based on scroll)
           float scrollT = smoothstep(0.0, 0.4, uScroll);
@@ -130,22 +119,12 @@ export function HalftoneWave() {
           // Base mix between core and edge
           vec3 finalColor = mix(coreColor, edgeColor, normalizedDepth + rim * 0.5);
           
-          // Cool-core -> warm-tip gradient: subtle warm accent strongest at
-          // the outermost petal tips, fades out on scroll (hero-only accent).
-          vec3 heroWarm = vec3(0.85, 0.3, 0.24);
-          float warmT = smoothstep(0.55, 1.0, normalizedDepth) * spotlightFade;
-          finalColor = mix(finalColor, heroWarm, warmT * 0.32);
-          
           // Add elegant, slightly tinted spotlight to final color
-          finalColor += vec3(0.9, 0.95, 1.0) * spotlight * 0.65;
-          
-          // Rim glow highlight on the dot pixels too, so the glow reads as
-          // one continuous halo rather than stopping at the grid boundary.
-          finalColor += glowColor * glow * 0.55;
+          finalColor += vec3(0.9, 0.95, 1.0) * spotlight * 0.7;
           
           // Apply Indigo as a subtle additive glow
           float indigoGradient = smoothstep(0.2, 0.8, normalizedDepth + rim);
-          finalColor += indigoColor * indigoGradient * 0.48;
+          finalColor += indigoColor * indigoGradient * 0.4;
           // Subtle living color nuance — a soft violet <-> teal shimmer that
           // harmonizes with the midnight / indigo palette. Kept low so it never
           // looks monotone, and a touch stronger while the flower moves (scroll).
@@ -163,8 +142,8 @@ export function HalftoneWave() {
           vec2 vignetteCenter = vec2(0.5) + uMouse * 0.05;
           float distFromCenter = distance(screenPos, vignetteCenter);
           // 0.85 -> 0.35 smoothly fades to pitch black at edges
-          float vignette = smoothstep(0.8, 0.28, distFromCenter);
-          finalColor *= vignette * 1.08; // 8% brighter, tighter falloff for more contrast
+          float vignette = smoothstep(0.85, 0.35, distFromCenter);
+          finalColor *= vignette * 1.05; // 5% brighter
 
           gl_FragColor = vec4(finalColor, 1.0);
         }
@@ -558,22 +537,11 @@ export function HalftoneWave() {
     };
 
     let scrollTicking = false;
-    let scrollBurstTimer: number | undefined;
-    let dprReduced = false;
     const onScroll = () => {
       if (!scrollTicking) {
         scrollTicking = true;
         requestAnimationFrame(() => { scrollTicking = false; handleScroll(); });
       }
-      if (!dprReduced) {
-        dprReduced = true;
-        renderer.setPixelRatio(baseDPR * 0.7);
-      }
-      window.clearTimeout(scrollBurstTimer);
-      scrollBurstTimer = window.setTimeout(() => {
-        dprReduced = false;
-        renderer.setPixelRatio(baseDPR);
-      }, 200);
     };
     window.addEventListener('scroll', onScroll, { passive: true });
     computeAnchors();
@@ -755,7 +723,6 @@ export function HalftoneWave() {
       cancelAnimationFrame(animationFrameId);
       clearTimeout(anchorTimer);
       observer.disconnect();
-      window.clearTimeout(scrollBurstTimer);
       window.removeEventListener('scroll', onScroll);
       window.removeEventListener('resize', handleResize);
       canvas.removeEventListener('pointerdown', onPointerDown);
