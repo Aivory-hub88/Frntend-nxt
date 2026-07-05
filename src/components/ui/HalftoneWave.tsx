@@ -59,8 +59,8 @@ export function HalftoneWave() {
           float normalizedDepth = smoothstep(2.0, 6.0, vDepth);
           
           // Elegant Rim Lighting for 3D depth
-          float rim = 1.0 - max(0.0, dot(viewDir, normal));
-          rim = smoothstep(0.5, 1.0, rim);
+          float fresnel = 1.0 - max(0.0, dot(viewDir, normal));
+          float rim = smoothstep(0.5, 1.0, fresnel);
           
           // NEW: Top-down spotlight (sharper and more elegant)
           vec3 topLightDir = normalize(vec3(0.14, 1.0, 0.3));
@@ -69,6 +69,11 @@ export function HalftoneWave() {
           float spotlightFade = 1.0 - smoothstep(0.0, 0.4, uScroll);
           float spotlight = pow(topLightDiff, 2.3) * 0.4 * spotlightFade;
           
+          // Continuous fresnel glow (bridges the gaps in the ASCII dot grid
+          // near the rim instead of being gated by it — see below).
+          float glow = pow(fresnel, 2.6) * 0.9 * spotlightFade;
+          vec3 glowColor = vec3(0.5, 0.72, 1.0);
+
           // Enhanced density for subtle but more 3D ASCII
           // Reduced spotlight influence on density to avoid solid bright blocks
           float density = 1.0 - normalizedDepth + (rim * 0.5) + (spotlight * 0.2);
@@ -79,23 +84,7 @@ export function HalftoneWave() {
           vec2 local = fract(gl_FragCoord.xy / uPixelSize);
           vec2 p5 = floor(local * 5.0); 
           
-          // 4x4 Bayer dither (screen-space) to break up hard band edges
-          float bdx = mod(floor(gl_FragCoord.x * 0.33), 4.0);
-          float bdy = mod(floor(gl_FragCoord.y * 0.33), 4.0);
-          float bayer = 0.0;
-          if (bdx < 1.0) {
-            if (bdy < 1.0) bayer = 0.0; else if (bdy < 2.0) bayer = 0.75; else if (bdy < 3.0) bayer = 0.1875; else bayer = 0.9375;
-          } else if (bdx < 2.0) {
-            if (bdy < 1.0) bayer = 0.5; else if (bdy < 2.0) bayer = 0.25; else if (bdy < 3.0) bayer = 0.6875; else bayer = 0.4375;
-          } else if (bdx < 3.0) {
-            if (bdy < 1.0) bayer = 0.125; else if (bdy < 2.0) bayer = 0.875; else if (bdy < 3.0) bayer = 0.0625; else bayer = 0.8125;
-          } else {
-            if (bdy < 1.0) bayer = 0.625; else if (bdy < 2.0) bayer = 0.375; else if (bdy < 3.0) bayer = 0.5625; else bayer = 0.3125;
-          }
-          float ditheredDensity = clamp(density + (bayer - 0.5) * 0.16, 0.0, 0.9);
-
-          int charIndex = int(floor(ditheredDensity * 5.99));
-          if (charIndex == 0) discard; // empty cell: skip glyph branches
+          int charIndex = int(floor(density * 5.99));
           float shape = 0.0;
           
           if (charIndex == 1) {
@@ -113,7 +102,13 @@ export function HalftoneWave() {
               if (p5.x >= 1.0 && p5.x <= 3.0 && p5.y >= 1.0 && p5.y <= 3.0) shape = 1.0;
           }
           
-          if (shape == 0.0) discard;
+          if (shape == 0.0) {
+            // Soft glow bridge: fill the dot grid's gaps near the silhouette
+            // with a smooth translucent glow instead of discarding outright.
+            if (glow < 0.05) discard;
+            gl_FragColor = vec4(glowColor * glow, glow * 0.85);
+            return;
+          }
           
           // 3. ELEGANT COLOR MAPPING (Transition based on scroll)
           float scrollT = smoothstep(0.0, 0.4, uScroll);
@@ -135,8 +130,18 @@ export function HalftoneWave() {
           // Base mix between core and edge
           vec3 finalColor = mix(coreColor, edgeColor, normalizedDepth + rim * 0.5);
           
+          // Cool-core -> warm-tip gradient: subtle warm accent strongest at
+          // the outermost petal tips, fades out on scroll (hero-only accent).
+          vec3 heroWarm = vec3(0.85, 0.3, 0.24);
+          float warmT = smoothstep(0.55, 1.0, normalizedDepth) * spotlightFade;
+          finalColor = mix(finalColor, heroWarm, warmT * 0.32);
+          
           // Add elegant, slightly tinted spotlight to final color
           finalColor += vec3(0.9, 0.95, 1.0) * spotlight * 0.65;
+          
+          // Rim glow highlight on the dot pixels too, so the glow reads as
+          // one continuous halo rather than stopping at the grid boundary.
+          finalColor += glowColor * glow * 0.55;
           
           // Apply Indigo as a subtle additive glow
           float indigoGradient = smoothstep(0.2, 0.8, normalizedDepth + rim);
