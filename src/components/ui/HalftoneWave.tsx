@@ -19,7 +19,7 @@ export function HalftoneWave() {
     const camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 100);
     camera.position.z = 15;
 
-    const renderer = new THREE.WebGLRenderer({ antialias: false, alpha: true });
+    const renderer = new THREE.WebGLRenderer({ antialias: false, alpha: true, powerPreference: 'high-performance', stencil: false });
     renderer.setSize(width, height);
     
     const isMobile = window.innerWidth < 1024;
@@ -31,7 +31,8 @@ export function HalftoneWave() {
       uTime: { value: 0.0 },
       uResolution: { value: new THREE.Vector2(width, height) },
       uPixelSize: { value: isMobile ? 5.0 : 6.0 }, 
-      uScroll: { value: 0.0 } // Used to trigger the spreading petals effect
+      uScroll: { value: 0.0 }, // Used to trigger the spreading petals effect
+      uMouse: { value: new THREE.Vector2(0, 0) }
     };
 
     // ==========================================
@@ -47,6 +48,7 @@ export function HalftoneWave() {
         uniform vec2 uResolution;
         uniform float uScroll;
         uniform float uTime;
+        uniform vec2 uMouse;
 
         void main() {
           // 1. LIGHTING & DENSITY
@@ -59,15 +61,25 @@ export function HalftoneWave() {
           float rim = 1.0 - max(0.0, dot(viewDir, normal));
           rim = smoothstep(0.5, 1.0, rim);
           
-          float density = 1.0 - normalizedDepth + (rim * 0.3);
+          // NEW: Top-down spotlight (sharper and more elegant)
+          vec3 topLightDir = normalize(vec3(0.0, 1.0, 0.4));
+          float topLightDiff = max(0.0, dot(normal, topLightDir));
+          // Fade spotlight heavily on scroll to protect readability in lower sections
+          float spotlightFade = 1.0 - smoothstep(0.0, 0.4, uScroll);
+          float spotlight = pow(topLightDiff, 3.2) * 0.42 * spotlightFade;
+          
+          // Enhanced density for subtle but more 3D ASCII
+          // Reduced spotlight influence on density to avoid solid bright blocks
+          float density = 1.0 - normalizedDepth + (rim * 0.5) + (spotlight * 0.2);
           density -= uScroll * 0.3; // Fade out slightly as it spreads
-          density = clamp(density, 0.0, 1.0);
+          density = clamp(density, 0.0, 0.9); // Clamp below 1.0 to prevent full solid blocks
           
           // 2. ASCII SCREEN-SPACE GRID
           vec2 local = fract(gl_FragCoord.xy / uPixelSize);
           vec2 p5 = floor(local * 5.0); 
           
           int charIndex = int(floor(density * 5.99));
+          if (charIndex == 0) discard; // empty cell: skip glyph branches
           float shape = 0.0;
           
           if (charIndex == 1) {
@@ -107,6 +119,9 @@ export function HalftoneWave() {
           // Base mix between core and edge
           vec3 finalColor = mix(coreColor, edgeColor, normalizedDepth + rim * 0.5);
           
+          // Add elegant, slightly tinted spotlight to final color
+          finalColor += vec3(0.9, 0.95, 1.0) * spotlight * 0.7;
+          
           // Apply Indigo as a subtle additive glow
           float indigoGradient = smoothstep(0.2, 0.8, normalizedDepth + rim);
           finalColor += indigoColor * indigoGradient * 0.4;
@@ -122,10 +137,14 @@ export function HalftoneWave() {
           float accentGate = mix(0.5, 1.0, indigoGradient);
           finalColor += accent * ((0.11 + uScroll * 0.12) * accentGate);
           
-          // 4. SPECTACULAR ORCHID PATTERN (Removed per user request)
-          // The flower is now purely a smooth, elegant geometric 3D shape
-          // without any halftone dots or stripping overlay.
-          
+          // 4. RADIAL VIGNETTE (Abyss Effect)
+          vec2 screenPos = gl_FragCoord.xy / uResolution.xy;
+          vec2 vignetteCenter = vec2(0.5) + uMouse * 0.05;
+          float distFromCenter = distance(screenPos, vignetteCenter);
+          // 0.85 -> 0.35 smoothly fades to pitch black at edges
+          float vignette = smoothstep(0.85, 0.35, distFromCenter);
+          finalColor *= vignette * 1.05; // 5% brighter
+
           gl_FragColor = vec4(finalColor, 1.0);
         }
     `;
@@ -267,11 +286,39 @@ export function HalftoneWave() {
             float density = smoothstep(1.0, 0.32, rad);
             if (density < 0.06) discard;
 
+            // 4x4 Bayer Dither for retro depth (scaled up for even larger radius)
+            float dx = mod(floor(gl_FragCoord.x * 0.33), 4.0);
+            float dy = mod(floor(gl_FragCoord.y * 0.33), 4.0);
+            float dither = 0.0;
+            if (dx < 1.0) {
+              if (dy < 1.0) dither = 0.0;
+              else if (dy < 2.0) dither = 0.75;
+              else if (dy < 3.0) dither = 0.1875;
+              else dither = 0.9375;
+            } else if (dx < 2.0) {
+              if (dy < 1.0) dither = 0.5;
+              else if (dy < 2.0) dither = 0.25;
+              else if (dy < 3.0) dither = 0.6875;
+              else dither = 0.4375;
+            } else if (dx < 3.0) {
+              if (dy < 1.0) dither = 0.125;
+              else if (dy < 2.0) dither = 0.875;
+              else if (dy < 3.0) dither = 0.0625;
+              else dither = 0.8125;
+            } else {
+              if (dy < 1.0) dither = 0.625;
+              else if (dy < 2.0) dither = 0.375;
+              else if (dy < 3.0) dither = 0.5625;
+              else dither = 0.3125;
+            }
+            // Perturb the density for the ASCII lookup (max intensity/spread)
+            float ditheredDensity = density + (dither - 0.5) * 1.1;
+
             // Same ASCII screen-space grid as the main flower, so petals share
             // its exact halftone character style (one continuous material feel).
             vec2 localc = fract(gl_FragCoord.xy / uPixelSize);
             vec2 p5 = floor(localc * 5.0);
-            int charIndex = int(floor(density * 5.99));
+            int charIndex = int(floor(ditheredDensity * 5.99));
             float shape = 0.0;
             if (charIndex == 1) {
                 if (p5.x == 2.0 && p5.y == 2.0) shape = 1.0;
@@ -303,12 +350,14 @@ export function HalftoneWave() {
           }
         `,
       });
-      const PETAL_COUNT = 18;
+      // Reduced from 18 to 8 petals to prevent massive GPU overdraw and frame drops 
+      // when scrolling into the operations stack section, keeping the page very lightweight.
+      const PETAL_COUNT = 8;
       // Palette harmonized with the flower (toned-down blue-indigo / violet /
       // teal family) so petals vary in hue without clashing with the bloom.
       const petalPalette = [
         new THREE.Vector3(0.05, 0.17, 0.46), // blue-indigo (base)
-        new THREE.Vector3(0.05, 0.21, 0.36), // teal
+        new THREE.Vector3(0.02, 0.08, 0.60), // deep blue 2 (was teal)
         new THREE.Vector3(0.10, 0.13, 0.52), // deep blue
         new THREE.Vector3(0.05, 0.15, 0.44), // blue
         new THREE.Vector3(0.12, 0.12, 0.44), // muted indigo (subtle violet hint)
@@ -321,7 +370,7 @@ export function HalftoneWave() {
         // Per-petal material so brightness can vary with size (atmospheric
         // perspective): small = far/dim, medium closer, large = near/brightest.
         const normSize = Math.min(Math.max((size - 0.55) / 1.5, 0), 1);
-        const bright = 0.6 + normSize * 0.75;    // ~0.6 (far) .. 1.35 (near)
+        const bright = (0.6 + normSize * 0.75) * 1.05;    // ~0.6 (far) .. 1.35 (near), +5% brighter
         const tint = petalPalette[(Math.random() * petalPalette.length) | 0].clone();
         const mat = petalMat!.clone();
         mat.uniforms.uOpacity = petalUniforms.uOpacity; // share fade opacity
@@ -330,8 +379,8 @@ export function HalftoneWave() {
         const m = new THREE.Mesh(petalGeo, mat);
         m.scale.setScalar(size);
 
-        // ~1/3 orbit the flower like satellites; the rest drift down.
-        const mode: 'drift' | 'orbit' = i < 6 ? 'orbit' : 'drift';
+        // All petals now orbit the flower like satellites
+        const mode: 'drift' | 'orbit' = 'orbit';
 
         const sx = (Math.random() * 2 - 1) * 8.5;
         const sy = Math.random() * 18;
@@ -399,6 +448,7 @@ export function HalftoneWave() {
     let centerAt = Infinity;
     let rightAt = Infinity;
     let petalStartAt = Infinity;
+    let footerAt = Infinity;
     const computeAnchors = () => {
       const vh = window.innerHeight;
       const showcaseEl = document.getElementById('showcase');
@@ -420,6 +470,10 @@ export function HalftoneWave() {
         petalStartAt = ftTop - vh * 0.5;
       } else {
         petalStartAt = centerAt;
+      }
+      const footerEl = document.querySelector('footer');
+      if (footerEl) {
+        footerAt = footerEl.getBoundingClientRect().top + window.scrollY - vh;
       }
     };
 
@@ -469,6 +523,16 @@ export function HalftoneWave() {
           x = lerp(heroX, 0, smooth(centerAt - band, centerAt, scrollY)); // right → center
         }
       }
+      
+      // Footer right-shift override
+      if (footerAt !== Infinity) {
+         const shiftStart = Math.max(0, footerAt - 800);
+         if (scrollY > shiftStart) {
+            const shiftProgress = smooth(shiftStart, footerAt, scrollY);
+            x = lerp(x, endX, shiftProgress);
+         }
+      }
+      
       targetX = x;
     };
 
@@ -524,6 +588,21 @@ export function HalftoneWave() {
     window.addEventListener('pointermove', onPointerMove);
     window.addEventListener('pointerup', onPointerUp);
     if (mountRef.current) mountRef.current.style.cursor = 'grab';
+
+    // --- Passive Mouse Hover Parallax ---
+    let targetMouseX = 0;
+    let targetMouseY = 0;
+    let smoothMouseX = 0;
+    let smoothMouseY = 0;
+
+    const handleMouseMove = (event: MouseEvent) => {
+      targetMouseX = (event.clientX / window.innerWidth) * 2 - 1;
+      targetMouseY = -(event.clientY / window.innerHeight) * 2 + 1;
+    };
+    
+    if (!isMobile) {
+      window.addEventListener('mousemove', handleMouseMove);
+    }
     // -------------------------------------
 
     const observer = new IntersectionObserver(([entry]) => {
@@ -531,9 +610,19 @@ export function HalftoneWave() {
     }, { threshold: 0.0 });
     observer.observe(renderer.domElement);
 
+    let lastRenderTime = 0;
     const renderLoop = (timestamp: number) => {
       animationFrameId = requestAnimationFrame(renderLoop);
       if (isVisible) {
+        // Dynamic FPS Throttle: Run at 60fps in the hero section, but drop to 30fps (33.3ms) 
+        // when scrolled down into heavy DOM animation areas to prevent stuttering.
+        const fpsLimit = window.scrollY > 400 ? 33.33 : 16.66;
+        const elapsed = timestamp - lastRenderTime;
+        if (elapsed < fpsLimit) return;
+        // Align to the frame grid so throttled sections pace evenly
+        // (prevents the 24-30fps oscillation that reads as stutter).
+        lastRenderTime = timestamp - (elapsed % fpsLimit);
+
         const time = clock.getElapsedTime();
         uniforms.uTime.value = time;
         
@@ -551,15 +640,20 @@ export function HalftoneWave() {
           targetDragRotationY *= 0.95;
         }
 
-        // Lock the Y-axis facing direction, add mouse drag offset, spin on Z-axis (pinwheel)
-        group.rotation.y = (Math.PI / 1.5) + (floatRot * 0.5) + dragRotationY;
+        // Smooth mouse for parallax and vignette
+        smoothMouseX += (targetMouseX - smoothMouseX) * 0.05;
+        smoothMouseY += (targetMouseY - smoothMouseY) * 0.05;
+        uniforms.uMouse.value.set(smoothMouseX, smoothMouseY);
+
+        // Lock the Y-axis facing direction, add mouse drag offset, hover parallax, spin on Z-axis
+        group.rotation.y = (Math.PI / 1.5) + (floatRot * 0.5) + dragRotationY + smoothMouseX * 0.15;
         group.rotation.z = time * 0.15; // Counter-clockwise pinwheel spin
         
         uniforms.uScroll.value += (targetScroll - uniforms.uScroll.value) * 0.05;
         
-        // Smoothly interpolate scroll rotation separately, then add drag as a positional offset
+        // Smoothly interpolate scroll rotation separately, then add drag & hover as a positional offset
         currentScrollRotationX += (targetRotationX - currentScrollRotationX) * 0.05;
-        group.rotation.x = currentScrollRotationX + dragRotationX;
+        group.rotation.x = currentScrollRotationX + dragRotationX + smoothMouseY * 0.15;
         
         // Smoothly interpolate position and scale
         group.position.x += (targetX - group.position.x) * 0.05;
@@ -634,6 +728,7 @@ export function HalftoneWave() {
       canvas.removeEventListener('pointerdown', onPointerDown);
       window.removeEventListener('pointermove', onPointerMove);
       window.removeEventListener('pointerup', onPointerUp);
+      window.removeEventListener('mousemove', handleMouseMove);
       if (mountRef.current) {
         mountRef.current.removeChild(renderer.domElement);
       }

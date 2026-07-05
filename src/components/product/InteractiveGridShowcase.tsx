@@ -99,7 +99,7 @@ const DIMS = [
 ];
 
 function DiagnosticAnimation() {
-  const [phase, setPhase] = useState<'form' | 'thinking' | 'score' | 'improvements'>('form');
+  const [phase, setPhase] = useState<'form' | 'thinking' | 'score' | 'improvements' | 'results'>('form');
   const [stepIdx, setStepIdx] = useState(0);
   const [selectedIdx, setSelectedIdx] = useState<number | null>(null);
   const [dots, setDots] = useState('');
@@ -144,7 +144,10 @@ function DiagnosticAnimation() {
       // Improvements
       t(() => setPhase('improvements'), 10.5);
       
-      t(run, 15.5);
+      // Results
+      t(() => setPhase('results'), 14.5);
+      
+      t(run, 19.5);
     };
     run();
     return clearAll;
@@ -197,10 +200,26 @@ function DiagnosticAnimation() {
 
         {phase === 'thinking' && (
           <div className="flex flex-col items-center justify-center gap-3 animate-fade-in-up">
-            <div className="flex -space-x-1.5 opacity-80 mb-1">
-              <div className="w-4 h-4 rounded-full bg-[#556B2F] border border-[#181818] relative z-30 animate-pulse" style={{ animationDelay: '0ms' }} />
-              <div className="w-4 h-4 rounded-full bg-[#6B8E23] border border-[#181818] relative z-20 animate-pulse" style={{ animationDelay: '150ms' }} />
-              <div className="w-4 h-4 rounded-full bg-[#9ACD32] border border-[#181818] relative z-10 animate-pulse" style={{ animationDelay: '300ms' }} />
+            <div className="relative w-8 h-8 sm:w-10 sm:h-10 mb-1">
+              {[
+                { top: '5%', left: '50%', delay: 0 },
+                { top: '27.5%', left: '89%', delay: 150 },
+                { top: '72.5%', left: '89%', delay: 300 },
+                { top: '95%', left: '50%', delay: 450 },
+                { top: '72.5%', left: '11%', delay: 600 },
+                { top: '27.5%', left: '11%', delay: 750 },
+                { top: '50%', left: '50%', delay: 900 }
+              ].map((pos, i) => (
+                <div 
+                  key={i}
+                  className="absolute w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-[#aec99d] animate-loader-wave"
+                  style={{
+                    top: pos.top,
+                    left: pos.left,
+                    animationDelay: `${pos.delay}ms`
+                  }}
+                />
+              ))}
             </div>
             <span className="text-[11px] text-[#aec99d]">Analyzing responses{dots}</span>
           </div>
@@ -250,6 +269,47 @@ function DiagnosticAnimation() {
            ))}
          </div>
       </div>
+
+      {/* Results */}
+      <div className={`col-start-1 row-start-1 flex flex-col justify-center items-center p-4 w-full h-full transition-all duration-500 delay-200 ${phase === 'results' ? 'opacity-100 scale-100' : 'opacity-0 scale-105 pointer-events-none'}`}>
+        <div className="flex flex-col items-center gap-3 animate-fade-in-up">
+          <div className="relative w-32 h-24 bg-[#0d0d0d] border border-white/10 rounded-lg shadow-xl overflow-hidden flex flex-col scale-110">
+            <div className="absolute inset-0 bg-gradient-to-br from-[#aec99d]/10 to-transparent opacity-30" />
+            <div className="h-4 border-b border-white/5 flex items-center px-2 bg-white/[0.02]">
+              <div className="flex gap-1">
+                <div className="w-1.5 h-1.5 rounded-full bg-white/10" />
+                <div className="w-1.5 h-1.5 rounded-full bg-white/10" />
+              </div>
+            </div>
+            <div className="p-2.5 flex items-center gap-2 relative">
+              <div className="w-5 h-5 rounded flex items-center justify-center border border-[#aec99d]/30 bg-[#aec99d]/10 shrink-0">
+                <svg className="w-3 h-3 text-[#aec99d]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+              </div>
+              <div className="flex flex-col gap-1.5 flex-1">
+                <div className="h-[3px] w-[80%] rounded-full bg-[#aec99d]/60" />
+                <div className="h-[3px] w-[40%] rounded-full bg-white/20 mt-0.5" />
+              </div>
+            </div>
+            <div className="px-2.5 pb-2.5 pt-0.5 space-y-1.5">
+              <div className="h-[3px] w-full rounded-full bg-white/12" />
+              <div className="h-[3px] w-[86%] rounded-full bg-white/10" />
+              <div className="h-[3px] w-[68%] rounded-full bg-white/10" />
+              <div className="flex items-center gap-2 pt-1">
+                <span className="text-[7px] leading-none font-semibold text-[#aec99d] bg-[#aec99d]/12 border border-[#aec99d]/30 rounded px-1 py-[2px]">42%</span>
+                <div className="flex-1 rounded-full bg-white/10 overflow-hidden h-[3px]">
+                  <div className="h-full w-[42%] rounded-full bg-[#aec99d]/70" />
+                </div>
+              </div>
+            </div>
+            <div className="absolute inset-x-0 h-6 pointer-events-none" style={{ background: 'linear-gradient(to bottom, transparent, rgba(174,201,157,0.28), transparent)', animation: 'doc-scan 2.4s ease-in-out infinite' }} />
+          </div>
+          
+          <div className="flex flex-col items-center mt-4 gap-1.5">
+            <span className="text-[10px] text-[#aec99d]/90 uppercase tracking-[0.2em] font-medium px-4 py-1.5 bg-[#0d0d0d]/80 border border-[#aec99d]/20 rounded-full whitespace-nowrap backdrop-blur-sm shadow-[0_4px_12px_rgba(0,0,0,0.5)]">Deep Diagnostic Results</span>
+            <span className="text-[18px] text-white/50 font-medium tracking-wide mt-1 animate-pulse">Blueprints are ready to generate</span>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
@@ -277,31 +337,22 @@ function BlueprintAnimation() {
     <div className="w-full flex-1 relative overflow-hidden grid place-items-center p-4">
       <style>{`
         @keyframes doc-ingest {
-          0%   { transform: translate(-50%, -40px) scale(0.9) rotateX(-14deg); opacity: 0; }
-          13%  { transform: translate(-50%, 0px) scale(1) rotateX(0deg); opacity: 1; }
-          40%  { transform: translate(-50%, 6px) scale(1) rotateX(0deg); opacity: 1; }
-          56%  { transform: translate(-50%, 0px) scale(1) rotateX(0deg); opacity: 1; }
-          80%  { transform: translate(-50%, 64px) scale(0.48); opacity: 0.9; }
-          92%  { transform: translate(-50%, 92px) scale(0.12); opacity: 0.35; }
-          100% { transform: translate(-50%, 96px) scale(0); opacity: 0; }
+          0%   { transform: translate(-50%, -40px) scale(0.9) rotateX(-14deg); opacity: 0; filter: blur(4px); }
+          12%  { transform: translate(-50%, 0px) scale(1) rotateX(0deg); opacity: 1; filter: blur(0px); }
+          65%  { transform: translate(-50%, 0px) scale(1) rotateX(0deg); opacity: 1; filter: blur(0px); }
+          78%  { transform: translate(-50%, 15px) scale(0.95); opacity: 1; filter: blur(0px); }
+          86%  { transform: translate(-50%, 25px) scale(1.15); opacity: 0.9; filter: blur(2px); }
+          92%  { transform: translate(-50%, 30px) scale(0.4); opacity: 0; filter: blur(8px); }
+          100% { transform: translate(-50%, 30px) scale(0); opacity: 0; filter: blur(8px); }
         }
-        @keyframes beam-charge {
-          0%, 12% { opacity: 0; }
-          35% { opacity: 0.18; }
-          72% { opacity: 0.5; }
-          90% { opacity: 0.72; }
-          100% { opacity: 0.12; }
+        @keyframes doc-float {
+          0%, 100% { transform: translateY(0) rotate(-0.6deg); }
+          50% { transform: translateY(-3px) rotate(0.6deg); }
         }
-        @keyframes beam-sweep {
-          0%, 30% { transform: translateY(-120%); opacity: 0; }
-          55% { opacity: 0.8; }
-          88% { transform: translateY(120%); opacity: 0.4; }
-          100% { transform: translateY(120%); opacity: 0; }
-        }
-        @keyframes mac-glow {
-          0%, 58% { opacity: 0.12; transform: scale(0.9); }
-          88% { opacity: 0.9; transform: scale(1.18); }
-          100% { opacity: 0.32; transform: scale(1); }
+        @keyframes particle-shatter {
+          0% { transform: translate(-50%, -50%) scale(0.5); opacity: 0; }
+          20% { transform: translate(calc(-50% + (var(--tx) * 0.4)), calc(-50% + (var(--ty) * 0.4))) scale(1.5); opacity: 1; }
+          100% { transform: translate(calc(-50% + var(--tx)), calc(-50% + var(--ty))) scale(0); opacity: 0; }
         }
         @keyframes pulse-ring {
           0%, 82% { opacity: 0; transform: scale(0.4); }
@@ -313,10 +364,6 @@ function BlueprintAnimation() {
           25% { opacity: 1; }
           75% { opacity: 1; }
           100% { transform: translateY(84px); opacity: 0; }
-        }
-        @keyframes doc-float {
-          0%, 100% { transform: translateY(0) rotate(-0.6deg); }
-          50% { transform: translateY(-3px) rotate(0.6deg); }
         }
         @keyframes fade-in-text {
           0%, 65% { opacity: 0; transform: translateY(15px); }
@@ -349,33 +396,13 @@ function BlueprintAnimation() {
         {phase === 'import' && (
           <div className="flex flex-col items-center justify-center w-full">
 
-            {/* Ingest stage: document glides down a beam into the Mac */}
+            {/* Ingest stage: document glides down and shatters */}
             <div className="relative flex items-center justify-center w-full" style={{ height: '175px', perspective: '600px' }}>
-
-              {/* Tractor beam funnel */}
-              <div
-                className="absolute left-1/2 -translate-x-1/2 top-[4px] w-14 h-[120px] pointer-events-none overflow-hidden"
-                style={{
-                  background: 'linear-gradient(to bottom, rgba(174,201,157,0) 0%, rgba(174,201,157,0.28) 65%, rgba(174,201,157,0.04) 100%)',
-                  clipPath: 'polygon(38% 0, 62% 0, 100% 100%, 0% 100%)',
-                  filter: 'blur(1.5px)',
-                  opacity: 0,
-                  animation: 'beam-charge 3.8s ease-in-out forwards',
-                }}
-              >
-                <div
-                  className="absolute inset-x-0 h-6"
-                  style={{
-                    background: 'linear-gradient(to bottom, transparent, rgba(174,201,157,0.6), transparent)',
-                    animation: 'beam-sweep 3.8s ease-in forwards',
-                  }}
-                />
-              </div>
 
               {/* Falling document */}
               <div
-                className="absolute left-1/2 top-0 z-20 flex flex-col items-center gap-2"
-                style={{ animation: 'doc-ingest 3.8s cubic-bezier(0.45,0,0.2,1) forwards', willChange: 'transform, opacity' }}
+                className="absolute left-1/2 top-[10px] z-20 flex flex-col items-center gap-2"
+                style={{ animation: 'doc-ingest 4.0s cubic-bezier(0.45,0,0.2,1) forwards', willChange: 'transform, opacity, filter' }}
               >
                 {/* Diagnostic report card */}
                 <div
@@ -413,33 +440,50 @@ function BlueprintAnimation() {
                     style={{ background: 'linear-gradient(to bottom, transparent, rgba(174,201,157,0.28), transparent)', animation: 'doc-scan 2.4s ease-in-out infinite' }}
                   />
                 </div>
-                <span className="text-[9px] text-[#aec99d]/90 uppercase tracking-[0.2em] font-medium px-2.5 py-0.5 bg-[#0d0d0d]/80 border border-white/5 rounded whitespace-nowrap backdrop-blur-sm">Deep Diagnostic Results</span>
+                <span className="text-[9px] text-[#aec99d]/90 uppercase tracking-[0.2em] font-medium px-2.5 py-0.5 bg-[#0d0d0d]/80 border border-white/5 rounded whitespace-nowrap backdrop-blur-sm shadow-[0_4px_12px_rgba(0,0,0,0.5)]">Deep Diagnostic Results</span>
               </div>
 
-              {/* Mac receiver anchored at bottom center */}
-              <div className="absolute left-1/2 -translate-x-1/2 bottom-0 w-36 h-36 flex items-center justify-center pointer-events-none">
-                <div
-                  className="absolute w-16 h-16 rounded-full border border-[#aec99d]/60"
-                  style={{ animation: 'pulse-ring 3.8s ease-out forwards' }}
-                />
-                <div
-                  className="absolute w-16 h-16 rounded-full border border-[#aec99d]/40"
-                  style={{ animation: 'pulse-ring 3.8s ease-out forwards', animationDelay: '0.18s' }}
-                />
-                <div
-                  className="absolute w-20 h-20 bg-[#aec99d] rounded-full blur-2xl z-[-1]"
-                  style={{ animation: 'mac-glow 3.8s ease-in-out forwards' }}
-                />
-                <RetroMacCanvas />
-              </div>
+              {/* Shatter Particles */}
+              {Array.from({ length: 24 }).map((_, i) => {
+                const angle = (i * 137.5) * (Math.PI / 180); 
+                const dist = 30 + (i % 5) * 20;
+                const x = Math.cos(angle) * dist;
+                const y = Math.sin(angle) * dist + (i % 3) * 25;
+                return (
+                  <div
+                    key={`particle-${i}`}
+                    className="absolute w-[3px] h-[3px] rounded-full bg-[#aec99d] z-30"
+                    style={{
+                      left: '50%',
+                      top: 'calc(50% + 20px)',
+                      '--tx': `${x}px`,
+                      '--ty': `${y + 40}px`,
+                      animation: `particle-shatter 1.4s cubic-bezier(0.2, 0.8, 0.2, 1) forwards`,
+                      animationDelay: `${3.3 + (i % 4) * 0.04}s`,
+                      opacity: 0,
+                      boxShadow: '0 0 8px 1.5px rgba(174,201,157,0.8)'
+                    } as React.CSSProperties}
+                  />
+                )
+              })}
+
+              {/* Ethereal Glow left behind */}
+              <div 
+                className="absolute left-1/2 top-[calc(50%+20px)] -translate-x-1/2 -translate-y-1/2 w-32 h-32 bg-[#aec99d] rounded-full blur-[40px] z-10 pointer-events-none"
+                style={{ 
+                  animation: 'pulse-ring 1.8s ease-out forwards',
+                  animationDelay: '3.3s',
+                  opacity: 0 
+                }}
+              />
             </div>
 
             <div className="flex flex-col items-center gap-3 z-10 relative mt-1 w-full">
               <span className="text-[10px] text-white/70 bg-[#111111]/80 px-3 py-1 rounded-full backdrop-blur-sm opacity-0 animate-[fade-in-text_4.5s_ease-out_forwards]">Engine processing from deep diagnostic result</span>
               <div className="flex flex-wrap justify-center gap-3 max-w-[240px]">
-                <div className="bg-white/5 border border-white/10 rounded px-3 py-1.5 text-[10px] text-white/80 whitespace-nowrap opacity-0 animate-[pop-in-pill_0.6s_ease-out_forwards]" style={{ animationDelay: '3.0s' }}>Goal: Scale Ops</div>
-                <div className="bg-white/5 border border-white/10 rounded px-3 py-1.5 text-[10px] text-white/80 whitespace-nowrap opacity-0 animate-[pop-in-pill_0.6s_ease-out_forwards]" style={{ animationDelay: '3.2s' }}>Data: Partially Centralized</div>
-                <div className="bg-[#aec99d]/10 border border-[#aec99d]/30 rounded px-3 py-1.5 text-[10px] text-[#aec99d] shadow-[0_0_15px_rgba(174,201,157,0.15)] font-medium whitespace-nowrap opacity-0 animate-[pop-in-pill_0.6s_ease-out_forwards]" style={{ animationDelay: '3.4s' }}>Score: 42%</div>
+                <div className="bg-white/5 border border-white/10 rounded px-3 py-1.5 text-[10px] text-white/80 whitespace-nowrap opacity-0 animate-[pop-in-pill_0.6s_ease-out_forwards]" style={{ animationDelay: '3.6s' }}>Goal: Scale Ops</div>
+                <div className="bg-white/5 border border-white/10 rounded px-3 py-1.5 text-[10px] text-white/80 whitespace-nowrap opacity-0 animate-[pop-in-pill_0.6s_ease-out_forwards]" style={{ animationDelay: '3.75s' }}>Data: Partially Centralized</div>
+                <div className="bg-[#aec99d]/10 border border-[#aec99d]/30 rounded px-3 py-1.5 text-[10px] text-[#aec99d] shadow-[0_0_15px_rgba(174,201,157,0.15)] font-medium whitespace-nowrap opacity-0 animate-[pop-in-pill_0.6s_ease-out_forwards]" style={{ animationDelay: '3.9s' }}>Score: 42%</div>
               </div>
             </div>
           </div>
@@ -481,7 +525,7 @@ function BlueprintAnimation() {
            {/* Card 1 */}
            <div className={`group relative flex items-center gap-2 rounded-2xl p-3 border border-white/10 overflow-hidden bg-gradient-to-br from-white/[0.055] to-white/[0.015] ${phase === 'blueprint' ? 'animate-[blueprint-card-enter_0.7s_ease-out_forwards]' : 'opacity-0'}`} style={{ boxShadow: '0 10px 26px -14px rgba(0,0,0,0.65), inset 0 1px 0 rgba(255,255,255,0.06)', animationDelay: phase === 'blueprint' ? '0.2s' : '0s' }}>
               <div className="absolute left-0 top-2.5 bottom-2.5 w-[3px] rounded-full bg-white/20" />
-              <div className="flex items-center gap-2 w-[42%] min-w-0 relative z-10">
+              <div className="flex items-center gap-2 flex-1 min-w-0 pr-2 relative z-10">
                  <div className="w-6 h-6 rounded-lg bg-white/[0.06] border border-white/10 flex items-center justify-center text-white/70 shrink-0">
                    <svg className="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><path strokeLinecap="round" strokeLinejoin="round" d="M12 9v4m0 4h.01M10.3 3.86L1.8 18a2 2 0 001.7 3h17a2 2 0 001.7-3L13.7 3.86a2 2 0 00-3.4 0z"/></svg>
                  </div>
@@ -490,13 +534,18 @@ function BlueprintAnimation() {
                     <span className="text-[11px] text-white/90 font-medium leading-snug truncate">Centralized Data</span>
                  </div>
               </div>
-              <div className="relative flex-1 min-w-[20px] h-3 z-10 flex items-center">
-                 <div className="h-[2px] w-full rounded-full" style={{ background: 'linear-gradient(to right, rgba(255,255,255,0.12), rgba(174,201,157,0.85))' }} />
-                 <span className="absolute top-1/2 -translate-y-1/2 w-1.5 h-1.5 rounded-full bg-[#aec99d]" style={{ boxShadow: '0 0 8px #aec99d', animation: 'bp-flow 1.9s ease-in-out infinite' }} />
-                 <svg className="absolute right-[-1px] top-1/2 -translate-y-1/2 w-2.5 h-2.5 text-[#aec99d]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.6"><path strokeLinecap="round" strokeLinejoin="round" d="M9 6l6 6-6 6"/></svg>
+              <div className="relative w-[30px] sm:w-[40px] shrink-0 h-3 z-10 flex items-center mx-1 sm:mx-2">
+                  <div className="relative h-[1px] w-full bg-white/20">
+                     {/* Premium Node Connector (Mini) */}
+                     <div className="absolute left-1/2 top-[0.5px] -translate-x-1/2 -translate-y-1/2 flex items-center justify-center">
+                       <div className="absolute w-[18px] h-[18px] rounded-full border border-[#b2cca2]/40 animate-[ping_2.5s_cubic-bezier(0,0,0.2,1)_infinite] opacity-60" />
+                       <div className="absolute w-[10px] h-[10px] rounded-full border border-[#b2cca2]/60 bg-[#1c1c22]/80 backdrop-blur-md shadow-[0_0_6px_rgba(178,204,162,0.3)]" />
+                       <div className="w-[4px] h-[4px] rounded-full bg-[#b2cca2] shadow-[0_0_8px_1px_rgba(178,204,162,1)] z-10" />
+                     </div>
+                  </div>
               </div>
-              <div className="flex items-center gap-2 w-[42%] min-w-0 justify-end text-right relative z-10">
-                 <div className="flex flex-col items-end min-w-0">
+              <div className="flex items-center gap-2 flex-1 min-w-0 pl-2 justify-end text-right relative z-10">
+                 <div className="flex flex-col w-full text-right min-w-0">
                     <span className="text-[8px] text-[#aec99d]/80 uppercase tracking-wider mb-0.5">Resolution</span>
                     <span className="text-[11px] text-white/90 font-medium leading-snug truncate">Data Sync</span>
                  </div>
@@ -509,7 +558,7 @@ function BlueprintAnimation() {
            {/* Card 2 */}
            <div className={`group relative flex items-center gap-2 rounded-2xl p-3 border border-white/10 overflow-hidden bg-gradient-to-br from-white/[0.055] to-white/[0.015] ${phase === 'blueprint' ? 'animate-[blueprint-card-enter_0.7s_ease-out_forwards]' : 'opacity-0'}`} style={{ boxShadow: '0 10px 26px -14px rgba(0,0,0,0.65), inset 0 1px 0 rgba(255,255,255,0.06)', animationDelay: phase === 'blueprint' ? '0.4s' : '0s' }}>
               <div className="absolute left-0 top-2.5 bottom-2.5 w-[3px] rounded-full bg-white/20" />
-              <div className="flex items-center gap-2 w-[42%] min-w-0 relative z-10">
+              <div className="flex items-center gap-2 flex-1 min-w-0 pr-4 relative z-10">
                  <div className="w-6 h-6 rounded-lg bg-white/[0.06] border border-white/10 flex items-center justify-center text-white/70 shrink-0">
                    <svg className="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3.2"/></svg>
                  </div>
@@ -518,18 +567,23 @@ function BlueprintAnimation() {
                     <span className="text-[11px] text-white/90 font-medium leading-snug truncate">Scale Ops</span>
                  </div>
               </div>
-              <div className="relative flex-1 min-w-[20px] h-3 z-10 flex items-center">
-                 <div className="h-[2px] w-full rounded-full" style={{ background: 'linear-gradient(to right, rgba(255,255,255,0.12), rgba(174,201,157,0.85))' }} />
-                 <span className="absolute top-1/2 -translate-y-1/2 w-1.5 h-1.5 rounded-full bg-[#aec99d]" style={{ boxShadow: '0 0 8px #aec99d', animation: 'bp-flow 1.9s ease-in-out infinite', animationDelay: '0.4s' }} />
-                 <svg className="absolute right-[-1px] top-1/2 -translate-y-1/2 w-2.5 h-2.5 text-[#aec99d]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.6"><path strokeLinecap="round" strokeLinejoin="round" d="M9 6l6 6-6 6"/></svg>
+              <div className="relative w-[30px] sm:w-[40px] shrink-0 h-3 z-10 flex items-center mx-1 sm:mx-2">
+                  <div className="relative h-[1px] w-full bg-white/20">
+                     {/* Premium Node Connector (Mini) */}
+                     <div className="absolute left-1/2 top-[0.5px] -translate-x-1/2 -translate-y-1/2 flex items-center justify-center">
+                       <div className="absolute w-[18px] h-[18px] rounded-full border border-[#b2cca2]/40 animate-[ping_2.5s_cubic-bezier(0,0,0.2,1)_infinite] opacity-60" style={{ animationDelay: '0.4s' }} />
+                       <div className="absolute w-[10px] h-[10px] rounded-full border border-[#b2cca2]/60 bg-[#1c1c22]/80 backdrop-blur-md shadow-[0_0_6px_rgba(178,204,162,0.3)]" />
+                       <div className="w-[4px] h-[4px] rounded-full bg-[#b2cca2] shadow-[0_0_8px_1px_rgba(178,204,162,1)] z-10" />
+                     </div>
+                  </div>
               </div>
-              <div className="flex items-center gap-2 w-[42%] min-w-0 justify-end text-right relative z-10">
-                 <div className="flex flex-col items-end min-w-0">
-                    <span className="text-[8px] text-[#aec99d]/80 uppercase tracking-wider mb-0.5">Action</span>
-                    <span className="text-[11px] text-white/90 font-medium leading-snug truncate">Triage Flow</span>
+              <div className="flex items-center gap-2 flex-1 min-w-0 pl-4 justify-end text-right relative z-10">
+                 <div className="flex flex-col w-full text-right min-w-0">
+                    <span className="text-[8px] text-[#aec99d]/80 uppercase tracking-wider mb-0.5">Deployment</span>
+                    <span className="text-[11px] text-white/90 font-medium leading-snug truncate">Automated Triage Flow</span>
                  </div>
                  <div className="w-6 h-6 rounded-lg bg-[#aec99d]/12 border border-[#aec99d]/35 flex items-center justify-center text-[#aec99d] shrink-0">
-                   <svg className="w-3 h-3" viewBox="0 0 24 24" fill="currentColor"><path d="M13 2L3 14h7l-1 8 10-12h-7l1-8z"/></svg>
+                   <svg className="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path strokeLinecap="round" strokeLinejoin="round" d="M20 6L9 17l-5-5"/></svg>
                  </div>
               </div>
            </div>
@@ -723,10 +777,28 @@ function ConsoleAnimation() {
 
         {/* AI Typing Indicator */}
         <div className={`flex items-center gap-2 transition-all duration-300 ease-out ${phase === 'ai_typing' ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 hidden'}`}>
-           <div className="bg-[#111111] border border-white/5 rounded-2xl rounded-tl-sm px-4 py-3 text-white/70 text-[12px] shadow-sm flex items-center gap-1">
-             <div className="w-1.5 h-1.5 bg-white/40 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
-             <div className="w-1.5 h-1.5 bg-white/40 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
-             <div className="w-1.5 h-1.5 bg-white/40 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
+           <div className="bg-[#111111] border border-white/5 rounded-2xl rounded-tl-sm px-4 py-2 sm:px-4 sm:py-2.5 shadow-sm flex items-center justify-center">
+             <div className="relative w-5 h-5 opacity-80">
+               {[
+                 { top: '5%', left: '50%', delay: 0 },
+                 { top: '27.5%', left: '89%', delay: 150 },
+                 { top: '72.5%', left: '89%', delay: 300 },
+                 { top: '95%', left: '50%', delay: 450 },
+                 { top: '72.5%', left: '11%', delay: 600 },
+                 { top: '27.5%', left: '11%', delay: 750 },
+                 { top: '50%', left: '50%', delay: 900 }
+               ].map((pos, i) => (
+                 <div 
+                   key={i}
+                   className="absolute w-1 h-1 rounded-full bg-[#aec99d] animate-loader-wave"
+                   style={{
+                     top: pos.top,
+                     left: pos.left,
+                     animationDelay: `${pos.delay}ms`
+                   }}
+                 />
+               ))}
+             </div>
            </div>
         </div>
 
@@ -747,11 +819,27 @@ function ConsoleAnimation() {
         {/* AI Thinking & Response */}
         <div className={`flex flex-col gap-3 transition-all duration-300 ${phase === 'thinking' || phase === 'response' ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 hidden'}`}>
           {phase === 'thinking' && (
-            <div className="flex items-center gap-2 mt-1">
-              <div className="flex -space-x-1.5 opacity-80">
-                <div className="w-3.5 h-3.5 rounded-full bg-[#556B2F] border border-[#181818] relative z-30" />
-                <div className="w-3.5 h-3.5 rounded-full bg-[#6B8E23] border border-[#181818] relative z-20" />
-                <div className="w-3.5 h-3.5 rounded-full bg-[#9ACD32] border border-[#181818] relative z-10" />
+            <div className="flex items-center gap-3 mt-1">
+              <div className="relative w-5 h-5 opacity-80">
+                {[
+                  { top: '5%', left: '50%', delay: 0 },
+                  { top: '27.5%', left: '89%', delay: 150 },
+                  { top: '72.5%', left: '89%', delay: 300 },
+                  { top: '95%', left: '50%', delay: 450 },
+                  { top: '72.5%', left: '11%', delay: 600 },
+                  { top: '27.5%', left: '11%', delay: 750 },
+                  { top: '50%', left: '50%', delay: 900 }
+                ].map((pos, i) => (
+                  <div 
+                    key={i}
+                    className="absolute w-1 h-1 rounded-full bg-[#aec99d] animate-loader-wave"
+                    style={{
+                      top: pos.top,
+                      left: pos.left,
+                      animationDelay: `${pos.delay}ms`
+                    }}
+                  />
+                ))}
               </div>
               <div className="text-white/70 text-[11px] font-medium">Analyzing systems{dots}</div>
             </div>
@@ -871,10 +959,28 @@ function WorkflowAnimation() {
         
         {/* AI Typing Indicator */}
         <div className={`flex items-center gap-2 transition-all duration-300 ease-out ${phase === 'ai_typing' ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 hidden'}`}>
-           <div className="bg-[#111111] border border-white/5 rounded-3xl rounded-tl-md px-4 py-3 text-white/70 text-[12px] shadow-sm flex items-center gap-1">
-             <div className="w-1.5 h-1.5 bg-white/40 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
-             <div className="w-1.5 h-1.5 bg-white/40 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
-             <div className="w-1.5 h-1.5 bg-white/40 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
+           <div className="bg-[#111111] border border-white/5 rounded-2xl rounded-tl-sm px-4 py-2 sm:px-4 sm:py-2.5 shadow-sm flex items-center justify-center">
+             <div className="relative w-5 h-5 opacity-80">
+               {[
+                 { top: '5%', left: '50%', delay: 0 },
+                 { top: '27.5%', left: '89%', delay: 150 },
+                 { top: '72.5%', left: '89%', delay: 300 },
+                 { top: '95%', left: '50%', delay: 450 },
+                 { top: '72.5%', left: '11%', delay: 600 },
+                 { top: '27.5%', left: '11%', delay: 750 },
+                 { top: '50%', left: '50%', delay: 900 }
+               ].map((pos, i) => (
+                 <div 
+                   key={i}
+                   className="absolute w-1 h-1 rounded-full bg-[#aec99d] animate-loader-wave"
+                   style={{
+                     top: pos.top,
+                     left: pos.left,
+                     animationDelay: `${pos.delay}ms`
+                   }}
+                 />
+               ))}
+             </div>
            </div>
         </div>
 
@@ -896,7 +1002,27 @@ function WorkflowAnimation() {
         <div className={`flex items-center gap-2.5 transition-all duration-300 ${phase === 'generating' || phase === 'generated' || phase === 'buttons' ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 hidden'}`}>
            {phase === 'generating' ? (
              <>
-               <div className="w-4 h-4 rounded-full border-2 border-white/10 border-t-[#c1ccc8] animate-spin shrink-0" />
+               <div className="relative w-5 h-5 opacity-80 shrink-0">
+                 {[
+                   { top: '5%', left: '50%', delay: 0 },
+                   { top: '27.5%', left: '89%', delay: 150 },
+                   { top: '72.5%', left: '89%', delay: 300 },
+                   { top: '95%', left: '50%', delay: 450 },
+                   { top: '72.5%', left: '11%', delay: 600 },
+                   { top: '27.5%', left: '11%', delay: 750 },
+                   { top: '50%', left: '50%', delay: 900 }
+                 ].map((pos, i) => (
+                   <div 
+                     key={i}
+                     className="absolute w-1 h-1 rounded-full bg-[#aec99d] animate-loader-wave"
+                     style={{
+                       top: pos.top,
+                       left: pos.left,
+                       animationDelay: `${pos.delay}ms`
+                     }}
+                   />
+                 ))}
+               </div>
                <span className="text-white/70 text-[12px] sm:text-[13px] font-medium">Aivory is generating workflow<span className="animate-pulse">{dots}</span></span>
              </>
            ) : null}

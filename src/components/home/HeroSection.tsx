@@ -67,7 +67,7 @@ export default function HeroSection() {
         <div className="animate-slide-up-3 pointer-events-none" style={{ animationDelay: '0.6s' }}>
           <a
             href="/free-diagnostic"
-            className="inline-flex items-center gap-3 text-white no-underline uppercase cursor-pointer transition-all duration-[250ms] border border-white/20 bg-black/60 hover:border-[#a3aa96] hover:bg-white/5 animate-gentle-bounce min-h-[44px] pointer-events-auto"
+            className="inline-flex items-center gap-3 text-white no-underline uppercase cursor-pointer transition-all duration-[250ms] border border-white/20 bg-black/20 hover:border-[#a3aa96] hover:bg-white/5 animate-gentle-bounce min-h-[44px] pointer-events-auto"
             style={{
               padding: '0.75rem 1.5rem',
               fontFamily: "'Manrope', sans-serif",

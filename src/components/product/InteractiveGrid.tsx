@@ -105,7 +105,7 @@ function AutonomousAgentAnimation() {
         </div>
         <div className="flex flex-col">
           <span className="text-[11px] text-white/90 font-medium">{current.name}</span>
-          <span className="text-[9px] text-white/60">{current.channel}</span>
+          <span className="text-[9px] text-white/40">{current.channel}</span>
         </div>
         <div className="ml-auto flex items-center gap-1.5">
           {platforms.map((p, i) => (
@@ -134,17 +134,17 @@ function AutonomousAgentAnimation() {
               className={`max-w-[85%] px-3 py-2 rounded-xl text-[11px] leading-relaxed ${
                 msg.from === 'user'
                   ? 'bg-white/10 text-white/90 rounded-br-sm'
-                  : 'bg-white/5 border border-white/10 text-white/85 rounded-bl-sm'
+                  : 'bg-white/5 border border-white/10 text-white/70 rounded-bl-sm'
               }`}
             >
               {msg.from === 'agent' && (
                 <div className="flex items-center gap-1.5 mb-1">
                   <div className="w-3 h-3 rounded-full bg-white/20 flex items-center justify-center">
-                    <svg className="w-2 h-2 text-white/75" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <svg className="w-2 h-2 text-white/60" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
                     </svg>
                   </div>
-                  <span className="text-[9px] text-white/60 font-medium uppercase tracking-wider">Aivory Agent</span>
+                  <span className="text-[9px] text-white/40 font-medium uppercase tracking-wider">Aivory Agent</span>
                 </div>
               )}
               {msg.text}
@@ -242,10 +242,10 @@ function TemplateLibraryAnimation() {
           className="flex flex-col items-center justify-center gap-2 bg-black/20 border border-white/5 rounded-xl p-3 hover:border-white/10 hover:bg-black/40 transition-all duration-300 cursor-default group"
           style={{ animationDelay: `${i * 0.1}s` }}
         >
-          <div className="text-white/60 group-hover:text-white/85 transition-colors duration-300">
+          <div className="text-white/40 group-hover:text-white/70 transition-colors duration-300">
             {tmpl.icon}
           </div>
-          <span className="text-[9px] text-white/60 group-hover:text-white/75 font-medium uppercase tracking-wider transition-colors duration-300 text-center leading-tight">
+          <span className="text-[9px] text-white/40 group-hover:text-white/60 font-medium uppercase tracking-wider transition-colors duration-300 text-center leading-tight">
             {tmpl.label}
           </span>
         </div>
@@ -288,66 +288,73 @@ function AppIntegrationsAnimation() {
     { name: 'HTTP API', icon: '/integrations/icons/http-api.svg' },
   ];
 
-  // Connecting "circuit" lines that weave between the icon cells. Coordinates
-  // are the cell centres of the 7-col x 4-row grid (percent), drawn behind the
-  // icons so the glow reads as wires linking the apps. pathLength=100 keeps the
-  // travelling pulse even regardless of the actual segment lengths. More wires
-  // + diagonals/horizontals for a denser, more "massive" networked spread.
-  const wires = [
-    { d: 'M7.14 12.5 L21.43 12.5 L21.43 37.5 L35.71 37.5 L35.71 62.5 L50 62.5 L50 87.5', color: 'rgba(96,132,236,0.95)', delay: '0s', dur: '2.0s' },
-    { d: 'M92.86 12.5 L78.57 12.5 L78.57 37.5 L64.29 37.5 L64.29 62.5 L50 62.5', color: 'rgba(64,196,206,0.95)', delay: '0.4s', dur: '2.3s' },
-    { d: 'M7.14 62.5 L21.43 62.5 L21.43 87.5 L35.71 87.5 L50 87.5', color: 'rgba(120,120,236,0.95)', delay: '0.8s', dur: '1.9s' },
-    { d: 'M92.86 87.5 L78.57 87.5 L78.57 62.5 L64.29 62.5 L64.29 37.5', color: 'rgba(72,168,220,0.95)', delay: '0.2s', dur: '2.5s' },
-    { d: 'M7.14 12.5 L21.43 37.5 L35.71 62.5 L50 87.5', color: 'rgba(64,196,206,0.95)', delay: '1.0s', dur: '2.2s' },
-    { d: 'M92.86 12.5 L78.57 37.5 L64.29 62.5 L50 87.5', color: 'rgba(96,132,236,0.95)', delay: '0.6s', dur: '2.6s' },
-    { d: 'M7.14 12.5 L92.86 12.5', color: 'rgba(120,120,236,0.95)', delay: '1.3s', dur: '2.1s' },
-    { d: 'M7.14 37.5 L92.86 37.5', color: 'rgba(64,196,206,0.95)', delay: '0.3s', dur: '2.4s' },
-  ];
+  // Generate a fully connected, evenly spread mesh (Horizontal, Vertical, and Truss Diagonals)
+  const lines = [];
+  for (let r = 0; r < 4; r++) {
+    for (let c = 0; c < 7; c++) {
+      const x1 = (c + 0.5) * (100 / 7);
+      const y1 = (r + 0.5) * 25;
+      
+      // Calculate distance from center for beautiful radiating animation delay
+      const dist1 = Math.sqrt(Math.pow(c - 3, 2) + Math.pow(r - 1.5, 2));
+
+      // Horizontal connection to the right
+      if (c < 6) {
+        lines.push({ x1, y1, x2: (c + 1.5) * (100 / 7), y2: y1, delay: dist1 * 0.15 });
+      }
+      
+      // Vertical connection to the bottom
+      if (r < 3) {
+        lines.push({ x1, y1, x2: x1, y2: (r + 1.5) * 25, delay: dist1 * 0.15 });
+      }
+      
+      // Diagonal connections (Alternating Truss Pattern for high-tech look)
+      if (r < 3 && c < 6) {
+        if (r % 2 === 0) {
+          // Top-Left to Bottom-Right
+          lines.push({ x1, y1, x2: (c + 1.5) * (100 / 7), y2: (r + 1.5) * 25, delay: dist1 * 0.15 });
+        } else {
+          // Top-Right to Bottom-Left
+          lines.push({ x1: (c + 1.5) * (100 / 7), y1: y1, x2: x1, y2: (r + 1.5) * 25, delay: dist1 * 0.15 });
+        }
+      }
+    }
+  }
 
   return (
-    <div className="relative w-full h-full">
+    <div className="w-full h-full relative">
+      {/* SVG Network Connections Overlay */}
       <svg
-        className="pointer-events-none absolute inset-0 w-full h-full z-0"
-        viewBox="0 0 100 100"
-        preserveAspectRatio="none"
-        aria-hidden="true"
+        className="absolute inset-0 w-full h-full pointer-events-none z-0"
+        style={{ filter: 'drop-shadow(0 0 3px rgba(174,201,157,0.55))' }}
       >
-        {wires.map((w, i) => (
-          <g key={i}>
-            {/* faint constant wire — gently pulses (breathes) */}
-            <path
-              d={w.d}
-              fill="none"
-              stroke={w.color}
-              strokeWidth={1}
-              vectorEffect="non-scaling-stroke"
-              className="ig-wire"
-              style={{ animationDelay: w.delay }}
-            />
-            {/* multiple travelling glowing pulses along the wire */}
-            <path
-              d={w.d}
-              fill="none"
-              stroke={w.color}
-              strokeWidth={1.6}
-              strokeLinecap="round"
-              vectorEffect="non-scaling-stroke"
-              pathLength={100}
-              className="ig-flow"
-              style={{
-                filter: `drop-shadow(0 0 3px ${w.color})`,
-                animationDuration: w.dur,
-                animationDelay: w.delay,
-              }}
-            />
-          </g>
+        {lines.map((line, i) => (
+          <line
+            key={i}
+            x1={`${line.x1}%`}
+            y1={`${line.y1}%`}
+            x2={`${line.x2}%`}
+            y2={`${line.y2}%`}
+            stroke="url(#line-gradient)"
+            strokeWidth="2"
+            className="animate-pulse"
+            style={{ animationDelay: `${line.delay}s`, animationDuration: '3s' }}
+          />
         ))}
+        <defs>
+          <linearGradient id="line-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="#aec99d" stopOpacity="0.25" />
+            <stop offset="50%" stopColor="#c8e0ba" stopOpacity="0.95" />
+            <stop offset="100%" stopColor="#aec99d" stopOpacity="0.25" />
+          </linearGradient>
+        </defs>
       </svg>
-      <div className="relative z-10 w-full h-full grid grid-cols-7 gap-2">
+
+      <div className="w-full h-full grid grid-cols-7 gap-2 relative z-10">
         {apps.map((app, i) => (
           <div
             key={app.name}
-            className="flex items-center justify-center aspect-square bg-[#111111] border border-white/5 rounded-lg hover:border-white/15 hover:bg-white/[0.03] transition-all duration-300 cursor-default group"
+            className="flex items-center justify-center aspect-square bg-[#111111]/80 backdrop-blur-sm border border-white/5 rounded-lg hover:border-[#aec99d]/30 hover:bg-[#aec99d]/10 transition-all duration-300 cursor-default group shadow-[0_0_15px_rgba(0,0,0,0.5)]"
           >
             {/* Using standard img for SVG to prevent Next.js Image lazy loading/optimization issues */}
             <img
@@ -365,28 +372,6 @@ function AppIntegrationsAnimation() {
           </div>
         ))}
       </div>
-      <style>{`
-        .ig-flow {
-          stroke-dasharray: 8 22;
-          stroke-dashoffset: 0;
-          animation-name: igFlow;
-          animation-timing-function: linear;
-          animation-iteration-count: infinite;
-        }
-        @keyframes igFlow { to { stroke-dashoffset: -30; } }
-        .ig-wire {
-          stroke-opacity: 0.12;
-          animation: igPulse 2.4s ease-in-out infinite alternate;
-        }
-        @keyframes igPulse {
-          from { stroke-opacity: 0.08; }
-          to   { stroke-opacity: 0.3; }
-        }
-        @media (prefers-reduced-motion: reduce) {
-          .ig-flow { animation: none; stroke-opacity: 0.4; stroke-dasharray: none; }
-          .ig-wire { animation: none; stroke-opacity: 0.25; }
-        }
-      `}</style>
     </div>
   );
 }
@@ -399,13 +384,13 @@ export function InteractiveGrid() {
 
       <div className="max-w-6xl mx-auto relative">
         <div className="text-center mb-16">
-          <h2 className="text-[#dfe2d8] uppercase tracking-widest text-xs font-manrope font-light mb-3">
+          <h2 className="text-[#c4c9b8] uppercase tracking-widest text-xs font-manrope font-light mb-3">
             THE PLATFORM
           </h2>
           <h3 className="text-4xl md:text-5xl font-light tracking-tight mb-4">
             Your AI Operations Stack.
           </h3>
-          <p className="text-white/75 max-w-xl mx-auto font-light leading-relaxed">
+          <p className="text-white/60 max-w-xl mx-auto font-light leading-relaxed">
             Agents that act, integrations that connect, and templates that ship fast.
           </p>
         </div>
@@ -417,7 +402,7 @@ export function InteractiveGrid() {
           <SpotlightCard className="flex flex-col p-6">
             <div className="relative z-10 mb-5">
               <h4 className="text-lg font-medium text-white mb-2">Autonomous AI Agent</h4>
-              <p className="text-white/70 text-[13px] font-light leading-relaxed">
+              <p className="text-white/50 text-[13px] font-light leading-relaxed">
                 Deploy autonomous agents inside your communication hubs. They triage, respond, and update your CRM 24/7.
               </p>
             </div>
@@ -431,7 +416,7 @@ export function InteractiveGrid() {
           <SpotlightCard className="flex flex-col p-6">
             <div className="relative z-10 mb-5">
               <h4 className="text-lg font-medium text-white mb-2">App Integrations</h4>
-              <p className="text-white/70 text-[13px] font-light leading-relaxed">
+              <p className="text-white/50 text-[13px] font-light leading-relaxed">
                 Connect your external applications and seamlessly search across conversations, documents and emails.
               </p>
             </div>
@@ -445,7 +430,7 @@ export function InteractiveGrid() {
           <SpotlightCard className="flex flex-col p-6">
             <div className="relative z-10 mb-5">
               <h4 className="text-lg font-medium text-white mb-2">Template Library</h4>
-              <p className="text-white/70 text-[13px] font-light leading-relaxed">
+              <p className="text-white/50 text-[13px] font-light leading-relaxed">
                 Speed up deployment with pre-built template flows. Connect tools and route notifications instantly.
               </p>
             </div>
@@ -515,12 +500,12 @@ function IntegrationsMarquee() {
   const marqueeItems = [...logos, ...logos];
 
   return (
-    <div id="agent-language" className="w-full mt-20 md:mt-28 mb-0">
+    <div className="w-full mt-20 md:mt-28 mb-0">
       <div className="text-center mb-10 md:mb-12 px-6">
-        <h3 className="text-[22px] md:text-[32px] font-light text-[#dfe2d8] mb-3 tracking-tight" style={{ fontFamily: "'Manrope', sans-serif" }}>
+        <h3 className="text-[22px] md:text-[32px] font-light text-[#c4c9b8] mb-3 tracking-tight" style={{ fontFamily: "'Manrope', sans-serif" }}>
           Every Aivory agent speaks your customer&apos;s language. Literally.
         </h3>
-        <p className={`text-[20px] md:text-[22px] text-[#c6c9c8] font-light transition-opacity duration-500 ${isFading ? 'opacity-0' : 'opacity-100'}`} style={{ fontFamily: MULTILINGUAL_TEXTS[langIndex].font }}>
+        <p className={`text-[20px] md:text-[22px] text-[#8a8f8e] font-light transition-opacity duration-500 ${isFading ? 'opacity-0' : 'opacity-100'}`} style={{ fontFamily: MULTILINGUAL_TEXTS[langIndex].font }}>
           {MULTILINGUAL_TEXTS[langIndex].text}
         </p>
       </div>
@@ -604,7 +589,7 @@ function getBadgeColor(status: string) {
   if (s.includes('disqualified')) {
     return 'bg-red-400/10 text-red-400 border-red-400/20';
   }
-  return 'bg-white/10 text-white/85 border-white/20';
+  return 'bg-white/10 text-white/70 border-white/20';
 }
 
 function TypewriterText({ text, onComplete }: { text: string, onComplete?: () => void }) {
@@ -676,7 +661,7 @@ function AgentFlowVisual({ title }: { title: string }) {
   }, [inView, reducedMotion]);
 
   const arrowRight = (
-    <svg className="w-3 h-3 text-white/50 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+    <svg className="w-3 h-3 text-white/30 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
     </svg>
   );
@@ -709,7 +694,7 @@ function AgentFlowVisual({ title }: { title: string }) {
           </div>
           <div className="ml-0.5">{arrowRight}</div>
           <div className="ml-0.5">
-            <div className={`w-7 h-7 rounded-xl border flex items-center justify-center transition-colors duration-700 ${reducedMotion || csState.status === 'resolved' ? 'bg-[#aec99d]/10 text-[#aec99d] border-[#aec99d]/20' : 'bg-white/5 text-white/60 border-white/10'}`}>
+            <div className={`w-7 h-7 rounded-xl border flex items-center justify-center transition-colors duration-700 ${reducedMotion || csState.status === 'resolved' ? 'bg-[#aec99d]/10 text-[#aec99d] border-[#aec99d]/20' : 'bg-white/5 text-white/40 border-white/10'}`}>
               <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
               </svg>
@@ -728,7 +713,7 @@ function AgentFlowVisual({ title }: { title: string }) {
           {['BUDGET', 'AUTHORITY', 'NEED', 'TIME'].map((tag, i) => {
             const isLit = reducedMotion || lqPhase >= i;
             return (
-              <div key={tag} className={`px-2 py-1 text-[9px] font-mono rounded border transition-colors duration-300 ${isLit ? 'bg-[#aec99d]/10 text-[#aec99d] border-[#aec99d]/20' : 'bg-white/5 text-white/50 border-white/10'}`}>
+              <div key={tag} className={`px-2 py-1 text-[9px] font-mono rounded border transition-colors duration-300 ${isLit ? 'bg-[#aec99d]/10 text-[#aec99d] border-[#aec99d]/20' : 'bg-white/5 text-white/30 border-white/10'}`}>
                  {tag}
               </div>
             );
@@ -739,7 +724,7 @@ function AgentFlowVisual({ title }: { title: string }) {
       {title === 'Office Assistant' && (
         <div className="flex items-center w-full max-w-[85%]">
            <div className="w-8 h-8 flex items-center justify-center bg-[#111111] border border-white/5 rounded-xl z-10 shrink-0">
-              <svg className="w-4 h-4 text-white/75" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <svg className="w-4 h-4 text-white/60" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" />
               </svg>
            </div>
@@ -750,7 +735,7 @@ function AgentFlowVisual({ title }: { title: string }) {
               {reducedMotion && <div className="absolute top-0 left-full -translate-x-full h-full w-full bg-[#aec99d]/50" />}
            </div>
            <div className="w-8 h-8 flex items-center justify-center bg-[#111111] border border-white/5 rounded-xl z-10 shrink-0">
-              <svg className="w-4 h-4 text-white/75" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <svg className="w-4 h-4 text-white/60" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
               </svg>
            </div>
@@ -821,7 +806,7 @@ function TaskQueueAnimation({ tasks, offset }: { tasks: any[], offset: number })
           >
             {/* Header Row */}
             <div className="flex items-center justify-between mb-2">
-              <span className="text-[10px] text-white/60 uppercase tracking-wider font-mono truncate mr-2">
+              <span className="text-[10px] text-white/40 uppercase tracking-wider font-mono truncate mr-2">
                 {task.source}
               </span>
               <span className={`text-[9px] px-1.5 py-0.5 rounded-full border ${getBadgeColor(task.status)} font-medium uppercase tracking-wide`}>
@@ -865,7 +850,7 @@ function AgentCard({ agent }: { agent: typeof NEW_AGENTS[0] }) {
         <h4 className="text-lg font-medium text-white mb-2" style={{ fontFamily: "'Manrope', sans-serif" }}>
           {agent.title}
         </h4>
-        <p className="text-white/70 text-[13px] font-light leading-relaxed" style={{ fontFamily: "'Manrope', sans-serif" }}>
+        <p className="text-white/50 text-[13px] font-light leading-relaxed" style={{ fontFamily: "'Manrope', sans-serif" }}>
           {agent.description}
         </p>
       </div>
@@ -879,7 +864,7 @@ function AgentCard({ agent }: { agent: typeof NEW_AGENTS[0] }) {
             <span className="absolute inline-flex w-full h-full rounded-full bg-[#aec99d] opacity-75 animate-ping" />
             <span className="relative inline-flex w-2 h-2 rounded-full bg-[#aec99d]" />
           </div>
-          <span className="text-[9px] text-[#dfe2d8] uppercase tracking-widest font-mono">
+          <span className="text-[9px] text-[#c4c9b8] uppercase tracking-widest font-mono">
             {agent.status}
           </span>
         </div>

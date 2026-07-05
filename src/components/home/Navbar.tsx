@@ -80,7 +80,7 @@ export default function Navbar() {
           <img
             src="/Aivory_logo_2_2026.svg"
             alt="Aivory Logo"
-            className="h-[30px] w-auto object-contain"
+            className="h-[26px] w-auto object-contain"
           />
         </Link>
 
@@ -97,7 +97,7 @@ export default function Navbar() {
               <Image src="/uk-flag.svg" alt="EN" width={14} height={10} className="rounded-[2px] object-cover h-[10px] w-[14px]" />
               EN
             </button>
-            <span className="text-white/50 text-[10px]">|</span>
+            <span className="text-white/30 text-[10px]">|</span>
             <button
               onClick={() => setLanguage('id')}
               className={`flex items-center gap-1.5 transition-all duration-300 ${
@@ -219,7 +219,7 @@ export default function Navbar() {
             <img
               src="/Aivory_logo_2_2026.svg"
               alt="Aivory Logo"
-              className="h-[30px] w-auto object-contain"
+              className="h-[26px] w-auto object-contain"
             />
           </Link>
           <button
@@ -239,7 +239,7 @@ export default function Navbar() {
           <Link
             href="/product"
             onClick={() => setIsMobileMenuOpen(false)}
-            className="text-white text-3xl font-light tracking-tight no-underline hover:text-white/85 transition-colors"
+            className="text-white text-3xl font-light tracking-tight no-underline hover:text-white/70 transition-colors"
             style={{ fontFamily: "'Manrope', sans-serif" }}
           >
             Product
@@ -247,7 +247,7 @@ export default function Navbar() {
           <Link
             href="/company"
             onClick={() => setIsMobileMenuOpen(false)}
-            className="text-white text-3xl font-light tracking-tight no-underline hover:text-white/85 transition-colors"
+            className="text-white text-3xl font-light tracking-tight no-underline hover:text-white/70 transition-colors"
             style={{ fontFamily: "'Manrope', sans-serif" }}
           >
             Company
@@ -255,7 +255,7 @@ export default function Navbar() {
           <Link
             href="/pricing"
             onClick={() => setIsMobileMenuOpen(false)}
-            className="text-white text-3xl font-light tracking-tight no-underline hover:text-white/85 transition-colors"
+            className="text-white text-3xl font-light tracking-tight no-underline hover:text-white/70 transition-colors"
             style={{ fontFamily: "'Manrope', sans-serif" }}
           >
             Pricing
@@ -263,7 +263,7 @@ export default function Navbar() {
           <Link
             href="/blog"
             onClick={() => setIsMobileMenuOpen(false)}
-            className="text-white text-3xl font-light tracking-tight no-underline hover:text-white/85 transition-colors"
+            className="text-white text-3xl font-light tracking-tight no-underline hover:text-white/70 transition-colors"
             style={{ fontFamily: "'Manrope', sans-serif" }}
           >
             Blog
@@ -271,7 +271,7 @@ export default function Navbar() {
           <Link
             href="/careers"
             onClick={() => setIsMobileMenuOpen(false)}
-            className="text-white text-3xl font-light tracking-tight no-underline hover:text-white/85 transition-colors"
+            className="text-white text-3xl font-light tracking-tight no-underline hover:text-white/70 transition-colors"
             style={{ fontFamily: "'Manrope', sans-serif" }}
           >
             Careers
@@ -279,7 +279,7 @@ export default function Navbar() {
           {authed ? (
             <button
               onClick={() => { setIsMobileMenuOpen(false); logout(); }}
-              className="text-white text-3xl font-light tracking-tight no-underline hover:text-white/85 transition-colors bg-transparent border-none cursor-pointer text-left"
+              className="text-white text-3xl font-light tracking-tight no-underline hover:text-white/70 transition-colors bg-transparent border-none cursor-pointer text-left"
               style={{ fontFamily: "'Manrope', sans-serif" }}
             >
               Sign Out
@@ -287,7 +287,7 @@ export default function Navbar() {
           ) : (
             <button
               onClick={() => { setIsMobileMenuOpen(false); setIsSignInModalOpen(true); }}
-              className="text-white text-3xl font-light tracking-tight no-underline hover:text-white/85 transition-colors bg-transparent border-none cursor-pointer text-left"
+              className="text-white text-3xl font-light tracking-tight no-underline hover:text-white/70 transition-colors bg-transparent border-none cursor-pointer text-left"
               style={{ fontFamily: "'Manrope', sans-serif" }}
             >
               Sign In
@@ -295,7 +295,7 @@ export default function Navbar() {
           )}
           <button
             onClick={() => { setIsMobileMenuOpen(false); handleDashboard('user'); }}
-            className="text-white text-3xl font-light tracking-tight no-underline hover:text-white/85 transition-colors bg-transparent border-none cursor-pointer text-left"
+            className="text-white text-3xl font-light tracking-tight no-underline hover:text-white/70 transition-colors bg-transparent border-none cursor-pointer text-left"
             style={{ fontFamily: "'Manrope', sans-serif" }}
           >
             Dashboard
@@ -303,7 +303,7 @@ export default function Navbar() {
           {authed && (accountType === 'superadmin' || accountType === 'admin') && (
             <button
               onClick={() => { setIsMobileMenuOpen(false); handleDashboard('admin'); }}
-              className="text-white text-3xl font-light tracking-tight no-underline hover:text-white/85 transition-colors bg-transparent border-none cursor-pointer text-left"
+              className="text-white text-3xl font-light tracking-tight no-underline hover:text-white/70 transition-colors bg-transparent border-none cursor-pointer text-left"
               style={{ fontFamily: "'Manrope', sans-serif" }}
             >
               Admin
@@ -323,7 +323,7 @@ export default function Navbar() {
             <Image src="/uk-flag.svg" alt="EN" width={18} height={12} className="rounded-[2px] object-cover h-[12px] w-[18px]" />
             EN
           </button>
-          <span className="text-white/50 text-xs">|</span>
+          <span className="text-white/30 text-xs">|</span>
           <button
             onClick={() => { setLanguage('id'); setIsMobileMenuOpen(false); }}
             className={`flex items-center gap-2 transition-all duration-300 ${
