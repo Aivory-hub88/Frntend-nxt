@@ -22,6 +22,15 @@ body,
   }
 }
 
+/* ─── Desktop scroll perf: same trick, gated on active scrolling ───
+   Toggled by ScrollRevealProvider (adds/removes html.is-scrolling). Using CSS
+   vars (not a raw backdrop-filter decl) so the Next/lightningcss minifier
+   can't drop the unprefixed property the way it does with plain media rules. */
+html.is-scrolling .spotlight-card {
+  --card-frost: none;
+  --card-bg: rgba(18, 18, 22, 0.92);
+}
+
 /* ─── Scroll Animation Utility ─── */
 .animate-on-scroll {
   opacity: 0;

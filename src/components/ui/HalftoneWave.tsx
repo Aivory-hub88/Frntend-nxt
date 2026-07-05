@@ -62,11 +62,11 @@ export function HalftoneWave() {
           rim = smoothstep(0.5, 1.0, rim);
           
           // NEW: Top-down spotlight (sharper and more elegant)
-          vec3 topLightDir = normalize(vec3(0.0, 1.0, 0.4));
+          vec3 topLightDir = normalize(vec3(0.14, 1.0, 0.3));
           float topLightDiff = max(0.0, dot(normal, topLightDir));
           // Fade spotlight heavily on scroll to protect readability in lower sections
           float spotlightFade = 1.0 - smoothstep(0.0, 0.4, uScroll);
-          float spotlight = pow(topLightDiff, 3.2) * 0.42 * spotlightFade;
+          float spotlight = pow(topLightDiff, 4.6) * 0.52 * spotlightFade;
           
           // Enhanced density for subtle but more 3D ASCII
           // Reduced spotlight influence on density to avoid solid bright blocks
@@ -120,11 +120,11 @@ export function HalftoneWave() {
           vec3 finalColor = mix(coreColor, edgeColor, normalizedDepth + rim * 0.5);
           
           // Add elegant, slightly tinted spotlight to final color
-          finalColor += vec3(0.9, 0.95, 1.0) * spotlight * 0.7;
+          finalColor += vec3(0.9, 0.95, 1.0) * spotlight * 0.95;
           
           // Apply Indigo as a subtle additive glow
           float indigoGradient = smoothstep(0.2, 0.8, normalizedDepth + rim);
-          finalColor += indigoColor * indigoGradient * 0.4;
+          finalColor += indigoColor * indigoGradient * 0.48;
           // Subtle living color nuance — a soft violet <-> teal shimmer that
           // harmonizes with the midnight / indigo palette. Kept low so it never
           // looks monotone, and a touch stronger while the flower moves (scroll).
@@ -142,8 +142,8 @@ export function HalftoneWave() {
           vec2 vignetteCenter = vec2(0.5) + uMouse * 0.05;
           float distFromCenter = distance(screenPos, vignetteCenter);
           // 0.85 -> 0.35 smoothly fades to pitch black at edges
-          float vignette = smoothstep(0.85, 0.35, distFromCenter);
-          finalColor *= vignette * 1.05; // 5% brighter
+          float vignette = smoothstep(0.8, 0.28, distFromCenter);
+          finalColor *= vignette * 1.08; // 8% brighter, tighter falloff for more contrast
 
           gl_FragColor = vec4(finalColor, 1.0);
         }
