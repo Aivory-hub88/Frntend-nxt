@@ -544,28 +544,16 @@ export function HalftoneWave() {
     };
 
     let scrollTicking = false;
-    let scrollBurstTimer: number | undefined;
-    let dprReduced = false;
+    // NOTE: We intentionally do NOT change renderer.setPixelRatio() during
+    // scroll. setPixelRatio() reallocates the WebGL drawing buffer, which
+    // stalls the GPU pipeline for a frame — doing that at the start of every
+    // scroll gesture (and again 200ms after it ends) was the main cause of the
+    // visible scroll stutter. The DPR is fixed to baseDPR for the whole session.
     const onScroll = () => {
       if (!scrollTicking) {
         scrollTicking = true;
         requestAnimationFrame(() => { scrollTicking = false; handleScroll(); });
       }
-      if (!dprReduced) {
-        dprReduced = true;
-        renderer.setPixelRatio(baseDPR * 0.7);
-        const rect = mountRef.current!.getBoundingClientRect();
-        uniforms.uResolution.value.set(rect.width * renderer.getPixelRatio(), rect.height * renderer.getPixelRatio());
-      }
-      window.clearTimeout(scrollBurstTimer);
-      scrollBurstTimer = window.setTimeout(() => {
-        dprReduced = false;
-        renderer.setPixelRatio(baseDPR);
-        if (mountRef.current) {
-          const rect = mountRef.current.getBoundingClientRect();
-          uniforms.uResolution.value.set(rect.width * renderer.getPixelRatio(), rect.height * renderer.getPixelRatio());
-        }
-      }, 200);
     };
     window.addEventListener('scroll', onScroll, { passive: true });
     computeAnchors();
@@ -638,9 +626,12 @@ export function HalftoneWave() {
     const renderLoop = (timestamp: number) => {
       animationFrameId = requestAnimationFrame(renderLoop);
       if (isVisible) {
-        // Dynamic FPS Throttle: Run at 60fps in the hero section, but drop to 30fps (33.3ms) 
-        // when scrolled down into heavy DOM animation areas to prevent stuttering.
-        const fpsLimit = window.scrollY > 400 ? 33.33 : 16.66;
+        // Constant 60fps cadence. Previously this stepped from 60→30fps the
+        // instant scrollY crossed 400px, which halved the frame rate (and the
+        // per-frame position/scale easing below) right in the middle of the
+        // hero transition — reading as a scroll stutter. A fixed cadence keeps
+        // the motion smooth through the whole scroll gesture.
+        const fpsLimit = 16.66;
         const elapsed = timestamp - lastRenderTime;
         if (elapsed < fpsLimit) return;
         // Align to the frame grid so throttled sections pace evenly
@@ -747,7 +738,6 @@ export function HalftoneWave() {
       cancelAnimationFrame(animationFrameId);
       clearTimeout(anchorTimer);
       observer.disconnect();
-      window.clearTimeout(scrollBurstTimer);
       window.removeEventListener('scroll', onScroll);
       window.removeEventListener('resize', handleResize);
       canvas.removeEventListener('pointerdown', onPointerDown);
