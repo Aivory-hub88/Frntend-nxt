@@ -76,10 +76,32 @@ export function HalftoneWave() {
           density = clamp(density, 0.0, 0.9); // Clamp below 1.0 to prevent full solid blocks
           
           // 2. ASCII SCREEN-SPACE GRID
+          vec2 cell = floor(gl_FragCoord.xy / uPixelSize);
           vec2 local = fract(gl_FragCoord.xy / uPixelSize);
-          vec2 p5 = floor(local * 5.0); 
-          
-          int charIndex = int(floor(density * 5.99));
+          vec2 p5 = floor(local * 5.0);
+
+          // Ordered (4x4 Bayer) dither applied to the CHARACTER SELECTION only,
+          // keyed to the glyph cell (not per-pixel — so each cell stays a single
+          // clean glyph). This smooths the hard ASCII level-banding across the
+          // flower's many curves, and keeps the level boundaries from snapping
+          // all at once frame-to-frame as it moves (the shimmer/instability).
+          // Color + silhouette below still use the raw, undithered density, so
+          // the holey scroll variation and the true silhouette are unchanged.
+          float bx = mod(cell.x, 4.0);
+          float by = mod(cell.y, 4.0);
+          float bayer;
+          if (bx < 1.0) {
+            bayer = by < 1.0 ? 0.0    : by < 2.0 ? 0.75   : by < 3.0 ? 0.1875 : 0.9375;
+          } else if (bx < 2.0) {
+            bayer = by < 1.0 ? 0.5    : by < 2.0 ? 0.25   : by < 3.0 ? 0.6875 : 0.4375;
+          } else if (bx < 3.0) {
+            bayer = by < 1.0 ? 0.125  : by < 2.0 ? 0.875  : by < 3.0 ? 0.0625 : 0.8125;
+          } else {
+            bayer = by < 1.0 ? 0.625  : by < 2.0 ? 0.375  : by < 3.0 ? 0.5625 : 0.3125;
+          }
+          float ditheredDensity = clamp(density + (bayer - 0.5) * 0.167, 0.0, 0.99);
+
+          int charIndex = int(floor(ditheredDensity * 5.99));
           if (charIndex == 0) discard; // empty cell: skip glyph branches
           float shape = 0.0;
           
@@ -162,7 +184,7 @@ export function HalftoneWave() {
     // ==========================================
     // 1. MAIN 6-LOBE FLOWER (Base)
     // ==========================================
-    const geometry = new THREE.SphereGeometry(1, 96, 96);
+    const geometry = new THREE.SphereGeometry(1, 128, 128); // higher tessellation = smoother petal curves at the silhouette
     const material = new THREE.ShaderMaterial({
       uniforms,
       side: THREE.FrontSide, 
