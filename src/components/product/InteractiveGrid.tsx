@@ -341,7 +341,6 @@ function AppIntegrationsAnimation() {
                     ? 'opacity-100 scale-110 drop-shadow-[0_0_5px_rgba(255,255,255,0.3)]' 
                     : 'opacity-30 grayscale'}
                 `}
-                loading="lazy"
               />
               {/* Inner subtle glow for active cell */}
               {isActive && (
