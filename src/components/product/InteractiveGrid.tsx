@@ -333,8 +333,8 @@ function AppIntegrationsAnimation() {
               <img
                 src={app.icon}
                 alt={app.name}
-                width={18}
-                height={18}
+                width={22}
+                height={22}
                 className={`transition-all duration-[800ms] z-10 relative
                   ${isInvert ? 'invert' : ''}
                   ${isActive 
