@@ -76,15 +76,30 @@ export function HalftoneWave() {
           density = clamp(density, 0.0, 0.9); // Clamp below 1.0 to prevent full solid blocks
           
           // 2. ASCII SCREEN-SPACE GRID
-          // No dithering on the character selection — the raw density drives the
-          // glyph level directly, which keeps the halftone crisp and the density
-          // contrast punchy (full-bright edge cells vs dark core). Ordered dither
-          // was tried here but it spread the density across levels, flattening
-          // the contrast and dulling the vibrancy.
+          // LIGHT ordered (4x4 Bayer) dither on the character selection, keyed to
+          // the glyph cell — softens the hard level-boundary contours (the
+          // "pembatas") so the shading spreads smoothly. Kept light (0.12 vs the
+          // earlier heavy 0.167 that dulled the color); on the current rich
+          // palette this smooths banding without flattening. Color + silhouette
+          // still use the raw, undithered density.
+          vec2 cell = floor(gl_FragCoord.xy / uPixelSize);
           vec2 local = fract(gl_FragCoord.xy / uPixelSize);
           vec2 p5 = floor(local * 5.0);
+          float bx = mod(cell.x, 4.0);
+          float by = mod(cell.y, 4.0);
+          float bayer;
+          if (bx < 1.0) {
+            bayer = by < 1.0 ? 0.0    : by < 2.0 ? 0.75   : by < 3.0 ? 0.1875 : 0.9375;
+          } else if (bx < 2.0) {
+            bayer = by < 1.0 ? 0.5    : by < 2.0 ? 0.25   : by < 3.0 ? 0.6875 : 0.4375;
+          } else if (bx < 3.0) {
+            bayer = by < 1.0 ? 0.125  : by < 2.0 ? 0.875  : by < 3.0 ? 0.0625 : 0.8125;
+          } else {
+            bayer = by < 1.0 ? 0.625  : by < 2.0 ? 0.375  : by < 3.0 ? 0.5625 : 0.3125;
+          }
+          float ditheredDensity = clamp(density + (bayer - 0.5) * 0.12, 0.0, 0.99);
 
-          int charIndex = int(floor(density * 5.99));
+          int charIndex = int(floor(ditheredDensity * 5.99));
           if (charIndex == 0) discard; // empty cell: skip glyph branches
           float shape = 0.0;
           
@@ -110,11 +125,17 @@ export function HalftoneWave() {
           // blue-violet edge for a sculpted 3D read, deepening subtly on scroll.
           float scrollT = smoothstep(0.0, 0.4, uScroll);
 
-          vec3 coreColor = mix(vec3(0.02, 0.015, 0.08), vec3(0.02, 0.02, 0.09), scrollT); // near-black indigo core
-          vec3 edgeColor = mix(vec3(0.32, 0.10, 0.74), vec3(0.20, 0.09, 0.58), scrollT);  // deep, rich blue-violet -> indigo (not pale periwinkle)
+          // Smooth BLUE -> VIOLET shade across the bloom's depth (brings the blue
+          // shade back alongside the purple; analogous hues so it stays elegant,
+          // not a rainbow). Driven by the smooth depth term — no hard stops.
+          vec3 blueTone   = vec3(0.10, 0.12, 0.66); // blue shade
+          vec3 violetTone = vec3(0.42, 0.12, 0.72); // violet shade
+          float shade = smoothstep(0.0, 1.0, normalizedDepth + rim * 0.4);
+          vec3 hueCol = mix(blueTone, violetTone, shade);
 
+          vec3 coreColor = mix(vec3(0.02, 0.015, 0.07), vec3(0.02, 0.02, 0.09), scrollT); // near-black core
           float form = clamp(normalizedDepth + rim * 0.6, 0.0, 1.0);
-          vec3 finalColor = mix(coreColor, edgeColor, form);
+          vec3 finalColor = mix(coreColor, hueCol, form);
 
           // Top-down key light — tinted LAVENDER, not white. A neutral-white
           // highlight desaturated the purple into a pale/greyish patch (which
