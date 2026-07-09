@@ -120,33 +120,43 @@ export function HalftoneWave() {
           
           if (shape == 0.0) discard;
           
-          // 3. COLOR — clean, rich blue-violet. NO hue wheel, NO cyan tint (both
-          // made the hero look pale/cheap). Just a dark midnight core -> vibrant
-          // blue-violet edge for a sculpted 3D read, deepening subtly on scroll.
+          // 3. ELEGANT COLOR MAPPING (Transition based on scroll)
           float scrollT = smoothstep(0.0, 0.4, uScroll);
-
-          // Smooth BLUE -> VIOLET shade across the bloom's depth (brings the blue
-          // shade back alongside the purple; analogous hues so it stays elegant,
-          // not a rainbow). Driven by the smooth depth term — no hard stops.
-          vec3 blueTone   = vec3(0.10, 0.12, 0.66); // blue shade
-          vec3 violetTone = vec3(0.42, 0.12, 0.72); // violet shade
-          float shade = smoothstep(0.0, 1.0, normalizedDepth + rim * 0.4);
-          vec3 hueCol = mix(blueTone, violetTone, shade);
-
-          vec3 coreColor = mix(vec3(0.02, 0.015, 0.07), vec3(0.02, 0.02, 0.09), scrollT); // near-black core
-          float form = clamp(normalizedDepth + rim * 0.6, 0.0, 1.0);
-          vec3 finalColor = mix(coreColor, hueCol, form);
-
-          // Top-down key light — tinted LAVENDER, not white. A neutral-white
-          // highlight desaturated the purple into a pale/greyish patch (which
-          // read as peachy against the violet); a violet-leaning highlight stays
-          // bright yet keeps the tone rich.
-          finalColor += vec3(0.62, 0.58, 1.0) * spotlight * 0.72;
-
-          // Subtle deep-violet edge definition — kept low so the edges read rich
-          // rather than a cheap glowing fringe.
-          float rimGlow = pow(smoothstep(0.60, 1.0, normalizedDepth + rim * 0.7), 2.0);
-          finalColor += vec3(0.26, 0.10, 0.52) * rimGlow * 0.22;
+          
+          // Original Colors (Dimmed amber / Cyan / Purple)
+          vec3 origCore = vec3(0.5, 0.25, 0.05);
+          vec3 origEdge = vec3(0.04, 0.18, 0.32);
+          vec3 origIndigo = vec3(0.16, 0.02, 0.32);
+          
+          // Hero Colors (Premium Elegance: Midnight Core / Deep Blue-Purple Edges)
+          vec3 heroCore = vec3(0.02, 0.03, 0.06); // Deep midnight core (slightly brighter)
+          vec3 heroEdge = vec3(0.15, 0.08, 0.65);  // Deep blue-purple edges (brighter blue)
+          vec3 heroIndigo = vec3(0.2, 0.1, 0.4);  // Subtle purple/indigo glow (brighter)
+          
+          vec3 coreColor = mix(heroCore, origCore, scrollT);
+          vec3 edgeColor = mix(heroEdge, origEdge, scrollT);
+          vec3 indigoColor = mix(heroIndigo, origIndigo, scrollT);
+          
+          // Base mix between core and edge
+          vec3 finalColor = mix(coreColor, edgeColor, normalizedDepth + rim * 0.5);
+          
+          // Add elegant, slightly tinted spotlight to final color
+          finalColor += vec3(0.9, 0.95, 1.0) * spotlight * 0.7;
+          
+          // Apply Indigo as a subtle additive glow
+          float indigoGradient = smoothstep(0.2, 0.8, normalizedDepth + rim);
+          finalColor += indigoColor * indigoGradient * 0.4;
+          // Subtle living color nuance — a soft violet <-> teal shimmer that
+          // harmonizes with the midnight / indigo palette. Kept low so it never
+          // looks monotone, and a touch stronger while the flower moves (scroll).
+          vec3 accentA = vec3(0.30, 0.16, 0.55); // soft violet
+          vec3 accentB = vec3(0.08, 0.28, 0.42); // soft teal
+          float shimmer = 0.5 + 0.5 * sin(uTime * 0.6 + vLocalPos.y * 3.0 + vLocalPos.x * 2.0);
+          vec3 accent = mix(accentA, accentB, shimmer);
+          // More noticeable now: ~2x amount, and applied across the whole
+          // bloom (not just the rim) with edges still a touch stronger.
+          float accentGate = mix(0.5, 1.0, indigoGradient);
+          finalColor += accent * ((0.11 + uScroll * 0.12) * accentGate);
           
           // 4. RADIAL VIGNETTE (Abyss Effect)
           vec2 screenPos = gl_FragCoord.xy / uResolution.xy;
