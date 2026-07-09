@@ -31,7 +31,7 @@ export function HalftoneWave() {
     const uniforms = {
       uTime: { value: 0.0 },
       uResolution: { value: new THREE.Vector2(width * baseDPR, height * baseDPR) },
-      uPixelSize: { value: isMobile ? 5.0 : 3.5 }, // finer dots on desktop = smoother silhouette at grazing angles
+      uPixelSize: { value: isMobile ? 5.0 : 6.0 }, 
       uScroll: { value: 0.0 }, // Used to trigger the spreading petals effect
       uMouse: { value: new THREE.Vector2(0, 0) }
     };
@@ -84,22 +84,9 @@ export function HalftoneWave() {
           // still use the raw, undithered density.
           vec2 cell = floor(gl_FragCoord.xy / uPixelSize);
           vec2 local = fract(gl_FragCoord.xy / uPixelSize);
-          vec2 p5 = floor(local * 5.0);
-          float bx = mod(cell.x, 4.0);
-          float by = mod(cell.y, 4.0);
-          float bayer;
-          if (bx < 1.0) {
-            bayer = by < 1.0 ? 0.0    : by < 2.0 ? 0.75   : by < 3.0 ? 0.1875 : 0.9375;
-          } else if (bx < 2.0) {
-            bayer = by < 1.0 ? 0.5    : by < 2.0 ? 0.25   : by < 3.0 ? 0.6875 : 0.4375;
-          } else if (bx < 3.0) {
-            bayer = by < 1.0 ? 0.125  : by < 2.0 ? 0.875  : by < 3.0 ? 0.0625 : 0.8125;
-          } else {
-            bayer = by < 1.0 ? 0.625  : by < 2.0 ? 0.375  : by < 3.0 ? 0.5625 : 0.3125;
-          }
-          float ditheredDensity = clamp(density + (bayer - 0.5) * 0.12, 0.0, 0.99);
-
-          int charIndex = int(floor(ditheredDensity * 5.99));
+          vec2 p5 = floor(local * 5.0); 
+          
+          int charIndex = int(floor(density * 5.99));
           if (charIndex == 0) discard; // empty cell: skip glyph branches
           float shape = 0.0;
           
@@ -179,7 +166,7 @@ export function HalftoneWave() {
     // ==========================================
     // 1. MAIN 6-LOBE FLOWER (Base)
     // ==========================================
-    const geometry = new THREE.SphereGeometry(1, 128, 128); // higher tessellation = smoother petal curves at the silhouette
+    const geometry = new THREE.SphereGeometry(1, 96, 96);
     const material = new THREE.ShaderMaterial({
       uniforms,
       side: THREE.FrontSide, 
@@ -270,7 +257,7 @@ export function HalftoneWave() {
       baseRotX: number; baseRotY: number; baseRotZ: number;
       wobbleAmp: number; wobbleFreq: number;
     }[] = [];
-    const petalUniforms = { uOpacity: { value: 0.0 }, uPixelSize: { value: isMobile ? 5.0 : 3.5 }, uBright: { value: 1.0 }, uTint: { value: new THREE.Vector3(0.05, 0.17, 0.46) } };
+    const petalUniforms = { uOpacity: { value: 0.0 }, uPixelSize: { value: isMobile ? 5.0 : 6.0 }, uBright: { value: 1.0 }, uTint: { value: new THREE.Vector3(0.05, 0.17, 0.46) } };
     let petalGeo: THREE.PlaneGeometry | null = null;
     let petalMat: THREE.ShaderMaterial | null = null;
     let petalOpacity = 0;
