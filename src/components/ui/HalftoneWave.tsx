@@ -67,7 +67,7 @@ export function HalftoneWave() {
           float topLightDiff = max(0.0, dot(normal, topLightDir));
           // Fade spotlight heavily on scroll to protect readability in lower sections
           float spotlightFade = 1.0 - smoothstep(0.0, 0.4, uScroll);
-          float spotlight = pow(topLightDiff, 3.2) * 0.42 * spotlightFade;
+          float spotlight = pow(topLightDiff, 2.6) * 0.58 * spotlightFade; // broader + stronger top-down key light
           
           // Enhanced density for subtle but more 3D ASCII
           // Reduced spotlight influence on density to avoid solid bright blocks
@@ -116,8 +116,9 @@ export function HalftoneWave() {
           float form = clamp(normalizedDepth + rim * 0.6, 0.0, 1.0);
           vec3 finalColor = mix(coreColor, edgeColor, form);
 
-          // Cool spotlight sheen on the top-lit tips only (the 3D highlight).
-          finalColor += vec3(0.85, 0.90, 1.0) * spotlight * 0.5;
+          // Cool top-down key light — the bright highlight raking the flower
+          // from above (restored: was dimmed to 0.5 which made it read as gone).
+          finalColor += vec3(0.90, 0.95, 1.0) * spotlight * 0.85;
 
           // Violet rim glow in-hue — richness at the edges, no white/cyan wash.
           float rimGlow = pow(smoothstep(0.55, 1.0, normalizedDepth + rim * 0.7), 2.0);
