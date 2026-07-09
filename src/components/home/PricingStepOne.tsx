@@ -161,7 +161,7 @@ export default function PricingStepOne({ currency }: { currency?: 'IDR' | 'USD' 
                     {card.title}
                   </h3>
                   {card.subtitle && (
-                    <p className="mt-3 text-[14px] md:text-[15px] font-bold leading-tight text-[#c6c9c8]">
+                    <p className="mt-3 text-[14px] md:text-[15px] font-bold leading-tight text-[#8a8f8d]">
                       {card.subtitle}
                     </p>
                   )}
