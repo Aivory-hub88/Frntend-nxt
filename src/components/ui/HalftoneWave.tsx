@@ -72,7 +72,6 @@ export function HalftoneWave() {
           // Enhanced density for subtle but more 3D ASCII
           // Reduced spotlight influence on density to avoid solid bright blocks
           float density = 1.0 - normalizedDepth + (rim * 0.5) + (spotlight * 0.2);
-          density -= uScroll * 0.3; // Fade out slightly as it spreads
           density = clamp(density, 0.0, 0.9); // Clamp below 1.0 to prevent full solid blocks
           
           // 2. ASCII SCREEN-SPACE GRID
@@ -166,7 +165,7 @@ export function HalftoneWave() {
     // ==========================================
     // 1. MAIN 6-LOBE FLOWER (Base)
     // ==========================================
-    const geometry = new THREE.SphereGeometry(1, 96, 96);
+    const geometry = new THREE.SphereGeometry(1, 128, 128);
     const material = new THREE.ShaderMaterial({
       uniforms,
       side: THREE.FrontSide, 
@@ -209,10 +208,10 @@ export function HalftoneWave() {
           float idleBloom = (sin(uTime * 1.5) * 0.5 + 0.5) * 0.1;
           float spread = smoothstep(0.0, 1.0, uScroll) + (idleBloom * (1.0 - smoothstep(0.0, 1.0, uScroll)));
           
-          // Gentler spread + bend on scroll (was 1.5 / 0.8) so the petals keep
-          // their silhouette instead of blowing apart into a messy overlap.
-          float radius = 2.5 + (petalDepth * 2.0) + (petalDepth * spread * 0.7);
-          float bend = spread * 0.45;
+          // Extremely gentle spread + bend on scroll so the petals maintain
+          // a highly stable, solid 3D silhouette instead of separating into pieces.
+          float radius = 2.5 + (petalDepth * 2.0) + (petalDepth * spread * 0.25);
+          float bend = spread * 0.15;
           
           vec3 displacedPos = p * radius;
           displacedPos.y -= bend * petalDepth;

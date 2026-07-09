@@ -106,7 +106,15 @@ export default function Footer() {
           <div className="pb-6 text-sm text-white/80">
             &copy; 2026 Aivory. All rights reserved.
           </div>
-          {/* Divider removed */}
+          {/* Scraper Trap - Invisible Link */}
+          <a 
+            href="/api/internal/trap" 
+            style={{ display: 'none', visibility: 'hidden', position: 'absolute', left: '-9999px' }} 
+            aria-hidden="true" 
+            rel="nofollow"
+          >
+            System Configuration
+          </a>
         </div>
       </div>
     </footer>

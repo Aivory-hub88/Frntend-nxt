@@ -254,8 +254,7 @@ function TemplateLibraryAnimation() {
   );
 }
 
-// ── App Integrations Card ─────────────────────────────────
-// Grid of real integration logos from the Aivory Dashboard
+// ── App Integrations Card (Glowing Grid Animation) ────────────────
 function AppIntegrationsAnimation() {
   const apps = [
     { name: 'Slack', icon: '/integrations/icons/slack.svg' },
@@ -288,89 +287,69 @@ function AppIntegrationsAnimation() {
     { name: 'HTTP API', icon: '/integrations/icons/http-api.svg' },
   ];
 
-  // Generate a fully connected, evenly spread mesh (Horizontal, Vertical, and Truss Diagonals)
-  const lines = [];
-  for (let r = 0; r < 4; r++) {
-    for (let c = 0; c < 7; c++) {
-      const x1 = (c + 0.5) * (100 / 7);
-      const y1 = (r + 0.5) * 25;
-      
-      // Calculate distance from center for beautiful radiating animation delay
-      const dist1 = Math.sqrt(Math.pow(c - 3, 2) + Math.pow(r - 1.5, 2));
+  const [activeIndex, setActiveIndex] = useState(0);
 
-      // Horizontal connection to the right
-      if (c < 6) {
-        lines.push({ x1, y1, x2: (c + 1.5) * (100 / 7), y2: y1, delay: dist1 * 0.15 });
-      }
-      
-      // Vertical connection to the bottom
-      if (r < 3) {
-        lines.push({ x1, y1, x2: x1, y2: (r + 1.5) * 25, delay: dist1 * 0.15 });
-      }
-      
-      // Diagonal connections (Alternating Truss Pattern for high-tech look)
-      if (r < 3 && c < 6) {
-        if (r % 2 === 0) {
-          // Top-Left to Bottom-Right
-          lines.push({ x1, y1, x2: (c + 1.5) * (100 / 7), y2: (r + 1.5) * 25, delay: dist1 * 0.15 });
-        } else {
-          // Top-Right to Bottom-Left
-          lines.push({ x1: (c + 1.5) * (100 / 7), y1: y1, x2: x1, y2: (r + 1.5) * 25, delay: dist1 * 0.15 });
-        }
-      }
-    }
-  }
+  // Randomly change active index every 1.5 seconds
+  useEffect(() => {
+    const interval = setInterval(() => {
+      // Pick a new random index that is different from the current one
+      setActiveIndex((prev) => {
+        let next = Math.floor(Math.random() * apps.length);
+        while (next === prev) next = Math.floor(Math.random() * apps.length);
+        return next;
+      });
+    }, 1500);
+    return () => clearInterval(interval);
+  }, [apps.length]);
 
   return (
-    <div className="w-full h-full relative">
-      {/* SVG Network Connections Overlay */}
-      <svg
-        className="absolute inset-0 w-full h-full pointer-events-none z-0"
-        style={{ filter: 'drop-shadow(0 0 3px rgba(174,201,157,0.55))' }}
-      >
-        {lines.map((line, i) => (
-          <line
-            key={i}
-            x1={`${line.x1}%`}
-            y1={`${line.y1}%`}
-            x2={`${line.x2}%`}
-            y2={`${line.y2}%`}
-            stroke="url(#line-gradient)"
-            strokeWidth="2"
-            className="animate-pulse"
-            style={{ animationDelay: `${line.delay}s`, animationDuration: '3s' }}
-          />
-        ))}
-        <defs>
-          <linearGradient id="line-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#aec99d" stopOpacity="0.25" />
-            <stop offset="50%" stopColor="#c8e0ba" stopOpacity="0.95" />
-            <stop offset="100%" stopColor="#aec99d" stopOpacity="0.25" />
-          </linearGradient>
-        </defs>
-      </svg>
+    <div className="w-full h-full relative flex items-center justify-center py-2 z-0">
+      {/* Moving Background Glow */}
+      <div 
+        className="absolute w-40 h-40 blur-[45px] rounded-full transition-all duration-[1500ms] ease-in-out opacity-40 -z-10"
+        style={{
+          background: 'linear-gradient(135deg, #a855f7, #ec4899, #f97316)', // Premium purple/pink/orange
+          left: `${(activeIndex % 7) * (100 / 7) + (100/14)}%`,
+          top: `${Math.floor(activeIndex / 7) * 25 + 12.5}%`,
+          transform: 'translate(-50%, -50%)'
+        }}
+      />
 
-      <div className="w-full h-full grid grid-cols-7 gap-2 relative z-10">
-        {apps.map((app, i) => (
-          <div
-            key={app.name}
-            className="flex items-center justify-center aspect-square bg-[#111111]/80 backdrop-blur-sm border border-white/5 rounded-lg hover:border-[#aec99d]/30 hover:bg-[#aec99d]/10 transition-all duration-300 cursor-default group shadow-[0_0_15px_rgba(0,0,0,0.5)]"
-          >
-            {/* Using standard img for SVG to prevent Next.js Image lazy loading/optimization issues */}
-            <img
-              src={app.icon}
-              alt={app.name}
-              width={22}
-              height={22}
-              className={`transition-opacity duration-300 ${
-                app.name === 'GitHub' || app.name === 'Notion' 
-                  ? 'invert opacity-70 group-hover:opacity-100' 
-                  : 'opacity-70 group-hover:opacity-100'
+      <div className="w-full h-full grid grid-cols-7 gap-1.5 relative z-10">
+        {apps.map((app, i) => {
+          const isActive = i === activeIndex;
+          const isInvert = app.name === 'GitHub' || app.name === 'Notion';
+          
+          return (
+            <div
+              key={app.name}
+              className={`flex items-center justify-center aspect-square rounded-md transition-all duration-[800ms] relative overflow-hidden border ${
+                isActive 
+                  ? 'bg-[#1a1a1a] border-[#f97316]/80 shadow-[0_0_12px_rgba(249,115,22,0.4)]' 
+                  : 'bg-[#0a0a0a]/90 border-white/5'
               }`}
-              loading="lazy"
-            />
-          </div>
-        ))}
+            >
+              {/* Using standard img for SVG to prevent Next.js Image lazy loading issues */}
+              <img
+                src={app.icon}
+                alt={app.name}
+                width={18}
+                height={18}
+                className={`transition-all duration-[800ms] z-10 relative
+                  ${isInvert ? 'invert' : ''}
+                  ${isActive 
+                    ? 'opacity-100 scale-110 drop-shadow-[0_0_5px_rgba(255,255,255,0.3)]' 
+                    : 'opacity-30 grayscale'}
+                `}
+                loading="lazy"
+              />
+              {/* Inner subtle glow for active cell */}
+              {isActive && (
+                <div className="absolute inset-0 bg-gradient-to-br from-[#f97316]/10 to-transparent z-0" />
+              )}
+            </div>
+          );
+        })}
       </div>
     </div>
   );
