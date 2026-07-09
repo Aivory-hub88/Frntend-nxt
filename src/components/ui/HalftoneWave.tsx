@@ -110,19 +110,22 @@ export function HalftoneWave() {
           // blue-violet edge for a sculpted 3D read, deepening subtly on scroll.
           float scrollT = smoothstep(0.0, 0.4, uScroll);
 
-          vec3 coreColor = mix(vec3(0.02, 0.02, 0.07), vec3(0.02, 0.03, 0.10), scrollT); // deep midnight
-          vec3 edgeColor = mix(vec3(0.24, 0.11, 0.86), vec3(0.16, 0.10, 0.66), scrollT); // vibrant blue-violet -> deep indigo
+          vec3 coreColor = mix(vec3(0.02, 0.015, 0.08), vec3(0.02, 0.02, 0.09), scrollT); // near-black indigo core
+          vec3 edgeColor = mix(vec3(0.32, 0.10, 0.74), vec3(0.20, 0.09, 0.58), scrollT);  // deep, rich blue-violet -> indigo (not pale periwinkle)
 
           float form = clamp(normalizedDepth + rim * 0.6, 0.0, 1.0);
           vec3 finalColor = mix(coreColor, edgeColor, form);
 
-          // Cool top-down key light — the bright highlight raking the flower
-          // from above (restored: was dimmed to 0.5 which made it read as gone).
-          finalColor += vec3(0.90, 0.95, 1.0) * spotlight * 0.85;
+          // Top-down key light — tinted LAVENDER, not white. A neutral-white
+          // highlight desaturated the purple into a pale/greyish patch (which
+          // read as peachy against the violet); a violet-leaning highlight stays
+          // bright yet keeps the tone rich.
+          finalColor += vec3(0.62, 0.58, 1.0) * spotlight * 0.72;
 
-          // Violet rim glow in-hue — richness at the edges, no white/cyan wash.
-          float rimGlow = pow(smoothstep(0.55, 1.0, normalizedDepth + rim * 0.7), 2.0);
-          finalColor += vec3(0.34, 0.14, 0.60) * rimGlow * 0.4;
+          // Subtle deep-violet edge definition — kept low so the edges read rich
+          // rather than a cheap glowing fringe.
+          float rimGlow = pow(smoothstep(0.60, 1.0, normalizedDepth + rim * 0.7), 2.0);
+          finalColor += vec3(0.26, 0.10, 0.52) * rimGlow * 0.22;
           
           // 4. RADIAL VIGNETTE (Abyss Effect)
           vec2 screenPos = gl_FragCoord.xy / uResolution.xy;
