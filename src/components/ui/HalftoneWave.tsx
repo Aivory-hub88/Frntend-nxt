@@ -125,43 +125,50 @@ export function HalftoneWave() {
           // 3. ELEGANT COLOR MAPPING (Transition based on scroll)
           float scrollT = smoothstep(0.0, 0.4, uScroll);
           
-          // Scrolled-state colors — kept in the SAME cool blue/indigo family as
-          // the hero (was a warm amber core: vec3(0.5,0.25,0.05), which turned
-          // the flower muddy brown on scroll and made overlapping petals read
-          // as a messy tangle). Now it only deepens slightly, never goes warm.
-          vec3 origCore = vec3(0.04, 0.07, 0.16);
-          vec3 origEdge = vec3(0.06, 0.20, 0.36);
-          vec3 origIndigo = vec3(0.16, 0.06, 0.34);
-          
-          // Hero Colors (Premium Elegance: Midnight Core / Deep Blue-Purple Edges)
-          vec3 heroCore = vec3(0.02, 0.03, 0.06); // Deep midnight core (slightly brighter)
-          vec3 heroEdge = vec3(0.15, 0.08, 0.65);  // Deep blue-purple edges (brighter blue)
-          vec3 heroIndigo = vec3(0.2, 0.1, 0.4);  // Subtle purple/indigo glow (brighter)
-          
-          vec3 coreColor = mix(heroCore, origCore, scrollT);
-          vec3 edgeColor = mix(heroEdge, origEdge, scrollT);
+          // Scrolled-state palette. Cool the whole way (never warm/brown), but
+          // it SHIFTS hue on scroll for variation: the hero leans blue-violet,
+          // the scrolled state leans brighter azure/periwinkle. Bright edges vs
+          // dark cores restore the core->edge contrast that reads as 3D form
+          // (the dither smoothing had flattened that read).
+          vec3 origCore   = vec3(0.02, 0.05, 0.12);  // deep blue core
+          vec3 origEdge   = vec3(0.10, 0.34, 0.86);  // bright azure/periwinkle edge
+          vec3 origIndigo = vec3(0.10, 0.22, 0.55);  // blue glow
+
+          // Hero Colors (Premium Elegance: Midnight Core / Blue-Purple Edges)
+          vec3 heroCore   = vec3(0.02, 0.03, 0.08); // deep midnight
+          vec3 heroEdge   = vec3(0.20, 0.10, 0.74); // blue-violet edge (bright)
+          vec3 heroIndigo = vec3(0.26, 0.12, 0.48); // violet glow
+
+          vec3 coreColor   = mix(heroCore, origCore, scrollT);
+          vec3 edgeColor   = mix(heroEdge, origEdge, scrollT);
           vec3 indigoColor = mix(heroIndigo, origIndigo, scrollT);
-          
-          // Base mix between core and edge
-          vec3 finalColor = mix(coreColor, edgeColor, normalizedDepth + rim * 0.5);
-          
-          // Add elegant, slightly tinted spotlight to final color
+
+          // Depth read: stronger core(dark)->edge(bright) transition for 3D form.
+          float form = clamp(normalizedDepth + rim * 0.6, 0.0, 1.0);
+          vec3 finalColor = mix(coreColor, edgeColor, form);
+
+          // Cool tinted spotlight highlight for sculpted shading (the 3D "sheen").
           finalColor += vec3(0.9, 0.95, 1.0) * spotlight * 0.7;
-          
-          // Apply Indigo as a subtle additive glow
+
+          // Indigo/violet additive glow, gated to the mid/outer form.
           float indigoGradient = smoothstep(0.2, 0.8, normalizedDepth + rim);
-          finalColor += indigoColor * indigoGradient * 0.4;
-          // Subtle living color nuance — a soft violet <-> teal shimmer that
-          // harmonizes with the midnight / indigo palette. Kept low so it never
-          // looks monotone, and a touch stronger while the flower moves (scroll).
-          vec3 accentA = vec3(0.30, 0.16, 0.55); // soft violet
-          vec3 accentB = vec3(0.08, 0.28, 0.42); // soft teal
+          finalColor += indigoColor * indigoGradient * 0.45;
+
+          // Cyan/teal tip sheen ONLY on the outer edges/tips — adds hue variation
+          // across the bloom (so it's not one flat blue) and accentuates the 3D
+          // silhouette. Kept off the dark core so depth contrast stays intact.
+          vec3 tipTint = vec3(0.10, 0.46, 0.86);
+          float tipGate = pow(smoothstep(0.45, 1.0, normalizedDepth + rim * 0.7), 2.0);
+          finalColor += tipTint * tipGate * (0.16 + uScroll * 0.10);
+
+          // Living violet <-> teal shimmer so the surface never reads monotone;
+          // a touch stronger while scrolling.
+          vec3 accentA = vec3(0.34, 0.14, 0.60); // violet
+          vec3 accentB = vec3(0.06, 0.34, 0.50); // teal
           float shimmer = 0.5 + 0.5 * sin(uTime * 0.6 + vLocalPos.y * 3.0 + vLocalPos.x * 2.0);
           vec3 accent = mix(accentA, accentB, shimmer);
-          // More noticeable now: ~2x amount, and applied across the whole
-          // bloom (not just the rim) with edges still a touch stronger.
           float accentGate = mix(0.5, 1.0, indigoGradient);
-          finalColor += accent * ((0.11 + uScroll * 0.12) * accentGate);
+          finalColor += accent * ((0.13 + uScroll * 0.14) * accentGate);
           
           // 4. RADIAL VIGNETTE (Abyss Effect)
           vec2 screenPos = gl_FragCoord.xy / uResolution.xy;
