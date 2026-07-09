@@ -329,19 +329,21 @@ function AppIntegrationsAnimation() {
                   : 'bg-[#0a0a0a]/90 border-white/5'
               }`}
             >
-              {/* Using standard img for SVG to prevent Next.js Image lazy loading issues */}
-              <img
-                src={app.icon}
-                alt={app.name}
-                width={22}
-                height={22}
-                className={`transition-all duration-[800ms] z-10 relative
-                  ${isInvert ? 'invert' : ''}
-                  ${isActive 
-                    ? 'opacity-100 scale-110 drop-shadow-[0_0_5px_rgba(255,255,255,0.3)]' 
-                    : 'opacity-30 grayscale'}
-                `}
-              />
+              {/* Wrap the img in a div for filters to prevent Safari iOS SVG rendering bug */}
+              <div className={`transition-all duration-[800ms] z-10 relative flex items-center justify-center w-full h-full
+                ${isInvert ? 'invert' : ''}
+                ${isActive 
+                  ? 'opacity-100 scale-110 drop-shadow-[0_0_5px_rgba(255,255,255,0.3)]' 
+                  : 'opacity-40 grayscale'}
+              `}>
+                <img
+                  src={app.icon}
+                  alt={app.name}
+                  width={22}
+                  height={22}
+                  className="w-[22px] h-[22px]"
+                />
+              </div>
               {/* Inner subtle glow for active cell */}
               {isActive && (
                 <div className="absolute inset-0 bg-gradient-to-br from-[#f97316]/10 to-transparent z-0" />
