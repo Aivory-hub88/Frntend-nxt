@@ -77,7 +77,7 @@ export function CTAFooter({ title, subtitle, primaryCta, secondaryCta }: CTAFoot
 
         {/* Title */}
         <h2
-          className="text-4xl md:text-5xl font-light tracking-tight mb-6 text-white leading-tight md:whitespace-nowrap"
+          className="text-4xl md:text-5xl font-light tracking-normal mb-6 text-white leading-tight md:whitespace-nowrap"
           style={{ fontFamily: "'Manrope', sans-serif" }}
         >
           {title}
