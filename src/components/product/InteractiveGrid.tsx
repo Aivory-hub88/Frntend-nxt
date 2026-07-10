@@ -288,9 +288,21 @@ function AppIntegrationsAnimation() {
   ];
 
   const [activeIndex, setActiveIndex] = useState(0);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [inView, setInView] = useState(false);
 
-  // Randomly change active index every 1.5 seconds
   useEffect(() => {
+    const observer = new IntersectionObserver(([entry]) => {
+      setInView(entry.isIntersecting);
+    }, { threshold: 0.1 });
+    if (containerRef.current) observer.observe(containerRef.current);
+    return () => observer.disconnect();
+  }, []);
+
+  // Randomly change active index every 1.5 seconds — only while scrolled
+  // into view, so this doesn't keep re-rendering all 28 icon tiles forever.
+  useEffect(() => {
+    if (!inView) return;
     const interval = setInterval(() => {
       // Pick a new random index that is different from the current one
       setActiveIndex((prev) => {
@@ -300,10 +312,10 @@ function AppIntegrationsAnimation() {
       });
     }, 1500);
     return () => clearInterval(interval);
-  }, [apps.length]);
+  }, [apps.length, inView]);
 
   return (
-    <div className="w-full h-full relative flex items-center justify-center py-2 z-0">
+    <div ref={containerRef} className="w-full h-full relative flex items-center justify-center py-2 z-0">
       {/* Moving Background Glow */}
       <div 
         className="absolute w-40 h-40 blur-[45px] rounded-full transition-all duration-[1500ms] ease-in-out opacity-40 -z-10"
@@ -574,10 +586,14 @@ function getBadgeColor(status: string) {
   return 'bg-white/10 text-white/70 border-white/20';
 }
 
-function TypewriterText({ text, onComplete }: { text: string, onComplete?: () => void }) {
+function TypewriterText({ text, onComplete, active = true }: { text: string, onComplete?: () => void, active?: boolean }) {
   const [displayed, setDisplayed] = useState('');
-  
+
   useEffect(() => {
+    // Skip the 20ms tick loop entirely while the card is scrolled out of view —
+    // this ran unconditionally before, so 3 off-screen AgentCards could still
+    // burn ~150 state updates/sec on a main thread that's also busy scrolling.
+    if (!active) return;
     setDisplayed('');
     let i = 0;
     const interval = setInterval(() => {
@@ -590,7 +606,7 @@ function TypewriterText({ text, onComplete }: { text: string, onComplete?: () =>
       }
     }, 20); // Faster typewriter
     return () => clearInterval(interval);
-  }, [text, onComplete]);
+  }, [text, onComplete, active]);
 
   return <span>{displayed}<span className="ml-[2px] w-[2px] h-2.5 bg-[#aec99d] animate-pulse inline-block align-middle" /></span>;
 }
@@ -742,19 +758,34 @@ function TaskQueueAnimation({ tasks, offset }: { tasks: any[], offset: number })
   const [visibleItems, setVisibleItems] = useState<any[]>([]);
   // Use a ref to track unique IDs for each added task to avoid key collisions and allow React to track identity
   const idCounter = useRef(0);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [inView, setInView] = useState(false);
+
+  // This ran forever regardless of scroll position — 3 AgentCards each cycling
+  // every 3.5s (plus each card's TypewriterText ticking every 20ms) kept the
+  // main thread busy even while scrolled far away, compounding with real
+  // scroll work when the user came back through this section.
+  useEffect(() => {
+    const observer = new IntersectionObserver(([entry]) => {
+      setInView(entry.isIntersecting);
+    }, { threshold: 0.1 });
+    if (containerRef.current) observer.observe(containerRef.current);
+    return () => observer.disconnect();
+  }, []);
 
   useEffect(() => {
+    if (!inView) return;
     let timer: NodeJS.Timeout;
     const startCycle = () => {
       let currentIdx = 0;
-      
+
       // Add first task
       setVisibleItems([{ ...tasks[0], uid: idCounter.current++ }]);
-      
+
       timer = setInterval(() => {
         currentIdx = (currentIdx + 1) % tasks.length;
         const nextTask = { ...tasks[currentIdx], uid: idCounter.current++ };
-        
+
         setVisibleItems((current) => {
           const newItems = [...current, nextTask];
           if (newItems.length > 2) { return newItems.slice(newItems.length - 2); }
@@ -762,16 +793,16 @@ function TaskQueueAnimation({ tasks, offset }: { tasks: any[], offset: number })
         });
       }, 3500);
     };
-    
+
     const initTimer = setTimeout(startCycle, offset);
     return () => {
       clearTimeout(initTimer);
       clearInterval(timer); // FIX: was clearTimeout
     };
-  }, [offset, tasks]);
+  }, [offset, tasks, inView]);
 
   return (
-    <div className="flex flex-col gap-3 relative h-full overflow-hidden w-full px-5 pb-5">
+    <div ref={containerRef} className="flex flex-col gap-3 relative h-full overflow-hidden w-full px-5 pb-5">
       {visibleItems.map((task, i) => {
         const isProcessing = task.status.toLowerCase().includes('processing') || 
                              task.status.toLowerCase().includes('scoring') || 
@@ -800,7 +831,7 @@ function TaskQueueAnimation({ tasks, offset }: { tasks: any[], offset: number })
             
             {/* Body */}
             <div className="text-[11px] text-white/80 leading-relaxed mb-2 truncate">
-              {isNewest ? <TypewriterText text={task.message} /> : task.message}
+              {isNewest ? <TypewriterText text={task.message} active={inView} /> : task.message}
             </div>
             
             {/* Result / Typing */}
