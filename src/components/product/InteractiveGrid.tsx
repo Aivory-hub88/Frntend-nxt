@@ -318,7 +318,7 @@ function AppIntegrationsAnimation() {
       <div className="w-full h-full grid grid-cols-7 gap-1.5 relative z-10">
         {apps.map((app, i) => {
           const isActive = i === activeIndex;
-          const isInvert = app.name === 'GitHub' || app.name === 'Notion';
+          const isInvert = app.name === 'GitHub';
           
           return (
             <div
@@ -499,7 +499,9 @@ function IntegrationsMarquee() {
         {marqueeItems.map((item, idx) => (
           <div key={idx} className="flex flex-1 items-center justify-center gap-3 grayscale transition-all duration-300 px-8">
             {item.name === 'Zoom' || item.name === 'Glean' ? null : (
-              <img src={item.icon} alt={item.name} className="w-7 h-7 object-contain" style={{ filter: 'brightness(0) invert(1)' }} />
+              <div style={{ filter: 'brightness(0) invert(1)', width: '28px', height: '28px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <img src={item.icon} alt={item.name} className="w-full h-full object-contain" />
+              </div>
             )}
             <span className="text-white/80 font-semibold text-xl tracking-tight" style={{ fontFamily: item.name === 'Zoom' ? 'sans-serif' : 'inherit' }}>{item.name}</span>
           </div>
@@ -670,7 +672,9 @@ function AgentFlowVisual({ title }: { title: string }) {
             <img src="/integrations/icons/telegram.svg" alt="Telegram" className="w-4 h-4 opacity-80" />
           </div>
           <div className={`${boxClasses} ${csState.channel === 2 && csState.status === 'processing' && !reducedMotion ? activePulseClasses : ''}`}>
-            <img src="/integrations/icons/gmail.svg" alt="Email" className="w-4 h-4 opacity-80 grayscale" />
+            <div className="w-4 h-4 opacity-80 grayscale flex items-center justify-center">
+              <img src="/integrations/icons/gmail.svg" alt="Email" className="w-full h-full" />
+            </div>
           </div>
           <div className="ml-0.5">{arrowRight}</div>
           <div className="ml-0.5">

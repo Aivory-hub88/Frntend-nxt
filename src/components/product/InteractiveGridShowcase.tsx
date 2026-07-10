@@ -442,8 +442,11 @@ function BlueprintAnimation() {
               {Array.from({ length: 24 }).map((_, i) => {
                 const angle = (i * 137.5) * (Math.PI / 180); 
                 const dist = 30 + (i % 5) * 20;
-                const x = Math.cos(angle) * dist;
-                const y = Math.sin(angle) * dist + (i % 3) * 25;
+                // Rounded to avoid a server/client floating-point mismatch (Math.cos/sin
+                // can differ in the last bit between Node and the browser JS engine),
+                // which was tripping a React hydration-mismatch warning on every load.
+                const x = Math.round(Math.cos(angle) * dist * 1000) / 1000;
+                const y = Math.round((Math.sin(angle) * dist + (i % 3) * 25) * 1000) / 1000;
                 return (
                   <div
                     key={`particle-${i}`}
