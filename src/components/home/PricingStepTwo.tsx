@@ -1,8 +1,12 @@
 'use client';
 
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
 
 import { useLanguage } from '@/components/context/LanguageContext';
+import { PricingCheckoutModal } from '@/components/payment/PricingCheckoutModal';
+import { PRODUCT_IDS } from '@/lib/pricing';
 
 /* ─── Icons ─── */
 function ArrowUpRight({ className = '' }: { className?: string }) {
@@ -43,6 +47,7 @@ interface Plan {
   frequency: string;
   features: string[];
   cta: string;
+  productId?: string;
   overageUSD?: number;
   mostPopular?: boolean;
 }
@@ -61,6 +66,7 @@ const plans: Plan[] = [
       'Multilingual by default',
     ],
     cta: 'Start With Foundation',
+    productId: PRODUCT_IDS.FOUNDATION,
     overageUSD: 0.015
   },
   {
@@ -78,6 +84,7 @@ const plans: Plan[] = [
       'Multi-step agent flows'
     ],
     cta: 'Start With Pro',
+    productId: PRODUCT_IDS.PRO,
     overageUSD: 0.012,
     mostPopular: true
   },
@@ -97,12 +104,23 @@ const plans: Plan[] = [
       'Dedicated support + SLA guarantee'
     ],
     cta: 'Contact Sales',
+    // No productId: Enterprise is sales-assisted, not self-serve checkout.
   },
 ];
 
 export default function PricingStepTwo({ currency }: { currency?: 'IDR' | 'USD' }) {
   const { ref, isVisible } = useScrollAnimation();
   const { language, exchangeRate } = useLanguage();
+  const router = useRouter();
+  const [selectedProduct, setSelectedProduct] = useState<string | null>(null);
+
+  const handleCtaClick = (plan: Plan) => {
+    if (!plan.productId) {
+      router.push('/contact');
+      return;
+    }
+    setSelectedProduct(plan.productId);
+  };
 
   const handleMouseMove = (e: React.MouseEvent<HTMLElement>) => {
     const rect = e.currentTarget.getBoundingClientRect();
@@ -231,6 +249,7 @@ export default function PricingStepTwo({ currency }: { currency?: 'IDR' | 'USD' 
               <div className="pt-10 mt-auto">
                 <button
                   type="button"
+                  onClick={() => handleCtaClick(plan)}
                   className="w-full bg-[#c4c9b8] text-[#494949] py-[14px] px-4 text-[15px] md:text-[16px] font-medium text-center transition-colors hover:bg-[#b0b5a4]"
                 >
                   {plan.cta}
@@ -256,6 +275,13 @@ export default function PricingStepTwo({ currency }: { currency?: 'IDR' | 'USD' 
           </p>
         </div>
       </div>
+
+      <PricingCheckoutModal
+        isOpen={selectedProduct !== null}
+        onClose={() => setSelectedProduct(null)}
+        productId={selectedProduct}
+        currency={currency}
+      />
     </section>
   );
 }

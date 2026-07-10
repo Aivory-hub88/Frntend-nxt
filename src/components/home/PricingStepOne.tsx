@@ -1,8 +1,11 @@
 'use client';
 
+import { useState } from 'react';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
 
 import { useLanguage } from '@/components/context/LanguageContext';
+import { PricingCheckoutModal } from '@/components/payment/PricingCheckoutModal';
+import { PRODUCT_IDS } from '@/lib/pricing';
 
 /* ─── Arrow Icon (reused) ─── */
 function ArrowUpRight({ className = '' }: { className?: string }) {
@@ -44,6 +47,7 @@ interface PricingCard {
   description: string;
   features: string[];
   cta: string;
+  productId: string;
   savings?: string;
   mostPopular?: boolean;
 }
@@ -62,6 +66,7 @@ const cards: PricingCard[] = [
       'Data & process readiness',
     ],
     cta: 'Start Deep Diagnostic',
+    productId: PRODUCT_IDS.DEEP_DIAGNOSTIC,
   },
   {
     title: 'AI System\nBlueprint + Roadmap',
@@ -77,6 +82,7 @@ const cards: PricingCard[] = [
       '• KPI targets per phase',
     ],
     cta: 'Generate Blueprint',
+    productId: PRODUCT_IDS.BLUEPRINT,
   },
   {
     title: 'Full Stack Bundle',
@@ -86,6 +92,7 @@ const cards: PricingCard[] = [
     description: 'Everything in one. Know, plan, execute in order.',
     features: ['• Deep Diagnostic', '• Blueprint', '• Roadmap'],
     cta: 'View Deployment Plans',
+    productId: PRODUCT_IDS.FULL_STACK,
     savings: 'Save 13%',
     mostPopular: true,
   },
@@ -94,6 +101,7 @@ const cards: PricingCard[] = [
 export default function PricingStepOne({ currency }: { currency?: 'IDR' | 'USD' }) {
   const { ref, isVisible } = useScrollAnimation();
   const { language, exchangeRate } = useLanguage(); // Fixed here to use exchangeRate
+  const [selectedProduct, setSelectedProduct] = useState<string | null>(null);
 
   const handleMouseMove = (e: React.MouseEvent<HTMLElement>) => {
     const rect = e.currentTarget.getBoundingClientRect();
@@ -211,6 +219,7 @@ export default function PricingStepOne({ currency }: { currency?: 'IDR' | 'USD' 
               <div className="pt-10 mt-auto">
                 <button
                   type="button"
+                  onClick={() => setSelectedProduct(card.productId)}
                   className="w-full bg-[#c4c9b8] text-[#494949] py-[14px] px-4 text-[15px] md:text-[16px] font-medium text-center transition-colors hover:bg-[#b0b5a4]"
                 >
                   {card.cta}
@@ -220,6 +229,13 @@ export default function PricingStepOne({ currency }: { currency?: 'IDR' | 'USD' 
           ))}
         </div>
       </div>
+
+      <PricingCheckoutModal
+        isOpen={selectedProduct !== null}
+        onClose={() => setSelectedProduct(null)}
+        productId={selectedProduct}
+        currency={currency}
+      />
     </section>
   );
 }
