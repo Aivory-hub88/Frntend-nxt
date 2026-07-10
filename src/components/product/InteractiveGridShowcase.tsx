@@ -1133,7 +1133,7 @@ export function InteractiveGridShowcase() {
           <h2 className="text-[#dfe2d8] uppercase tracking-widest text-xs font-manrope font-light mb-3">
             Operational Framework
           </h2>
-          <h3 className="text-4xl md:text-5xl font-light tracking-tight mb-6 leading-tight">
+          <h3 className="text-4xl md:text-5xl font-light tracking-normal mb-6 leading-tight">
             From Assessment <br className="hidden md:block" />to Staged Autonomy
           </h3>
           <p className="text-white/75 font-light leading-relaxed">

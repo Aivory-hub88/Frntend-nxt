@@ -367,7 +367,7 @@ export function InteractiveGrid() {
           <h2 className="text-[#c4c9b8] uppercase tracking-widest text-xs font-manrope font-light mb-3">
             THE PLATFORM
           </h2>
-          <h3 className="text-4xl md:text-5xl font-light tracking-tight mb-4">
+          <h3 className="text-4xl md:text-5xl font-light tracking-normal mb-4">
             Your AI Operations Stack.
           </h3>
           <p className="text-white/60 max-w-xl mx-auto font-light leading-relaxed">
@@ -482,7 +482,7 @@ function IntegrationsMarquee() {
   return (
     <div className="w-full mt-20 md:mt-28 mb-0">
       <div className="text-center mb-10 md:mb-12 px-6">
-        <h3 className="text-[22px] md:text-[32px] font-light text-[#c4c9b8] mb-3 tracking-tight" style={{ fontFamily: "'Manrope', sans-serif" }}>
+        <h3 className="text-[22px] md:text-[32px] font-light text-[#c4c9b8] mb-3 tracking-normal" style={{ fontFamily: "'Manrope', sans-serif" }}>
           Every Aivory agent speaks your customer&apos;s language. Literally.
         </h3>
         <p className={`text-[20px] md:text-[22px] text-[#8a8f8e] font-light transition-opacity duration-500 ${isFading ? 'opacity-0' : 'opacity-100'}`} style={{ fontFamily: MULTILINGUAL_TEXTS[langIndex].font }}>
