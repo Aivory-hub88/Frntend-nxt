@@ -193,6 +193,12 @@ function setAuthCookies(data: any): void {
     account_type: acct,
     role: acct,
   };
+  // Expire any legacy domain-wide variants first (older builds stamped
+  // domain=.aivory.id copies; duplicates with different scopes poisoned the
+  // dashboards), then set fresh host-only cookies.
+  for (const k of ["aivory_access_token", "aivory_session_token", "aivory_user"]) {
+    document.cookie = `${k}=; path=/; domain=.aivory.id; max-age=0; SameSite=Lax`;
+  }
   const attrs = "path=/; max-age=604800; SameSite=Lax";
   document.cookie = `aivory_access_token=${at}; ${attrs}`;
   document.cookie = `aivory_session_token=${encodeURIComponent(JSON.stringify(at))}; ${attrs}`;
@@ -203,6 +209,7 @@ function clearAuthCookies(): void {
   if (typeof document === "undefined") return;
   for (const k of ["aivory_access_token", "aivory_session_token", "aivory_user"]) {
     document.cookie = `${k}=; path=/; max-age=0; SameSite=Lax`;
+    document.cookie = `${k}=; path=/; domain=.aivory.id; max-age=0; SameSite=Lax`;
   }
 }
 
