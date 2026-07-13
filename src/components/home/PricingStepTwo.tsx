@@ -5,7 +5,6 @@ import { useRouter } from 'next/navigation';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
 
 import { useLanguage } from '@/components/context/LanguageContext';
-import { PricingCheckoutModal } from '@/components/payment/PricingCheckoutModal';
 import { PRODUCT_IDS } from '@/lib/pricing';
 
 /* ─── Icons ─── */
@@ -119,7 +118,7 @@ export default function PricingStepTwo({ currency }: { currency?: 'IDR' | 'USD' 
       router.push('/contact');
       return;
     }
-    setSelectedProduct(plan.productId);
+    router.push(`/checkout/${plan.productId}`);
   };
 
   const handleMouseMove = (e: React.MouseEvent<HTMLElement>) => {
@@ -275,13 +274,6 @@ export default function PricingStepTwo({ currency }: { currency?: 'IDR' | 'USD' 
           </p>
         </div>
       </div>
-
-      <PricingCheckoutModal
-        isOpen={selectedProduct !== null}
-        onClose={() => setSelectedProduct(null)}
-        productId={selectedProduct}
-        currency={currency}
-      />
     </section>
   );
 }
