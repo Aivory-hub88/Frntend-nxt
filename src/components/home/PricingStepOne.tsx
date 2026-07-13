@@ -1,10 +1,10 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
 
 import { useLanguage } from '@/components/context/LanguageContext';
+import { PlanConfirmModal } from '@/components/payment/PlanConfirmModal';
 import { PRODUCT_IDS } from '@/lib/pricing';
 
 /* ─── Arrow Icon (reused) ─── */
@@ -99,9 +99,9 @@ const cards: PricingCard[] = [
 ];
 
 export default function PricingStepOne({ currency }: { currency?: 'IDR' | 'USD' }) {
-  const router = useRouter();
   const { ref, isVisible } = useScrollAnimation();
   const { language, exchangeRate } = useLanguage(); // Fixed here to use exchangeRate
+  const [selectedProduct, setSelectedProduct] = useState<string | null>(null);
 
   const handleMouseMove = (e: React.MouseEvent<HTMLElement>) => {
     const rect = e.currentTarget.getBoundingClientRect();
@@ -219,7 +219,7 @@ export default function PricingStepOne({ currency }: { currency?: 'IDR' | 'USD' 
               <div className="pt-10 mt-auto">
                 <button
                   type="button"
-                  onClick={() => router.push(`/checkout/${card.productId}`)}
+                  onClick={() => setSelectedProduct(card.productId)}
                   className="w-full bg-[#c4c9b8] text-[#494949] py-[14px] px-4 text-[15px] md:text-[16px] font-medium text-center transition-colors hover:bg-[#b0b5a4]"
                 >
                   {card.cta}
@@ -229,6 +229,12 @@ export default function PricingStepOne({ currency }: { currency?: 'IDR' | 'USD' 
           ))}
         </div>
       </div>
+
+      <PlanConfirmModal
+        productId={selectedProduct}
+        currency={currency}
+        onClose={() => setSelectedProduct(null)}
+      />
     </section>
   );
 }
