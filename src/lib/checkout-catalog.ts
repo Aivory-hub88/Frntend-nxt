@@ -1,0 +1,101 @@
+/**
+ * Customer-facing service descriptions + "what's included" feature lists for
+ * the checkout order-summary popup. Copy is kept in sync with the /pricing
+ * cards (PricingStepOne / PricingStepTwo) so the checkout never contradicts
+ * what the customer saw before clicking through.
+ */
+
+import { PRODUCT_IDS } from '@/lib/pricing';
+
+export interface CheckoutServiceInfo {
+  /** One-line explanation of what the service is / who it's for. */
+  description: string;
+  /** Bullet list of what the purchase includes. */
+  features: string[];
+}
+
+const CHECKOUT_SERVICE_INFO: Record<string, CheckoutServiceInfo> = {
+  [PRODUCT_IDS.DEEP_DIAGNOSTIC]: {
+    description:
+      'Know exactly where your business stands on AI before you build anything.',
+    features: [
+      'AI readiness score',
+      'Business objective mapping',
+      'Gap & constraint analysis',
+      'AI opportunity identification',
+      'Data & process readiness',
+    ],
+  },
+  [PRODUCT_IDS.BLUEPRINT]: {
+    description:
+      'Your full AI architecture and execution plan, built around your business, not a template.',
+    features: [
+      'Full AI system blueprint',
+      'Workflow architecture',
+      'Agent structure design',
+      'Deployment-ready plan',
+      'Phased implementation roadmap',
+      'KPI targets per phase',
+    ],
+  },
+  [PRODUCT_IDS.FULL_STACK]: {
+    description: 'Everything in one. Know, plan, execute — in order.',
+    features: ['Deep Diagnostic', 'Blueprint', 'Roadmap'],
+  },
+  [PRODUCT_IDS.FOUNDATION]: {
+    description:
+      'For individuals and solo professionals deploying their first AI agent.',
+    features: [
+      '1,500 conversations/month',
+      '1 active agent',
+      '3 workflow build',
+      'Telegram or Slack (choose one)',
+      'Multilingual by default',
+    ],
+  },
+  [PRODUCT_IDS.PRO]: {
+    description: 'For growing teams running AI operations daily.',
+    features: [
+      '5,000 conversations/month',
+      '3 active agents',
+      '7 workflow build',
+      'Telegram + Slack + Email',
+      'Multilingual by default',
+      'Conditional logic & branching',
+      'Multi-step agent flows',
+    ],
+  },
+  [PRODUCT_IDS.ENTERPRISE]: {
+    description: 'For organizations scaling AI across operations.',
+    features: [
+      'Unlimited conversations',
+      'Unlimited agents',
+      'Unlimited workflow build',
+      'All channels + WhatsApp Business',
+      'Custom integrations',
+      'Advanced orchestration',
+      'Multi-team workspace',
+      'Dedicated support + SLA guarantee',
+    ],
+  },
+};
+
+/** Resolve service copy for a product id (handles `credits_<n>` packs too). */
+export function getServiceInfo(id: string): CheckoutServiceInfo | undefined {
+  if (id?.startsWith('credits_')) {
+    const credits = parseInt(id.slice('credits_'.length), 10);
+    if (!Number.isNaN(credits)) {
+      return {
+        description: `A one-time top-up of ${credits.toLocaleString(
+          'en-US'
+        )} Intelligence Credits, applied instantly to your workspace balance.`,
+        features: [
+          `${credits.toLocaleString('en-US')} Intelligence Credits`,
+          'Never expires',
+          'Usable across every agent and workflow',
+        ],
+      };
+    }
+  }
+  return CHECKOUT_SERVICE_INFO[id];
+}
