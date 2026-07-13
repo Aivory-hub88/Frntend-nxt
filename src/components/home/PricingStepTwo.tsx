@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
 
 import { useLanguage } from '@/components/context/LanguageContext';
+import { PlanConfirmModal } from '@/components/payment/PlanConfirmModal';
 import { PRODUCT_IDS } from '@/lib/pricing';
 
 /* ─── Icons ─── */
@@ -118,7 +119,8 @@ export default function PricingStepTwo({ currency }: { currency?: 'IDR' | 'USD' 
       router.push('/contact');
       return;
     }
-    router.push(`/checkout/${plan.productId}`);
+    // Confirm the selection first; the modal's Continue opens checkout.
+    setSelectedProduct(plan.productId);
   };
 
   const handleMouseMove = (e: React.MouseEvent<HTMLElement>) => {
@@ -274,6 +276,12 @@ export default function PricingStepTwo({ currency }: { currency?: 'IDR' | 'USD' 
           </p>
         </div>
       </div>
+
+      <PlanConfirmModal
+        productId={selectedProduct}
+        currency={currency}
+        onClose={() => setSelectedProduct(null)}
+      />
     </section>
   );
 }
