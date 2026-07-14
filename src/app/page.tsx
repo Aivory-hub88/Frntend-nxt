@@ -37,8 +37,9 @@ export default function HomePage() {
               <StatsSection />
             </div>
 
-            {/* Pricing Section (unscaled, has its own black background that covers the clouds) */}
-            <div style={{ zoom: 1 }}>
+            {/* Pricing Section (scaled to match surrounding sections, avoids a
+                jarring zoom-scale jump at the Stats/Privacy boundaries) */}
+            <div style={{ zoom: 0.85 }}>
               <PricingClientWrapper />
             </div>
 
