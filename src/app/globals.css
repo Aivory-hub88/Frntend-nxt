@@ -859,6 +859,27 @@ body,
   animation: loader-wave 1.2s infinite ease-in-out;
 }
 
+/* Octagon thinking dots, v2: single-hue glow-pulse instead of the old
+   loader-wave's dark-olive <-> sage color swap (the dip into #556B2F read
+   muddy against the dark card background). Dots stay one hue (sage) and
+   only pulse scale + opacity, so the "low" state is a dim glow rather than
+   a murky color change. */
+@keyframes octagon-dot-pulse {
+  0%, 100% { transform: scale(0.55); opacity: 0.25; }
+  50% { transform: scale(1); opacity: 1; }
+}
+.animate-octagon-dot {
+  animation: octagon-dot-pulse 1.2s infinite ease-in-out;
+  box-shadow: 0 0 6px 0 rgba(174, 201, 157, 0.55);
+}
+
+/* Softer stand-in for Tailwind's default animate-ping, whose blunt scale(2)
+   fade reads as a stock UI kit "notification dot". Reuses the eased curve
+   already proven in the roadmap connector. */
+.premium-ping {
+  animation: roadmap-ping-soft 1.8s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+
 /* roadmap-comet / roadmap-ping / roadmap-glow */
 /* Used by InteractiveShowcase.tsx + InteractiveGridShowcase.tsx (roadmap step
    connectors) — previously referenced with no CSS definition anywhere, so the
