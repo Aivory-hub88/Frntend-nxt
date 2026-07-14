@@ -58,8 +58,11 @@ export function useGsapScrollReveal() {
           trigger: el,
           start: 'top 88%',
           end: 'top 60%',
-          toggleActions: 'play none none none',
-          once: true,
+          // Bidirectional: reveal scrolling down into view (onEnter), stay
+          // revealed on onLeave/onEnterBack, hide again once scrolled back up
+          // past the start point (onLeaveBack) so it replays next time the
+          // user scrolls back down over it.
+          toggleActions: 'play none none reverse',
         },
       });
     });
