@@ -26,9 +26,11 @@ function SpotlightCard({ children, className = '', style }: { children: React.Re
       onMouseMove={handleMouseMove}
       className={`relative spotlight-card border-t border-l border-white/10 border-b border-r border-black/20 shadow-[0_8px_32px_rgba(0,0,0,0.4)] overflow-hidden rounded-[24px] ${className}`}
       style={{
-        backgroundColor: 'var(--card-bg, rgba(28, 28, 34, 0.45))',
-        backdropFilter: 'var(--card-frost, blur(2.5px))',
-        WebkitBackdropFilter: 'var(--card-frost, blur(2.5px))',
+        // Constant look, no backdrop-filter — see InteractiveGrid SpotlightCard note
+        // (the scroll-gated frost swap made cards flash/glitch on every scroll).
+        backgroundColor: 'var(--card-bg, rgba(20, 20, 26, 0.78))',
+        backdropFilter: 'var(--card-frost, none)',
+        WebkitBackdropFilter: 'var(--card-frost, none)',
         ...style
       }}
     >

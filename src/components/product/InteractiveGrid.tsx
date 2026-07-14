@@ -23,19 +23,15 @@ function SpotlightCard({ children, className = '' }: { children: React.ReactNode
       onMouseMove={handleMouseMove}
       className={`spotlight-card rounded-[24px] border-t border-l border-white/10 border-b border-r border-black/20 shadow-[0_8px_32px_rgba(0,0,0,0.4)] ${className}`}
       style={{
-        // Apple-style dark frosted glass. The tint is kept semi-transparent so the
-        // animated megamendung backdrop shows through; `brightness` lifts the very dim
-        // clouds just enough that the blur reads as frost rather than a flat dark panel.
-        // NOTE: for this backdrop-filter to actually sample the page background, no
-        // ancestor of this card may carry a transform/will-change (that would turn the
-        // ancestor into a "backdrop root"). See revealGrids() in useGsapScrollReveal.ts.
-        // Driven by CSS custom properties so the mobile override (globals.css) can
-        // switch the blur off via a single var — robust against the CSS minifier, which
-        // otherwise drops the unprefixed `backdrop-filter` from a plain media-query rule
-        // and leaves Chrome-Android still blurring. The var fallbacks are the desktop look.
-        backgroundColor: 'var(--card-bg, rgba(28, 28, 34, 0.45))',
-        backdropFilter: 'var(--card-frost, blur(2.5px))',
-        WebkitBackdropFilter: 'var(--card-frost, blur(2.5px))'
+        // One CONSTANT card look, no backdrop-filter. The old frosted glass needed
+        // an `html.is-scrolling` override that swapped frost/bg during scroll, which
+        // made every card visibly flash ("glitch") on scroll start/stop. A steady
+        // semi-transparent tint keeps the animated backdrop faintly visible with
+        // zero per-frame blur cost and zero state flips. Still var-driven so the
+        // mobile media rule in globals.css can go near-opaque for cheap rendering.
+        backgroundColor: 'var(--card-bg, rgba(20, 20, 26, 0.78))',
+        backdropFilter: 'var(--card-frost, none)',
+        WebkitBackdropFilter: 'var(--card-frost, none)'
       }}
     >
       {children}
@@ -502,7 +498,7 @@ function IntegrationsMarquee() {
           className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[140%] h-[260%]"
           style={{
             background:
-              'radial-gradient(ellipse at center, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.55) 40%, rgba(0,0,0,0) 72%)',
+              'radial-gradient(ellipse at center, rgba(0,0,0,0.5) 0%, rgba(0,0,0,0.32) 40%, rgba(0,0,0,0) 75%)',
           }}
         />
         <h3 className="relative text-[22px] md:text-[32px] font-light text-[#c4c9b8] mb-3 tracking-normal" style={{ fontFamily: "'Manrope', sans-serif", textShadow: '0 2px 12px rgba(0,0,0,0.6)' }}>
@@ -514,16 +510,16 @@ function IntegrationsMarquee() {
       </div>
 
       <div className="w-full overflow-hidden relative">
-        {/* Readability scrim band: full-strength dark band (fades to transparent top/bottom)
-            behind the logo strip so the grayscale logos keep contrast when the bright amber
-            lobe of the animated flower passes behind them. Sits outside the opacity wrapper
-            so dimming the logos never dims the scrim. */}
+        {/* Readability scrim band behind the logo strip. Kept SUBTLE: low peak
+            opacity + very long ramps so it reads as gentle depth, never a visible
+            dark bar cutting across the flower (the earlier 0.72 band looked boxy).
+            Contrast is mostly carried by the logo drop-shadows/text-shadows. */}
         <div
           aria-hidden
-          className="pointer-events-none absolute inset-x-0 top-1/2 -translate-y-1/2 h-[190%] z-0"
+          className="pointer-events-none absolute inset-x-0 top-1/2 -translate-y-1/2 h-[280%] z-0"
           style={{
             background:
-              'linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0.72) 28%, rgba(0,0,0,0.72) 72%, rgba(0,0,0,0) 100%)',
+              'linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0.18) 30%, rgba(0,0,0,0.4) 50%, rgba(0,0,0,0.18) 70%, rgba(0,0,0,0) 100%)',
           }}
         />
         <div className="relative z-10 opacity-60 hover:opacity-100 transition-opacity duration-700">

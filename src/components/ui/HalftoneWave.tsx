@@ -374,14 +374,11 @@ export function HalftoneWave() {
         new THREE.Vector3(0.875, 0.420, 0.027), // Amber (#df6b07)
       ];
       for (let i = 0; i < PETAL_COUNT; i++) {
-        // Depth-varied size for a richer 3D feel: bigger overall with a higher
-        // floor so far petals still read as discs, never single dots.
-        const r = Math.random();
-        const size = 0.55 + r * r * 1.5;         // ~0.55 .. 2.05, skewed small
-        // Per-petal material so brightness can vary with size (atmospheric
-        // perspective): small = far/dim, medium closer, large = near/brightest.
-        const normSize = Math.min(Math.max((size - 0.55) / 1.5, 0), 1);
-        const bright = (0.6 + normSize * 0.75) * 1.05;    // ~0.6 (far) .. 1.35 (near), +5% brighter
+        // UNIFORM small petals: one fixed size for every petal (no depth-varied
+        // sizing) and a flattened orbit depth below, so petals never appear to
+        // grow/shrink as they sweep past the camera.
+        const size = 0.6;
+        const bright = 1.05;
         const tint = petalPalette[(Math.random() * petalPalette.length) | 0].clone();
         const mat = petalMat!.clone();
         mat.uniforms.uOpacity = petalUniforms.uOpacity; // share fade opacity
@@ -396,7 +393,9 @@ export function HalftoneWave() {
         const sx = (Math.random() * 2 - 1) * 8.5;
         const sy = Math.random() * 18;
 
-        // Each orbit sits on its own tilted plane so they cross in 3D.
+        // Each orbit sits on its own tilted plane so they cross in 3D. The
+        // depth (z) component is flattened to 12% so the perspective size
+        // change while orbiting is negligible — petals keep one apparent size.
         const incl = Math.random() * Math.PI;
         const orbitR = 4.0 + Math.random() * 3.0;   // 4.0 .. 7.0, outside bloom
 
@@ -421,7 +420,8 @@ export function HalftoneWave() {
           swayFreq: 0.16 + Math.random() * 0.32,
           orbitR,
           inclSin: Math.sin(incl),
-          inclCos: Math.cos(incl),
+          inclCos: Math.cos(incl) * 0.12, // flattened depth — see note above
+
           orbitSpeed: (0.10 + Math.random() * 0.14) * (Math.random() < 0.5 ? 1 : -1),
           orbitPhase: Math.random() * 6.28,
           phase: Math.random() * 6.28,
