@@ -148,11 +148,11 @@ export function HalftoneWave() {
           float accentGate = mix(0.5, 1.0, indigoGradient);
           finalColor += accent * ((0.11 + uScroll * 0.12) * accentGate);
 
-          // Outer-rim accent (#4903bb) that only appears once the user scrolls —
+          // Outer-rim accent (#330380) that only appears once the user scrolls —
           // a glow along the silhouette edge so the halftone gaps there blend
           // into a rich violet instead of reading as bare holes. Color-only
           // (doesn't touch density/alpha), so it can't affect the shape/gaps.
-          vec3 edgeAccent = vec3(0.2863, 0.0118, 0.7333); // #4903bb
+          vec3 edgeAccent = vec3(0.2, 0.0118, 0.502); // #330380
           float edgeAccentGate = rim * smoothstep(0.0, 0.5, uScroll);
           finalColor += edgeAccent * edgeAccentGate * 0.4;
 
@@ -380,10 +380,11 @@ export function HalftoneWave() {
       // Reduced from 18 to 8 petals to prevent massive GPU overdraw and frame drops 
       // when scrolling into the operations stack section, keeping the page very lightweight.
       const PETAL_COUNT = 8;
-      // Palette harmonized with the flower (toned-down blue-indigo / violet /
-      // teal family) so petals vary in hue without clashing with the bloom.
+      // Palette harmonized with the flower's rim accent (#330380) so the
+      // orbiting petals blend into the bloom's edge instead of reading as
+      // disconnected orange fragments/holes near the silhouette.
       const petalPalette = [
-        new THREE.Vector3(0.875, 0.420, 0.027), // Amber (#df6b07)
+        new THREE.Vector3(0.2, 0.0118, 0.502), // Violet (#330380)
       ];
       for (let i = 0; i < PETAL_COUNT; i++) {
         // UNIFORM small petals: one fixed size for every petal (no depth-varied
