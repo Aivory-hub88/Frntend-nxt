@@ -513,23 +513,37 @@ function IntegrationsMarquee() {
         </p>
       </div>
 
-      <div className="w-full overflow-hidden relative opacity-40 hover:opacity-100 transition-opacity duration-700">
+      <div className="w-full overflow-hidden relative">
+        {/* Readability scrim band: full-strength dark band (fades to transparent top/bottom)
+            behind the logo strip so the grayscale logos keep contrast when the bright amber
+            lobe of the animated flower passes behind them. Sits outside the opacity wrapper
+            so dimming the logos never dims the scrim. */}
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-x-0 top-1/2 -translate-y-1/2 h-[190%] z-0"
+          style={{
+            background:
+              'linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0.72) 28%, rgba(0,0,0,0.72) 72%, rgba(0,0,0,0) 100%)',
+          }}
+        />
+        <div className="relative z-10 opacity-60 hover:opacity-100 transition-opacity duration-700">
         {/* gradient masks for smooth edges */}
         <div className="absolute top-0 left-0 w-32 md:w-64 h-full bg-gradient-to-r from-black to-transparent z-10 pointer-events-none" />
         <div className="absolute top-0 right-0 w-32 md:w-64 h-full bg-gradient-to-l from-black to-transparent z-10 pointer-events-none" />
-      
+
       <div className="flex w-[200%] animate-marquee">
         {marqueeItems.map((item, idx) => (
           <div key={idx} className="flex flex-1 items-center justify-center gap-3 grayscale transition-all duration-300 px-8">
             {item.name === 'Zoom' || item.name === 'Glean' ? null : (
-              <div style={{ filter: 'brightness(0) invert(1)', width: '28px', height: '28px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <div style={{ filter: 'brightness(0) invert(1) drop-shadow(0 2px 6px rgba(0,0,0,0.7))', width: '28px', height: '28px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 <img src={item.icon} alt={item.name} className="w-full h-full object-contain" />
               </div>
             )}
-            <span className="text-white/80 font-semibold text-xl tracking-tight" style={{ fontFamily: item.name === 'Zoom' ? 'sans-serif' : 'inherit' }}>{item.name}</span>
+            <span className="text-white/90 font-semibold text-xl tracking-tight" style={{ fontFamily: item.name === 'Zoom' ? 'sans-serif' : 'inherit', textShadow: '0 2px 8px rgba(0,0,0,0.75)' }}>{item.name}</span>
           </div>
         ))}
       </div>
+        </div>
       </div>
     </div>
   );
