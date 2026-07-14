@@ -110,9 +110,9 @@ export function HalftoneWave() {
           float scrollT = smoothstep(0.0, 0.4, uScroll);
           
           // Original Colors (Dimmed amber / Cyan / Purple)
-          vec3 origCore = vec3(0.5, 0.25, 0.05);
+          vec3 origCore = vec3(0.875, 0.420, 0.027); // #df6b07
           vec3 origEdge = vec3(0.04, 0.18, 0.32);
-          vec3 origIndigo = vec3(0.16, 0.02, 0.32);
+          vec3 origIndigo = vec3(0.215, 0.078, 0.474); // #371479
           
           // Hero Colors (Premium Elegance: Midnight Core / Deep Blue-Purple Edges)
           vec3 heroCore = vec3(0.02, 0.03, 0.06); // Deep midnight core (slightly brighter)
@@ -371,11 +371,7 @@ export function HalftoneWave() {
       // Palette harmonized with the flower (toned-down blue-indigo / violet /
       // teal family) so petals vary in hue without clashing with the bloom.
       const petalPalette = [
-        new THREE.Vector3(0.05, 0.17, 0.46), // blue-indigo (base)
-        new THREE.Vector3(0.02, 0.08, 0.60), // deep blue 2 (was teal)
-        new THREE.Vector3(0.10, 0.13, 0.52), // deep blue
-        new THREE.Vector3(0.05, 0.15, 0.44), // blue
-        new THREE.Vector3(0.12, 0.12, 0.44), // muted indigo (subtle violet hint)
+        new THREE.Vector3(0.875, 0.420, 0.027), // Amber (#df6b07)
       ];
       for (let i = 0; i < PETAL_COUNT; i++) {
         // Depth-varied size for a richer 3D feel: bigger overall with a higher
