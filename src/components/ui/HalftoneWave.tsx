@@ -65,8 +65,11 @@ export function HalftoneWave() {
           // NEW: Top-down spotlight (sharper and more elegant)
           vec3 topLightDir = normalize(vec3(0.0, 1.0, 0.4));
           float topLightDiff = max(0.0, dot(normal, topLightDir));
-          // Fade spotlight heavily on scroll to protect readability in lower sections
-          float spotlightFade = 1.0 - smoothstep(0.0, 0.4, uScroll);
+          // Fade spotlight on scroll to protect text readability, but keep a
+          // floor instead of dropping to 0 -- fading it out completely was
+          // starving the density term, thinning the dot coverage at the
+          // flower's outer edges for the rest of the page past this scroll point.
+          float spotlightFade = mix(1.0, 0.4, smoothstep(0.0, 0.4, uScroll));
           float spotlight = pow(topLightDiff, 2.6) * 0.58 * spotlightFade; // broader + stronger top-down key light
           
           // Enhanced density for subtle but more 3D ASCII
