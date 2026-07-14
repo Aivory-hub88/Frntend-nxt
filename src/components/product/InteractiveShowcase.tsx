@@ -224,7 +224,7 @@ function DiagnosticAnimation() {
 
         {phase === 'thinking' && (
           <div className="flex flex-col items-center justify-center gap-4 animate-fade-in-up">
-            <div className="relative w-12 h-12 sm:w-16 sm:h-16 mb-2">
+            <div className="relative w-10 h-10 sm:w-14 sm:h-14 mb-2">
               {[
                 { top: '5%', left: '50%', delay: 0 },
                 { top: '27.5%', left: '89%', delay: 150 },
@@ -232,11 +232,11 @@ function DiagnosticAnimation() {
                 { top: '95%', left: '50%', delay: 450 },
                 { top: '72.5%', left: '11%', delay: 600 },
                 { top: '27.5%', left: '11%', delay: 750 },
-                { top: '50%', left: '50%', delay: 900 }
+                { top: '50%', left: '50%', delay: 900 },
               ].map((pos, i) => (
-                <div 
+                <div
                   key={i}
-                  className="absolute w-2.5 h-2.5 sm:w-3.5 sm:h-3.5 rounded-full bg-[#aec99d] animate-loader-wave"
+                  className="absolute w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full bg-[#aec99d] animate-octagon-dot"
                   style={{
                     top: pos.top,
                     left: pos.left,
@@ -277,15 +277,15 @@ function DiagnosticAnimation() {
       <div className={`col-start-1 row-start-1 flex flex-col justify-center items-center p-4 w-full h-full transition-all duration-500 delay-200 ${phase === 'improvements' ? 'opacity-100 scale-100' : 'opacity-0 scale-105 pointer-events-none'}`}>
          <div className="w-full max-w-[80%] md:max-w-sm flex flex-col gap-4">
            <div className="text-center mb-2">
-             <span className="text-sm sm:text-base text-[#ff7a7a] font-medium tracking-wider uppercase mb-1 block">Critical Bottlenecks</span>
+             <span className="text-sm sm:text-base text-[#e2a35c] font-medium tracking-wider uppercase mb-1 block">Critical Bottlenecks</span>
              <span className="text-xs text-white/70">Immediate action recommended</span>
            </div>
            {[
              { title: 'Manual Data Entry', desc: 'Siloed data causing sync delays' },
              { title: 'Workflow Inefficiency', desc: 'High overhead to scale ops' }
            ].map((item, i) => (
-             <div key={i} className="flex gap-3 items-start bg-red-500/5 border border-red-500/10 rounded-lg p-3 animate-fade-in-up" style={{ animationDelay: `${i * 0.3}s` }}>
-               <div className="w-2 h-2 mt-1.5 rounded-full bg-[#ff7a7a] shrink-0 animate-pulse" />
+             <div key={i} className="flex gap-3 items-start bg-[#e2a35c]/5 border border-[#e2a35c]/10 rounded-lg p-3 animate-fade-in-up" style={{ animationDelay: `${i * 0.3}s` }}>
+               <div className="w-2 h-2 mt-1.5 rounded-full bg-[#e2a35c] shrink-0 animate-pulse" />
                <div className="flex flex-col gap-0.5">
                  <span className="text-sm text-white/90 font-medium">{item.title}</span>
                  <span className="text-xs text-white/70">{item.desc}</span>
@@ -422,7 +422,7 @@ function ConsoleAnimation() {
         {/* AI Typing Indicator */}
         <div className={`flex items-center gap-2 transition-all duration-300 ease-out ${phase === 'ai_typing' ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 hidden'}`}>
            <div className="bg-[#111111] border border-white/5 rounded-2xl rounded-tl-sm px-4 py-2 sm:px-4 sm:py-2.5 shadow-sm flex items-center justify-center">
-             <div className="relative w-5 h-5 opacity-80">
+             <div className="relative w-4 h-4 opacity-80">
                {[
                  { top: '5%', left: '50%', delay: 0 },
                  { top: '27.5%', left: '89%', delay: 150 },
@@ -430,11 +430,11 @@ function ConsoleAnimation() {
                  { top: '95%', left: '50%', delay: 450 },
                  { top: '72.5%', left: '11%', delay: 600 },
                  { top: '27.5%', left: '11%', delay: 750 },
-                 { top: '50%', left: '50%', delay: 900 }
+                 { top: '50%', left: '50%', delay: 900 },
                ].map((pos, i) => (
-                 <div 
+                 <div
                    key={i}
-                   className="absolute w-1 h-1 rounded-full bg-[#aec99d] animate-loader-wave"
+                   className="absolute w-[3px] h-[3px] rounded-full bg-[#aec99d] animate-octagon-dot"
                    style={{
                      top: pos.top,
                      left: pos.left,
@@ -464,7 +464,7 @@ function ConsoleAnimation() {
         <div className={`flex flex-col gap-3 transition-all duration-300 ${phase === 'thinking' || phase === 'response' ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 hidden'}`}>
           {phase === 'thinking' && (
             <div className="flex items-center gap-2 mt-1">
-              <div className="relative w-5 h-5 opacity-80 shrink-0">
+              <div className="relative w-4 h-4 opacity-80 shrink-0">
                 {[
                   { top: '5%', left: '50%', delay: 0 },
                   { top: '27.5%', left: '89%', delay: 150 },
@@ -472,11 +472,11 @@ function ConsoleAnimation() {
                   { top: '95%', left: '50%', delay: 450 },
                   { top: '72.5%', left: '11%', delay: 600 },
                   { top: '27.5%', left: '11%', delay: 750 },
-                  { top: '50%', left: '50%', delay: 900 }
+                  { top: '50%', left: '50%', delay: 900 },
                 ].map((pos, i) => (
-                  <div 
+                  <div
                     key={i}
-                    className="absolute w-1 h-1 rounded-full bg-[#aec99d] animate-loader-wave"
+                    className="absolute w-[3px] h-[3px] rounded-full bg-[#aec99d] animate-octagon-dot"
                     style={{
                       top: pos.top,
                       left: pos.left,
@@ -614,7 +614,7 @@ function WorkflowAnimation() {
         {/* AI Typing Indicator */}
         <div className={`flex items-center gap-2 transition-all duration-300 ease-out ${phase === 'ai_typing' ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 hidden'}`}>
            <div className="bg-[#111111] border border-white/5 rounded-3xl rounded-tl-md px-4 py-2 sm:px-4 sm:py-2.5 shadow-sm flex items-center justify-center">
-             <div className="relative w-5 h-5 opacity-80">
+             <div className="relative w-4 h-4 opacity-80">
                {[
                  { top: '5%', left: '50%', delay: 0 },
                  { top: '27.5%', left: '89%', delay: 150 },
@@ -622,11 +622,11 @@ function WorkflowAnimation() {
                  { top: '95%', left: '50%', delay: 450 },
                  { top: '72.5%', left: '11%', delay: 600 },
                  { top: '27.5%', left: '11%', delay: 750 },
-                 { top: '50%', left: '50%', delay: 900 }
+                 { top: '50%', left: '50%', delay: 900 },
                ].map((pos, i) => (
-                 <div 
+                 <div
                    key={i}
-                   className="absolute w-1 h-1 rounded-full bg-[#aec99d] animate-loader-wave"
+                   className="absolute w-[3px] h-[3px] rounded-full bg-[#aec99d] animate-octagon-dot"
                    style={{
                      top: pos.top,
                      left: pos.left,
@@ -656,7 +656,7 @@ function WorkflowAnimation() {
         <div className={`flex items-center gap-2.5 transition-all duration-300 ${phase === 'generating' || phase === 'generated' || phase === 'buttons' ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 hidden'}`}>
            {phase === 'generating' ? (
              <>
-               <div className="relative w-5 h-5 opacity-80 shrink-0">
+               <div className="relative w-4 h-4 opacity-80 shrink-0">
                  {[
                    { top: '5%', left: '50%', delay: 0 },
                    { top: '27.5%', left: '89%', delay: 150 },
@@ -664,11 +664,11 @@ function WorkflowAnimation() {
                    { top: '95%', left: '50%', delay: 450 },
                    { top: '72.5%', left: '11%', delay: 600 },
                    { top: '27.5%', left: '11%', delay: 750 },
-                   { top: '50%', left: '50%', delay: 900 }
+                   { top: '50%', left: '50%', delay: 900 },
                  ].map((pos, i) => (
-                   <div 
+                   <div
                      key={i}
-                     className="absolute w-1 h-1 rounded-full bg-[#aec99d] animate-loader-wave"
+                     className="absolute w-[3px] h-[3px] rounded-full bg-[#aec99d] animate-octagon-dot"
                      style={{
                        top: pos.top,
                        left: pos.left,
@@ -722,7 +722,7 @@ function WorkflowAnimation() {
               {/* Node 2: AI Agent (Extract) */}
               <div className="relative flex flex-col items-center w-[86px] sm:w-[100px] rounded-2xl pt-2 pb-2.5 px-2 z-20 border border-[#aec99d]/30 bg-gradient-to-b from-[#23262b] to-[#15171b]" style={{ boxShadow: '0 10px 26px -8px rgba(0,0,0,0.7), 0 0 20px rgba(174,201,157,0.16), inset 0 1px 0 rgba(255,255,255,0.06)', animation: 'node-pop 0.6s ease-out 0.2s both' }}>
                 {/* live indicator */}
-                <span className="absolute top-[-4px] right-[-4px] w-3 h-3 rounded-full bg-[#aec99d] animate-ping z-30" />
+                <span className="absolute top-[-4px] right-[-4px] w-3 h-3 rounded-full bg-[#aec99d] premium-ping z-30" />
                 <span className="absolute top-[-4px] right-[-4px] w-3 h-3 rounded-full bg-[#aec99d] border border-[#0c0d0f] z-30" />
                 {/* handles both sides */}
                 <span className="absolute top-1/2 -translate-y-1/2 -left-[6px] w-3 h-3 rounded-full bg-[#0c0d0f] border-2 border-[#aec99d] z-20" />
@@ -793,12 +793,28 @@ function WorkflowAnimation() {
 }
 
 function RoadmapAnimation() {
+  const [phase, setPhase] = useState<'ingest' | 'roadmap'>('ingest');
   const [step, setStep] = useState(0);
 
+  // Replays the "System Blueprint" doc drop-in every time the wave loop resets.
   useEffect(() => {
-    let timer: NodeJS.Timeout;
-    const nextStep = () => setStep(s => (s >= 13 ? 0 : s + 1));
-    
+    if (phase !== 'ingest') return;
+    const timer = setTimeout(() => setPhase('roadmap'), 4000);
+    return () => clearTimeout(timer);
+  }, [phase]);
+
+  useEffect(() => {
+    if (phase !== 'roadmap') return;
+
+    const nextStep = () => {
+      if (step >= 13) {
+        setPhase('ingest');
+        setStep(0);
+        return;
+      }
+      setStep(s => s + 1);
+    };
+
     const delays = [
       500,  // 0 -> 1: W1
       1000, // 1 -> 2: Task 1
@@ -816,9 +832,9 @@ function RoadmapAnimation() {
       500,  // 13 -> 0: Reset
     ];
 
-    timer = setTimeout(nextStep, delays[step] || 1000);
+    const timer = setTimeout(nextStep, delays[step] || 1000);
     return () => clearTimeout(timer);
-  }, [step]);
+  }, [step, phase]);
 
   const waves = [
     { num: 'W1', name: 'Setup', activeStep: 1 },
@@ -867,7 +883,126 @@ function RoadmapAnimation() {
   if (step >= 12) checkedCount = 3;
 
   return (
-    <div className="flex-1 flex flex-col justify-center space-y-8 w-full h-full relative z-10">
+    <div className="flex-1 relative w-full h-full grid">
+      <style>{`
+        @keyframes doc-ingest {
+          0%   { transform: translate(-50%, -46px) scale(0.9) rotateX(-14deg); opacity: 0; filter: blur(4px); }
+          12%  { transform: translate(-50%, 0px) scale(1) rotateX(0deg); opacity: 1; filter: blur(0px); }
+          65%  { transform: translate(-50%, 0px) scale(1) rotateX(0deg); opacity: 1; filter: blur(0px); }
+          78%  { transform: translate(-50%, 15px) scale(0.95); opacity: 1; filter: blur(0px); }
+          86%  { transform: translate(-50%, 25px) scale(1.15); opacity: 0.9; filter: blur(2px); }
+          92%  { transform: translate(-50%, 30px) scale(0.4); opacity: 0; filter: blur(8px); }
+          100% { transform: translate(-50%, 30px) scale(0); opacity: 0; filter: blur(8px); }
+        }
+        @keyframes doc-float {
+          0%, 100% { transform: translateY(0) rotate(-0.6deg); }
+          50% { transform: translateY(-4px) rotate(0.6deg); }
+        }
+        @keyframes particle-shatter {
+          0% { transform: translate(-50%, -50%) scale(0.5); opacity: 0; }
+          20% { transform: translate(calc(-50% + (var(--tx) * 0.4)), calc(-50% + (var(--ty) * 0.4))) scale(1.5); opacity: 1; }
+          100% { transform: translate(calc(-50% + var(--tx)), calc(-50% + var(--ty))) scale(0); opacity: 0; }
+        }
+        @keyframes pulse-ring {
+          0%, 82% { opacity: 0; transform: scale(0.4); }
+          87% { opacity: 0.7; transform: scale(0.6); }
+          100% { opacity: 0; transform: scale(1.75); }
+        }
+        @keyframes doc-scan {
+          0% { transform: translateY(-28px); opacity: 0; }
+          25% { opacity: 1; }
+          75% { opacity: 1; }
+          100% { transform: translateY(96px); opacity: 0; }
+        }
+        @keyframes fade-in-text {
+          0%, 65% { opacity: 0; transform: translateY(15px); }
+          75%, 100% { opacity: 1; transform: translateY(0); }
+        }
+      `}</style>
+
+      {/* Ingest: System Blueprint doc drops in, mirroring the Blueprint import beat.
+          Gated on `phase === 'ingest'` so the subtree unmounts/remounts on every
+          loop — otherwise the doc-ingest CSS animation only ever plays once and
+          freezes at its vanished end-state on repeat cycles. */}
+      <div className={`col-start-1 row-start-1 flex flex-col items-center justify-center w-full h-full transition-all duration-500 ${phase === 'roadmap' ? 'opacity-0 scale-95 pointer-events-none' : 'opacity-100 scale-100'}`}>
+        {phase === 'ingest' && (<>
+        <div className="relative flex items-center justify-center w-full" style={{ height: '215px', perspective: '600px' }}>
+          <div
+            className="absolute left-1/2 top-[10px] z-20 flex flex-col items-center gap-2.5"
+            style={{ animation: 'doc-ingest 4.0s cubic-bezier(0.45,0,0.2,1) forwards', willChange: 'transform, opacity, filter' }}
+          >
+            <div
+              className="relative w-[150px] sm:w-[164px] rounded-xl overflow-hidden bg-gradient-to-b from-[#171b16] to-[#0c0e0b] border border-[#aec99d]/25"
+              style={{
+                boxShadow: '0 14px 34px -10px rgba(0,0,0,0.75), 0 0 22px rgba(174,201,157,0.14), inset 0 1px 0 rgba(255,255,255,0.06)',
+                animation: 'doc-float 3.2s ease-in-out infinite',
+              }}
+            >
+              <div className="h-[3px] w-full bg-gradient-to-r from-[#aec99d]/40 via-[#aec99d] to-[#aec99d]/40" />
+              <div className="flex items-center gap-2 px-3 pt-2.5 pb-1.5">
+                <div className="w-6 h-6 rounded-md bg-[#aec99d]/12 border border-[#aec99d]/40 flex items-center justify-center text-[#aec99d] shrink-0">
+                  <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                  </svg>
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className="h-[6px] w-[64%] rounded-full bg-[#aec99d]/70" />
+                  <div className="h-[4px] w-[40%] rounded-full bg-white/20 mt-1.5" />
+                </div>
+              </div>
+              <div className="px-3 pb-3 pt-1 space-y-[7px]">
+                <div className="h-[4px] w-full rounded-full bg-white/12" />
+                <div className="h-[4px] w-[86%] rounded-full bg-white/10" />
+                <div className="h-[4px] w-[68%] rounded-full bg-white/10" />
+                <div className="flex items-center gap-2 pt-1">
+                  <span className="text-[7px] leading-none font-semibold text-[#aec99d] bg-[#aec99d]/12 border border-[#aec99d]/30 rounded px-1.5 py-[3px]">98%</span>
+                  <div className="h-[4px] flex-1 rounded-full bg-white/10 overflow-hidden">
+                    <div className="h-full w-[98%] rounded-full bg-[#aec99d]/70" />
+                  </div>
+                </div>
+              </div>
+              <div
+                className="absolute inset-x-0 h-7 pointer-events-none"
+                style={{ background: 'linear-gradient(to bottom, transparent, rgba(174,201,157,0.28), transparent)', animation: 'doc-scan 2.4s ease-in-out infinite' }}
+              />
+            </div>
+            <span className="text-[10px] sm:text-[11px] text-[#aec99d]/90 uppercase tracking-[0.22em] font-medium px-3 py-1 bg-[#0d0d0d]/80 border border-white/5 rounded-md whitespace-nowrap backdrop-blur-sm shadow-[0_4px_12px_rgba(0,0,0,0.5)]">System Blueprint</span>
+          </div>
+
+          {Array.from({ length: 24 }).map((_, i) => {
+            const angle = (i * 137.5) * (Math.PI / 180);
+            const dist = 30 + (i % 5) * 20;
+            const x = Math.round(Math.cos(angle) * dist * 1000) / 1000;
+            const y = Math.round((Math.sin(angle) * dist + (i % 3) * 25) * 1000) / 1000;
+            return (
+              <div
+                key={`roadmap-particle-${i}`}
+                className="absolute w-[3.5px] h-[3.5px] sm:w-[4px] sm:h-[4px] rounded-full bg-[#aec99d] z-30"
+                style={{
+                  left: '50%',
+                  top: 'calc(50% + 20px)',
+                  '--tx': `${x}px`,
+                  '--ty': `${y + 40}px`,
+                  animation: `particle-shatter 1.4s cubic-bezier(0.2, 0.8, 0.2, 1) forwards`,
+                  animationDelay: `${3.3 + (i % 4) * 0.04}s`,
+                  opacity: 0,
+                  boxShadow: '0 0 8px 1.5px rgba(174,201,157,0.8)'
+                } as React.CSSProperties}
+              />
+            );
+          })}
+
+          <div
+            className="absolute left-1/2 top-[calc(50%+20px)] -translate-x-1/2 -translate-y-1/2 w-40 h-40 bg-[#aec99d] rounded-full blur-[40px] z-10 pointer-events-none"
+            style={{ animation: 'pulse-ring 1.8s ease-out forwards', animationDelay: '3.3s', opacity: 0 }}
+          />
+        </div>
+        <span className="text-xs sm:text-sm text-white/70 bg-[#111111]/80 px-4 py-1 rounded-full backdrop-blur-sm opacity-0 animate-[fade-in-text_4.0s_ease-out_forwards] -mt-2">Sequencing blueprint into phased waves</span>
+        </>)}
+      </div>
+
+      {/* Roadmap: wave milestone UI (unchanged sticky-scroll layout) */}
+      <div className={`col-start-1 row-start-1 flex flex-col justify-center space-y-8 w-full h-full relative z-10 transition-all duration-500 ${phase === 'roadmap' ? 'opacity-100 scale-100' : 'opacity-0 scale-95 pointer-events-none'}`}>
       {/* Top nodes */}
       <div className="flex items-center justify-between w-full mx-auto relative px-8">
         <div className="absolute top-1/2 left-[52px] right-[52px] h-[1px] bg-white/10 -translate-y-1/2 -z-10" />
@@ -934,6 +1069,7 @@ function RoadmapAnimation() {
             })}
           </div>
         </SpotlightCard>
+      </div>
       </div>
     </div>
   );
@@ -1028,7 +1164,7 @@ function IntroAnimation() {
 }
 
 function BlueprintAnimation() {
-  const [phase, setPhase] = useState<'import' | 'generate' | 'blueprint'>('import');
+  const [phase, setPhase] = useState<'import' | 'generate' | 'blueprint' | 'complete'>('import');
   const timerRefs = useRef<ReturnType<typeof setTimeout>[]>([]);
 
   const clearAll = () => { timerRefs.current.forEach(clearTimeout); timerRefs.current = []; };
@@ -1039,7 +1175,8 @@ function BlueprintAnimation() {
       setPhase('import');
       t(() => setPhase('generate'), 4.5);
       t(() => setPhase('blueprint'), 8.0);
-      t(run, 16.0);
+      t(() => setPhase('complete'), 13.0);
+      t(run, 17.0);
     };
     run();
     return clearAll;
@@ -1110,8 +1247,8 @@ function BlueprintAnimation() {
         
 
         {/* Import & Generate Phases */}
-        <div className={`col-start-1 row-start-1 flex flex-col items-center justify-center transition-all duration-500 w-full h-full z-10 ${phase === 'blueprint' ? 'opacity-0 scale-95 pointer-events-none' : 'opacity-100 scale-100'}`}>
-          
+        <div className={`col-start-1 row-start-1 flex flex-col items-center justify-center transition-all duration-500 w-full h-full z-10 ${phase === 'blueprint' || phase === 'complete' ? 'opacity-0 scale-95 pointer-events-none' : 'opacity-100 scale-100'}`}>
+
           {phase === 'import' && (
             <div className="flex flex-col items-center justify-center w-full">
 
@@ -1232,7 +1369,7 @@ function BlueprintAnimation() {
           {phase === 'generate' && (
             <div className="flex flex-col items-center justify-center gap-6 animate-fade-in-up">
               <div className="relative w-28 h-28 sm:w-36 sm:h-36 flex items-center justify-center">
-                <div className="absolute inset-[-10px] border border-[#aec99d]/20 rounded-full animate-ping opacity-20" />
+                <div className="absolute inset-[-10px] border border-[#aec99d]/20 rounded-full premium-ping" />
                 <div className="absolute inset-0 bg-[#aec99d]/5 rounded-full blur-2xl" />
                 <div className="w-full h-full flex items-center justify-center z-10">
                   <LabFlaskCanvas />
@@ -1336,6 +1473,51 @@ function BlueprintAnimation() {
           
           <div className={`mt-8 text-center ${phase === 'blueprint' ? 'animate-[blueprint-card-enter_0.7s_ease-out_forwards]' : 'opacity-0'}`} style={{ animationDelay: phase === 'blueprint' ? '0.6s' : '0s' }}>
              <span className="text-[9px] sm:text-[10px] text-[#aec99d]/60 uppercase tracking-[0.15em] font-medium drop-shadow-sm">Aivory Engine Processing Capacity: 98% Efficiency</span>
+          </div>
+        </div>
+
+        {/* Complete: System Blueprint doc, same premium doc-card style as the Deep Diagnostic Results beat */}
+        <div className={`col-start-1 row-start-1 flex flex-col justify-center items-center p-4 w-full h-full transition-all duration-500 delay-200 ${phase === 'complete' ? 'opacity-100 scale-100' : 'opacity-0 scale-105 pointer-events-none'}`}>
+          <div className="flex flex-col items-center gap-3 animate-fade-in-up">
+            <div className="relative flex flex-col items-center gap-3 z-20">
+              <div
+                className="relative w-36 h-[104px] bg-[#111111] border border-white/10 rounded-xl overflow-hidden flex flex-col"
+                style={{
+                  boxShadow: '0 14px 34px -10px rgba(0,0,0,0.75), 0 0 22px rgba(174,201,157,0.14), inset 0 1px 0 rgba(255,255,255,0.06)',
+                  animation: 'doc-float 3.2s ease-in-out infinite',
+                }}
+              >
+                <div className="h-[3px] w-full bg-gradient-to-r from-[#aec99d]/40 via-[#aec99d] to-[#aec99d]/40" />
+                <div className="flex items-center gap-2 px-3 pt-2.5 pb-1.5">
+                  <div className="w-6 h-6 rounded-md bg-[#aec99d]/12 border border-[#aec99d]/40 flex items-center justify-center text-[#aec99d] shrink-0">
+                    <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    </svg>
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="h-[6px] w-[64%] rounded-full bg-[#aec99d]/70" />
+                    <div className="h-[4px] w-[40%] rounded-full bg-white/20 mt-1.5" />
+                  </div>
+                </div>
+                <div className="px-3 pb-3 pt-1 space-y-[7px]">
+                  <div className="h-[4px] w-full rounded-full bg-white/12" />
+                  <div className="h-[4px] w-[86%] rounded-full bg-white/10" />
+                  <div className="h-[4px] w-[68%] rounded-full bg-white/10" />
+                  <div className="flex items-center gap-2 pt-1">
+                    <span className="text-[7px] leading-none font-semibold text-[#aec99d] bg-[#aec99d]/12 border border-[#aec99d]/30 rounded px-1.5 py-[3px]">98%</span>
+                    <div className="h-[4px] flex-1 rounded-full bg-white/10 overflow-hidden">
+                      <div className="h-full w-[98%] rounded-full bg-[#aec99d]/70" />
+                    </div>
+                  </div>
+                </div>
+                <div
+                  className="absolute inset-x-0 h-7 pointer-events-none"
+                  style={{ background: 'linear-gradient(to bottom, transparent, rgba(174,201,157,0.28), transparent)', animation: 'doc-scan 2.4s ease-in-out infinite' }}
+                />
+              </div>
+              <span className="text-[10px] sm:text-[11px] text-[#aec99d]/90 uppercase tracking-[0.22em] font-medium px-4 py-1.5 bg-[#0d0d0d]/80 border border-white/5 rounded-full whitespace-nowrap backdrop-blur-sm shadow-[0_4px_12px_rgba(0,0,0,0.5)]">System Blueprint</span>
+              <span className="text-[19px] text-white/50 font-medium tracking-wide mt-1 animate-pulse">Ready for phased rollout</span>
+            </div>
           </div>
         </div>
       </SpotlightCard>
