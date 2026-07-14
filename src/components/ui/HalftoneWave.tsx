@@ -31,7 +31,7 @@ export function HalftoneWave() {
     const uniforms = {
       uTime: { value: 0.0 },
       uResolution: { value: new THREE.Vector2(width * baseDPR, height * baseDPR) },
-      uPixelSize: { value: isMobile ? 5.0 : 6.0 }, 
+      uPixelSize: { value: isMobile ? 4.0 : 4.5 },
       uScroll: { value: 0.0 }, // Used to trigger the spreading petals effect
       uMouse: { value: new THREE.Vector2(0, 0) }
     };
@@ -119,7 +119,11 @@ export function HalftoneWave() {
           vec3 heroEdge = vec3(0.15, 0.08, 0.65);  // Deep blue-purple edges (brighter blue)
           vec3 heroIndigo = vec3(0.2, 0.1, 0.4);  // Subtle purple/indigo glow (brighter)
           
-          vec3 coreColor = mix(heroCore, origCore, scrollT);
+          // Keep the amber transition contained to a small central radius —
+          // gated by depth so it reads as a warm core accent instead of
+          // flooding the whole bloom orange as the user scrolls.
+          float coreRadiusGate = smoothstep(0.55, 0.0, normalizedDepth);
+          vec3 coreColor = mix(heroCore, origCore, scrollT * coreRadiusGate);
           vec3 edgeColor = mix(heroEdge, origEdge, scrollT);
           vec3 indigoColor = mix(heroIndigo, origIndigo, scrollT);
           
