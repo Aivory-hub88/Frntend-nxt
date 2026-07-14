@@ -480,7 +480,9 @@ function IntegrationsMarquee() {
     { name: 'Slack', icon: '/integrations/icons/slack.svg' },
     { name: 'Salesforce', icon: '/integrations/icons/salesforce.svg' },
     { name: 'Claude', icon: '/integrations/icons/claude.svg' },
+    { name: 'Gemini', icon: '/integrations/icons/gemini.svg' },
     { name: 'OpenAI', icon: '/integrations/icons/openai.svg' },
+    { name: 'AWS', icon: '/integrations/icons/aws.svg' },
     { name: 'Tencent Cloud', icon: '/integrations/icons/tencent-cloud.svg' },
     { name: 'Zendesk', icon: '/integrations/icons/zendesk.svg' },
     { name: 'GitHub', icon: '/integrations/icons/github.svg' },
@@ -531,13 +533,13 @@ function IntegrationsMarquee() {
 
       <div className="flex w-[200%] animate-marquee">
         {marqueeItems.map((item, idx) => (
-          <div key={idx} className="flex flex-1 items-center justify-center gap-3 grayscale transition-all duration-300 px-8">
+          <div key={idx} className="flex flex-none shrink-0 items-center justify-center gap-3 grayscale transition-all duration-300 px-8">
             {!item.icon ? null : (
-              <div style={{ filter: 'brightness(0) invert(1) drop-shadow(0 2px 6px rgba(0,0,0,0.7))', width: '28px', height: '28px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <div style={{ filter: 'brightness(0) invert(1) drop-shadow(0 2px 6px rgba(0,0,0,0.7))', width: '28px', height: '28px', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
                 <img src={item.icon} alt={item.name} className="w-full h-full object-contain" />
               </div>
             )}
-            <span className="text-white/90 font-semibold text-xl tracking-tight" style={{ textShadow: '0 2px 8px rgba(0,0,0,0.75)' }}>{item.name}</span>
+            <span className="text-white/90 font-semibold text-xl tracking-tight whitespace-nowrap" style={{ textShadow: '0 2px 8px rgba(0,0,0,0.75)' }}>{item.name}</span>
           </div>
         ))}
       </div>
