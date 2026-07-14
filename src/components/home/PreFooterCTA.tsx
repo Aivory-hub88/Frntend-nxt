@@ -67,7 +67,7 @@ export default function PreFooterCTA() {
         <div className="max-w-7xl mx-auto px-6 md:px-12">
           {/* Headline */}
           <div className="text-sm font-medium mb-6">Direct Engagement</div>
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-normal tracking-tight leading-[1.2] pb-1 mb-6">
+          <h2 className="no-word-split text-3xl md:text-4xl lg:text-5xl font-normal tracking-tight leading-[1.2] mb-6">
             Prefer to Work With Our Team Directly?
           </h2>
           <p className="text-white text-xl md:text-2xl font-semibold mb-4">

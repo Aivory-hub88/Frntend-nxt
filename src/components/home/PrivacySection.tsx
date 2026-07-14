@@ -41,15 +41,15 @@ export default function PrivacySection() {
               {trustBadges.map((badge) => (
                 <div
                   key={badge}
-                  className="flex items-center gap-1.5 rounded-full border border-[#a78bfa]/30 bg-[#a78bfa]/[0.06] px-3 py-1 text-[11px] font-medium text-[#c4b5fd]"
+                  className="flex items-center gap-1.5 rounded-full border border-[#a3aa96]/30 bg-[#a3aa96]/[0.06] px-3 py-1 text-[11px] font-medium text-[#c3c9b8]"
                 >
-                  <span className="h-1.5 w-1.5 rounded-full bg-[#a78bfa]" />
+                  <span className="h-1.5 w-1.5 rounded-full bg-[#a3aa96]" />
                   {badge}
                 </div>
               ))}
             </div>
           </div>
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-normal tracking-tight leading-[1.2] pb-1 mb-10">
+          <h2 className="no-word-split text-3xl md:text-4xl lg:text-5xl font-normal tracking-tight leading-[1.2] mb-10">
             Your data stays<br />where it belongs.
           </h2>
 
