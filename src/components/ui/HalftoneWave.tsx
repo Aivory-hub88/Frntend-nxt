@@ -151,14 +151,6 @@ export function HalftoneWave() {
           float accentGate = mix(0.5, 1.0, indigoGradient);
           finalColor += accent * ((0.11 + uScroll * 0.12) * accentGate);
 
-          // Outer-rim accent (#330380) that only appears once the user scrolls —
-          // a glow along the silhouette edge so the halftone gaps there blend
-          // into a rich violet instead of reading as bare holes. Color-only
-          // (doesn't touch density/alpha), so it can't affect the shape/gaps.
-          vec3 edgeAccent = vec3(0.2, 0.0118, 0.502); // #330380
-          float edgeAccentGate = rim * smoothstep(0.0, 0.5, uScroll);
-          finalColor += edgeAccent * edgeAccentGate * 0.4;
-
           // 4. RADIAL VIGNETTE (Abyss Effect)
           vec2 screenPos = gl_FragCoord.xy / uResolution.xy;
           vec2 vignetteCenter = vec2(0.5) + uMouse * 0.05;
