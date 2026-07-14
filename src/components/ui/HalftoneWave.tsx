@@ -31,7 +31,11 @@ export function HalftoneWave() {
     const uniforms = {
       uTime: { value: 0.0 },
       uResolution: { value: new THREE.Vector2(width * baseDPR, height * baseDPR) },
-      uPixelSize: { value: isMobile ? 5.0 : 6.0 }, 
+      // High-density halftone grid — smaller cells than the original
+      // (was 5/6px) so the ASCII texture reads as fine grain, not chunky dots.
+      // High-density halftone grid — smaller cells than the original
+      // (was 5/6px) so the ASCII texture reads as fine grain, not chunky dots.
+      uPixelSize: { value: isMobile ? 3.5 : 4.0 },
       uScroll: { value: 0.0 }, // Used to trigger the spreading petals effect
       uMouse: { value: new THREE.Vector2(0, 0) }
     };
@@ -39,7 +43,7 @@ export function HalftoneWave() {
     // ==========================================
     // SHARED ASCII FRAGMENT SHADER
     // ==========================================
-    const asciiFragShader = `
+    const flowerFragShader = `
         varying vec3 vNormal;
         varying vec3 vViewPosition;
         varying float vDepth;
@@ -55,40 +59,34 @@ export function HalftoneWave() {
           // 1. LIGHTING & DENSITY
           vec3 normal = normalize(vNormal);
           vec3 viewDir = normalize(vViewPosition);
-          
+
           float normalizedDepth = smoothstep(2.0, 6.0, vDepth);
-          
+
           // Elegant Rim Lighting for 3D depth
           float rim = 1.0 - max(0.0, dot(viewDir, normal));
-          rim = smoothstep(0.5, 1.0, rim);
-          
-          // NEW: Top-down spotlight (sharper and more elegant)
+          float rimSoft = smoothstep(0.35, 1.0, rim);
+          // Tight glassy edge highlight — kept narrow (high power) so it reads
+          // as a thin glint at grazing angles, not a broad wash of white.
+          float rimSpecular = pow(rim, 11.0);
+
+          // Top-down spotlight — narrow + dim so it never clips to a flat
+          // white cap; it's a hint of key light, not a headlamp.
           vec3 topLightDir = normalize(vec3(0.0, 1.0, 0.4));
           float topLightDiff = max(0.0, dot(normal, topLightDir));
-          // Fade spotlight heavily on scroll to protect readability in lower sections
           float spotlightFade = 1.0 - smoothstep(0.0, 0.4, uScroll);
-          float spotlight = pow(topLightDiff, 2.6) * 0.58 * spotlightFade; // broader + stronger top-down key light
-          
-          // Enhanced density for subtle but more 3D ASCII
-          // Reduced spotlight influence on density to avoid solid bright blocks
-          float density = 1.0 - normalizedDepth + (rim * 0.5) + (spotlight * 0.2);
-          density = clamp(density, 0.0, 0.9); // Clamp below 1.0 to prevent full solid blocks
-          
+          float spotlight = pow(topLightDiff, 4.5) * 0.3 * spotlightFade;
+
+          float density = 1.0 - normalizedDepth + (rimSoft * 0.5) + (spotlight * 0.15);
+          density = clamp(density, 0.0, 0.9);
+
           // 2. ASCII SCREEN-SPACE GRID
-          // LIGHT ordered (4x4 Bayer) dither on the character selection, keyed to
-          // the glyph cell — softens the hard level-boundary contours (the
-          // "pembatas") so the shading spreads smoothly. Kept light (0.12 vs the
-          // earlier heavy 0.167 that dulled the color); on the current rich
-          // palette this smooths banding without flattening. Color + silhouette
-          // still use the raw, undithered density.
-          vec2 cell = floor(gl_FragCoord.xy / uPixelSize);
           vec2 local = fract(gl_FragCoord.xy / uPixelSize);
-          vec2 p5 = floor(local * 5.0); 
-          
+          vec2 p5 = floor(local * 5.0);
+
           int charIndex = int(floor(density * 5.99));
           if (charIndex == 0) discard; // empty cell: skip glyph branches
           float shape = 0.0;
-          
+
           if (charIndex == 1) {
               if (p5.x == 2.0 && p5.y == 2.0) shape = 1.0;
           } else if (charIndex == 2) {
@@ -103,34 +101,43 @@ export function HalftoneWave() {
           } else if (charIndex >= 5) {
               if (p5.x >= 1.0 && p5.x <= 3.0 && p5.y >= 1.0 && p5.y <= 3.0) shape = 1.0;
           }
-          
+
           if (shape == 0.0) discard;
-          
+
           // 3. ELEGANT COLOR MAPPING (Transition based on scroll)
           float scrollT = smoothstep(0.0, 0.4, uScroll);
-          
+
           // Original Colors (Dimmed amber / Cyan / Purple)
           vec3 origCore = vec3(0.875, 0.420, 0.027); // #df6b07
           vec3 origEdge = vec3(0.04, 0.18, 0.32);
           vec3 origIndigo = vec3(0.215, 0.078, 0.474); // #371479
-          
+
           // Hero Colors (Premium Elegance: Midnight Core / Deep Blue-Purple Edges)
           vec3 heroCore = vec3(0.02, 0.03, 0.06); // Deep midnight core (slightly brighter)
           vec3 heroEdge = vec3(0.15, 0.08, 0.65);  // Deep blue-purple edges (brighter blue)
           vec3 heroIndigo = vec3(0.2, 0.1, 0.4);  // Subtle purple/indigo glow (brighter)
-          
-          vec3 coreColor = mix(heroCore, origCore, scrollT);
+
+          // Keep the amber transition contained to a small central radius —
+          // gated by depth so it reads as a warm core accent instead of
+          // flooding the whole bloom orange as the user scrolls.
+          float coreRadiusGate = smoothstep(0.55, 0.0, normalizedDepth);
+          vec3 coreColor = mix(heroCore, origCore, scrollT * coreRadiusGate);
           vec3 edgeColor = mix(heroEdge, origEdge, scrollT);
           vec3 indigoColor = mix(heroIndigo, origIndigo, scrollT);
-          
+
           // Base mix between core and edge
-          vec3 finalColor = mix(coreColor, edgeColor, normalizedDepth + rim * 0.5);
-          
-          // Add elegant, slightly tinted spotlight to final color
-          finalColor += vec3(0.9, 0.95, 1.0) * spotlight * 0.7;
-          
+          vec3 finalColor = mix(coreColor, edgeColor, normalizedDepth + rimSoft * 0.5);
+
+          // Add a cool, restrained spotlight tint — enough to suggest a key
+          // light without blowing the top of the bloom out to flat white.
+          finalColor += vec3(0.55, 0.62, 0.85) * spotlight;
+
+          // Glassy specular rim glint (premium "polished glass" read instead of a flat surface) —
+          // thin and dim, a glint rather than a wash.
+          finalColor += vec3(0.7, 0.78, 1.0) * rimSpecular * 0.4;
+
           // Apply Indigo as a subtle additive glow
-          float indigoGradient = smoothstep(0.2, 0.8, normalizedDepth + rim);
+          float indigoGradient = smoothstep(0.2, 0.8, normalizedDepth + rimSoft);
           finalColor += indigoColor * indigoGradient * 0.4;
           // Subtle living color nuance — a soft violet <-> teal shimmer that
           // harmonizes with the midnight / indigo palette. Kept low so it never
@@ -143,8 +150,8 @@ export function HalftoneWave() {
           // bloom (not just the rim) with edges still a touch stronger.
           float accentGate = mix(0.5, 1.0, indigoGradient);
           finalColor += accent * ((0.11 + uScroll * 0.12) * accentGate);
-          
-          // 4. RADIAL VIGNETTE (Abyss Effect)
+
+          // 3. RADIAL VIGNETTE (Abyss Effect)
           vec2 screenPos = gl_FragCoord.xy / uResolution.xy;
           vec2 vignetteCenter = vec2(0.5) + uMouse * 0.05;
           float distFromCenter = distance(screenPos, vignetteCenter);
@@ -154,8 +161,7 @@ export function HalftoneWave() {
 
           // Soft alpha falloff at the true silhouette: fades opacity out as
           // density approaches 0 (the outer edge of the bloom), instead of the
-          // dot grid winking off at full opacity. Purely alpha -- no color or
-          // glow change -- so it just smooths the blocky boundary.
+          // dot grid winking off at full opacity.
           float silhouetteAlpha = smoothstep(0.0, 0.12, density);
 
           gl_FragColor = vec4(finalColor, silhouetteAlpha);
@@ -227,7 +233,7 @@ export function HalftoneWave() {
           gl_Position = projectionMatrix * mvPosition;
         }
       `,
-      fragmentShader: asciiFragShader
+      fragmentShader: flowerFragShader
     });
     const mesh = new THREE.Mesh(geometry, material);
 
@@ -256,7 +262,7 @@ export function HalftoneWave() {
       baseRotX: number; baseRotY: number; baseRotZ: number;
       wobbleAmp: number; wobbleFreq: number;
     }[] = [];
-    const petalUniforms = { uOpacity: { value: 0.0 }, uPixelSize: { value: isMobile ? 5.0 : 6.0 }, uBright: { value: 1.0 }, uTint: { value: new THREE.Vector3(0.05, 0.17, 0.46) } };
+    const petalUniforms = { uOpacity: { value: 0.0 }, uBright: { value: 1.0 }, uTint: { value: new THREE.Vector3(0.05, 0.17, 0.46) } };
     let petalGeo: THREE.PlaneGeometry | null = null;
     let petalMat: THREE.ShaderMaterial | null = null;
     let petalOpacity = 0;
@@ -290,66 +296,15 @@ export function HalftoneWave() {
         fragmentShader: `
           varying vec2 vUv;
           uniform float uOpacity;
-          uniform float uPixelSize;
           uniform float uBright;
           uniform vec3 uTint;
           void main() {
             vec2 pp = vUv - vec2(0.5);
             // Near-round silhouette → density (denser at the core, soft at the
-            // rim). Radial mask instead of the old petal-width profile.
+            // rim), smoothly shaded — no dot/glyph grid.
             float rad = length(pp) * 2.0;   // 0 center .. 1 edge
             float density = smoothstep(1.0, 0.32, rad);
-            if (density < 0.06) discard;
-
-            // 4x4 Bayer Dither for retro depth (scaled up for even larger radius)
-            float dx = mod(floor(gl_FragCoord.x * 0.33), 4.0);
-            float dy = mod(floor(gl_FragCoord.y * 0.33), 4.0);
-            float dither = 0.0;
-            if (dx < 1.0) {
-              if (dy < 1.0) dither = 0.0;
-              else if (dy < 2.0) dither = 0.75;
-              else if (dy < 3.0) dither = 0.1875;
-              else dither = 0.9375;
-            } else if (dx < 2.0) {
-              if (dy < 1.0) dither = 0.5;
-              else if (dy < 2.0) dither = 0.25;
-              else if (dy < 3.0) dither = 0.6875;
-              else dither = 0.4375;
-            } else if (dx < 3.0) {
-              if (dy < 1.0) dither = 0.125;
-              else if (dy < 2.0) dither = 0.875;
-              else if (dy < 3.0) dither = 0.0625;
-              else dither = 0.8125;
-            } else {
-              if (dy < 1.0) dither = 0.625;
-              else if (dy < 2.0) dither = 0.375;
-              else if (dy < 3.0) dither = 0.5625;
-              else dither = 0.3125;
-            }
-            // Perturb the density for the ASCII lookup (max intensity/spread)
-            float ditheredDensity = density + (dither - 0.5) * 1.1;
-
-            // Same ASCII screen-space grid as the main flower, so petals share
-            // its exact halftone character style (one continuous material feel).
-            vec2 localc = fract(gl_FragCoord.xy / uPixelSize);
-            vec2 p5 = floor(localc * 5.0);
-            int charIndex = int(floor(ditheredDensity * 5.99));
-            float shape = 0.0;
-            if (charIndex == 1) {
-                if (p5.x == 2.0 && p5.y == 2.0) shape = 1.0;
-            } else if (charIndex == 2) {
-                if (p5.x == 2.0 && p5.y > 0.0 && p5.y < 4.0) shape = 1.0;
-                if (p5.y == 2.0 && p5.x > 0.0 && p5.x < 4.0) shape = 1.0;
-            } else if (charIndex == 3) {
-                if (p5.x == p5.y && p5.x > 0.0 && p5.x < 4.0) shape = 1.0;
-                if (p5.x == (4.0 - p5.y) && p5.x > 0.0 && p5.x < 4.0) shape = 1.0;
-            } else if (charIndex == 4) {
-                if ((p5.x == 1.0 || p5.x == 3.0) && p5.y >= 1.0 && p5.y <= 3.0) shape = 1.0;
-                if ((p5.y == 1.0 || p5.y == 3.0) && p5.x >= 1.0 && p5.x <= 3.0) shape = 1.0;
-            } else if (charIndex >= 5) {
-                if (p5.x >= 1.0 && p5.x <= 3.0 && p5.y >= 1.0 && p5.y <= 3.0) shape = 1.0;
-            }
-            if (shape == 0.0) discard;
+            if (density < 0.02) discard;
 
             // Per-petal tint drawn from the flower's palette family (blue-
             // indigo / violet / teal) so the drift isn't monotone but still
@@ -358,10 +313,12 @@ export function HalftoneWave() {
             vec3 edgeC = uTint * 0.34;
             vec3 col = mix(edgeC, coreC, density);
             col += uTint * 0.5 * pow(density, 2.0);
+            // Soft inner sheen — a gentle glassy highlight near the core
+            col += vec3(0.85, 0.9, 1.0) * pow(density, 6.0) * 0.35;
             // Atmospheric perspective: brightness scales with petal size so
             // small = far (dimmer/hazier), large = near (brighter).
             col *= uBright;
-            gl_FragColor = vec4(col, uOpacity);
+            gl_FragColor = vec4(col, uOpacity * density);
           }
         `,
       });
