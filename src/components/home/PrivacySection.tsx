@@ -26,6 +26,8 @@ const badges = [
   'End to End Private',
 ];
 
+const trustBadges = ['Enterprise Grade', 'GDPR Compliant', 'SOC 2 Ready'];
+
 export default function PrivacySection() {
   const { ref, isVisible } = useScrollAnimation();
 
@@ -33,8 +35,21 @@ export default function PrivacySection() {
     <section ref={ref} className={`animate-on-scroll ${isVisible ? 'is-visible' : ''} w-full text-white pt-24 pb-12 font-sans`}>
       <div className="max-w-7xl mx-auto px-6 md:px-12">
         <div className="mb-4">
-          <div className="text-sm font-medium mb-6">Privacy &amp; Security</div>
-          <h2 className="text-3xl md:text-5xl lg:text-6xl font-normal tracking-tight mb-10">
+          <div className="flex flex-wrap items-center gap-x-4 gap-y-2 mb-6">
+            <div className="text-sm font-medium">Privacy &amp; Security</div>
+            <div className="flex flex-wrap gap-2">
+              {trustBadges.map((badge) => (
+                <div
+                  key={badge}
+                  className="flex items-center gap-1.5 rounded-full border border-[#a78bfa]/30 bg-[#a78bfa]/[0.06] px-3 py-1 text-[11px] font-medium text-[#c4b5fd]"
+                >
+                  <span className="h-1.5 w-1.5 rounded-full bg-[#a78bfa]" />
+                  {badge}
+                </div>
+              ))}
+            </div>
+          </div>
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-normal tracking-tight leading-[1.2] pb-1 mb-10">
             Your data stays<br />where it belongs.
           </h2>
 
