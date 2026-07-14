@@ -493,11 +493,22 @@ function IntegrationsMarquee() {
 
   return (
     <div className="w-full mt-20 md:mt-28 mb-0">
-      <div className="text-center mb-10 md:mb-12 px-6">
-        <h3 className="text-[22px] md:text-[32px] font-light text-[#c4c9b8] mb-3 tracking-normal" style={{ fontFamily: "'Manrope', sans-serif" }}>
+      <div className="text-center mb-10 md:mb-12 px-6 relative">
+        {/* Readability scrim: localized dark radial behind the text so it stays legible
+            when a bright lobe of the animated halftone flower passes behind it. Kept
+            small + soft so the flower animation is untouched everywhere else. */}
+        <div
+          aria-hidden
+          className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[140%] h-[260%]"
+          style={{
+            background:
+              'radial-gradient(ellipse at center, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.55) 40%, rgba(0,0,0,0) 72%)',
+          }}
+        />
+        <h3 className="relative text-[22px] md:text-[32px] font-light text-[#c4c9b8] mb-3 tracking-normal" style={{ fontFamily: "'Manrope', sans-serif", textShadow: '0 2px 12px rgba(0,0,0,0.6)' }}>
           Every Aivory agent speaks your customer&apos;s language. Literally.
         </h3>
-        <p className={`text-[20px] md:text-[22px] text-[#8a8f8e] font-light transition-opacity duration-500 ${isFading ? 'opacity-0' : 'opacity-100'}`} style={{ fontFamily: MULTILINGUAL_TEXTS[langIndex].font }}>
+        <p className={`relative text-[20px] md:text-[22px] text-[#8a8f8e] font-light transition-opacity duration-500 ${isFading ? 'opacity-0' : 'opacity-100'}`} style={{ fontFamily: MULTILINGUAL_TEXTS[langIndex].font, textShadow: '0 2px 12px rgba(0,0,0,0.6)' }}>
           {MULTILINGUAL_TEXTS[langIndex].text}
         </p>
       </div>
