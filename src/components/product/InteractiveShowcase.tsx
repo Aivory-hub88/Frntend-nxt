@@ -976,7 +976,7 @@ function IntroAnimation() {
     <div ref={containerRef} className="w-full h-full relative flex flex-col justify-center items-center text-center p-8">
       {/* Agent Label */}
       <div className={`transition-all duration-1000 ease-out absolute top-12 ${step >= 1 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
-        <img src="/aivory-logo.svg" alt="Aivory Agent" className="h-6 w-auto opacity-80 mx-auto" />
+        <img src="/Aivory_logo_2_2026.svg" alt="Aivory Agent" className="h-6 w-auto opacity-80 mx-auto" />
       </div>
 
       {/* Rotating Lines Container */}
