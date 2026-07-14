@@ -25,6 +25,11 @@ export function useGsapScrollReveal() {
       if (el.closest('.hero')) return;
       if (el.closest('.gsap-card-container')) return;
       if (el.closest('.gsap-card')) return;
+      // Skip elements that opt out of the per-word split: the reveal masks
+      // each line with `overflow: hidden` sized to the line's own box, which
+      // clips descenders (g/y/p) on large display headings. These still get
+      // the section-level fade/slide-up from `.animate-on-scroll`.
+      if (el.closest('.no-word-split')) return;
       if ((el as any)._isSplit) return;
       (el as any)._isSplit = true;
 
