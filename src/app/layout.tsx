@@ -55,13 +55,27 @@ export const metadata: Metadata = {
   },
 };
 
+import { headers } from 'next/headers';
 import { LanguageProvider } from '@/components/context/LanguageContext';
 
-export default function RootLayout({
+// aivory.uk is served by a Cloudflare Worker that reverse-proxies this app
+// (see the aivory-uk-reverse-proxy Worker), forwarding the real hostname via
+// x-aivory-proxy-host (a custom header -- Traefik overwrites the standard
+// x-forwarded-host based on the Host it sees, which the Worker sets to
+// aivory.id for routing). Default that domain to English/USD; everything
+// else keeps the id/IDR default.
+async function getInitialLanguage(): Promise<'en' | 'id'> {
+  const headersList = await headers();
+  const forwardedHost = headersList.get('x-aivory-proxy-host') ?? '';
+  return forwardedHost.includes('aivory.uk') ? 'en' : 'id';
+}
+
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const initialLanguage = await getInitialLanguage();
   return (
     <html lang="en" className={`${manrope.variable} ${doto.variable}`}>
       <head>
@@ -85,7 +99,7 @@ export default function RootLayout({
             ],
           }}
         />
-        <LanguageProvider>
+        <LanguageProvider initialLanguage={initialLanguage}>
           {children}
         </LanguageProvider>
       </body>
