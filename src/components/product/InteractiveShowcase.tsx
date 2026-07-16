@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
+import { motion, animate, AnimatePresence } from 'framer-motion';
 import dynamic from 'next/dynamic';
 
 const LabFlaskCanvas = dynamic(
@@ -8,11 +9,38 @@ const LabFlaskCanvas = dynamic(
   { ssr: false }
 );
 
-function SpotlightCard({ children, className = '', style }: { children: React.ReactNode; className?: string; style?: React.CSSProperties }) {
+function SpotlightCard({ children, className = '', style, autoplay = false, autoplaySpeed = 0.0015 }: { children: React.ReactNode; className?: string; style?: React.CSSProperties; autoplay?: boolean; autoplaySpeed?: number }) {
   const cardRef = useRef<HTMLDivElement>(null);
 
+  useEffect(() => {
+    if (!autoplay) return;
+    let animationFrameId: number;
+    let startTime = Math.random() * 10000;
+
+    const animate = (time: number) => {
+      if (cardRef.current) {
+        const rect = cardRef.current.getBoundingClientRect();
+        const centerX = rect.width / 2;
+        const centerY = rect.height / 2;
+        const radiusX = rect.width / 2;
+        const radiusY = rect.height / 2;
+        
+        const angle = (time + startTime) * autoplaySpeed;
+        const x = centerX + radiusX * Math.cos(angle);
+        const y = centerY - radiusY * Math.sin(angle);
+        
+        cardRef.current.style.setProperty('--mouse-x', `${x}px`);
+        cardRef.current.style.setProperty('--mouse-y', `${y}px`);
+      }
+      animationFrameId = requestAnimationFrame(animate);
+    };
+
+    animationFrameId = requestAnimationFrame(animate);
+    return () => cancelAnimationFrame(animationFrameId);
+  }, [autoplay, autoplaySpeed]);
+
   const handleMouseMove = (e: React.MouseEvent) => {
-    if (!cardRef.current) return;
+    if (autoplay || !cardRef.current) return;
     const rect = cardRef.current.getBoundingClientRect();
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
@@ -24,7 +52,7 @@ function SpotlightCard({ children, className = '', style }: { children: React.Re
     <div
       ref={cardRef}
       onMouseMove={handleMouseMove}
-      className={`relative spotlight-card border-t border-l border-white/10 border-b border-r border-black/20 shadow-[0_8px_32px_rgba(0,0,0,0.4)] overflow-hidden rounded-[24px] ${className}`}
+      className={`relative spotlight-card ${autoplay ? 'auto-spotlight' : ''} border-t border-l border-white/10 border-b border-r border-black/20 shadow-[0_8px_32px_rgba(0,0,0,0.4)] overflow-hidden rounded-[24px] ${className}`}
       style={{
         // Constant look, no backdrop-filter — see InteractiveGrid SpotlightCard note
         // (the scroll-gated frost swap made cards flash/glitch on every scroll).
@@ -44,10 +72,10 @@ const showcaseProducts = [
   {
     id: 'diagnostic',
     step: '01. DISCOVER',
-    title: 'Deep Diagnostic',
+    title: 'Deep Assessment',
     description: (
       <>
-        In this stage, Aivory runs a deep diagnostic across your current operations, constraints, and data environment to understand where AI can create the most impact. <span className="font-semibold text-white">Using a high-intelligence deterministic engine</span>, it maps readiness, surfaces execution gaps, and identifies the conditions needed to move forward faster without relying on long traditional consulting cycles.
+        In this stage, Aivory runs a Deep Assessment across your current operations, constraints, and data environment to understand where AI can create the most impact. <span className="font-semibold text-white">Using a high-intelligence deterministic engine</span>, it maps readiness, surfaces execution gaps, and identifies the conditions needed to move forward faster without relying on long traditional consulting cycles.
       </>
     ),
     features: ['Operational Gaps Audit', 'Infrastructure Readiness', 'Constraint & Risk Check'],
@@ -123,12 +151,14 @@ const DIMS = [
 ];
 
 function DiagnosticAnimation() {
-  const [phase, setPhase] = useState<'form' | 'thinking' | 'score' | 'improvements' | 'results'>('form');
+  const [phase, setPhase] = useState<'intro' | 'company' | 'form' | 'thinking' | 'score' | 'improvements' | 'document'>('intro');
   const [stepIdx, setStepIdx] = useState(0);
   const [selectedIdx, setSelectedIdx] = useState<number | null>(null);
   const [dots, setDots] = useState('');
   const [scoreVal, setScoreVal] = useState(0);
   const [barsVisible, setBarsVisible] = useState(false);
+  const [companyNameTyped, setCompanyNameTyped] = useState('');
+  const [companySizeState, setCompanySizeState] = useState<'closed' | 'open' | 'selected' | 'done'>('closed');
   const timerRefs = useRef<ReturnType<typeof setTimeout>[]>([]);
 
   const clearAll = () => { timerRefs.current.forEach(clearTimeout); timerRefs.current = []; };
@@ -136,42 +166,64 @@ function DiagnosticAnimation() {
 
   useEffect(() => {
     const run = () => {
-      setPhase('form'); 
+      setPhase('intro'); 
       setStepIdx(0); 
       setSelectedIdx(null);
       setScoreVal(0); 
       setBarsVisible(false);
+      setCompanyNameTyped('');
+      setCompanySizeState('closed');
+      
+      // Intro -> Company Form
+      t(() => setPhase('company'), 2.0);
+      
+      // Type "Acme Corp"
+      const targetName = "Acme Corp";
+      for (let i = 0; i <= targetName.length; i++) {
+        t(() => setCompanyNameTyped(targetName.substring(0, i)), 2.5 + (i * 0.08));
+      }
+      
+      // Dropdown interaction
+      t(() => setCompanySizeState('open'), 3.6);
+      t(() => setCompanySizeState('selected'), 4.4);
+      t(() => setCompanySizeState('done'), 5.0);
+      
+      // Company Form -> Questions
+      t(() => setPhase('form'), 6.2);
       
       // Step 0
-      t(() => setSelectedIdx(1), 0.8);
+      t(() => setSelectedIdx(1), 7.0);
       
       // Step 1
-      t(() => { setStepIdx(1); setSelectedIdx(null); }, 1.6);
-      t(() => setSelectedIdx(1), 2.4);
+      t(() => { setStepIdx(1); setSelectedIdx(null); }, 7.8);
+      t(() => setSelectedIdx(1), 8.6);
       
       // Step 2
-      t(() => { setStepIdx(2); setSelectedIdx(null); }, 3.2);
-      t(() => setSelectedIdx(1), 4.0);
+      t(() => { setStepIdx(2); setSelectedIdx(null); }, 9.4);
+      t(() => setSelectedIdx(1), 10.2);
       
       // Thinking
-      t(() => setPhase('thinking'), 4.8);
+      t(() => setPhase('thinking'), 11.0);
       
       // Score
       t(() => {
         setPhase('score');
-        let v = 0;
-        const step = () => { v += 2; setScoreVal(v); if (v < 42) timerRefs.current.push(setTimeout(step, 20)); else setScoreVal(42); };
-        step();
+        animate(0, 42, {
+          duration: 1.5,
+          type: "spring",
+          bounce: 0,
+          onUpdate: (latest) => setScoreVal(Math.round(latest))
+        });
         timerRefs.current.push(setTimeout(() => setBarsVisible(true), 300));
-      }, 7.0);
+      }, 13.5);
       
       // Improvements
-      t(() => setPhase('improvements'), 10.5);
+      t(() => setPhase('improvements'), 17.0);
       
-      // Results
-      t(() => setPhase('results'), 14.5);
+      // Document Generation
+      t(() => setPhase('document'), 20.0);
       
-      t(run, 19.5);
+      t(run, 24.5);
     };
     run();
     return clearAll;
@@ -186,137 +238,287 @@ function DiagnosticAnimation() {
 
   const currentStep = DIAGNOSTIC_STEPS[stepIdx];
 
+  const fadeSpring = { type: 'spring' as const, stiffness: 200, damping: 20 };
+
   return (
     <div className="flex-1 w-full min-h-[320px] relative overflow-hidden grid place-items-center p-4">
       {/* Form & Thinking */}
-      <div className={`col-start-1 row-start-1 flex flex-col justify-center w-full h-full transition-all duration-500 ${phase === 'score' || phase === 'improvements' ? 'opacity-0 scale-95 pointer-events-none' : 'opacity-100 scale-100'}`}>
-        
-        {phase === 'form' && (
-          <div className="flex flex-col gap-4 w-full max-w-[320px] mx-auto animate-fade-in-up">
-            <div className="flex items-center justify-between">
-               <span className="text-[10px] sm:text-xs text-[#aec99d] font-medium tracking-wider uppercase">{currentStep.phase}</span>
-            </div>
-            <span className="text-sm sm:text-base text-white/90 font-medium leading-snug">{currentStep.q}</span>
-            
-            <div className="flex flex-col gap-2 mt-2">
-              {currentStep.options.map((opt, i) => (
-                <div 
-                  key={i} 
-                  className={`flex items-center gap-3 rounded-lg px-4 py-3 border transition-all duration-300 ${
-                    selectedIdx === i 
-                      ? 'bg-[#aec99d]/10 border-[#aec99d]/30 shadow-[0_0_10px_rgba(174,201,157,0.1)]' 
-                      : 'bg-white/5 border-white/5'
-                  }`}
-                >
-                  <div className={`w-4 h-4 rounded-full border flex items-center justify-center transition-colors shrink-0 ${
-                    selectedIdx === i ? 'border-[#aec99d]' : 'border-white/30'
-                  }`}>
-                    {selectedIdx === i && <div className="w-2 h-2 bg-[#aec99d] rounded-full" />}
-                  </div>
-                  <span className={`text-xs sm:text-sm ${selectedIdx === i ? 'text-[#aec99d]' : 'text-white/75'}`}>
-                    {opt}
-                  </span>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
+      <motion.div 
+        animate={{ opacity: phase === 'score' || phase === 'improvements' || phase === 'document' ? 0 : 1, scale: phase === 'score' || phase === 'improvements' || phase === 'document' ? 0.95 : 1 }}
+        transition={fadeSpring}
+        className={`col-start-1 row-start-1 flex flex-col justify-center w-full h-full pointer-events-none relative`}
+      >
+        <AnimatePresence mode="wait">
+          {phase === 'intro' && (
+             <motion.div 
+               key="intro"
+               initial={{ opacity: 0, y: 15 }}
+               animate={{ opacity: 1, y: 0 }}
+               exit={{ opacity: 0, y: -15 }}
+               transition={{ type: 'spring', stiffness: 300, damping: 25 }}
+               className="flex items-center justify-center w-full h-full absolute inset-0"
+             >
+               <span className="text-sm sm:text-base text-white/90 font-medium">Lets begin your AI Readiness Assessment</span>
+             </motion.div>
+          )}
 
-        {phase === 'thinking' && (
-          <div className="flex flex-col items-center justify-center gap-4 animate-fade-in-up">
-            <div className="relative w-10 h-10 sm:w-14 sm:h-14 mb-2">
-              {[
-                { top: '5%', left: '50%', delay: 0 },
-                { top: '27.5%', left: '89%', delay: 150 },
-                { top: '72.5%', left: '89%', delay: 300 },
-                { top: '95%', left: '50%', delay: 450 },
-                { top: '72.5%', left: '11%', delay: 600 },
-                { top: '27.5%', left: '11%', delay: 750 },
-                { top: '50%', left: '50%', delay: 900 },
-              ].map((pos, i) => (
-                <div
-                  key={i}
-                  className="absolute w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full bg-[#aec99d] animate-octagon-dot"
-                  style={{
-                    top: pos.top,
-                    left: pos.left,
-                    animationDelay: `${pos.delay}ms`
-                  }}
-                />
-              ))}
-            </div>
-            <span className="text-sm sm:text-base text-[#aec99d] font-medium tracking-wide">Aivory is analyzing responses{dots}</span>
-          </div>
-        )}
-      </div>
+          {phase === 'company' && (
+             <motion.div 
+               key="company"
+               initial={{ opacity: 0, y: 15 }}
+               animate={{ opacity: 1, y: 0 }}
+               exit={{ opacity: 0, y: -15 }}
+               transition={{ type: 'spring', stiffness: 300, damping: 25 }}
+               className="flex flex-col gap-4 w-full max-w-[320px] mx-auto absolute"
+               style={{ top: '50%', left: '50%', x: '-50%', y: '-50%' }}
+             >
+               <div className="flex flex-col gap-1.5">
+                 <span className="text-[10px] text-[#bbe2ef] font-medium tracking-wider uppercase">Company Name</span>
+                 <div className="w-full h-10 bg-[#111111]/80 border border-white/10 rounded-md flex items-center px-3 relative overflow-hidden">
+                    <span className="text-sm text-white/90 relative z-10 flex items-center">
+                      {companyNameTyped}
+                      <motion.span
+                        animate={{ opacity: [1, 0] }}
+                        transition={{ duration: 0.8, repeat: Infinity, ease: 'linear' }}
+                        className="inline-block w-1 h-3.5 bg-white/70 ml-0.5"
+                      />
+                    </span>
+                 </div>
+               </div>
+               
+               <div className="flex flex-col gap-1.5 relative z-20">
+                 <span className="text-[10px] text-[#bbe2ef] font-medium tracking-wider uppercase">Company Size</span>
+                 <div className={`w-full h-10 bg-[#111111]/80 border ${companySizeState === 'open' || companySizeState === 'selected' ? 'border-[#bbe2ef]/50 ring-1 ring-[#bbe2ef]/30' : 'border-white/10'} rounded-md flex items-center justify-between px-3 relative transition-all duration-300`}>
+                    <span className={`text-sm ${companySizeState === 'done' ? 'text-white/90' : 'text-white/40'}`}>
+                      {companySizeState === 'done' ? '50-200 Employees' : 'Select size...'}
+                    </span>
+                    <svg className={`w-4 h-4 text-white/40 transition-transform duration-300 ${companySizeState === 'open' || companySizeState === 'selected' ? 'rotate-180 text-[#bbe2ef]' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                    </svg>
+                 </div>
+                 
+                 {/* Dropdown Menu */}
+                 <AnimatePresence>
+                   {(companySizeState === 'open' || companySizeState === 'selected') && (
+                     <motion.div
+                       initial={{ opacity: 0, y: -10, scale: 0.95 }}
+                       animate={{ opacity: 1, y: 0, scale: 1 }}
+                       exit={{ opacity: 0, y: -10, scale: 0.95 }}
+                       transition={{ type: 'spring', stiffness: 400, damping: 30 }}
+                       className="absolute top-full left-0 right-0 mt-2 bg-[#1a1a1a] border border-white/10 rounded-md overflow-hidden z-30 shadow-[0_10px_40px_rgba(0,0,0,0.8)]"
+                     >
+                       <div className="p-1 flex flex-col gap-0.5">
+                         {['1-10 Employees', '11-49 Employees', '50-200 Employees', '201+ Employees'].map((opt, i) => (
+                           <div 
+                             key={i}
+                             className={`px-3 py-2 text-sm rounded-md transition-colors duration-200 ${
+                               (companySizeState === 'selected' && i === 2) 
+                                 ? 'bg-[#bbe2ef]/15 text-[#bbe2ef]' 
+                                 : 'text-white/60'
+                             }`}
+                           >
+                             {opt}
+                           </div>
+                         ))}
+                       </div>
+                     </motion.div>
+                   )}
+                 </AnimatePresence>
+               </div>
+             </motion.div>
+          )}
+
+          {phase === 'form' && (
+            <motion.div 
+              key={`form-${stepIdx}`}
+              initial={{ opacity: 0, y: 15 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -15 }}
+              transition={{ type: 'spring', stiffness: 300, damping: 25 }}
+              className="flex flex-col gap-4 w-full max-w-[320px] mx-auto"
+            >
+              <div className="flex items-center justify-between">
+                 <span className="text-[10px] sm:text-xs text-[#bbe2ef] font-medium tracking-wider uppercase">{currentStep.phase}</span>
+              </div>
+              <span className="text-sm sm:text-base text-white/90 font-medium leading-snug">{currentStep.q}</span>
+              
+              <div className="flex flex-col gap-2 mt-2">
+                {currentStep.options.map((opt, i) => (
+                  <motion.div 
+                    key={i}
+                    layout
+                    transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+                    className={`flex items-center gap-3 rounded-lg px-4 py-3 border transition-colors duration-300 ${
+                      selectedIdx === i 
+                        ? 'bg-[#bbe2ef]/10 border-[#bbe2ef]/30 shadow-[0_0_10px_rgba(187, 226, 239,0.1)]' 
+                        : 'bg-white/5 border-white/5'
+                    }`}
+                  >
+                    <div className={`w-4 h-4 rounded-full border flex items-center justify-center transition-colors shrink-0 ${
+                      selectedIdx === i ? 'border-[#bbe2ef]' : 'border-white/30'
+                    }`}>
+                      <AnimatePresence>
+                        {selectedIdx === i && (
+                          <motion.div 
+                            initial={{ scale: 0 }}
+                            animate={{ scale: 1 }}
+                            exit={{ scale: 0 }}
+                            className="w-2 h-2 bg-[#bbe2ef] rounded-full" 
+                          />
+                        )}
+                      </AnimatePresence>
+                    </div>
+                    <span className={`text-xs sm:text-sm ${selectedIdx === i ? 'text-[#bbe2ef]' : 'text-white/75'}`}>
+                      {opt}
+                    </span>
+                  </motion.div>
+                ))}
+              </div>
+            </motion.div>
+          )}
+
+          {phase === 'thinking' && (
+            <motion.div 
+              key="thinking"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              className="flex flex-col items-center justify-center gap-4"
+            >
+              <div className="relative w-12 h-12 sm:w-16 sm:h-16 mb-2">
+                {[
+                  { top: '5%', left: '50%', delay: 0 },
+                  { top: '27.5%', left: '89%', delay: 0.15 },
+                  { top: '72.5%', left: '89%', delay: 0.3 },
+                  { top: '95%', left: '50%', delay: 0.45 },
+                  { top: '72.5%', left: '11%', delay: 0.6 },
+                  { top: '27.5%', left: '11%', delay: 0.75 },
+                  { top: '50%', left: '50%', delay: 0.9 }
+                ].map((pos, i) => (
+                  <motion.div 
+                    key={i}
+                    animate={{ scale: [1, 1.5, 1], opacity: [0.3, 1, 0.3] }}
+                    transition={{ duration: 1.5, repeat: Infinity, delay: pos.delay }}
+                    className="absolute w-2.5 h-2.5 sm:w-3.5 sm:h-3.5 rounded-full bg-[#bbe2ef]"
+                    style={{
+                      top: pos.top,
+                      left: pos.left,
+                      transform: 'translate(-50%, -50%)'
+                    }}
+                  />
+                ))}
+              </div>
+              <span className="text-sm sm:text-base text-[#bbe2ef] font-medium tracking-wide">Aivory is analyzing responses{dots}</span>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </motion.div>
 
       {/* Score */}
-      <div className={`col-start-1 row-start-1 flex flex-col justify-center items-center p-2 w-full h-full transition-all duration-500 delay-200 ${phase === 'score' ? 'opacity-100 scale-100' : 'opacity-0 scale-95 pointer-events-none'}`}>
+      <motion.div 
+        animate={{ 
+          opacity: phase === 'score' ? 1 : 0, 
+          scale: phase === 'score' ? 1 : phase === 'improvements' ? 0.95 : 1.05 
+        }}
+        transition={fadeSpring}
+        className="col-start-1 row-start-1 flex flex-col justify-center items-center p-2 w-full h-full pointer-events-none"
+      >
         <div className="relative w-28 h-28 flex items-center justify-center mb-8">
            <svg className="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
              <circle cx="50" cy="50" r="42" fill="none" stroke="rgba(255,255,255,0.05)" strokeWidth="6" />
-             <circle cx="50" cy="50" r="42" fill="none" stroke="#aec99d" strokeWidth="6" strokeDasharray={264} strokeDashoffset={barsVisible ? 264 - (264 * 0.42) : 264} className="transition-all duration-1000 ease-out drop-shadow-[0_0_8px_rgba(174,201,157,0.4)]" />
+             <motion.circle 
+                cx="50" cy="50" r="42" fill="none" stroke="#bbe2ef" strokeWidth="6" strokeDasharray={264} 
+                initial={{ strokeDashoffset: 264 }}
+                animate={{ strokeDashoffset: barsVisible ? 264 - (264 * 0.42) : 264 }}
+                transition={{ duration: 1.5, type: 'spring', bounce: 0 }}
+                className="drop-shadow-[0_0_8px_rgba(187, 226, 239,0.4)]" 
+             />
            </svg>
            <div className="absolute flex flex-col items-center">
              <span className="text-3xl font-light text-white" style={{ fontFamily: "'Doto', 'Courier New', monospace" }}>{scoreVal}</span>
            </div>
         </div>
         <div className="w-full space-y-4 px-6 max-w-[80%] md:max-w-sm">
-          {DIMS.map((dim) => (
-            <div key={dim.label} className={`text-xs space-y-1.5 transition-all duration-500 ${barsVisible ? 'opacity-100' : 'opacity-0'}`} style={{ transitionDelay: `${dim.delay}s` }}>
-              <div className="flex justify-between text-white/85 font-light"><span>{dim.label}</span><span className="text-[#aec99d]">{dim.val}%</span></div>
+          {DIMS.map((dim, i) => (
+            <div key={dim.label} className="text-xs space-y-1.5">
+              <div className="flex justify-between text-white/85 font-light">
+                <motion.span initial={{ opacity: 0 }} animate={{ opacity: barsVisible ? 1 : 0 }} transition={{ delay: dim.delay }}>{dim.label}</motion.span>
+                <motion.span initial={{ opacity: 0 }} animate={{ opacity: barsVisible ? 1 : 0 }} transition={{ delay: dim.delay }} className="text-[#bbe2ef]">{dim.val}%</motion.span>
+              </div>
               <div className="w-full h-1.5 bg-white/5 rounded-full overflow-hidden relative">
-                <div className="absolute left-0 top-0 h-full bg-[#aec99d] rounded-full transition-all duration-700 ease-out" style={{ width: barsVisible ? `${dim.val}%` : '0%', transitionDelay: `${dim.delay}s` }} />
+                <motion.div 
+                  initial={{ width: '0%' }}
+                  animate={{ width: barsVisible ? `${dim.val}%` : '0%' }}
+                  transition={{ duration: 1, delay: dim.delay, type: 'spring', bounce: 0 }}
+                  className="absolute left-0 top-0 h-full bg-[#bbe2ef] rounded-full" 
+                />
               </div>
             </div>
           ))}
         </div>
-      </div>
+      </motion.div>
 
       {/* Improvements */}
-      <div className={`col-start-1 row-start-1 flex flex-col justify-center items-center p-4 w-full h-full transition-all duration-500 delay-200 ${phase === 'improvements' ? 'opacity-100 scale-100' : 'opacity-0 scale-105 pointer-events-none'}`}>
+      <motion.div 
+        animate={{ opacity: phase === 'improvements' ? 1 : 0, scale: phase === 'improvements' ? 1 : 1.05 }}
+        transition={fadeSpring}
+        className="col-start-1 row-start-1 flex flex-col justify-center items-center p-4 w-full h-full pointer-events-none"
+      >
          <div className="w-full max-w-[80%] md:max-w-sm flex flex-col gap-4">
            <div className="text-center mb-2">
-             <span className="text-sm sm:text-base text-[#e2a35c] font-medium tracking-wider uppercase mb-1 block">Critical Bottlenecks</span>
+             <span className="text-sm sm:text-base text-[#ff7a7a] font-medium tracking-wider uppercase mb-1 block">Critical Bottlenecks</span>
              <span className="text-xs text-white/70">Immediate action recommended</span>
            </div>
            {[
              { title: 'Manual Data Entry', desc: 'Siloed data causing sync delays' },
              { title: 'Workflow Inefficiency', desc: 'High overhead to scale ops' }
            ].map((item, i) => (
-             <div key={i} className="flex gap-3 items-start bg-[#e2a35c]/5 border border-[#e2a35c]/10 rounded-lg p-3 animate-fade-in-up" style={{ animationDelay: `${i * 0.3}s` }}>
-               <div className="w-2 h-2 mt-1.5 rounded-full bg-[#e2a35c] shrink-0 animate-pulse" />
+             <motion.div 
+               key={i} 
+               initial={{ opacity: 0, y: 15 }}
+               animate={{ opacity: phase === 'improvements' ? 1 : 0, y: phase === 'improvements' ? 0 : 15 }}
+               transition={{ delay: phase === 'improvements' ? i * 0.2 : 0, type: 'spring' }}
+               className="flex gap-3 items-start bg-red-500/5 border border-red-500/10 rounded-lg p-3"
+             >
+               <div className="w-2 h-2 mt-1.5 rounded-full bg-[#ff7a7a] shrink-0" />
                <div className="flex flex-col gap-0.5">
                  <span className="text-sm text-white/90 font-medium">{item.title}</span>
                  <span className="text-xs text-white/70">{item.desc}</span>
                </div>
-             </div>
+             </motion.div>
            ))}
          </div>
-      </div>
+      </motion.div>
 
-      {/* Results */}
-      <div className={`col-start-1 row-start-1 flex flex-col justify-center items-center p-4 w-full h-full transition-all duration-500 delay-200 ${phase === 'results' ? 'opacity-100 scale-100' : 'opacity-0 scale-105 pointer-events-none'}`}>
-        <div className="flex flex-col items-center gap-3 animate-fade-in-up">
-          <div className="relative flex flex-col items-center gap-3 z-20">
-            <div 
-              className="relative w-36 h-[104px] bg-[#111111] border border-white/10 rounded-xl overflow-hidden flex flex-col"
+      {/* Document Output */}
+      <AnimatePresence>
+      <motion.div 
+        initial={{ opacity: 0, scale: 0.95 }}
+        animate={{ opacity: phase === 'document' ? 1 : 0, scale: phase === 'document' ? 1 : 1.05 }}
+        exit={{ opacity: 0, transition: { duration: 0.5 } }}
+        transition={fadeSpring}
+        className="col-start-1 row-start-1 flex flex-col justify-center items-center p-4 w-full h-full pointer-events-none z-20"
+      >
+        {phase === 'document' && (
+          <div className="flex flex-col items-center gap-3 animate-fade-in-up">
+            <div
+              className="relative w-[150px] sm:w-[164px] rounded-xl overflow-hidden bg-gradient-to-b from-[#171b16] to-[#0c0e0b] border border-[#bbe2ef]/25"
               style={{
-                boxShadow: '0 14px 34px -10px rgba(0,0,0,0.75), 0 0 22px rgba(174,201,157,0.14), inset 0 1px 0 rgba(255,255,255,0.06)',
+                boxShadow: '0 14px 34px -10px rgba(0,0,0,0.75), 0 0 22px rgba(187, 226, 239,0.14), inset 0 1px 0 rgba(255,255,255,0.06)',
                 animation: 'doc-float 3.2s ease-in-out infinite',
               }}
             >
               {/* top accent bar */}
-              <div className="h-[3px] w-full bg-gradient-to-r from-[#aec99d]/40 via-[#aec99d] to-[#aec99d]/40" />
+              <div className="h-[3px] w-full bg-gradient-to-r from-[#bbe2ef]/40 via-[#bbe2ef] to-[#bbe2ef]/40" />
               {/* header */}
               <div className="flex items-center gap-2 px-3 pt-2.5 pb-1.5">
-                <div className="w-6 h-6 rounded-md bg-[#aec99d]/12 border border-[#aec99d]/40 flex items-center justify-center text-[#aec99d] shrink-0">
+                <div className="w-6 h-6 rounded-md bg-[#bbe2ef]/12 border border-[#bbe2ef]/40 flex items-center justify-center text-[#bbe2ef] shrink-0">
                   <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                   </svg>
                 </div>
                 <div className="flex-1 min-w-0">
-                  <div className="h-[6px] w-[64%] rounded-full bg-[#aec99d]/70" />
+                  <div className="h-[6px] w-[64%] rounded-full bg-[#bbe2ef]/70" />
                   <div className="h-[4px] w-[40%] rounded-full bg-white/20 mt-1.5" />
                 </div>
               </div>
@@ -327,23 +529,24 @@ function DiagnosticAnimation() {
                 <div className="h-[4px] w-[68%] rounded-full bg-white/10" />
                 {/* mini score row */}
                 <div className="flex items-center gap-2 pt-1">
-                  <span className="text-[7px] leading-none font-semibold text-[#aec99d] bg-[#aec99d]/12 border border-[#aec99d]/30 rounded px-1.5 py-[3px]">42%</span>
+                  <span className="text-[7px] leading-none font-semibold text-[#bbe2ef] bg-[#bbe2ef]/12 border border-[#bbe2ef]/30 rounded px-1.5 py-[3px]">42%</span>
                   <div className="h-[4px] flex-1 rounded-full bg-white/10 overflow-hidden">
-                    <div className="h-full w-[42%] rounded-full bg-[#aec99d]/70" />
+                    <div className="h-full w-[42%] rounded-full bg-[#bbe2ef]/70" />
                   </div>
                 </div>
               </div>
               {/* scanning light */}
               <div
                 className="absolute inset-x-0 h-7 pointer-events-none"
-                style={{ background: 'linear-gradient(to bottom, transparent, rgba(174,201,157,0.28), transparent)', animation: 'doc-scan 2.4s ease-in-out infinite' }}
+                style={{ background: 'linear-gradient(to bottom, transparent, rgba(187, 226, 239,0.28), transparent)', animation: 'doc-scan 2.4s ease-in-out infinite' }}
               />
             </div>
-            <span className="text-[10px] sm:text-[11px] text-[#aec99d]/90 uppercase tracking-[0.22em] font-medium px-4 py-1.5 bg-[#0d0d0d]/80 border border-white/5 rounded-full whitespace-nowrap backdrop-blur-sm shadow-[0_4px_12px_rgba(0,0,0,0.5)]">Deep Diagnostic Results</span>
-            <span className="text-[19px] text-white/50 font-medium tracking-wide mt-1 animate-pulse">Blueprints are ready to generate</span>
+            <span className="text-[10px] sm:text-[11px] text-[#bbe2ef]/90 uppercase tracking-[0.22em] font-medium px-3 py-1 bg-[#0d0d0d]/80 border border-white/5 rounded-md whitespace-nowrap backdrop-blur-sm shadow-[0_4px_12px_rgba(0,0,0,0.5)]">Deep Assessment Results</span>
+            <span className="text-xs sm:text-sm text-white/70 bg-[#111111]/80 px-4 py-1 rounded-full backdrop-blur-sm mt-2 opacity-0 animate-[fade-in-text_2.0s_ease-out_forwards]">Document generated & ready</span>
           </div>
-        </div>
-      </div>
+        )}
+      </motion.div>
+      </AnimatePresence>
     </div>
   );
 }
@@ -413,14 +616,13 @@ function ConsoleAnimation() {
     <div className="w-full h-full flex flex-col justify-end pb-6 sm:pb-20 p-4 font-light relative">
       <div className="flex flex-col gap-3 w-full max-w-[100%] mx-auto mb-2">
         {/* User Message 1 */}
-        <div className={`flex justify-end transition-all duration-300 ease-out ${phase !== 'typing' ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
+        <motion.div initial={false} animate={{ opacity: phase !== "typing" ? 1 : 0, y: phase !== "typing" ? 0 : 16 }} transition={{ type: "spring", stiffness: 300, damping: 24 }} className="flex justify-end">
           <div className="bg-[#2A2A2A] rounded-2xl rounded-tr-sm px-4 py-2 sm:px-5 sm:py-2.5 text-white/90 text-[12px] sm:text-[14px] max-w-[90%] shadow-md">
             {fullText}
           </div>
-        </div>
-        
+        </motion.div>
         {/* AI Typing Indicator */}
-        <div className={`flex items-center gap-2 transition-all duration-300 ease-out ${phase === 'ai_typing' ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 hidden'}`}>
+        <motion.div initial={false} animate={{ opacity: phase === "ai_typing" ? 1 : 0, y: phase === "ai_typing" ? 0 : 16 }} transition={{ type: "spring", stiffness: 300, damping: 24 }} className={`flex items-center gap-2 ${phase === "ai_typing" ? "" : "hidden"}`}>
            <div className="bg-[#111111] border border-white/5 rounded-2xl rounded-tl-sm px-4 py-2 sm:px-4 sm:py-2.5 shadow-sm flex items-center justify-center">
              <div className="relative w-4 h-4 opacity-80">
                {[
@@ -434,7 +636,7 @@ function ConsoleAnimation() {
                ].map((pos, i) => (
                  <div
                    key={i}
-                   className="absolute w-[3px] h-[3px] rounded-full bg-[#aec99d] animate-octagon-dot"
+                   className="absolute w-[3px] h-[3px] rounded-full bg-[#bbe2ef] animate-octagon-dot"
                    style={{
                      top: pos.top,
                      left: pos.left,
@@ -444,24 +646,21 @@ function ConsoleAnimation() {
                ))}
              </div>
            </div>
-        </div>
-
+        </motion.div>
         {/* AI Confirmation */}
-        <div className={`flex justify-start transition-all duration-300 ease-out ${['ai_confirm', 'user_typing_yes', 'user_yes', 'thinking', 'response'].includes(phase) ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 hidden'}`}>
+        <motion.div initial={false} animate={{ opacity: ["ai_confirm", "user_typing_yes", "user_yes", "thinking", "response"].includes(phase) ? 1 : 0, y: ["ai_confirm", "user_typing_yes", "user_yes", "thinking", "response"].includes(phase) ? 0 : 16 }} transition={{ type: "spring", stiffness: 300, damping: 24 }} className={`flex justify-start ${["ai_confirm", "user_typing_yes", "user_yes", "thinking", "response"].includes(phase) ? "" : "hidden"}`}>
            <div className="bg-[#111111] border border-white/5 rounded-2xl rounded-tl-sm px-4 py-2 sm:px-4 sm:py-3 text-white/80 text-[12px] sm:text-[14px] max-w-[90%] leading-relaxed shadow-md">
              Sure. Should I focus on a specific pipeline, or run a comprehensive end-to-end audit?
            </div>
-        </div>
-
+        </motion.div>
         {/* User Message 2 (Yes) */}
-        <div className={`flex justify-end transition-all duration-300 ease-out ${['user_yes', 'thinking', 'response'].includes(phase) ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 hidden'}`}>
+        <motion.div initial={false} animate={{ opacity: ['user_yes', 'thinking', 'response'].includes(phase) ? 1 : 0, y: ['user_yes', 'thinking', 'response'].includes(phase) ? 0 : 16 }} transition={{ type: "spring", stiffness: 300, damping: 24 }} className={`flex justify-end ${['user_yes', 'thinking', 'response'].includes(phase) ? "" : "hidden"}`}>
            <div className="bg-[#2A2A2A] rounded-2xl rounded-tr-sm px-4 py-2 sm:px-5 sm:py-2.5 text-white/90 text-[12px] sm:text-[14px] max-w-[90%] shadow-md">
              {yesText}
            </div>
-        </div>
-
+        </motion.div>
         {/* AI Thinking & Response */}
-        <div className={`flex flex-col gap-3 transition-all duration-300 ${phase === 'thinking' || phase === 'response' ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 hidden'}`}>
+        <motion.div initial={false} animate={{ opacity: phase === "thinking" || phase === "response" ? 1 : 0, y: phase === "thinking" || phase === "response" ? 0 : 16 }} transition={{ type: "spring", stiffness: 300, damping: 24 }} className={`flex flex-col gap-3 ${phase === "thinking" || phase === "response" ? "" : "hidden"}`}>
           {phase === 'thinking' && (
             <div className="flex items-center gap-2 mt-1">
               <div className="relative w-4 h-4 opacity-80 shrink-0">
@@ -476,7 +675,7 @@ function ConsoleAnimation() {
                 ].map((pos, i) => (
                   <div
                     key={i}
-                    className="absolute w-[3px] h-[3px] rounded-full bg-[#aec99d] animate-octagon-dot"
+                    className="absolute w-[3px] h-[3px] rounded-full bg-[#bbe2ef] animate-octagon-dot"
                     style={{
                       top: pos.top,
                       left: pos.left,
@@ -498,7 +697,7 @@ function ConsoleAnimation() {
                 { title: 'Conversion', desc: 'Drop-off rate at stage 3 is 18% higher than benchmark.', delay: '0.8s' },
               ].map((item, i) => (
                 <div key={i} className="flex items-start gap-2 opacity-0 animate-fade-in-up" style={{ animationDelay: item.delay }}>
-                  <div className="w-1.5 h-1.5 rounded-full bg-[#aec99d] mt-1.5 shrink-0" />
+                  <div className="w-1.5 h-1.5 rounded-full bg-[#bbe2ef] mt-1.5 shrink-0" />
                   <div className="flex flex-col">
                     <span className="text-white/80 text-[12px] sm:text-[13px] leading-snug">{item.title}: <span className="text-white/75">{item.desc}</span></span>
                   </div>
@@ -506,7 +705,7 @@ function ConsoleAnimation() {
               ))}
             </div>
           )}
-        </div>
+        </motion.div>
       </div>
 
       <div className="absolute bottom-4 left-4 right-4 bg-[#222222] border border-white/5 rounded-full pl-3 pr-2 py-2 flex items-center gap-3 shadow-lg">
@@ -524,7 +723,7 @@ function ConsoleAnimation() {
           <button className="w-7 h-7 flex items-center justify-center text-white/70 hover:text-white/80 transition-colors hidden sm:flex">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2M12 19v4M8 23h8" strokeLinecap="round" strokeLinejoin="round"/></svg>
           </button>
-          <button className="w-8 h-8 rounded-full bg-[#a3aa96] flex items-center justify-center text-[#494949] hover:bg-[#8f9681] transition-colors">
+          <button className="w-8 h-8 rounded-full bg-[#bbe2ef] flex items-center justify-center text-[#494949] hover:bg-[#7ac4c7] transition-colors">
             {phase === 'typing' || phase === 'thinking' ? (
               <div className="w-3 h-3 bg-black rounded-[2px]" />
             ) : (
@@ -605,14 +804,13 @@ function WorkflowAnimation() {
     <div className="w-full flex flex-col gap-4 h-full justify-end relative pb-6 sm:pb-20 p-4 font-light">
       <div className="flex flex-col gap-3 sm:gap-4 w-full max-w-[100%] mx-auto mb-4">
         {/* User Message 1 */}
-        <div className={`flex justify-end transition-all duration-300 ease-out ${phase !== 'typing' ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
+        <motion.div initial={false} animate={{ opacity: phase !== "typing" ? 1 : 0, y: phase !== "typing" ? 0 : 16 }} transition={{ type: "spring", stiffness: 300, damping: 24 }} className="flex justify-end">
            <div className="bg-[#2A2A2A] rounded-3xl rounded-tr-md px-4 py-2 sm:px-5 sm:py-3 text-white/90 text-[12px] sm:text-[14px] max-w-[95%] sm:max-w-[90%] leading-relaxed shadow-md">
              {fullText}
            </div>
-        </div>
-
+        </motion.div>
         {/* AI Typing Indicator */}
-        <div className={`flex items-center gap-2 transition-all duration-300 ease-out ${phase === 'ai_typing' ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 hidden'}`}>
+        <motion.div initial={false} animate={{ opacity: phase === "ai_typing" ? 1 : 0, y: phase === "ai_typing" ? 0 : 16 }} transition={{ type: "spring", stiffness: 300, damping: 24 }} className={`flex items-center gap-2 ${phase === "ai_typing" ? "" : "hidden"}`}>
            <div className="bg-[#111111] border border-white/5 rounded-3xl rounded-tl-md px-4 py-2 sm:px-4 sm:py-2.5 shadow-sm flex items-center justify-center">
              <div className="relative w-4 h-4 opacity-80">
                {[
@@ -626,7 +824,7 @@ function WorkflowAnimation() {
                ].map((pos, i) => (
                  <div
                    key={i}
-                   className="absolute w-[3px] h-[3px] rounded-full bg-[#aec99d] animate-octagon-dot"
+                   className="absolute w-[3px] h-[3px] rounded-full bg-[#bbe2ef] animate-octagon-dot"
                    style={{
                      top: pos.top,
                      left: pos.left,
@@ -636,15 +834,13 @@ function WorkflowAnimation() {
                ))}
              </div>
            </div>
-        </div>
-
+        </motion.div>
         {/* AI Confirmation */}
         <div className={`flex justify-start transition-all duration-300 ease-out ${['ai_confirm', 'user_typing_yes', 'user_yes', 'generating', 'generated', 'buttons'].includes(phase) ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 hidden'}`}>
            <div className="bg-[#111111] border border-white/5 rounded-3xl rounded-tl-md px-4 py-2 sm:px-5 sm:py-3 text-white/80 text-[12px] sm:text-[14px] max-w-[95%] sm:max-w-[90%] leading-relaxed shadow-md">
              I can help with that. I will configure a <b>Gmail</b> trigger, an AI extractor agent, and a <b>Slack</b> action. Proceed?
            </div>
         </div>
-
         {/* User Message 2 (Yes) */}
         <div className={`flex justify-end transition-all duration-300 ease-out ${['user_yes', 'generating', 'generated', 'buttons'].includes(phase) ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 hidden'}`}>
            <div className="bg-[#2A2A2A] rounded-3xl rounded-tr-md px-4 py-2 sm:px-5 sm:py-3 text-white/90 text-[12px] sm:text-[14px] max-w-[95%] sm:max-w-[90%] leading-relaxed shadow-md">
@@ -668,7 +864,7 @@ function WorkflowAnimation() {
                  ].map((pos, i) => (
                    <div
                      key={i}
-                     className="absolute w-[3px] h-[3px] rounded-full bg-[#aec99d] animate-octagon-dot"
+                     className="absolute w-[3px] h-[3px] rounded-full bg-[#bbe2ef] animate-octagon-dot"
                      style={{
                        top: pos.top,
                        left: pos.left,
@@ -699,18 +895,18 @@ function WorkflowAnimation() {
               <div className="absolute top-1/2 left-[10%] right-[10%] h-[1px] bg-white/10 -translate-y-1/2 -z-10 rounded-full" />
               
               {/* Glowing continuous line */}
-              <div className="absolute top-1/2 left-[10%] right-[10%] h-[2px] -translate-y-1/2 -z-10 origin-left animate-scale-x rounded-full" style={{ background: 'linear-gradient(to right, rgba(174,201,157,0.1), rgba(174,201,157,0.8), rgba(193,204,200,0.1))', animationDuration: '0.8s' }} />
+              <div className="absolute top-1/2 left-[10%] right-[10%] h-[2px] -translate-y-1/2 -z-10 origin-left animate-scale-x rounded-full" style={{ background: 'linear-gradient(to right, rgba(187, 226, 239,0.1), rgba(187, 226, 239,0.8), rgba(193,204,200,0.1))', animationDuration: '0.8s' }} />
               
               {/* flowing data dots */}
-              <span className="absolute top-1/2 -translate-y-1/2 w-2 h-2 rounded-full bg-[#aec99d] -z-10" style={{ boxShadow: '0 0 12px 2px #aec99d', animation: 'node-flow-continuous 1.2s ease-in-out infinite' }} />
+              <span className="absolute top-1/2 -translate-y-1/2 w-2 h-2 rounded-full bg-[#bbe2ef] -z-10" style={{ boxShadow: '0 0 12px 2px #bbe2ef', animation: 'node-flow-continuous 1.2s ease-in-out infinite' }} />
               <span className="absolute top-1/2 -translate-y-1/2 w-2 h-2 rounded-full bg-[#c1ccc8] -z-10" style={{ boxShadow: '0 0 12px 2px #c1ccc8', animation: 'node-flow-continuous 1.2s ease-in-out infinite', animationDelay: '0.6s' }} />
 
               {/* Node 1: Trigger (Gmail) */}
               <div className="relative flex flex-col items-center w-[86px] sm:w-[100px] rounded-2xl pt-2 pb-2.5 px-2 bg-gradient-to-b from-[#23262b] to-[#15171b] border border-white/10 z-10" style={{ boxShadow: '0 10px 24px -8px rgba(0,0,0,0.65), inset 0 1px 0 rgba(255,255,255,0.06)', animation: 'node-pop 0.6s ease-out both' }}>
                 {/* output handle */}
-                <span className="absolute top-1/2 -translate-y-1/2 -right-[6px] w-3 h-3 rounded-full bg-[#0c0d0f] border-2 border-[#aec99d] z-20" />
+                <span className="absolute top-1/2 -translate-y-1/2 -right-[6px] w-3 h-3 rounded-full bg-[#0c0d0f] border-2 border-[#bbe2ef] z-20" />
                 <div className="flex items-center gap-1 mb-1.5">
-                  <span className="w-1 h-1 rounded-full bg-[#aec99d]" />
+                  <span className="w-1 h-1 rounded-full bg-[#bbe2ef]" />
                   <span className="text-[6.5px] sm:text-[8px] uppercase tracking-[0.14em] text-white/65 font-semibold">Trigger</span>
                 </div>
                 <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl flex items-center justify-center bg-white shadow-[0_2px_6px_rgba(0,0,0,0.35)] mb-1.5">
@@ -720,18 +916,18 @@ function WorkflowAnimation() {
               </div>
 
               {/* Node 2: AI Agent (Extract) */}
-              <div className="relative flex flex-col items-center w-[86px] sm:w-[100px] rounded-2xl pt-2 pb-2.5 px-2 z-20 border border-[#aec99d]/30 bg-gradient-to-b from-[#23262b] to-[#15171b]" style={{ boxShadow: '0 10px 26px -8px rgba(0,0,0,0.7), 0 0 20px rgba(174,201,157,0.16), inset 0 1px 0 rgba(255,255,255,0.06)', animation: 'node-pop 0.6s ease-out 0.2s both' }}>
+              <div className="relative flex flex-col items-center w-[86px] sm:w-[100px] rounded-2xl pt-2 pb-2.5 px-2 z-20 border border-[#bbe2ef]/30 bg-gradient-to-b from-[#23262b] to-[#15171b]" style={{ boxShadow: '0 10px 26px -8px rgba(0,0,0,0.7), 0 0 20px rgba(187, 226, 239,0.16), inset 0 1px 0 rgba(255,255,255,0.06)', animation: 'node-pop 0.6s ease-out 0.2s both' }}>
                 {/* live indicator */}
-                <span className="absolute top-[-4px] right-[-4px] w-3 h-3 rounded-full bg-[#aec99d] premium-ping z-30" />
-                <span className="absolute top-[-4px] right-[-4px] w-3 h-3 rounded-full bg-[#aec99d] border border-[#0c0d0f] z-30" />
+                <span className="absolute top-[-4px] right-[-4px] w-3 h-3 rounded-full bg-[#bbe2ef] premium-ping z-30" />
+                <span className="absolute top-[-4px] right-[-4px] w-3 h-3 rounded-full bg-[#bbe2ef] border border-[#0c0d0f] z-30" />
                 {/* handles both sides */}
-                <span className="absolute top-1/2 -translate-y-1/2 -left-[6px] w-3 h-3 rounded-full bg-[#0c0d0f] border-2 border-[#aec99d] z-20" />
+                <span className="absolute top-1/2 -translate-y-1/2 -left-[6px] w-3 h-3 rounded-full bg-[#0c0d0f] border-2 border-[#bbe2ef] z-20" />
                 <span className="absolute top-1/2 -translate-y-1/2 -right-[6px] w-3 h-3 rounded-full bg-[#0c0d0f] border-2 border-[#c1ccc8] z-20" />
                 <div className="flex items-center gap-1 mb-1.5">
-                  <span className="w-1 h-1 rounded-full bg-[#aec99d]" />
-                  <span className="text-[6.5px] sm:text-[8px] uppercase tracking-[0.14em] text-[#aec99d]/80 font-semibold">AI Agent</span>
+                  <span className="w-1 h-1 rounded-full bg-[#bbe2ef]" />
+                  <span className="text-[6.5px] sm:text-[8px] uppercase tracking-[0.14em] text-[#bbe2ef]/80 font-semibold">AI Agent</span>
                 </div>
-                <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl flex items-center justify-center bg-gradient-to-br from-[#aec99d] to-[#7f9a6e] shadow-[0_2px_6px_rgba(0,0,0,0.35)] mb-1.5">
+                <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl flex items-center justify-center bg-gradient-to-br from-[#bbe2ef] to-[#62a6aa] shadow-[0_2px_6px_rgba(0,0,0,0.35)] mb-1.5">
                   <svg className="w-5 h-5 text-[#111]" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l1.6 4.6L18 8.2l-4.4 1.6L12 14l-1.6-4.2L6 8.2l4.4-1.6L12 2zm6 10l.9 2.5L21 15.4l-2.1.9L18 19l-.9-2.7L15 15.4l2.1-.9L18 12zM6 13l.8 2.2L9 16l-2.2.8L6 19l-.8-2.2L3 16l2.2-.8L6 13z"/></svg>
                 </div>
                 <span className="text-[10px] sm:text-[12px] font-semibold text-white leading-none">Extract</span>
@@ -779,7 +975,7 @@ function WorkflowAnimation() {
           )}
         </div>
         <div className="flex items-center gap-1.5 shrink-0">
-          <button className="w-8 h-8 rounded-full bg-[#a3aa96] flex items-center justify-center text-[#494949] hover:bg-[#8f9681] transition-colors">
+          <button className="w-8 h-8 rounded-full bg-[#bbe2ef] flex items-center justify-center text-[#494949] hover:bg-[#7ac4c7] transition-colors">
             {phase === 'typing' || phase === 'generating' ? (
               <div className="w-3 h-3 bg-black rounded-[2px]" />
             ) : (
@@ -793,8 +989,14 @@ function WorkflowAnimation() {
 }
 
 function RoadmapAnimation() {
-  const [phase, setPhase] = useState<'ingest' | 'roadmap'>('ingest');
+  const [phase, setPhase] = useState<'intro' | 'ingest' | 'roadmap'>('intro');
   const [step, setStep] = useState(0);
+
+  useEffect(() => {
+    if (phase !== 'intro') return;
+    const timer = setTimeout(() => setPhase('ingest'), 3000);
+    return () => clearTimeout(timer);
+  }, [phase]);
 
   // Replays the "System Blueprint" doc drop-in every time the wave loop resets.
   useEffect(() => {
@@ -808,7 +1010,7 @@ function RoadmapAnimation() {
 
     const nextStep = () => {
       if (step >= 13) {
-        setPhase('ingest');
+        setPhase('intro');
         setStep(0);
         return;
       }
@@ -913,7 +1115,6 @@ function RoadmapAnimation() {
           25% { opacity: 1; }
           75% { opacity: 1; }
           100% { transform: translateY(96px); opacity: 0; }
-        }
         @keyframes fade-in-text {
           0%, 65% { opacity: 0; transform: translateY(15px); }
           75%, 100% { opacity: 1; transform: translateY(0); }
@@ -924,29 +1125,43 @@ function RoadmapAnimation() {
           Gated on `phase === 'ingest'` so the subtree unmounts/remounts on every
           loop — otherwise the doc-ingest CSS animation only ever plays once and
           freezes at its vanished end-state on repeat cycles. */}
-      <div className={`col-start-1 row-start-1 flex flex-col items-center justify-center w-full h-full transition-all duration-500 ${phase === 'roadmap' ? 'opacity-0 scale-95 pointer-events-none' : 'opacity-100 scale-100'}`}>
-        {phase === 'ingest' && (<>
+      <AnimatePresence mode="wait">
+      {phase === 'intro' && (
+         <motion.div 
+           key="intro"
+           initial={{ opacity: 0, y: 15 }}
+           animate={{ opacity: 1, y: 0 }}
+           exit={{ opacity: 0, y: -15 }}
+           transition={{ type: 'spring', stiffness: 300, damping: 25 }}
+           className="flex items-center justify-center w-full h-full absolute inset-0 z-20"
+         >
+           <span className="text-sm sm:text-base text-white/90 font-medium text-center px-4 max-w-sm">Generating Implementation Roadmap from System Blueprint</span>
+         </motion.div>
+      )}
+
+      {phase === 'ingest' && (
+        <motion.div key="ingest" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0, transition: { duration: 0.5 } }} className="col-start-1 row-start-1 flex flex-col items-center justify-center w-full h-full z-10 absolute inset-0">
         <div className="relative flex items-center justify-center w-full" style={{ height: '215px', perspective: '600px' }}>
           <div
             className="absolute left-1/2 top-[10px] z-20 flex flex-col items-center gap-2.5"
             style={{ animation: 'doc-ingest 4.0s cubic-bezier(0.45,0,0.2,1) forwards', willChange: 'transform, opacity, filter' }}
           >
             <div
-              className="relative w-[150px] sm:w-[164px] rounded-xl overflow-hidden bg-gradient-to-b from-[#171b16] to-[#0c0e0b] border border-[#aec99d]/25"
+              className="relative w-[150px] sm:w-[164px] rounded-xl overflow-hidden bg-gradient-to-b from-[#171b16] to-[#0c0e0b] border border-[#bbe2ef]/25"
               style={{
-                boxShadow: '0 14px 34px -10px rgba(0,0,0,0.75), 0 0 22px rgba(174,201,157,0.14), inset 0 1px 0 rgba(255,255,255,0.06)',
+                boxShadow: '0 14px 34px -10px rgba(0,0,0,0.75), 0 0 22px rgba(187, 226, 239,0.14), inset 0 1px 0 rgba(255,255,255,0.06)',
                 animation: 'doc-float 3.2s ease-in-out infinite',
               }}
             >
-              <div className="h-[3px] w-full bg-gradient-to-r from-[#aec99d]/40 via-[#aec99d] to-[#aec99d]/40" />
+              <div className="h-[3px] w-full bg-gradient-to-r from-[#bbe2ef]/40 via-[#bbe2ef] to-[#bbe2ef]/40" />
               <div className="flex items-center gap-2 px-3 pt-2.5 pb-1.5">
-                <div className="w-6 h-6 rounded-md bg-[#aec99d]/12 border border-[#aec99d]/40 flex items-center justify-center text-[#aec99d] shrink-0">
+                <div className="w-6 h-6 rounded-md bg-[#bbe2ef]/12 border border-[#bbe2ef]/40 flex items-center justify-center text-[#bbe2ef] shrink-0">
                   <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                   </svg>
                 </div>
                 <div className="flex-1 min-w-0">
-                  <div className="h-[6px] w-[64%] rounded-full bg-[#aec99d]/70" />
+                  <div className="h-[6px] w-[64%] rounded-full bg-[#bbe2ef]/70" />
                   <div className="h-[4px] w-[40%] rounded-full bg-white/20 mt-1.5" />
                 </div>
               </div>
@@ -955,18 +1170,18 @@ function RoadmapAnimation() {
                 <div className="h-[4px] w-[86%] rounded-full bg-white/10" />
                 <div className="h-[4px] w-[68%] rounded-full bg-white/10" />
                 <div className="flex items-center gap-2 pt-1">
-                  <span className="text-[7px] leading-none font-semibold text-[#aec99d] bg-[#aec99d]/12 border border-[#aec99d]/30 rounded px-1.5 py-[3px]">98%</span>
+                  <span className="text-[7px] leading-none font-semibold text-[#bbe2ef] bg-[#bbe2ef]/12 border border-[#bbe2ef]/30 rounded px-1.5 py-[3px]">98%</span>
                   <div className="h-[4px] flex-1 rounded-full bg-white/10 overflow-hidden">
-                    <div className="h-full w-[98%] rounded-full bg-[#aec99d]/70" />
+                    <div className="h-full w-[98%] rounded-full bg-[#bbe2ef]/70" />
                   </div>
                 </div>
               </div>
               <div
                 className="absolute inset-x-0 h-7 pointer-events-none"
-                style={{ background: 'linear-gradient(to bottom, transparent, rgba(174,201,157,0.28), transparent)', animation: 'doc-scan 2.4s ease-in-out infinite' }}
+                style={{ background: 'linear-gradient(to bottom, transparent, rgba(187, 226, 239,0.28), transparent)', animation: 'doc-scan 2.4s ease-in-out infinite' }}
               />
             </div>
-            <span className="text-[10px] sm:text-[11px] text-[#aec99d]/90 uppercase tracking-[0.22em] font-medium px-3 py-1 bg-[#0d0d0d]/80 border border-white/5 rounded-md whitespace-nowrap backdrop-blur-sm shadow-[0_4px_12px_rgba(0,0,0,0.5)]">System Blueprint</span>
+            <span className="text-[10px] sm:text-[11px] text-[#bbe2ef]/90 uppercase tracking-[0.22em] font-medium px-3 py-1 bg-[#0d0d0d]/80 border border-white/5 rounded-md whitespace-nowrap backdrop-blur-sm shadow-[0_4px_12px_rgba(0,0,0,0.5)]">System Blueprint</span>
           </div>
 
           {Array.from({ length: 24 }).map((_, i) => {
@@ -977,7 +1192,7 @@ function RoadmapAnimation() {
             return (
               <div
                 key={`roadmap-particle-${i}`}
-                className="absolute w-[3.5px] h-[3.5px] sm:w-[4px] sm:h-[4px] rounded-full bg-[#aec99d] z-30"
+                className="absolute w-[3.5px] h-[3.5px] sm:w-[4px] sm:h-[4px] rounded-full bg-[#bbe2ef] z-30"
                 style={{
                   left: '50%',
                   top: 'calc(50% + 20px)',
@@ -986,20 +1201,21 @@ function RoadmapAnimation() {
                   animation: `particle-shatter 1.4s cubic-bezier(0.2, 0.8, 0.2, 1) forwards`,
                   animationDelay: `${3.3 + (i % 4) * 0.04}s`,
                   opacity: 0,
-                  boxShadow: '0 0 8px 1.5px rgba(174,201,157,0.8)'
+                  boxShadow: '0 0 8px 1.5px rgba(187, 226, 239,0.8)'
                 } as React.CSSProperties}
               />
             );
           })}
 
           <div
-            className="absolute left-1/2 top-[calc(50%+20px)] -translate-x-1/2 -translate-y-1/2 w-40 h-40 bg-[#aec99d] rounded-full blur-[40px] z-10 pointer-events-none"
+            className="absolute left-1/2 top-[calc(50%+20px)] -translate-x-1/2 -translate-y-1/2 w-40 h-40 bg-[#bbe2ef] rounded-full blur-[40px] z-10 pointer-events-none"
             style={{ animation: 'pulse-ring 1.8s ease-out forwards', animationDelay: '3.3s', opacity: 0 }}
           />
         </div>
         <span className="text-xs sm:text-sm text-white/70 bg-[#111111]/80 px-4 py-1 rounded-full backdrop-blur-sm opacity-0 animate-[fade-in-text_4.0s_ease-out_forwards] -mt-2">Sequencing blueprint into phased waves</span>
-        </>)}
-      </div>
+        </motion.div>
+      )}
+      </AnimatePresence>
 
       {/* Roadmap: wave milestone UI (unchanged sticky-scroll layout) */}
       <div className={`col-start-1 row-start-1 flex flex-col justify-center space-y-8 w-full h-full relative z-10 transition-all duration-500 ${phase === 'roadmap' ? 'opacity-100 scale-100' : 'opacity-0 scale-95 pointer-events-none'}`}>
@@ -1008,10 +1224,10 @@ function RoadmapAnimation() {
         <div className="absolute top-1/2 left-[52px] right-[52px] h-[1px] bg-white/10 -translate-y-1/2 -z-10" />
         
         {/* Progress Line W1 to W2 */}
-        <div className={`absolute top-1/2 left-[52px] right-1/2 h-[1px] bg-[#aec99d] -translate-y-1/2 -z-10 origin-left transition-all duration-700 ${step >= 5 ? 'scale-x-100 opacity-100' : 'scale-x-0 opacity-0'}`} />
+        <div className={`absolute top-1/2 left-[52px] right-1/2 h-[1px] bg-[#bbe2ef] -translate-y-1/2 -z-10 origin-left transition-all duration-700 ${step >= 5 ? 'scale-x-100 opacity-100' : 'scale-x-0 opacity-0'}`} />
         
         {/* Progress Line W2 to W3 */}
-        <div className={`absolute top-1/2 left-1/2 right-[52px] h-[1px] bg-[#aec99d] -translate-y-1/2 -z-10 origin-left transition-all duration-700 ${step >= 9 ? 'scale-x-100 opacity-100' : 'scale-x-0 opacity-0'}`} />
+        <div className={`absolute top-1/2 left-1/2 right-[52px] h-[1px] bg-[#bbe2ef] -translate-y-1/2 -z-10 origin-left transition-all duration-700 ${step >= 9 ? 'scale-x-100 opacity-100' : 'scale-x-0 opacity-0'}`} />
 
         {/* Traveling light pulses that ride the connectors as each wave unlocks */}
         {step >= 5 && (
@@ -1031,7 +1247,7 @@ function RoadmapAnimation() {
           return (
             <div key={wave.name} className="flex flex-col items-center gap-2 transition-all duration-500">
               <div className={`w-10 h-10 rounded-full border flex items-center justify-center text-xs transition-all duration-500 relative z-10 ${
-                isActive ? 'border-[#aec99d] bg-[#111111] text-[#aec99d] font-semibold scale-110 shadow-[0_0_15px_rgba(174,201,157,0.3)]' : 'border-white/10 bg-[#111111] text-white/60 scale-100'
+                isActive ? 'border-[#bbe2ef] bg-[#111111] text-[#bbe2ef] font-semibold scale-110 shadow-[0_0_15px_rgba(187, 226, 239,0.3)]' : 'border-white/10 bg-[#111111] text-white/60 scale-100'
               }`} style={{ fontFamily: "'Doto', 'Courier New', monospace" }}>
                 {isCurrent && <span className="roadmap-ping" />}
                 {wave.num}
@@ -1044,7 +1260,7 @@ function RoadmapAnimation() {
 
       {/* Deliverables list */}
       <div className="relative mx-auto w-full max-w-md">
-        <div aria-hidden className="roadmap-glow absolute -inset-4 -z-10 rounded-3xl blur-xl" style={{ background: 'radial-gradient(circle at 50% 38%, rgba(174,201,157,0.18), transparent 70%)' }} />
+        <div aria-hidden className="roadmap-glow absolute -inset-4 -z-10 rounded-3xl blur-xl" style={{ background: 'radial-gradient(circle at 50% 38%, rgba(187, 226, 239,0.18), transparent 70%)' }} />
         <SpotlightCard className="p-6 w-full space-y-4 shadow-lg transition-all duration-500">
           <div key={currentWaveIdx} className="roadmap-title-in text-[13.5px] text-white uppercase tracking-widest font-light" style={{ fontFamily: "'Doto', 'Courier New', monospace" }}>
             {currentData.title}
@@ -1055,10 +1271,10 @@ function RoadmapAnimation() {
               return (
                 <div key={`${currentWaveIdx}-${i}`} className="flex items-center gap-4 text-xs font-light transition-all duration-500 animate-fade-in-up" style={{ animationDelay: `${i * 0.1}s` }}>
                   <span className={`w-5 h-5 rounded border flex items-center justify-center shrink-0 transition-colors duration-500 ${
-                    isDone ? 'border-[#aec99d] bg-[#aec99d]/10' : 'border-white/10'
+                    isDone ? 'border-[#bbe2ef] bg-[#bbe2ef]/10' : 'border-white/10'
                   }`}>
                     {isDone && (
-                      <svg key={`chk-${currentWaveIdx}-${i}`} className="roadmap-check-draw" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#aec99d" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round">
+                      <svg key={`chk-${currentWaveIdx}-${i}`} className="roadmap-check-draw" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#bbe2ef" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round">
                         <path d="M5 13l4 4L19 7" />
                       </svg>
                     )}
@@ -1164,7 +1380,7 @@ function IntroAnimation() {
 }
 
 function BlueprintAnimation() {
-  const [phase, setPhase] = useState<'import' | 'generate' | 'blueprint' | 'complete'>('import');
+  const [phase, setPhase] = useState<'intro' | 'import' | 'generate' | 'blueprint' | 'complete'>('intro');
   const timerRefs = useRef<ReturnType<typeof setTimeout>[]>([]);
 
   const clearAll = () => { timerRefs.current.forEach(clearTimeout); timerRefs.current = []; };
@@ -1172,11 +1388,12 @@ function BlueprintAnimation() {
 
   useEffect(() => {
     const run = () => {
-      setPhase('import');
-      t(() => setPhase('generate'), 4.5);
-      t(() => setPhase('blueprint'), 8.0);
-      t(() => setPhase('complete'), 13.0);
-      t(run, 17.0);
+      setPhase('intro');
+      t(() => setPhase('import'), 3.0);
+      t(() => setPhase('generate'), 7.5);
+      t(() => setPhase('blueprint'), 11.0);
+      t(() => setPhase('complete'), 16.0);
+      t(run, 20.0);
     };
     run();
     return clearAll;
@@ -1243,14 +1460,28 @@ function BlueprintAnimation() {
           100% { opacity: 1; transform: translateY(0); letter-spacing: 0.1em; }
         }
       `}</style>
-      <SpotlightCard className="w-full p-6 sm:p-8 relative shadow-lg min-h-[320px] grid overflow-hidden">
+      <div className="w-full relative min-h-[320px] grid overflow-hidden">
         
 
         {/* Import & Generate Phases */}
-        <div className={`col-start-1 row-start-1 flex flex-col items-center justify-center transition-all duration-500 w-full h-full z-10 ${phase === 'blueprint' || phase === 'complete' ? 'opacity-0 scale-95 pointer-events-none' : 'opacity-100 scale-100'}`}>
+        <div className={`col-start-1 row-start-1 flex flex-col items-center justify-center transition-all duration-500 w-full h-full z-10 absolute inset-0 ${phase === 'blueprint' || phase === 'complete' ? 'opacity-0 scale-95 pointer-events-none' : 'opacity-100 scale-100'}`}>
+
+          <AnimatePresence mode="wait">
+          {phase === 'intro' && (
+             <motion.div 
+               key="intro"
+               initial={{ opacity: 0, y: 15 }}
+               animate={{ opacity: 1, y: 0 }}
+               exit={{ opacity: 0, y: -15 }}
+               transition={{ type: 'spring', stiffness: 300, damping: 25 }}
+               className="flex items-center justify-center w-full h-full absolute inset-0 z-20"
+             >
+               <span className="text-sm sm:text-base text-white/90 font-medium text-center px-4 max-w-sm">Generating System Blueprint from Deep Assessment Results</span>
+             </motion.div>
+          )}
 
           {phase === 'import' && (
-            <div className="flex flex-col items-center justify-center w-full">
+            <motion.div key="import" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0, transition: { duration: 0.5 } }} className="flex flex-col items-center justify-center w-full absolute inset-0">
 
               {/* Ingest stage: document glides down and shatters */}
               <div className="relative flex items-center justify-center w-full" style={{ height: '215px', perspective: '600px' }}>
@@ -1262,23 +1493,23 @@ function BlueprintAnimation() {
                 >
                   {/* Diagnostic report card */}
                   <div
-                    className="relative w-[150px] sm:w-[164px] rounded-xl overflow-hidden bg-gradient-to-b from-[#171b16] to-[#0c0e0b] border border-[#aec99d]/25"
+                    className="relative w-[150px] sm:w-[164px] rounded-xl overflow-hidden bg-gradient-to-b from-[#171b16] to-[#0c0e0b] border border-[#bbe2ef]/25"
                     style={{
-                      boxShadow: '0 14px 34px -10px rgba(0,0,0,0.75), 0 0 22px rgba(174,201,157,0.14), inset 0 1px 0 rgba(255,255,255,0.06)',
+                      boxShadow: '0 14px 34px -10px rgba(0,0,0,0.75), 0 0 22px rgba(187, 226, 239,0.14), inset 0 1px 0 rgba(255,255,255,0.06)',
                       animation: 'doc-float 3.2s ease-in-out infinite',
                     }}
                   >
                     {/* top accent bar */}
-                    <div className="h-[3px] w-full bg-gradient-to-r from-[#aec99d]/40 via-[#aec99d] to-[#aec99d]/40" />
+                    <div className="h-[3px] w-full bg-gradient-to-r from-[#bbe2ef]/40 via-[#bbe2ef] to-[#bbe2ef]/40" />
                     {/* header */}
                     <div className="flex items-center gap-2 px-3 pt-2.5 pb-1.5">
-                      <div className="w-6 h-6 rounded-md bg-[#aec99d]/12 border border-[#aec99d]/40 flex items-center justify-center text-[#aec99d] shrink-0">
+                      <div className="w-6 h-6 rounded-md bg-[#bbe2ef]/12 border border-[#bbe2ef]/40 flex items-center justify-center text-[#bbe2ef] shrink-0">
                         <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                         </svg>
                       </div>
                       <div className="flex-1 min-w-0">
-                        <div className="h-[6px] w-[64%] rounded-full bg-[#aec99d]/70" />
+                        <div className="h-[6px] w-[64%] rounded-full bg-[#bbe2ef]/70" />
                         <div className="h-[4px] w-[40%] rounded-full bg-white/20 mt-1.5" />
                       </div>
                     </div>
@@ -1289,19 +1520,19 @@ function BlueprintAnimation() {
                       <div className="h-[4px] w-[68%] rounded-full bg-white/10" />
                       {/* mini score row */}
                       <div className="flex items-center gap-2 pt-1">
-                        <span className="text-[7px] leading-none font-semibold text-[#aec99d] bg-[#aec99d]/12 border border-[#aec99d]/30 rounded px-1.5 py-[3px]">42%</span>
+                        <span className="text-[7px] leading-none font-semibold text-[#bbe2ef] bg-[#bbe2ef]/12 border border-[#bbe2ef]/30 rounded px-1.5 py-[3px]">42%</span>
                         <div className="h-[4px] flex-1 rounded-full bg-white/10 overflow-hidden">
-                          <div className="h-full w-[42%] rounded-full bg-[#aec99d]/70" />
+                          <div className="h-full w-[42%] rounded-full bg-[#bbe2ef]/70" />
                         </div>
                       </div>
                     </div>
                     {/* scanning light */}
                     <div
                       className="absolute inset-x-0 h-7 pointer-events-none"
-                      style={{ background: 'linear-gradient(to bottom, transparent, rgba(174,201,157,0.28), transparent)', animation: 'doc-scan 2.4s ease-in-out infinite' }}
+                      style={{ background: 'linear-gradient(to bottom, transparent, rgba(187, 226, 239,0.28), transparent)', animation: 'doc-scan 2.4s ease-in-out infinite' }}
                     />
                   </div>
-                  <span className="text-[10px] sm:text-[11px] text-[#aec99d]/90 uppercase tracking-[0.22em] font-medium px-3 py-1 bg-[#0d0d0d]/80 border border-white/5 rounded-md whitespace-nowrap backdrop-blur-sm shadow-[0_4px_12px_rgba(0,0,0,0.5)]">Deep Diagnostic Results</span>
+                  <span className="text-[10px] sm:text-[11px] text-[#bbe2ef]/90 uppercase tracking-[0.22em] font-medium px-3 py-1 bg-[#0d0d0d]/80 border border-white/5 rounded-md whitespace-nowrap backdrop-blur-sm shadow-[0_4px_12px_rgba(0,0,0,0.5)]">Deep Assessment Results</span>
                 </div>
 
                 {/* Shatter Particles */}
@@ -1316,7 +1547,7 @@ function BlueprintAnimation() {
                   return (
                     <div
                       key={`particle-${i}`}
-                      className="absolute w-[3.5px] h-[3.5px] sm:w-[4px] sm:h-[4px] rounded-full bg-[#aec99d] z-30"
+                      className="absolute w-[3.5px] h-[3.5px] sm:w-[4px] sm:h-[4px] rounded-full bg-[#bbe2ef] z-30"
                       style={{
                         left: '50%',
                         top: 'calc(50% + 20px)',
@@ -1325,7 +1556,7 @@ function BlueprintAnimation() {
                         animation: `particle-shatter 1.4s cubic-bezier(0.2, 0.8, 0.2, 1) forwards`,
                         animationDelay: `${3.3 + (i % 4) * 0.04}s`,
                         opacity: 0,
-                        boxShadow: '0 0 8px 1.5px rgba(174,201,157,0.8)'
+                        boxShadow: '0 0 8px 1.5px rgba(187, 226, 239,0.8)'
                       } as React.CSSProperties}
                     />
                   )
@@ -1333,7 +1564,7 @@ function BlueprintAnimation() {
 
                 {/* Ethereal Glow left behind */}
                 <div 
-                  className="absolute left-1/2 top-[calc(50%+20px)] -translate-x-1/2 -translate-y-1/2 w-40 h-40 bg-[#aec99d] rounded-full blur-[40px] z-10 pointer-events-none"
+                  className="absolute left-1/2 top-[calc(50%+20px)] -translate-x-1/2 -translate-y-1/2 w-40 h-40 bg-[#bbe2ef] rounded-full blur-[40px] z-10 pointer-events-none"
                   style={{ 
                     animation: 'pulse-ring 1.8s ease-out forwards',
                     animationDelay: '3.3s',
@@ -1345,8 +1576,8 @@ function BlueprintAnimation() {
                 <div 
                   className="absolute left-1/2 bottom-[20px] w-[4px] h-[50px] rounded-full z-0 pointer-events-none"
                   style={{ 
-                    background: 'linear-gradient(to bottom, rgba(174,201,157,0), #aec99d, #aec99d, rgba(174,201,157,0))',
-                    boxShadow: '0 0 20px 4px rgba(174,201,157,0.8), 0 0 40px rgba(174,201,157,0.4)',
+                    background: 'linear-gradient(to bottom, rgba(187, 226, 239,0), #bbe2ef, #bbe2ef, rgba(187, 226, 239,0))',
+                    boxShadow: '0 0 20px 4px rgba(187, 226, 239,0.8), 0 0 40px rgba(187, 226, 239,0.4)',
                     animation: 'data-stream-flow 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards',
                     animationDelay: '3.25s',
                     opacity: 0,
@@ -1357,28 +1588,29 @@ function BlueprintAnimation() {
 
               {/* Engine Context */}
               <div className="flex flex-col items-center gap-4 z-10 relative mt-2 w-full max-w-[420px]">
-                <span className="text-xs sm:text-sm text-white/70 bg-[#111111]/80 px-4 py-1 rounded-full backdrop-blur-sm opacity-0 animate-[fade-in-text_4.5s_ease-out_forwards]">Engine processing from deep diagnostic result</span>
+                <span className="text-xs sm:text-sm text-white/70 bg-[#111111]/80 px-4 py-1 rounded-full backdrop-blur-sm opacity-0 animate-[fade-in-text_4.5s_ease-out_forwards]">Engine processing from Deep Assessment result</span>
                 <div className="flex flex-wrap justify-center gap-3 sm:gap-4 w-full">
                   <div className="bg-white/5 border border-white/10 rounded-md px-3 py-1.5 sm:px-4 sm:py-2 text-[10px] sm:text-sm text-white/80 whitespace-nowrap opacity-0 animate-[pop-in-pill_0.6s_ease-out_forwards]" style={{ animationDelay: '3.6s' }}>Goal: Scale Ops</div>
                   <div className="bg-white/5 border border-white/10 rounded-md px-3 py-1.5 sm:px-4 sm:py-2 text-[10px] sm:text-sm text-white/80 whitespace-nowrap opacity-0 animate-[pop-in-pill_0.6s_ease-out_forwards]" style={{ animationDelay: '3.75s' }}>Data: Partially Centralized</div>
-                  <div className="bg-[#aec99d]/10 border border-[#aec99d]/30 rounded-md px-3 py-1.5 sm:px-4 sm:py-2 text-[10px] sm:text-sm text-[#aec99d] shadow-[0_0_15px_rgba(174,201,157,0.15)] font-medium whitespace-nowrap opacity-0 animate-[pop-in-pill_0.6s_ease-out_forwards]" style={{ animationDelay: '3.9s' }}>Score: 42%</div>
+                  <div className="bg-[#bbe2ef]/10 border border-[#bbe2ef]/30 rounded-md px-3 py-1.5 sm:px-4 sm:py-2 text-[10px] sm:text-sm text-[#bbe2ef] shadow-[0_0_15px_rgba(187, 226, 239,0.15)] font-medium whitespace-nowrap opacity-0 animate-[pop-in-pill_0.6s_ease-out_forwards]" style={{ animationDelay: '3.9s' }}>Score: 42%</div>
                 </div>
               </div>
-            </div>
+            </motion.div>
           )}
+          </AnimatePresence>
           {phase === 'generate' && (
             <div className="flex flex-col items-center justify-center gap-6 animate-fade-in-up">
               <div className="relative w-28 h-28 sm:w-36 sm:h-36 flex items-center justify-center">
-                <div className="absolute inset-[-10px] border border-[#aec99d]/20 rounded-full premium-ping" />
-                <div className="absolute inset-0 bg-[#aec99d]/5 rounded-full blur-2xl" />
+                <div className="absolute inset-[-10px] border border-[#bbe2ef]/20 rounded-full premium-ping" />
+                <div className="absolute inset-0 bg-[#bbe2ef]/5 rounded-full blur-2xl" />
                 <div className="w-full h-full flex items-center justify-center z-10">
                   <LabFlaskCanvas />
                 </div>
               </div>
               <div className="flex flex-col items-center">
-                <span className="text-sm sm:text-base text-[#aec99d] uppercase tracking-widest font-medium">Brewing Blueprint</span>
+                <span className="text-sm sm:text-base text-[#bbe2ef] uppercase tracking-widest font-medium">Brewing Blueprint</span>
                 <div className="w-32 sm:w-48 h-1 bg-white/10 rounded-full mt-4 overflow-hidden relative">
-                  <div className="h-full bg-[#aec99d] rounded-full animate-[loading-bar_3.5s_ease-in-out_forwards]" />
+                  <div className="h-full bg-[#bbe2ef] rounded-full animate-[loading-bar_3.5s_ease-in-out_forwards]" />
                 </div>
               </div>
             </div>
@@ -1388,7 +1620,7 @@ function BlueprintAnimation() {
         {/* Blueprint Layout */}
         <div className={`col-start-1 row-start-1 flex flex-col justify-center w-full h-full z-10 transition-opacity duration-300 ${phase === 'blueprint' ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}>
           <div className={`flex flex-col items-center mb-8 ${phase === 'blueprint' ? 'animate-[blueprint-header-enter_0.8s_ease-out_forwards]' : 'opacity-0'}`}>
-            <span className="text-[10px] sm:text-xs text-[#aec99d] uppercase tracking-[0.1em] font-medium mb-1 drop-shadow-[0_0_8px_rgba(174,201,157,0.5)]">Tailored Blueprint</span>
+            <span className="text-[10px] sm:text-xs text-[#bbe2ef] uppercase tracking-[0.1em] font-medium mb-1 drop-shadow-[0_0_8px_rgba(187, 226, 239,0.5)]">Tailored Blueprint</span>
             <span className="text-lg sm:text-xl text-white font-light text-center">Ops Scaling Architecture</span>
           </div>
 
@@ -1402,7 +1634,7 @@ function BlueprintAnimation() {
              {/* Card 1: Constraint → Resolution */}
              <div className={`group relative flex items-center gap-3 rounded-2xl p-3.5 sm:p-4 border border-white/10 overflow-hidden bg-gradient-to-br from-white/[0.055] to-white/[0.015] ${phase === 'blueprint' ? 'animate-[blueprint-card-enter_0.7s_ease-out_forwards]' : 'opacity-0'}`} style={{ boxShadow: '0 12px 30px -14px rgba(0,0,0,0.65), inset 0 1px 0 rgba(255,255,255,0.06)', animationDelay: phase === 'blueprint' ? '0.2s' : '0s' }}>
                 <div className="absolute left-0 top-3 bottom-3 w-[3px] rounded-full bg-white/20" />
-                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[#aec99d]/10 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000" />
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[#bbe2ef]/10 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000" />
                 {/* left */}
                 <div className="flex items-center gap-2.5 flex-1 min-w-0 pr-4 relative z-10">
                    <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-white/[0.06] border border-white/10 flex items-center justify-center text-white/70 shrink-0">
@@ -1418,19 +1650,19 @@ function BlueprintAnimation() {
                    <div className="relative h-[1px] w-full bg-white/20">
                       {/* Premium Node Connector (Mini) */}
                       <div className="absolute left-1/2 top-[0.5px] -translate-x-1/2 -translate-y-1/2 flex items-center justify-center">
-                        <div className="absolute w-[18px] h-[18px] rounded-full border border-[#b2cca2]/40 animate-[ping_2.5s_cubic-bezier(0,0,0.2,1)_infinite] opacity-60" />
-                        <div className="absolute w-[10px] h-[10px] rounded-full border border-[#b2cca2]/60 bg-[#1c1c22]/80 backdrop-blur-md shadow-[0_0_6px_rgba(178,204,162,0.3)]" />
-                        <div className="w-[4px] h-[4px] rounded-full bg-[#b2cca2] shadow-[0_0_8px_1px_rgba(178,204,162,1)] z-10" />
+                        <div className="absolute w-[18px] h-[18px] rounded-full border border-[#bbe2ef]/40 animate-[ping_2.5s_cubic-bezier(0,0,0.2,1)_infinite] opacity-60" />
+                        <div className="absolute w-[10px] h-[10px] rounded-full border border-[#bbe2ef]/60 bg-[#1c1c22]/80 backdrop-blur-md shadow-[0_0_6px_rgba(178,204,162,0.3)]" />
+                        <div className="w-[4px] h-[4px] rounded-full bg-[#bbe2ef] shadow-[0_0_8px_1px_rgba(178,204,162,1)] z-10" />
                       </div>
                    </div>
                 </div>
                 {/* right */}
                 <div className="flex items-center gap-2.5 flex-1 min-w-0 pl-4 justify-end text-right relative z-10">
                    <div className="flex flex-col min-w-0 w-full text-right">
-                      <span className="text-[9px] sm:text-[10px] text-[#aec99d]/80 uppercase tracking-wider mb-0.5">Resolution Layer</span>
+                      <span className="text-[9px] sm:text-[10px] text-[#bbe2ef]/80 uppercase tracking-wider mb-0.5">Resolution Layer</span>
                       <span className="text-xs sm:text-sm text-white/90 font-medium leading-snug truncate">Autonomous Data Sync</span>
                    </div>
-                   <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-[#aec99d]/12 border border-[#aec99d]/35 flex items-center justify-center text-[#aec99d] shrink-0">
+                   <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-[#bbe2ef]/12 border border-[#bbe2ef]/35 flex items-center justify-center text-[#bbe2ef] shrink-0">
                      <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path strokeLinecap="round" strokeLinejoin="round" d="M20 6L9 17l-5-5"/></svg>
                    </div>
                 </div>
@@ -1439,7 +1671,7 @@ function BlueprintAnimation() {
              {/* Card 2: Objective → Action */}
              <div className={`group relative flex items-center gap-3 rounded-2xl p-3.5 sm:p-4 border border-white/10 overflow-hidden bg-gradient-to-br from-white/[0.055] to-white/[0.015] ${phase === 'blueprint' ? 'animate-[blueprint-card-enter_0.7s_ease-out_forwards]' : 'opacity-0'}`} style={{ boxShadow: '0 12px 30px -14px rgba(0,0,0,0.65), inset 0 1px 0 rgba(255,255,255,0.06)', animationDelay: phase === 'blueprint' ? '0.4s' : '0s' }}>
                 <div className="absolute left-0 top-3 bottom-3 w-[3px] rounded-full bg-white/20" />
-                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[#aec99d]/10 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000" />
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[#bbe2ef]/10 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000" />
                 <div className="flex items-center gap-2.5 flex-1 min-w-0 pr-4 relative z-10">
                    <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-white/[0.06] border border-white/10 flex items-center justify-center text-white/70 shrink-0">
                      <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3.2"/></svg>
@@ -1453,18 +1685,18 @@ function BlueprintAnimation() {
                    <div className="relative h-[1px] w-full bg-white/20">
                       {/* Premium Node Connector (Mini) */}
                       <div className="absolute left-1/2 top-[0.5px] -translate-x-1/2 -translate-y-1/2 flex items-center justify-center">
-                        <div className="absolute w-[18px] h-[18px] rounded-full border border-[#b2cca2]/40 animate-[ping_2.5s_cubic-bezier(0,0,0.2,1)_infinite] opacity-60" style={{ animationDelay: '0.4s' }} />
-                        <div className="absolute w-[10px] h-[10px] rounded-full border border-[#b2cca2]/60 bg-[#1c1c22]/80 backdrop-blur-md shadow-[0_0_6px_rgba(178,204,162,0.3)]" />
-                        <div className="w-[4px] h-[4px] rounded-full bg-[#b2cca2] shadow-[0_0_8px_1px_rgba(178,204,162,1)] z-10" />
+                        <div className="absolute w-[18px] h-[18px] rounded-full border border-[#bbe2ef]/40 animate-[ping_2.5s_cubic-bezier(0,0,0.2,1)_infinite] opacity-60" style={{ animationDelay: '0.4s' }} />
+                        <div className="absolute w-[10px] h-[10px] rounded-full border border-[#bbe2ef]/60 bg-[#1c1c22]/80 backdrop-blur-md shadow-[0_0_6px_rgba(178,204,162,0.3)]" />
+                        <div className="w-[4px] h-[4px] rounded-full bg-[#bbe2ef] shadow-[0_0_8px_1px_rgba(178,204,162,1)] z-10" />
                       </div>
                    </div>
                 </div>
                 <div className="flex items-center gap-2.5 flex-1 min-w-0 pl-4 justify-end text-right relative z-10">
                    <div className="flex flex-col min-w-0 w-full text-right">
-                      <span className="text-[9px] sm:text-[10px] text-[#aec99d]/80 uppercase tracking-wider mb-0.5">Action Engine</span>
+                      <span className="text-[9px] sm:text-[10px] text-[#bbe2ef]/80 uppercase tracking-wider mb-0.5">Action Engine</span>
                       <span className="text-xs sm:text-sm text-white/90 font-medium leading-snug truncate">Automated Triage Flow</span>
                    </div>
-                   <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-[#aec99d]/12 border border-[#aec99d]/35 flex items-center justify-center text-[#aec99d] shrink-0">
+                   <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-[#bbe2ef]/12 border border-[#bbe2ef]/35 flex items-center justify-center text-[#bbe2ef] shrink-0">
                      <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor"><path d="M13 2L3 14h7l-1 8 10-12h-7l1-8z"/></svg>
                    </div>
                 </div>
@@ -1472,30 +1704,32 @@ function BlueprintAnimation() {
           </div>
           
           <div className={`mt-8 text-center ${phase === 'blueprint' ? 'animate-[blueprint-card-enter_0.7s_ease-out_forwards]' : 'opacity-0'}`} style={{ animationDelay: phase === 'blueprint' ? '0.6s' : '0s' }}>
-             <span className="text-[9px] sm:text-[10px] text-[#aec99d]/60 uppercase tracking-[0.15em] font-medium drop-shadow-sm">Aivory Engine Processing Capacity: 98% Efficiency</span>
+             <span className="text-[9px] sm:text-[10px] text-[#bbe2ef]/60 uppercase tracking-[0.15em] font-medium drop-shadow-sm">Aivory Engine Processing Capacity: 98% Efficiency</span>
           </div>
         </div>
 
-        {/* Complete: System Blueprint doc, same premium doc-card style as the Deep Diagnostic Results beat */}
-        <div className={`col-start-1 row-start-1 flex flex-col justify-center items-center p-4 w-full h-full transition-all duration-500 delay-200 ${phase === 'complete' ? 'opacity-100 scale-100' : 'opacity-0 scale-105 pointer-events-none'}`}>
+        {/* Complete: System Blueprint doc, same premium doc-card style as the Deep Assessment Results beat */}
+        <AnimatePresence>
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: phase === 'complete' ? 1 : 0 }} exit={{ opacity: 0, transition: { duration: 0.5 } }} className={`col-start-1 row-start-1 flex flex-col justify-center items-center p-4 w-full h-full transition-all duration-500 delay-200 ${phase === 'complete' ? 'scale-100' : 'scale-105 pointer-events-none'}`}>
+          {phase === 'complete' && (
           <div className="flex flex-col items-center gap-3 animate-fade-in-up">
             <div className="relative flex flex-col items-center gap-3 z-20">
               <div
                 className="relative w-36 h-[104px] bg-[#111111] border border-white/10 rounded-xl overflow-hidden flex flex-col"
                 style={{
-                  boxShadow: '0 14px 34px -10px rgba(0,0,0,0.75), 0 0 22px rgba(174,201,157,0.14), inset 0 1px 0 rgba(255,255,255,0.06)',
+                  boxShadow: '0 14px 34px -10px rgba(0,0,0,0.75), 0 0 22px rgba(187, 226, 239,0.14), inset 0 1px 0 rgba(255,255,255,0.06)',
                   animation: 'doc-float 3.2s ease-in-out infinite',
                 }}
               >
-                <div className="h-[3px] w-full bg-gradient-to-r from-[#aec99d]/40 via-[#aec99d] to-[#aec99d]/40" />
+                <div className="h-[3px] w-full bg-gradient-to-r from-[#bbe2ef]/40 via-[#bbe2ef] to-[#bbe2ef]/40" />
                 <div className="flex items-center gap-2 px-3 pt-2.5 pb-1.5">
-                  <div className="w-6 h-6 rounded-md bg-[#aec99d]/12 border border-[#aec99d]/40 flex items-center justify-center text-[#aec99d] shrink-0">
+                  <div className="w-6 h-6 rounded-md bg-[#bbe2ef]/12 border border-[#bbe2ef]/40 flex items-center justify-center text-[#bbe2ef] shrink-0">
                     <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                     </svg>
                   </div>
                   <div className="flex-1 min-w-0">
-                    <div className="h-[6px] w-[64%] rounded-full bg-[#aec99d]/70" />
+                    <div className="h-[6px] w-[64%] rounded-full bg-[#bbe2ef]/70" />
                     <div className="h-[4px] w-[40%] rounded-full bg-white/20 mt-1.5" />
                   </div>
                 </div>
@@ -1504,23 +1738,25 @@ function BlueprintAnimation() {
                   <div className="h-[4px] w-[86%] rounded-full bg-white/10" />
                   <div className="h-[4px] w-[68%] rounded-full bg-white/10" />
                   <div className="flex items-center gap-2 pt-1">
-                    <span className="text-[7px] leading-none font-semibold text-[#aec99d] bg-[#aec99d]/12 border border-[#aec99d]/30 rounded px-1.5 py-[3px]">98%</span>
+                    <span className="text-[7px] leading-none font-semibold text-[#bbe2ef] bg-[#bbe2ef]/12 border border-[#bbe2ef]/30 rounded px-1.5 py-[3px]">98%</span>
                     <div className="h-[4px] flex-1 rounded-full bg-white/10 overflow-hidden">
-                      <div className="h-full w-[98%] rounded-full bg-[#aec99d]/70" />
+                      <div className="h-full w-[98%] rounded-full bg-[#bbe2ef]/70" />
                     </div>
                   </div>
                 </div>
                 <div
                   className="absolute inset-x-0 h-7 pointer-events-none"
-                  style={{ background: 'linear-gradient(to bottom, transparent, rgba(174,201,157,0.28), transparent)', animation: 'doc-scan 2.4s ease-in-out infinite' }}
+                  style={{ background: 'linear-gradient(to bottom, transparent, rgba(187, 226, 239,0.28), transparent)', animation: 'doc-scan 2.4s ease-in-out infinite' }}
                 />
               </div>
-              <span className="text-[10px] sm:text-[11px] text-[#aec99d]/90 uppercase tracking-[0.22em] font-medium px-4 py-1.5 bg-[#0d0d0d]/80 border border-white/5 rounded-full whitespace-nowrap backdrop-blur-sm shadow-[0_4px_12px_rgba(0,0,0,0.5)]">System Blueprint</span>
+              <span className="text-[10px] sm:text-[11px] text-[#bbe2ef]/90 uppercase tracking-[0.22em] font-medium px-4 py-1.5 bg-[#0d0d0d]/80 border border-white/5 rounded-full whitespace-nowrap backdrop-blur-sm shadow-[0_4px_12px_rgba(0,0,0,0.5)]">System Blueprint</span>
               <span className="text-[19px] text-white/50 font-medium tracking-wide mt-1 animate-pulse">Ready for phased rollout</span>
             </div>
           </div>
-        </div>
-      </SpotlightCard>
+          )}
+        </motion.div>
+        </AnimatePresence>
+      </div>
     </div>
   );
 }
@@ -1606,7 +1842,7 @@ export function InteractiveShowcase() {
                 Operational Framework
               </h2>
               <h3 className="text-3xl md:text-4xl lg:text-5xl font-light tracking-tight mb-6 leading-tight">
-                From Assessment<br />to Staged Autonomy
+                From Assessment<br />to Staged <span className="italic" style={{ color: '#e4effd' }}>Autonomy</span>
               </h3>
               <p className="text-white/75 max-w-lg font-light leading-relaxed">
                 We take you step-by-step from auditing bottlenecks to running customized, automated system workflows. Explore the core product layers.
@@ -1633,7 +1869,16 @@ export function InteractiveShowcase() {
                     }}
                     className="text-3xl font-light text-white shrink-0 pr-8"
                   >
-                    {product.title}
+                    {(() => {
+                      const words = product.title.split(' ');
+                      if (words.length <= 1) return <span className="italic" style={{ color: '#e4effd' }}>{product.title}</span>;
+                      const lastWord = words.pop();
+                      return (
+                        <>
+                          {words.join(' ')} <span className="italic" style={{ color: '#e4effd' }}>{lastWord}</span>
+                        </>
+                      );
+                    })()}
                   </h4>
                   
                   {/* Animated Connecting Line with Premium Node Connector */}
@@ -1643,16 +1888,16 @@ export function InteractiveShowcase() {
                     }`}
                   >
                     {/* The Line */}
-                    <div className="h-[1px] bg-gradient-to-r from-transparent via-[#b2cca2]/50 to-[#b2cca2]/80 flex-grow" />
+                    <div className="h-[1px] bg-gradient-to-r from-transparent via-[#bbe2ef]/50 to-[#bbe2ef]/80 flex-grow" />
                     
                     {/* Premium Node Connector */}
                     <div className="relative flex items-center justify-center shrink-0 translate-x-[1px]">
                       {/* Outer ping animation */}
-                      <div className="absolute w-[24px] h-[24px] rounded-full border-[1.5px] border-[#b2cca2]/40 animate-[ping_2.5s_cubic-bezier(0,0,0.2,1)_infinite] opacity-60" />
+                      <div className="absolute w-[24px] h-[24px] rounded-full border-[1.5px] border-[#bbe2ef]/40 animate-[ping_2.5s_cubic-bezier(0,0,0.2,1)_infinite] opacity-60" />
                       {/* Static Glass Ring */}
-                      <div className="absolute w-[14px] h-[14px] rounded-full border border-[#b2cca2]/60 bg-[#1c1c22]/80 backdrop-blur-md shadow-[0_0_8px_rgba(178,204,162,0.3)]" />
+                      <div className="absolute w-[14px] h-[14px] rounded-full border border-[#bbe2ef]/60 bg-[#1c1c22]/80 backdrop-blur-md shadow-[0_0_8px_rgba(178,204,162,0.3)]" />
                       {/* Solid glowing core */}
-                      <div className="w-[6px] h-[6px] rounded-full bg-[#b2cca2] shadow-[0_0_12px_2px_rgba(178,204,162,1)] z-10" />
+                      <div className="w-[6px] h-[6px] rounded-full bg-[#bbe2ef] shadow-[0_0_12px_2px_rgba(178,204,162,1)] z-10" />
                     </div>
                   </div>
                 </div>
@@ -1685,6 +1930,7 @@ export function InteractiveShowcase() {
           {/* Right Column: Sticky Mockup Visualizer Area */}
           <div className="hidden lg:col-span-7 lg:sticky lg:top-[12vh] lg:flex items-center justify-center z-20 mx-auto w-full max-w-[850px] aspect-[4/3] lg:aspect-[16/11]">
             <SpotlightCard 
+              autoplay={true}
               className={`w-full h-full transition-all duration-500 p-6 md:p-8 flex flex-col shadow-2xl relative overflow-hidden`}
             >
               

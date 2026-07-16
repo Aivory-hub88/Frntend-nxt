@@ -31,7 +31,7 @@ export function HalftoneWave() {
     const uniforms = {
       uTime: { value: 0.0 },
       uResolution: { value: new THREE.Vector2(width * baseDPR, height * baseDPR) },
-      uPixelSize: { value: isMobile ? 4.0 : 4.5 },
+      uPixelSize: { value: 4.5 }, // Reduced by 10% from 5.0
       uScroll: { value: 0.0 }, // Used to trigger the spreading petals effect
       uMouse: { value: new THREE.Vector2(0, 0) }
     };
@@ -75,7 +75,8 @@ export function HalftoneWave() {
           // Enhanced density for subtle but more 3D ASCII
           // Reduced spotlight influence on density to avoid solid bright blocks
           float density = 1.0 - normalizedDepth + (rim * 0.5) + (spotlight * 0.2);
-          density = clamp(density, 0.0, 0.9); // Clamp below 1.0 to prevent full solid blocks
+          // + 0.1 boost to density as requested by user (10% increase)
+          density = clamp(density + 0.1, 0.0, 0.95);
           
           // 2. ASCII SCREEN-SPACE GRID
           // LIGHT ordered (4x4 Bayer) dither on the character selection, keyed to
@@ -112,8 +113,10 @@ export function HalftoneWave() {
           // 3. ELEGANT COLOR MAPPING (Transition based on scroll)
           float scrollT = smoothstep(0.0, 0.4, uScroll);
           
-          // Original Colors (Dimmed amber / Cyan / Purple)
-          vec3 origCore = vec3(0.875, 0.420, 0.027); // #df6b07
+          // Original Colors
+          vec3 amberCore = vec3(0.808, 0.290, 0.004); // #ce4a01 (Requested orange/amber color)
+          vec3 pinkCore = vec3(0.808, 0.004, 0.310);  // #ce014f (Deep pink/red requested for hero)
+          vec3 corePurple = vec3(0.176, 0.0, 0.518); // #2d0084 (Deep violet/purple)
           vec3 origEdge = vec3(0.04, 0.18, 0.32);
           vec3 origIndigo = vec3(0.215, 0.078, 0.474); // #371479
           
@@ -122,11 +125,23 @@ export function HalftoneWave() {
           vec3 heroEdge = vec3(0.15, 0.08, 0.65);  // Deep blue-purple edges (brighter blue)
           vec3 heroIndigo = vec3(0.2, 0.1, 0.4);  // Subtle purple/indigo glow (brighter)
           
-          // Keep the amber transition contained to a small central radius —
-          // gated by depth so it reads as a warm core accent instead of
-          // flooding the whole bloom orange as the user scrolls.
-          float coreRadiusGate = smoothstep(0.55, 0.0, normalizedDepth);
-          vec3 coreColor = mix(heroCore, origCore, scrollT * coreRadiusGate);
+          // The core transitions from Pink to Amber as you scroll down
+          vec3 dynamicCore = mix(pinkCore, amberCore, scrollT);
+          
+          // Create a shimmering effect mixing the dynamic core color and #2d0084 Purple
+          // The purple fades out on scroll, leaving only the amber core.
+          float purpleAmount = (1.0 - scrollT) * 0.85;
+          float coreShimmer = 0.5 + 0.5 * sin(uTime * 2.0 + vLocalPos.x * 6.0 - vLocalPos.y * 5.0 + cos(uTime + vLocalPos.z * 4.0));
+          vec3 mixedCore = mix(dynamicCore, corePurple, coreShimmer * purpleAmount);
+          
+          // Keep the amber/purple transition smoothly fading towards the edge.
+          // Tighter radius in hero section (scrollT = 0), widening as you scroll down.
+          float radiusGateEnd = mix(0.4, 0.75, scrollT); 
+          float coreRadiusGate = 1.0 - smoothstep(0.1, radiusGateEnd, normalizedDepth);
+          
+          // Reduced intensity in hero section (0.35) so it's not overpowering, scales to 1.0 on scroll
+          float coreMixFactor = max(0.35, scrollT) * coreRadiusGate; 
+          vec3 coreColor = mix(heroCore, mixedCore, coreMixFactor);
           vec3 edgeColor = mix(heroEdge, origEdge, scrollT);
           vec3 indigoColor = mix(heroIndigo, origIndigo, scrollT);
           
@@ -144,12 +159,16 @@ export function HalftoneWave() {
           // looks monotone, and a touch stronger while the flower moves (scroll).
           vec3 accentA = vec3(0.30, 0.16, 0.55); // soft violet
           vec3 accentB = vec3(0.08, 0.28, 0.42); // soft teal
-          float shimmer = 0.5 + 0.5 * sin(uTime * 0.6 + vLocalPos.y * 3.0 + vLocalPos.x * 2.0);
+          // More complex and dramatic shimmer pattern
+          float shimmer = 0.5 + 0.5 * sin(uTime * 1.2 + vLocalPos.y * 5.0 + vLocalPos.x * 4.0 + sin(uTime * 0.8 + vLocalPos.z * 3.0));
           vec3 accent = mix(accentA, accentB, shimmer);
-          // More noticeable now: ~2x amount, and applied across the whole
-          // bloom (not just the rim) with edges still a touch stronger.
           float accentGate = mix(0.5, 1.0, indigoGradient);
-          finalColor += accent * ((0.11 + uScroll * 0.12) * accentGate);
+          // Moderately increased the accent multiplier for turbulence without being too neon
+          finalColor += accent * ((0.22 + uScroll * 0.18) * accentGate);
+
+
+
+
 
           // 4. RADIAL VIGNETTE (Abyss Effect)
           vec2 screenPos = gl_FragCoord.xy / uResolution.xy;
@@ -242,204 +261,6 @@ export function HalftoneWave() {
     group.add(mesh);
     scene.add(group);
 
-    // ==========================================
-    // Premium drifting petals — appear only while the "Operational Framework"
-    // section is active. Soft-edged, palette-matched orchid petals with a
-    // blue-violet → lavender gradient and a gentle inner sheen; they drift down
-    // with organic sway + slow tumble. Desktop only (kept light), and rendered
-    // behind page content (z-0 background) so text stays readable.
-    // ==========================================
-    const petals: {
-      mesh: THREE.Mesh;
-      mode: 'drift' | 'orbit';
-      // drift (floating fall)
-      sx: number; sy: number; fall: number;
-      swayAmp: number; swayFreq: number;
-      // orbit (satellite around the flower, on a tilted plane)
-      orbitR: number; inclSin: number; inclCos: number;
-      orbitSpeed: number; orbitPhase: number;
-      // shared
-      phase: number;
-      baseRotX: number; baseRotY: number; baseRotZ: number;
-      wobbleAmp: number; wobbleFreq: number;
-    }[] = [];
-    const petalUniforms = { uOpacity: { value: 0.0 }, uPixelSize: { value: isMobile ? 5.0 : 6.0 }, uBright: { value: 1.0 }, uTint: { value: new THREE.Vector3(0.05, 0.17, 0.46) } };
-    let petalGeo: THREE.PlaneGeometry | null = null;
-    let petalMat: THREE.ShaderMaterial | null = null;
-    let petalOpacity = 0;
-    if (!isMobile) {
-      // Near-round petal geometry (square plane) with a soft cup so it still
-      // reads as a 3D disc, not a flat coin.
-      petalGeo = new THREE.PlaneGeometry(1, 1, 8, 8);
-      {
-        const pos = petalGeo.attributes.position;
-        for (let vi = 0; vi < pos.count; vi++) {
-          const vx = pos.getX(vi);
-          const vy = pos.getY(vi);
-          const z = -0.45 * (vx * vx + vy * vy);
-          pos.setZ(vi, z);
-        }
-        pos.needsUpdate = true;
-        petalGeo.computeVertexNormals();
-      }
-      petalMat = new THREE.ShaderMaterial({
-        transparent: true,
-        depthWrite: false,
-        side: THREE.DoubleSide,
-        uniforms: petalUniforms,
-        vertexShader: `
-          varying vec2 vUv;
-          void main() {
-            vUv = uv;
-            gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-          }
-        `,
-        fragmentShader: `
-          varying vec2 vUv;
-          uniform float uOpacity;
-          uniform float uPixelSize;
-          uniform float uBright;
-          uniform vec3 uTint;
-          void main() {
-            vec2 pp = vUv - vec2(0.5);
-            // Near-round silhouette → density (denser at the core, soft at the
-            // rim). Radial mask instead of the old petal-width profile.
-            float rad = length(pp) * 2.0;   // 0 center .. 1 edge
-            float density = smoothstep(1.0, 0.32, rad);
-            if (density < 0.06) discard;
-
-            // 4x4 Bayer Dither for retro depth (scaled up for even larger radius)
-            float dx = mod(floor(gl_FragCoord.x * 0.33), 4.0);
-            float dy = mod(floor(gl_FragCoord.y * 0.33), 4.0);
-            float dither = 0.0;
-            if (dx < 1.0) {
-              if (dy < 1.0) dither = 0.0;
-              else if (dy < 2.0) dither = 0.75;
-              else if (dy < 3.0) dither = 0.1875;
-              else dither = 0.9375;
-            } else if (dx < 2.0) {
-              if (dy < 1.0) dither = 0.5;
-              else if (dy < 2.0) dither = 0.25;
-              else if (dy < 3.0) dither = 0.6875;
-              else dither = 0.4375;
-            } else if (dx < 3.0) {
-              if (dy < 1.0) dither = 0.125;
-              else if (dy < 2.0) dither = 0.875;
-              else if (dy < 3.0) dither = 0.0625;
-              else dither = 0.8125;
-            } else {
-              if (dy < 1.0) dither = 0.625;
-              else if (dy < 2.0) dither = 0.375;
-              else if (dy < 3.0) dither = 0.5625;
-              else dither = 0.3125;
-            }
-            // Perturb the density for the ASCII lookup (max intensity/spread)
-            float ditheredDensity = density + (dither - 0.5) * 1.1;
-
-            // Same ASCII screen-space grid as the main flower, so petals share
-            // its exact halftone character style (one continuous material feel).
-            vec2 localc = fract(gl_FragCoord.xy / uPixelSize);
-            vec2 p5 = floor(localc * 5.0);
-            int charIndex = int(floor(ditheredDensity * 5.99));
-            float shape = 0.0;
-            if (charIndex == 1) {
-                if (p5.x == 2.0 && p5.y == 2.0) shape = 1.0;
-            } else if (charIndex == 2) {
-                if (p5.x == 2.0 && p5.y > 0.0 && p5.y < 4.0) shape = 1.0;
-                if (p5.y == 2.0 && p5.x > 0.0 && p5.x < 4.0) shape = 1.0;
-            } else if (charIndex == 3) {
-                if (p5.x == p5.y && p5.x > 0.0 && p5.x < 4.0) shape = 1.0;
-                if (p5.x == (4.0 - p5.y) && p5.x > 0.0 && p5.x < 4.0) shape = 1.0;
-            } else if (charIndex == 4) {
-                if ((p5.x == 1.0 || p5.x == 3.0) && p5.y >= 1.0 && p5.y <= 3.0) shape = 1.0;
-                if ((p5.y == 1.0 || p5.y == 3.0) && p5.x >= 1.0 && p5.x <= 3.0) shape = 1.0;
-            } else if (charIndex >= 5) {
-                if (p5.x >= 1.0 && p5.x <= 3.0 && p5.y >= 1.0 && p5.y <= 3.0) shape = 1.0;
-            }
-            if (shape == 0.0) discard;
-
-            // Per-petal tint drawn from the flower's palette family (blue-
-            // indigo / violet / teal) so the drift isn't monotone but still
-            // harmonizes with the bloom. Edge = darker rim, core = the tint.
-            vec3 coreC = uTint;
-            vec3 edgeC = uTint * 0.34;
-            vec3 col = mix(edgeC, coreC, density);
-            col += uTint * 0.5 * pow(density, 2.0);
-            // Atmospheric perspective: brightness scales with petal size so
-            // small = far (dimmer/hazier), large = near (brighter).
-            col *= uBright;
-            gl_FragColor = vec4(col, uOpacity);
-          }
-        `,
-      });
-      // Reduced from 18 to 8 petals to prevent massive GPU overdraw and frame drops 
-      // when scrolling into the operations stack section, keeping the page very lightweight.
-      const PETAL_COUNT = 8;
-      // Palette harmonized with the flower's rim accent (#330380) so the
-      // orbiting petals blend into the bloom's edge instead of reading as
-      // disconnected orange fragments/holes near the silhouette.
-      const petalPalette = [
-        new THREE.Vector3(0.2, 0.0118, 0.502), // Violet (#330380)
-      ];
-      for (let i = 0; i < PETAL_COUNT; i++) {
-        // UNIFORM small petals: one fixed size for every petal (no depth-varied
-        // sizing) and a flattened orbit depth below, so petals never appear to
-        // grow/shrink as they sweep past the camera.
-        const size = 0.6;
-        const bright = 1.05;
-        const tint = petalPalette[(Math.random() * petalPalette.length) | 0].clone();
-        const mat = petalMat!.clone();
-        mat.uniforms.uOpacity = petalUniforms.uOpacity; // share fade opacity
-        mat.uniforms.uBright.value = bright;
-        mat.uniforms.uTint.value = tint;
-        const m = new THREE.Mesh(petalGeo, mat);
-        m.scale.setScalar(size);
-
-        // All petals now orbit the flower like satellites
-        const mode: 'drift' | 'orbit' = 'orbit';
-
-        const sx = (Math.random() * 2 - 1) * 8.5;
-        const sy = Math.random() * 18;
-
-        // Each orbit sits on its own tilted plane so they cross in 3D. The
-        // depth (z) component is flattened to 12% so the perspective size
-        // change while orbiting is negligible — petals keep one apparent size.
-        const incl = Math.random() * Math.PI;
-        const orbitR = 4.0 + Math.random() * 3.0;   // 4.0 .. 7.0, outside bloom
-
-        // Base orientation faces the camera (+z) with a gentle tilt; in-plane
-        // spin (Z) is free, but X/Y tilt stays small and wobbles softly so the
-        // petal never turns fully edge-on (avoids the flat "coin" flip).
-        const baseRotX = (Math.random() - 0.5) * 0.7;
-        const baseRotY = (Math.random() - 0.5) * 0.7;
-        const baseRotZ = Math.random() * 6.28;
-
-        if (mode === 'drift') {
-          const depth = -4.0 + size * 2.6;          // bigger => nearer camera
-          m.position.set(sx, sy - 9, depth + (Math.random() * 2 - 1));
-        }
-        m.rotation.set(baseRotX, baseRotY, baseRotZ);
-
-        petals.push({
-          mesh: m, mode,
-          sx, sy,
-          fall: 0.08 + size * 0.15,               // ~0.10 .. 0.26 (floaty)
-          swayAmp: 0.45 + Math.random() * 0.95,
-          swayFreq: 0.16 + Math.random() * 0.32,
-          orbitR,
-          inclSin: Math.sin(incl),
-          inclCos: Math.cos(incl) * 0.12, // flattened depth — see note above
-
-          orbitSpeed: (0.10 + Math.random() * 0.14) * (Math.random() < 0.5 ? 1 : -1),
-          orbitPhase: Math.random() * 6.28,
-          phase: Math.random() * 6.28,
-          baseRotX, baseRotY, baseRotZ,
-          wobbleAmp: 0.16 + Math.random() * 0.2,   // gentle, never edge-on
-          wobbleFreq: 0.28 + Math.random() * 0.45,
-        });
-        scene.add(m);
-      }
-    }
 
     // Scroll Transition Setup
     // Start position: Shifted up slightly
@@ -466,29 +287,25 @@ export function HalftoneWave() {
     // the scroll stutter. We cache the anchor offsets instead.
     let centerAt = Infinity;
     let rightAt = Infinity;
-    let petalStartAt = Infinity;
+    let privacyAt = Infinity;
     let footerAt = Infinity;
     const computeAnchors = () => {
       const vh = window.innerHeight;
+      // The section containing "From Assessment to Staged Autonomy" on the home page has id="showcase"
       const showcaseEl = document.getElementById('showcase');
       if (showcaseEl) {
         const scTop = showcaseEl.getBoundingClientRect().top + window.scrollY;
-        centerAt = scTop - vh * 0.45; // Operational Framework becomes active → center
+        // Shift the center anchor lower so the flower waits longer on the right
+        centerAt = scTop - vh * 0.15; 
       }
       const langEl = document.getElementById('agent-language');
       if (langEl) {
         const lgTop = langEl.getBoundingClientRect().top + window.scrollY;
         rightAt = lgTop - vh * 0.45; // "speaks your customer's language" → right
       }
-      // Petals begin drifting when the "Turn your AI Confusion Into AI
-      // Execution" section (#features) scrolls into view. Fall back to the
-      // Operational Framework anchor on pages without that section.
-      const featEl = document.getElementById('features');
-      if (featEl) {
-        const ftTop = featEl.getBoundingClientRect().top + window.scrollY;
-        petalStartAt = ftTop - vh * 0.5;
-      } else {
-        petalStartAt = centerAt;
+      const privacyEl = document.getElementById('privacy');
+      if (privacyEl) {
+        privacyAt = privacyEl.getBoundingClientRect().top + window.scrollY;
       }
       const footerEl = document.querySelector('footer');
       if (footerEl) {
@@ -499,11 +316,24 @@ export function HalftoneWave() {
     const handleScroll = () => {
       const scrollY = window.scrollY;
       
+      const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
+      const smooth = (e0: number, e1: number, v: number) => {
+        if (e1 <= e0) return v >= e1 ? 1 : 0;
+        const t = Math.min(Math.max((v - e0) / (e1 - e0), 0), 1);
+        return t * t * (3 - 2 * t);
+      };
+
       // Calculate transition progress (0 to 1 over 800px scroll)
       const progress = Math.min(scrollY / 800, 1.0);
       
       targetY = startY + (endY - startY) * progress;
       targetScale = 1.6 - (0.6 * progress); // Shrink perfectly back from 1.6 to 1.0
+
+      if (privacyAt !== Infinity) {
+        const shrinkStart = Math.max(0, privacyAt - window.innerHeight); // Start shrinking when it enters viewport
+        const shrinkProgress = smooth(shrinkStart, privacyAt, scrollY);
+        targetScale = targetScale - (0.15 * shrinkProgress); // Scale down by only 15% to make it much larger
+      }
 
       targetScroll = Math.min(scrollY / 1500, 1.0);
       targetRotationX = 0.5 + (scrollY * 0.001);
@@ -517,12 +347,6 @@ export function HalftoneWave() {
         targetX = startX; // Mobile: keep centered throughout
         return;
       }
-      const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
-      const smooth = (e0: number, e1: number, v: number) => {
-        if (e1 <= e0) return v >= e1 ? 1 : 0;
-        const t = Math.min(Math.max((v - e0) / (e1 - e0), 0), 1);
-        return t * t * (3 - 2 * t);
-      };
       const heroX = startX + (endX - startX) * progress; // hero → right
       let x = heroX;
       if (centerAt !== Infinity) {
@@ -538,8 +362,16 @@ export function HalftoneWave() {
             x = 0; // Operational Framework → center (no right anchor found)
           }
         } else {
-          const band = Math.min(600, Math.max(1, centerAt));
-          x = lerp(heroX, 0, smooth(centerAt - band, centerAt, scrollY)); // right → center
+          // It should stay on the right until reaching the 'showcase' section,
+          // then quickly transition to the center. We'll use a shorter band
+          // so it waits until the section actually enters before moving.
+          const transitionBand = 300; // transition happens over 300px of scrolling
+          const startTransitionAt = centerAt - transitionBand;
+          if (scrollY >= startTransitionAt) {
+            x = lerp(heroX, 0, smooth(startTransitionAt, centerAt, scrollY)); // right → center
+          } else {
+            x = heroX; // strictly right
+          }
         }
       }
       
@@ -549,7 +381,16 @@ export function HalftoneWave() {
          if (scrollY > shiftStart) {
             const shiftProgress = smooth(shiftStart, footerAt, scrollY);
             x = lerp(x, endX, shiftProgress);
+            targetY = lerp(targetY, targetY - 1.2, shiftProgress); // Shift flower down slightly to center behind Aivory logo
          }
+      }
+      
+      // Privacy section further right-shift
+      if (privacyAt !== Infinity && !isMobile) {
+        const shiftStart = Math.max(0, privacyAt - window.innerHeight);
+        const shiftProgress = smooth(shiftStart, privacyAt, scrollY);
+        // Shift it to exactly endX. Since the flower is bigger, endX will prevent right-side clipping
+        x = lerp(x, endX, shiftProgress);
       }
       
       targetX = x;
@@ -608,7 +449,7 @@ export function HalftoneWave() {
     };
 
     const canvas = renderer.domElement;
-    canvas.addEventListener('pointerdown', onPointerDown);
+    window.addEventListener('pointerdown', onPointerDown);
     window.addEventListener('pointermove', onPointerMove);
     window.addEventListener('pointerup', onPointerUp);
     if (mountRef.current) mountRef.current.style.cursor = 'grab';
@@ -638,18 +479,8 @@ export function HalftoneWave() {
     const renderLoop = (timestamp: number) => {
       animationFrameId = requestAnimationFrame(renderLoop);
       if (isVisible) {
-        // Constant 60fps cadence. Previously this stepped from 60→30fps the
-        // instant scrollY crossed 400px, which halved the frame rate (and the
-        // per-frame position/scale easing below) right in the middle of the
-        // hero transition — reading as a scroll stutter. A fixed cadence keeps
-        // the motion smooth through the whole scroll gesture.
-        const fpsLimit = 16.66;
-        const elapsed = timestamp - lastRenderTime;
-        if (elapsed < fpsLimit) return;
-        // Align to the frame grid so throttled sections pace evenly
-        // (prevents the 24-30fps oscillation that reads as stutter).
-        lastRenderTime = timestamp - (elapsed % fpsLimit);
-
+        // Remove artificial fps limit to let requestAnimationFrame run at native display refresh rate (60Hz/120Hz)
+        // This fixes the "turun frame rate" and stuttering issues.
         const time = clock.getElapsedTime();
         uniforms.uTime.value = time;
         
@@ -688,47 +519,6 @@ export function HalftoneWave() {
         const currentScale = group.scale.x + (targetScale - group.scale.x) * 0.05;
         group.scale.set(currentScale, currentScale, currentScale);
 
-        // ── Drifting petals (Operational Framework only) ──
-        if (petals.length) {
-          let targetPetal = 0;
-          if (petalStartAt !== Infinity) {
-            const sY = window.scrollY;
-            const fadeIn = Math.min(Math.max((sY - (petalStartAt - 300)) / 500, 0), 1);
-            let fadeOut = 1;
-            if (rightAt !== Infinity) {
-              fadeOut = 1 - Math.min(Math.max((sY - (rightAt - 250)) / 250, 0), 1);
-            }
-            targetPetal = fadeIn * fadeOut;
-          }
-          petalOpacity += (targetPetal - petalOpacity) * 0.06;
-          petalUniforms.uOpacity.value = petalOpacity * 0.72;
-          if (petalOpacity > 0.002) {
-            const cx = group.position.x;
-            const cy = group.position.y;
-            const cz = group.position.z;
-            for (const pt of petals) {
-              const m = pt.mesh;
-              if (pt.mode === 'orbit') {
-                // Satellite-style orbit around the flower on a tilted plane,
-                // so petals sweep in front of and behind the bloom in 3D.
-                const a = pt.orbitPhase + time * pt.orbitSpeed;
-                m.position.x = cx + Math.cos(a) * pt.orbitR;
-                m.position.y = cy + Math.sin(a) * pt.orbitR * pt.inclSin;
-                m.position.z = cz + Math.sin(a) * pt.orbitR * pt.inclCos;
-              } else {
-                let ny = (pt.sy - time * pt.fall) % 18;
-                if (ny < 0) ny += 18;
-                m.position.y = ny - 9; // wrap off-screen, top → bottom
-                m.position.x = pt.sx + Math.sin(time * pt.swayFreq + pt.phase) * pt.swayAmp;
-              }
-              // Gentle wobble around a camera-facing base — the curved petal
-              // sways in 3D but never goes flat/edge-on (no "coin" spin).
-              m.rotation.x = pt.baseRotX + Math.sin(time * pt.wobbleFreq + pt.phase) * pt.wobbleAmp;
-              m.rotation.y = pt.baseRotY + Math.cos(time * pt.wobbleFreq * 0.8 + pt.phase) * pt.wobbleAmp;
-              m.rotation.z = pt.baseRotZ + Math.sin(time * pt.wobbleFreq * 0.6 + pt.phase) * pt.wobbleAmp * 0.5;
-            }
-          }
-        }
 
         renderer.render(scene, camera);
       }
@@ -752,7 +542,7 @@ export function HalftoneWave() {
       observer.disconnect();
       window.removeEventListener('scroll', onScroll);
       window.removeEventListener('resize', handleResize);
-      canvas.removeEventListener('pointerdown', onPointerDown);
+      window.removeEventListener('pointerdown', onPointerDown);
       window.removeEventListener('pointermove', onPointerMove);
       window.removeEventListener('pointerup', onPointerUp);
       window.removeEventListener('mousemove', handleMouseMove);

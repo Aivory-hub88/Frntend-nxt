@@ -5,7 +5,7 @@ import Image from 'next/image';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
 
 const productLinks = [
-  { label: 'Deep Diagnostic', href: '/product' },
+  { label: 'Deep Assessment', href: '/product' },
   { label: 'AI Blueprint', href: '/product' },
   { label: 'AI Roadmap', href: '/product' },
   { label: 'Workflow Builder', href: '/product' },

@@ -100,7 +100,7 @@ export function creditPackId(credits: number): string {
 export const ONE_TIME_PRODUCTS: OneTimeProduct[] = [
   {
     id: PRODUCT_IDS.DEEP_DIAGNOSTIC,
-    name: 'AI Readiness Deep Diagnostic',
+    name: 'AI Readiness Deep Assessment',
     price: 29,
     currency: PRICING_CURRENCY,
     kind: 'one-time',
@@ -116,7 +116,7 @@ export const ONE_TIME_PRODUCTS: OneTimeProduct[] = [
   },
   {
     id: PRODUCT_IDS.FULL_STACK,
-    name: 'Deep Diagnostic + Blueprint + Roadmap',
+    name: 'Deep Assessment + Blueprint + Roadmap',
     price: 99,
     currency: PRICING_CURRENCY,
     kind: 'one-time',

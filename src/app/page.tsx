@@ -17,8 +17,8 @@ export default function HomePage() {
       <ScrollRevealProvider />
       <section style={{ padding: 0 }} className="relative z-[1] bg-black">
         {/* Global seamless background for the ENTIRE page, down to the footer */}
-        <div className="absolute inset-0 z-0">
-          <div className="sticky top-0 w-full h-screen">
+        <div className="fixed inset-0 z-0 pointer-events-none">
+          <div className="w-full h-full">
             <HalftoneWaveWrapper />
           </div>
         </div>
@@ -32,19 +32,18 @@ export default function HomePage() {
             <AIReadySection />
             <FeatureCards />
             
-            {/* Scaled down content (85%) */}
-            <div style={{ zoom: 0.85 }}>
+            {/* Unscaled content */}
+            <div>
               <StatsSection />
             </div>
 
-            {/* Pricing Section (scaled to match surrounding sections, avoids a
-                jarring zoom-scale jump at the Stats/Privacy boundaries) */}
-            <div style={{ zoom: 0.85 }}>
+            {/* Pricing Section */}
+            <div>
               <PricingClientWrapper />
             </div>
 
-            {/* Scaled down content (85%) */}
-            <div style={{ zoom: 0.85 }}>
+            {/* Unscaled content */}
+            <div>
               <PrivacySection />
               <PreFooterCTA />
             </div>

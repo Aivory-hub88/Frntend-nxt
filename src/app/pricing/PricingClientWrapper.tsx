@@ -52,7 +52,7 @@ export default function PricingClientWrapper() {
         </div>
       </div>
 
-      <div style={{ zoom: 0.85 }} className="transition-opacity duration-300">
+      <div style={{ zoom: 0.75 }} className="transition-opacity duration-300">
         <PricingStepOne currency={activeCurrency} />
         <PricingStepTwo currency={activeCurrency} />
       </div>

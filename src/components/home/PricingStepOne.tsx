@@ -54,7 +54,7 @@ interface PricingCard {
 
 const cards: PricingCard[] = [
   {
-    title: 'AI Readiness\nDeep Diagnostic',
+    title: 'AI Readiness\nDeep Assessment',
     price: 29,
     frequency: 'One time',
     description: 'Know exactly where your business stands on AI before you build anything.',
@@ -65,7 +65,7 @@ const cards: PricingCard[] = [
       'AI opportunity identification ·',
       'Data & process readiness',
     ],
-    cta: 'Start Deep Diagnostic',
+    cta: 'Start Deep Assessment',
     productId: PRODUCT_IDS.DEEP_DIAGNOSTIC,
   },
   {
@@ -86,11 +86,11 @@ const cards: PricingCard[] = [
   },
   {
     title: 'Full Stack Bundle',
-    subtitle: 'Deep Diagnostic + Blueprint + Roadmap',
+    subtitle: 'Deep Assessment + Blueprint + Roadmap',
     price: 99,
     frequency: 'One time',
     description: 'Everything in one. Know, plan, execute in order.',
-    features: ['• Deep Diagnostic', '• Blueprint', '• Roadmap'],
+    features: ['• Deep Assessment', '• Blueprint', '• Roadmap'],
     cta: 'View Deployment Plans',
     productId: PRODUCT_IDS.FULL_STACK,
     savings: 'Save 13%',
@@ -147,7 +147,7 @@ export default function PricingStepOne({ currency }: { currency?: 'IDR' | 'USD' 
         </div>
 
         {/* Cards Grid */}
-        <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-3 mb-20 items-stretch gap-y-12 md:gap-y-0">
+        <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 mb-20 items-stretch gap-y-12 md:gap-x-8 md:gap-y-0">
           {cards.map((card, idx) => (
             <div 
               key={card.title} 
@@ -165,7 +165,7 @@ export default function PricingStepOne({ currency }: { currency?: 'IDR' | 'USD' 
                       </span>
                     )}
                   </div>
-                  <h3 className="max-w-[410px] text-[22px] md:text-[24px] lg:text-[26px] font-normal leading-[1.05] text-[#494949] whitespace-pre-line">
+                  <h3 className="max-w-[410px] text-[22px] md:text-[24px] lg:text-[28px] font-normal leading-[1.1] text-[#494949] whitespace-pre-line">
                     {card.title}
                   </h3>
                   {card.subtitle && (
@@ -177,11 +177,11 @@ export default function PricingStepOne({ currency }: { currency?: 'IDR' | 'USD' 
 
               {/* Price row */}
               <div className="flex items-center justify-start gap-3 py-6 mt-2">
-                <span className={`transition-all duration-300 ${(currency || language) === 'IDR' || language === 'id' && !currency ? 'text-[28px] sm:text-[32px] md:text-[38px]' : 'text-[42px] sm:text-[48px] md:text-[52px]'} font-extrabold leading-none whitespace-nowrap text-[#1a1a1a]`}>
+                <span className={`transition-all duration-300 ${(currency || language) === 'IDR' || language === 'id' && !currency ? 'text-[32px] sm:text-[38px] md:text-[44px]' : 'text-[42px] sm:text-[48px] md:text-[52px]'} font-extrabold leading-none whitespace-nowrap text-[#1a1a1a]`}>
                   {getFormattedPrice(card.price)}
                 </span>
                 <div className="flex flex-col pt-1">
-                  <span className="text-[14px] sm:text-[15px] md:text-[16px] font-normal leading-none text-[#494949] mb-[6px]">
+                  <span className="text-[15px] sm:text-[16px] md:text-[18px] font-normal leading-none text-[#494949] mb-[6px]">
                     {((currency || language) === 'IDR' || language === 'id' && !currency) ? card.frequency.replace('(month)', '(bulan)') : card.frequency}
                   </span>
                   <div className="w-full h-[5px] bg-[#c4c9b8]" />
@@ -189,12 +189,12 @@ export default function PricingStepOne({ currency }: { currency?: 'IDR' | 'USD' 
               </div>
 
               {/* Description */}
-              <p className="mt-8 max-w-[420px] text-[16px] md:text-[17px] font-medium leading-[1.35] text-[#494949]">
+              <p className="mt-8 max-w-[420px] text-[17px] md:text-[19px] font-medium leading-[1.4] text-[#494949]">
                 {card.description}
               </p>
 
               {/* Features */}
-              <ul className="mt-14 space-y-2 text-[15px] md:text-[16px] font-medium leading-[1.4] text-[#494949]">
+              <ul className="mt-14 space-y-3 text-[16px] md:text-[18px] font-medium leading-[1.45] text-[#494949]">
                 {card.features.map((f) => {
                   const isBullet = f.startsWith('• ');
                   const text = isBullet ? f.replace('• ', '') : f;
@@ -220,7 +220,7 @@ export default function PricingStepOne({ currency }: { currency?: 'IDR' | 'USD' 
                 <button
                   type="button"
                   onClick={() => setSelectedProduct(card.productId)}
-                  className="w-full bg-[#c4c9b8] text-[#494949] py-[14px] px-4 text-[15px] md:text-[16px] font-medium text-center transition-colors hover:bg-[#b0b5a4]"
+                  className="w-full bg-[#c4c9b8] text-[#494949] py-[18px] px-6 text-[17px] md:text-[19px] font-semibold text-center transition-colors hover:bg-[#b0b5a4]"
                 >
                   {card.cta}
                 </button>

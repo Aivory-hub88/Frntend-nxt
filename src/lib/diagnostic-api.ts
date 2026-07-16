@@ -186,7 +186,7 @@ export function generateShareText(
   category: string,
   platform: "linkedin" | "twitter" | "email" | "whatsapp"
 ): string {
-  const baseText = `I just completed the Aivory AI Readiness Diagnostic and scored ${score}! I'm at the ${category} level of AI maturity.`;
+  const baseText = `I just completed the Aivory AI Readiness Assessment and scored ${score}! I'm at the ${category} level of AI maturity.`;
 
   switch (platform) {
     case "linkedin":

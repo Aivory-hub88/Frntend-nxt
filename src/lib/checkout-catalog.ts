@@ -40,7 +40,7 @@ const CHECKOUT_SERVICE_INFO: Record<string, CheckoutServiceInfo> = {
   },
   [PRODUCT_IDS.FULL_STACK]: {
     description: 'Everything in one. Know, plan, execute — in order.',
-    features: ['Deep Diagnostic', 'Blueprint', 'Roadmap'],
+    features: ['Deep Assessment', 'Blueprint', 'Roadmap'],
   },
   [PRODUCT_IDS.FOUNDATION]: {
     description:

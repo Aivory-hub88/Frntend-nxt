@@ -26,7 +26,7 @@ const SITE_DESCRIPTION =
   'From diagnostic to deployment — everything you need to integrate AI into your business operations.';
 
 // Default social/share image used by any page that doesn't set its own.
-const DEFAULT_OG_IMAGE = '/hero-video-poster.jpg';
+const DEFAULT_OG_IMAGE = '/og-image.jpg';
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -55,15 +55,27 @@ export const metadata: Metadata = {
   },
 };
 
+import { headers } from 'next/headers';
 import { LanguageProvider } from '@/components/context/LanguageContext';
 
-export default function RootLayout({
+// aivory.uk is served by a Cloudflare Worker that reverse-proxies this app
+// (see the aivory-uk-reverse-proxy Worker), forwarding the real hostname via
+// x-aivory-proxy-host since the Worker rewrites Host to aivory.id for routing.
+// Default that domain to English/USD; everything else keeps the id/IDR default.
+async function getInitialLanguage(): Promise<'en' | 'id'> {
+  const headersList = await headers();
+  const forwardedHost = headersList.get('x-aivory-proxy-host') ?? '';
+  return forwardedHost.includes('aivory.uk') ? 'en' : 'id';
+}
+
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const initialLanguage = await getInitialLanguage();
   return (
-    <html lang="en" className={`${manrope.variable} ${doto.variable}`}>
+    <html lang="en" className={`${manrope.variable} ${doto.variable} antialiased scroll-smooth`}>
       <head>
         <link
           href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700;800&family=Doto:wght@400;700;900&display=swap"
@@ -85,7 +97,7 @@ export default function RootLayout({
             ],
           }}
         />
-        <LanguageProvider>
+        <LanguageProvider initialLanguage={initialLanguage}>
           {children}
         </LanguageProvider>
       </body>

@@ -179,7 +179,7 @@ export default function PricingStepTwo({ currency }: { currency?: 'IDR' | 'USD' 
         </div>
 
         {/* Plans Grid */}
-        <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-3 mb-20 items-stretch gap-y-12 md:gap-y-0">
+        <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 mb-20 items-stretch gap-y-12 md:gap-x-8 md:gap-y-0">
           {plans.map((plan, idx) => {
             const activeCurrency = currency || (language === 'id' ? 'IDR' : 'USD');
             const overageText = getFormattedOverage(plan.overageUSD);
@@ -201,10 +201,10 @@ export default function PricingStepTwo({ currency }: { currency?: 'IDR' | 'USD' 
                       </span>
                     )}
                   </div>
-                  <h3 className="max-w-[380px] text-[22px] md:text-[24px] lg:text-[26px] font-normal leading-[1.05] text-[#494949]">
+                  <h3 className="max-w-[380px] text-[22px] md:text-[24px] lg:text-[28px] font-normal leading-[1.1] text-[#494949]">
                     {plan.name}
                   </h3>
-                  <p className="mt-3 max-w-[340px] text-[14px] md:text-[15px] font-medium leading-[1.25] text-[#494949]">
+                  <p className="mt-3 max-w-[340px] text-[15px] md:text-[17px] font-medium leading-[1.25] text-[#494949]">
                     {plan.description}
                   </p>
                 </div>
@@ -236,7 +236,7 @@ export default function PricingStepTwo({ currency }: { currency?: 'IDR' | 'USD' 
               {/* Features */}
 
               {/* Features */}
-              <ul className="mt-14 space-y-2 text-[15px] md:text-[16px] font-medium leading-[1.35] text-[#494949]">
+              <ul className="mt-14 space-y-2 text-[16px] md:text-[18px] font-medium leading-[1.35] text-[#494949]">
                 {plan.features.map((f) => (
                   <li key={f} className="flex gap-2">
                     <span className="shrink-0">•</span>
@@ -251,7 +251,7 @@ export default function PricingStepTwo({ currency }: { currency?: 'IDR' | 'USD' 
                 <button
                   type="button"
                   onClick={() => handleCtaClick(plan)}
-                  className="w-full bg-[#c4c9b8] text-[#494949] py-[14px] px-4 text-[15px] md:text-[16px] font-medium text-center transition-colors hover:bg-[#b0b5a4]"
+                  className="w-full bg-[#c4c9b8] text-[#494949] py-[18px] px-6 text-[17px] md:text-[19px] font-medium text-center transition-colors hover:bg-[#b0b5a4]"
                 >
                   {plan.cta}
                 </button>

@@ -508,7 +508,7 @@ export default function FreeDiagnosticPage() {
           <>
             {/* Action Header */}
             <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
-              <h1 style={{ fontSize: '2rem', fontWeight: 700, marginBottom: '1.5rem' }}>Your AI Readiness Diagnostic Report</h1>
+              <h1 style={{ fontSize: '2rem', fontWeight: 700, marginBottom: '1.5rem' }}>Your AI Readiness Assessment Report</h1>
               <button
                 className="btn-primary"
                 onClick={downloadDiagnosticCards}
@@ -682,10 +682,10 @@ export default function FreeDiagnosticPage() {
               <div className="upgrade-grid">
                 <div className="upgrade-card">
                   <div className="upgrade-eyebrow">Upgrade path 01</div>
-                  <h3>AI Readiness Deep Diagnostic</h3>
+                  <h3>AI Readiness Deep Assessment</h3>
                   <div className="upgrade-price">$29 <span>one time</span></div>
                   <p className="upgrade-summary">Move from a quick score to a complete readiness analysis built around your specific use case and not generic.</p>
-                  <div className="comparison-note"><strong>Why it beats the free diagnostic:</strong> the free report gives a snapshot. Deep Diagnostic maps 30 data points across workflow maturity, data infrastructure, automation exposure, and organizational readiness.</div>
+                  <div className="comparison-note"><strong>Why it beats the free diagnostic:</strong> the free report gives a snapshot. Deep Assessment maps 30 data points across workflow maturity, data infrastructure, automation exposure, and organizational readiness.</div>
                   <ul className="cta-features">
                     <li>Detailed gap and constraint analysis</li>
                     <li>Business objective and AI opportunity mapping</li>
@@ -694,7 +694,7 @@ export default function FreeDiagnosticPage() {
                   </ul>
                   <a href="/#pricing-section" className="btn-cta">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ display: 'inline-block', marginRight: 4 }}><path d="M7 7l10 10M17 7v10H7" /></svg>
-                    Upgrade to Deep Diagnostic
+                    Upgrade to Deep Assessment
                   </a>
                 </div>
 
@@ -702,10 +702,10 @@ export default function FreeDiagnosticPage() {
                   <div className="upgrade-eyebrow">Best next step</div>
                   <h3>Full Stack Bundle</h3>
                   <div className="upgrade-price">$99 <span>one time</span></div>
-                  <p className="upgrade-summary">Get the complete planning stack: Deep Diagnostic + Blueprint + Roadmap in one bundled path.</p>
+                  <p className="upgrade-summary">Get the complete planning stack: Deep Assessment + Blueprint + Roadmap in one bundled path.</p>
                   <div className="comparison-note"><strong>Why bundle:</strong> it connects diagnosis to execution, so you do not stop at insights. You get the system design and a phased plan to act on it.</div>
                   <ul className="cta-features">
-                    <li>Everything in Deep Diagnostic</li>
+                    <li>Everything in Deep Assessment</li>
                     <li>AI system blueprint and workflow architecture</li>
                     <li>Phased implementation roadmap</li>
                     <li>KPI targets and deployment priorities</li>
@@ -720,7 +720,7 @@ export default function FreeDiagnosticPage() {
               <div className="strategy-card">
                 <div className="upgrade-eyebrow">Prefer to talk it through?</div>
                 <h3>Schedule a debrief with an AI strategist</h3>
-                <p>Review your score, clarify what is blocking adoption, and decide whether Deep Diagnostic or the Full Stack Bundle is the right next move.</p>
+                <p>Review your score, clarify what is blocking adoption, and decide whether Deep Assessment or the Full Stack Bundle is the right next move.</p>
                 <a href="https://calendly.com" target="_blank" rel="noopener noreferrer" className="btn-cta">
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ display: 'inline-block', marginRight: 4 }}><path d="M7 7l10 10M17 7v10H7" /></svg>
                   Book strategist debrief

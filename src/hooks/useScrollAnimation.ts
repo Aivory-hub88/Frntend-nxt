@@ -26,7 +26,7 @@ export function useScrollAnimation(options?: ScrollAnimationOptions) {
   const ref = useRef<HTMLDivElement>(null);
   const [isVisible, setIsVisible] = useState(false);
 
-  const { threshold = 0.05, rootMargin = '0px 0px 0px 0px', once = false } =
+  const { threshold = 0.05, rootMargin = '0px 0px 0px 0px', once = true } =
     options ?? {};
 
   useEffect(() => {

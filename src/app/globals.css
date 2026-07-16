@@ -680,7 +680,9 @@ body,
 }
 
 .spotlight-card:hover::before,
-.spotlight-card:hover::after {
+.spotlight-card:hover::after,
+.spotlight-card.auto-spotlight::before,
+.spotlight-card.auto-spotlight::after {
   opacity: 1;
 }
 

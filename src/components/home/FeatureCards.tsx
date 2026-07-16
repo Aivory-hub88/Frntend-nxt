@@ -39,10 +39,41 @@ function DiagnosticStatItem({
   target: number; prefix: string; suffix: string; title: string; subtitle: string; active: boolean; delay: number
 }) {
   const value = useCountUp(target, active);
+  const cardRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    let animationFrameId: number;
+    let startTime = Math.random() * 10000;
+
+    const animate = (time: number) => {
+      if (cardRef.current) {
+        const rect = cardRef.current.getBoundingClientRect();
+        const centerX = rect.width / 2;
+        const centerY = rect.height / 2;
+        
+        const radiusX = rect.width / 2;
+        const radiusY = rect.height / 2;
+        const speed = 0.004; 
+        const angle = (time + startTime) * speed;
+        
+        const x = centerX + radiusX * Math.cos(angle);
+        const y = centerY - radiusY * Math.sin(angle);
+        
+        cardRef.current.style.setProperty('--mouse-x', `${x}px`);
+        cardRef.current.style.setProperty('--mouse-y', `${y}px`);
+      }
+      animationFrameId = requestAnimationFrame(animate);
+    };
+
+    animationFrameId = requestAnimationFrame(animate);
+
+    return () => cancelAnimationFrame(animationFrameId);
+  }, []);
 
   return (
     <div
-      className="group flex-1 min-w-0 md:min-w-[200px] text-center py-8 px-4 lg:px-6 rounded-2xl transition-all duration-[800ms] ease-out flex flex-col items-center justify-start hover:bg-white/[0.03]"
+      ref={cardRef}
+      className="group relative spotlight-card auto-spotlight flex-1 min-w-0 md:min-w-[200px] text-center py-8 px-4 lg:px-6 rounded-2xl transition-all duration-[800ms] ease-out flex flex-col items-center justify-start border-transparent bg-transparent hover:bg-white/[0.03]"
       style={{
         opacity: active ? 1 : 0,
         transform: active ? 'translateY(0)' : 'translateY(30px)',
@@ -125,7 +156,7 @@ export default function FeatureCards() {
           <div className="text-center flex flex-col justify-center items-center">
             <h2 className="text-4xl md:text-5xl font-light tracking-tight mb-6 leading-tight text-white max-w-3xl">
               Turn your AI Confusion<br />
-              Into <span style={{ color: '#a78bfa' }}>AI Execution</span>
+              Into AI <span className="italic" style={{ color: '#e4effd' }}>Execution</span>
             </h2>
             <p className="text-white/75 max-w-2xl font-light leading-relaxed mb-16">
               Aivory™ helps organizations discover where AI creates value,

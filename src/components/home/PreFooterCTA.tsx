@@ -1,8 +1,9 @@
 'use client';
 
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
 import ContactModal from './ContactModal';
+import { SpotlightButton } from '@/components/ui/SpotlightButton';
 
 /* ─── Arrow Icon ─── */
 function ArrowIcon({ className = '' }: { className?: string }) {
@@ -36,20 +37,44 @@ const services = [
 const ServiceCard = ({ service }: { service: typeof services[0] }) => {
   const cardRef = useRef<HTMLDivElement>(null);
 
-  const handleMouseMove = (e: React.MouseEvent) => {
-    if (!cardRef.current) return;
-    const rect = cardRef.current.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-    cardRef.current.style.setProperty('--mouse-x', `${x}px`);
-    cardRef.current.style.setProperty('--mouse-y', `${y}px`);
-  };
+  useEffect(() => {
+    let animationFrameId: number;
+    let startTime = Math.random() * 10000; // Random start time so each card has a different phase
+
+    const animate = (time: number) => {
+      if (cardRef.current) {
+        const rect = cardRef.current.getBoundingClientRect();
+        const centerX = rect.width / 2;
+        const centerY = rect.height / 2;
+        
+        const radiusX = rect.width / 2;
+        const radiusY = rect.height / 2;
+        
+        // Speed: 1 full rotation every ~6 seconds
+        const speed = 0.001; 
+        const angle = (time + startTime) * speed;
+        
+        // Counter-clockwise motion (X uses cos, Y uses -sin since screen Y goes down)
+        const x = centerX + radiusX * Math.cos(angle);
+        const y = centerY - radiusY * Math.sin(angle);
+        
+        cardRef.current.style.setProperty('--mouse-x', `${x}px`);
+        cardRef.current.style.setProperty('--mouse-y', `${y}px`);
+      }
+      animationFrameId = requestAnimationFrame(animate);
+    };
+
+    animationFrameId = requestAnimationFrame(animate);
+
+    return () => {
+      cancelAnimationFrame(animationFrameId);
+    };
+  }, []);
 
   return (
     <div
       ref={cardRef}
-      onMouseMove={handleMouseMove}
-      className="relative spotlight-card border border-white/10 p-8 transition-colors bg-[#0a0a0a] overflow-hidden rounded-xl"
+      className="relative spotlight-card auto-spotlight border border-white/10 p-8 transition-colors bg-[#0a0a0a] overflow-hidden rounded-xl"
     >
       <h3 className="text-xl font-normal text-white mb-3 relative z-10">{service.title}</h3>
       <p className="text-[#dadada] font-light leading-relaxed relative z-10">{service.description}</p>
@@ -64,15 +89,13 @@ export default function PreFooterCTA() {
   return (
     <>
       <section ref={ref} className={`animate-on-scroll ${isVisible ? 'is-visible' : ''} w-full text-white pt-12 pb-24 font-sans`}>
-        <div className="max-w-7xl mx-auto px-6 md:px-12">
+        <div style={{ zoom: 0.85 }}>
+          <div className="max-w-7xl mx-auto px-6 md:px-12">
           {/* Headline */}
           <div className="text-sm font-medium mb-6">Direct Engagement</div>
           <h2 className="no-word-split text-3xl md:text-4xl lg:text-5xl font-normal tracking-tight leading-[1.2] mb-6">
             Prefer to Work With Our Team Directly?
           </h2>
-          <p className="text-white text-xl md:text-2xl font-semibold mb-4">
-            Some AI decisions are too important to leave to guesswork.
-          </p>
           <p className="text-[#dadada] text-lg md:text-xl font-light mb-10 max-w-4xl">
             Work directly with Aivory™ experts to validate your strategy, design custom AI systems, train your teams, and accelerate implementation.
           </p>
@@ -89,14 +112,13 @@ export default function PreFooterCTA() {
 
           {/* CTA Button */}
           <div className="flex flex-wrap gap-6">
-            <button
-              type="button"
+            <SpotlightButton 
               onClick={() => setIsModalOpen(true)}
-              className="flex items-center gap-2 border border-white/20 px-4 py-2.5 text-xs md:text-sm font-medium hover:border-[#a3aa96] hover:bg-white/5 transition-all cursor-pointer"
+              className="text-xs md:text-sm"
             >
-              <ArrowIcon className="w-4 h-4 text-[#a3aa96]" />
               Talk to Our Team
-            </button>
+            </SpotlightButton>
+          </div>
           </div>
         </div>
       </section>

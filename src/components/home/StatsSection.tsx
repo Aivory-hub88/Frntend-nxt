@@ -105,17 +105,7 @@ export default function StatsSection() {
   return (
     <div ref={animRef} className={`animate-on-scroll ${isVisible ? 'is-visible' : ''} w-full relative overflow-hidden`} style={{ padding: '110px 0 120px 0' }}>
 
-      {/* Readability scrim: soft dark band behind the stats so the numbers stay legible
-          when a bright lobe of the animated halftone flower passes behind them. Wide + soft
-          so it reads as depth, not a panel, and the flower animation is untouched elsewhere. */}
-      <div
-        aria-hidden
-        className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[90%] h-[150%]"
-        style={{
-          background:
-            'radial-gradient(ellipse at center, rgba(0,0,0,0.62) 0%, rgba(0,0,0,0.4) 45%, rgba(0,0,0,0) 75%)',
-        }}
-      />
+
 
       <div className="relative z-[1] max-w-[1340px] mx-auto px-4 lg:px-6">
         {/* Stats Row */}

@@ -4,6 +4,7 @@ import { useScrollAnimation } from '@/hooks/useScrollAnimation';
 import Link from 'next/link';
 import { useState } from 'react';
 import ContactModal from '@/components/home/ContactModal';
+import { SpotlightButton } from '@/components/ui/SpotlightButton';
 
 /* ─── Arrow Icon ─── */
 function ArrowIcon({ className = '' }: { className?: string }) {
@@ -28,33 +29,19 @@ export function CTAFooter({ title, subtitle, primaryCta, secondaryCta }: CTAFoot
 
   const renderCta = (cta: { label: string; href: string }, isPrimary: boolean) => {
     const isContact = cta.href === '#contact';
-    const baseClasses = "w-full sm:w-auto inline-flex justify-center items-center gap-3 no-underline uppercase cursor-pointer transition-all duration-[250ms] min-h-[44px]";
-    const primaryClasses = "text-white border border-white/20 bg-transparent hover:border-[#a3aa96] hover:bg-white/5";
-    const secondaryClasses = "text-white border border-white/20 bg-black/60 hover:border-[#a3aa96] hover:bg-white/5";
-    const className = `${baseClasses} ${isPrimary ? primaryClasses : secondaryClasses}`;
-    
-    const inlineStyle = {
-      padding: '0.75rem 1.5rem',
-      fontFamily: "'Manrope', sans-serif",
-      fontWeight: 400,
-      fontSize: '0.75rem',
-      letterSpacing: '0.1em',
-    };
 
     if (isContact) {
       return (
-        <button key={cta.label} onClick={() => setIsModalOpen(true)} className={className} style={inlineStyle}>
-          <ArrowIcon className="w-4 h-4 text-[#a3aa96]" />
+        <SpotlightButton key={cta.label} onClick={() => setIsModalOpen(true)}>
           {cta.label}
-        </button>
+        </SpotlightButton>
       );
     }
     
     return (
-      <Link key={cta.label} href={cta.href} className={className} style={inlineStyle}>
-        <ArrowIcon className="w-4 h-4 text-[#a3aa96]" />
+      <SpotlightButton key={cta.label} href={cta.href}>
         {cta.label}
-      </Link>
+      </SpotlightButton>
     );
   };
 
