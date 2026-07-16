@@ -69,10 +69,7 @@ function SpotlightCard({
       style={{
         // Constant look, no backdrop-filter — see InteractiveGrid SpotlightCard note
         // (the scroll-gated frost swap made cards flash/glitch on every scroll).
-        // semi-transparent tint keeps the animated backdrop faintly visible with
-        // zero per-frame blur cost and zero state flips. Still var-driven so the
-        // mobile media rule in globals.css can go near-opaque for cheap rendering.
-        backgroundColor: "var(--card-bg, rgba(14, 14, 18, 0.98))",
+        backgroundColor: "var(--card-bg, rgba(20, 20, 26, 0.78))",
         backdropFilter: "var(--card-frost, none)",
         WebkitBackdropFilter: "var(--card-frost, none)",
         ...style,
