@@ -861,9 +861,9 @@ export default function PrivacySection() {
                       style={{
                         textTransform: "none",
                         backgroundColor: "rgba(20, 20, 26, 0.3)",
-                        borderWidth: "0.1px",
+                        borderWidth: "0.5px",
                         borderStyle: "solid",
-                        borderColor: "rgba(255,255,255,0.1)",
+                        borderColor: "rgba(255,255,255,0.05)",
                       }}
                     >
                       <p className="text-sm md:text-[15px] font-medium leading-snug whitespace-pre-line text-[#dadada] group-hover:text-white transition-colors">
@@ -884,9 +884,9 @@ export default function PrivacySection() {
                       style={{
                         textTransform: "none",
                         backgroundColor: "rgba(20, 20, 26, 0.3)",
-                        borderWidth: "0.1px",
+                        borderWidth: "0.5px",
                         borderStyle: "solid",
-                        borderColor: "rgba(255,255,255,0.1)",
+                        borderColor: "rgba(255,255,255,0.05)",
                       }}
                     >
                       <p className="text-sm md:text-[15px] font-medium leading-snug whitespace-pre-line text-[#dadada] group-hover:text-white transition-colors">
@@ -907,9 +907,9 @@ export default function PrivacySection() {
                       style={{
                         textTransform: "none",
                         backgroundColor: "rgba(20, 20, 26, 0.3)",
-                        borderWidth: "0.1px",
+                        borderWidth: "0.5px",
                         borderStyle: "solid",
-                        borderColor: "rgba(255,255,255,0.1)",
+                        borderColor: "rgba(255,255,255,0.05)",
                       }}
                     >
                       <p className="text-sm md:text-[15px] font-medium leading-snug whitespace-pre-line text-[#dadada] group-hover:text-white transition-colors">
