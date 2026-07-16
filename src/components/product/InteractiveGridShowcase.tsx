@@ -51,7 +51,7 @@ function SpotlightCard({ children, className = '' }: { children: React.ReactNode
     <div
       ref={cardRef}
       onMouseMove={handleMouseMove}
-      className={`spotlight-card rounded-2xl border border-white/5 bg-zinc-950/65 shadow-lg flex flex-col p-4 md:p-6 min-w-0 w-full ${className}`}
+      className={`spotlight-card rounded-2xl border border-white/5 bg-zinc-950/[0.92] shadow-lg flex flex-col p-4 md:p-6 min-w-0 w-full ${className}`}
     >
       {children}
     </div>

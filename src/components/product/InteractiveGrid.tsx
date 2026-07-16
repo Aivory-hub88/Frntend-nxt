@@ -77,7 +77,7 @@ function SpotlightCard({ children, className = '' }: { children: React.ReactNode
         // semi-transparent tint keeps the animated backdrop faintly visible with
         // zero per-frame blur cost and zero state flips. Still var-driven so the
         // mobile media rule in globals.css can go near-opaque for cheap rendering.
-        backgroundColor: 'var(--card-bg, rgba(20, 20, 26, 0.78))',
+        backgroundColor: 'var(--card-bg, rgba(14, 14, 18, 0.94))',
         backdropFilter: 'var(--card-frost, none)',
         WebkitBackdropFilter: 'var(--card-frost, none)'
       }}

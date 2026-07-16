@@ -69,7 +69,7 @@ function SpotlightCard({
       style={{
         // Constant look, no backdrop-filter — see InteractiveGrid SpotlightCard note
         // (the scroll-gated frost swap made cards flash/glitch on every scroll).
-        backgroundColor: "var(--card-bg, rgba(20, 20, 26, 0.78))",
+        backgroundColor: "var(--card-bg, rgba(14, 14, 18, 0.94))",
         backdropFilter: "var(--card-frost, none)",
         WebkitBackdropFilter: "var(--card-frost, none)",
         ...style,
@@ -2366,7 +2366,7 @@ export function BlueprintAnimation() {
 
             {/* Card 1: Constraint → Resolution */}
             <div
-              className={`group relative flex items-center gap-3 rounded-2xl p-3.5 sm:p-4 border border-white/10 overflow-hidden bg-gradient-to-br from-white/[0.055] to-white/[0.015] ${phase === "blueprint" ? "animate-[blueprint-card-enter_0.7s_ease-out_forwards]" : "opacity-0"}`}
+              className={`group relative flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 rounded-2xl p-3.5 sm:p-4 border border-white/10 overflow-hidden bg-gradient-to-br from-white/[0.055] to-white/[0.015] ${phase === "blueprint" ? "animate-[blueprint-card-enter_0.7s_ease-out_forwards]" : "opacity-0"}`}
               style={{
                 boxShadow:
                   "0 12px 30px -14px rgba(0,0,0,0.65), inset 0 1px 0 rgba(255,255,255,0.06)",
@@ -2402,7 +2402,7 @@ export function BlueprintAnimation() {
                 </div>
               </div>
               {/* connector */}
-              <div className="w-[28px] sm:w-[50px] shrink-0 h-3 z-10 flex items-center mx-0.5 sm:mx-2">
+              <div className="hidden sm:flex w-[28px] sm:w-[50px] shrink-0 h-3 z-10 items-center mx-0.5 sm:mx-2">
                 <div className="relative h-[1px] w-full bg-white/20">
                   {/* Premium Node Connector (Mini) */}
                   <div className="absolute left-1/2 top-[0.5px] -translate-x-1/2 -translate-y-1/2 flex items-center justify-center">
@@ -2413,8 +2413,8 @@ export function BlueprintAnimation() {
                 </div>
               </div>
               {/* right */}
-              <div className="flex items-center gap-2.5 flex-1 min-w-0 pl-4 justify-end text-right relative z-10">
-                <div className="flex flex-col min-w-0 w-full text-right">
+              <div className="flex items-center gap-2.5 sm:flex-1 min-w-0 sm:pl-4 pl-0 sm:justify-end sm:text-right relative z-10">
+                <div className="flex flex-col min-w-0 w-full sm:text-right">
                   <span className="text-[9px] sm:text-[10px] text-[#bbe2ef]/80 uppercase tracking-wider mb-0.5">
                     Resolution Layer
                   </span>
@@ -2442,7 +2442,7 @@ export function BlueprintAnimation() {
 
             {/* Card 2: Objective → Action */}
             <div
-              className={`group relative flex items-center gap-3 rounded-2xl p-3.5 sm:p-4 border border-white/10 overflow-hidden bg-gradient-to-br from-white/[0.055] to-white/[0.015] ${phase === "blueprint" ? "animate-[blueprint-card-enter_0.7s_ease-out_forwards]" : "opacity-0"}`}
+              className={`group relative flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 rounded-2xl p-3.5 sm:p-4 border border-white/10 overflow-hidden bg-gradient-to-br from-white/[0.055] to-white/[0.015] ${phase === "blueprint" ? "animate-[blueprint-card-enter_0.7s_ease-out_forwards]" : "opacity-0"}`}
               style={{
                 boxShadow:
                   "0 12px 30px -14px rgba(0,0,0,0.65), inset 0 1px 0 rgba(255,255,255,0.06)",
@@ -2473,7 +2473,7 @@ export function BlueprintAnimation() {
                   </span>
                 </div>
               </div>
-              <div className="w-[28px] sm:w-[50px] shrink-0 h-3 z-10 flex items-center mx-0.5 sm:mx-2">
+              <div className="hidden sm:flex w-[28px] sm:w-[50px] shrink-0 h-3 z-10 items-center mx-0.5 sm:mx-2">
                 <div className="relative h-[1px] w-full bg-white/20">
                   {/* Premium Node Connector (Mini) */}
                   <div className="absolute left-1/2 top-[0.5px] -translate-x-1/2 -translate-y-1/2 flex items-center justify-center">
@@ -2486,8 +2486,8 @@ export function BlueprintAnimation() {
                   </div>
                 </div>
               </div>
-              <div className="flex items-center gap-2.5 flex-1 min-w-0 pl-4 justify-end text-right relative z-10">
-                <div className="flex flex-col min-w-0 w-full text-right">
+              <div className="flex items-center gap-2.5 sm:flex-1 min-w-0 sm:pl-4 pl-0 sm:justify-end sm:text-right relative z-10">
+                <div className="flex flex-col min-w-0 w-full sm:text-right">
                   <span className="text-[9px] sm:text-[10px] text-[#bbe2ef]/80 uppercase tracking-wider mb-0.5">
                     Action Engine
                   </span>
