@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { motion, animate, AnimatePresence } from 'framer-motion';
 import dynamic from 'next/dynamic';
+import { SpotlightButton } from '@/components/ui/SpotlightButton';
 
 const LabFlaskCanvas = dynamic(
   () => import('./LabFlask3D').then((mod) => mod.LabFlaskCanvas),
@@ -1838,9 +1839,18 @@ export function InteractiveShowcase() {
           {/* Left Column: Scrollable Description Blocks */}
           <div className="lg:col-span-5 flex flex-col gap-16 lg:gap-[30vh] lg:pb-[20vh]">
             <div ref={introRef} className="lg:min-h-[40vh] flex flex-col justify-center">
-              <h2 className="text-[#dfe2d8] uppercase tracking-widest text-xs font-manrope font-light mb-3">
+              <SpotlightButton 
+                className="mb-6 pointer-events-auto hover:-translate-y-0 inline-flex" 
+                style={{ 
+                  borderWidth: '0.5px', 
+                  borderStyle: 'solid', 
+                  borderColor: 'rgba(255,255,255,0.1)', 
+                  cursor: 'default' 
+                }}
+                icon={false}
+              >
                 Operational Framework
-              </h2>
+              </SpotlightButton>
               <h3 className="text-3xl md:text-4xl lg:text-5xl font-light tracking-tight mb-6 leading-tight">
                 From Assessment<br />to Staged <span className="italic" style={{ color: '#e4effd' }}>Autonomy</span>
               </h3>

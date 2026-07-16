@@ -4,6 +4,7 @@ import { MouseEvent, useRef, useEffect, useState } from 'react';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { HalftoneWave } from '@/components/ui/HalftoneWave';
+import { SpotlightButton } from '@/components/ui/SpotlightButton';
 
 // Reusable Spotlight Card Component
 function SpotlightCard({ children, className = '' }: { children: React.ReactNode; className?: string }) {
@@ -419,9 +420,18 @@ export function InteractiveGrid() {
 
       <div className="max-w-6xl mx-auto relative">
         <div className="text-center mb-16">
-          <h2 className="text-white uppercase tracking-widest text-xs font-manrope font-light mb-3">
+          <SpotlightButton 
+            className="mb-6 pointer-events-auto hover:-translate-y-0 inline-flex" 
+            style={{ 
+              borderWidth: '0.5px', 
+              borderStyle: 'solid', 
+              borderColor: 'rgba(255,255,255,0.1)', 
+              cursor: 'default' 
+            }}
+            icon={false}
+          >
             THE PLATFORM
-          </h2>
+          </SpotlightButton>
           <h3 className="text-4xl md:text-5xl font-light tracking-normal mb-4">
             Your AI Operations <span className="italic" style={{ color: '#e4effd' }}>Stack.</span>
           </h3>

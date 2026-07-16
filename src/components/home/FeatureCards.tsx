@@ -173,7 +173,7 @@ export default function FeatureCards() {
               </h3>
 
               <div ref={statsRef} className="flex flex-nowrap justify-center items-stretch relative flex-row w-full mt-4">
-                <DiagnosticStatItem target={10} prefix="" suffix="min" title="AI Readiness Diagnostic" subtitle="not days of sessions" active={statsActive} delay={0} />
+                <DiagnosticStatItem target={10} prefix="" suffix="min" title="AI Readiness Assessment" subtitle="not days of sessions" active={statsActive} delay={0} />
                 <div
                   className="w-px self-stretch relative min-h-[100px] hidden md:block"
                   style={{ background: 'linear-gradient(180deg, transparent, rgba(255,255,255,0.14) 20%, rgba(255,255,255,0.14) 80%, transparent)' }}

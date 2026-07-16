@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef, MouseEvent } from 'react';
+import { SpotlightButton } from '@/components/ui/SpotlightButton';
 import { DiagnosticAnimation, BlueprintAnimation, RoadmapAnimation, ConsoleAnimation, WorkflowAnimation } from './InteractiveShowcase';
 import dynamic from 'next/dynamic';
 
@@ -80,9 +81,18 @@ export function InteractiveGridShowcase() {
         
         {/* Header */}
         <div className="text-center mb-16 max-w-2xl mx-auto">
-          <h2 className="text-[#dfe2d8] uppercase tracking-widest text-xs font-manrope font-light mb-3">
+          <SpotlightButton 
+            className="mb-6 pointer-events-auto hover:-translate-y-0" 
+            style={{ 
+              borderWidth: '0.5px', 
+              borderStyle: 'solid', 
+              borderColor: 'rgba(255,255,255,0.1)', 
+              cursor: 'default' 
+            }}
+            icon={false}
+          >
             Operational Framework
-          </h2>
+          </SpotlightButton>
           <h3 className="text-4xl md:text-5xl font-light tracking-normal mb-6 leading-tight">
             From Assessment <br className="hidden md:block" />to Staged <span className="italic" style={{ color: '#e4effd' }}>Autonomy</span>
           </h3>
