@@ -102,7 +102,6 @@ export default function PreFooterCTA() {
               cursor: 'default' 
             }}
             icon={false}
-            autoplay={false}
           >
             Direct Engagement
           </SpotlightButton>

@@ -252,7 +252,6 @@ export default function PrivacySection() {
                 cursor: 'default' 
               }}
               icon={false}
-              autoplay={false}
             >
               Privacy &amp; Security
             </SpotlightButton>

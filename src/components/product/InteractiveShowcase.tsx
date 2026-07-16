@@ -1848,7 +1848,6 @@ export function InteractiveShowcase() {
                   cursor: 'default' 
                 }}
                 icon={false}
-                autoplay={false}
               >
                 Operational Framework
               </SpotlightButton>
