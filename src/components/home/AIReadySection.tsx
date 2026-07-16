@@ -21,8 +21,8 @@ export default function AIReadySection() {
               Where do
               <br />
               we{" "}
-              <span className="italic inline-block pr-6 sm:pr-2" style={{ color: "#e4effd" }}>
-                start?
+              <span className="italic" style={{ color: "#e4effd", paddingRight: "0.2em" }}>
+                start?&nbsp;
               </span>
             </h2>
           </div>
