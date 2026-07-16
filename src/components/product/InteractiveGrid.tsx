@@ -429,6 +429,7 @@ export function InteractiveGrid() {
               cursor: 'default' 
             }}
             icon={false}
+            autoplay={false}
           >
             THE PLATFORM
           </SpotlightButton>

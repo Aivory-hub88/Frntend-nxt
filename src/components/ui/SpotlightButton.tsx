@@ -10,9 +10,10 @@ interface SpotlightButtonProps {
   roundedClass?: string;
   iconClassName?: string;
   style?: React.CSSProperties;
+  autoplay?: boolean;
 }
 
-export function SpotlightButton({ href, onClick, children, className = '', icon = true, roundedClass = 'rounded-[24px]', iconClassName = 'w-4 h-4 text-[#a3aa96] shrink-0', style }: SpotlightButtonProps) {
+export function SpotlightButton({ href, onClick, children, className = '', icon = true, roundedClass = 'rounded-[24px]', iconClassName = 'w-4 h-4 text-[#a3aa96] shrink-0', style, autoplay = true }: SpotlightButtonProps) {
   const btnRef = useRef<HTMLAnchorElement & HTMLButtonElement>(null);
 
   useEffect(() => {
@@ -21,7 +22,7 @@ export function SpotlightButton({ href, onClick, children, className = '', icon 
     let isHovering = false;
 
     const animate = (time: number) => {
-      if (btnRef.current && !isHovering) {
+      if (btnRef.current && !isHovering && autoplay) {
         const rect = btnRef.current.getBoundingClientRect();
         const centerX = rect.width / 2;
         const centerY = rect.height / 2;
@@ -39,7 +40,9 @@ export function SpotlightButton({ href, onClick, children, className = '', icon 
       animationFrameId = requestAnimationFrame(animate);
     };
 
-    animationFrameId = requestAnimationFrame(animate);
+    if (autoplay) {
+      animationFrameId = requestAnimationFrame(animate);
+    }
 
     const el = btnRef.current;
     

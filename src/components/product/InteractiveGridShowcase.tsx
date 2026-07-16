@@ -90,6 +90,7 @@ export function InteractiveGridShowcase() {
               cursor: 'default' 
             }}
             icon={false}
+            autoplay={false}
           >
             Operational Framework
           </SpotlightButton>
