@@ -14,65 +14,52 @@ function ShieldIcon({ className = "" }: { className?: string }) {
     >
       <defs>
         <linearGradient
-          id="sh1"
-          x1="0"
-          y1="0"
-          x2="100"
-          y2="100"
-          gradientUnits="userSpaceOnUse"
-        >
-          <stop stopColor="#FFD700" />
-          <stop offset="1" stopColor="#FF8C00" />
-        </linearGradient>
-        <linearGradient
-          id="shRim"
+          id="glassBase"
           x1="0"
           y1="0"
           x2="0"
           y2="100"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stopColor="#FFF5CC" />
-          <stop offset="1" stopColor="#995500" />
+          <stop offset="0%" stopColor="#FFFFFF" stopOpacity="0.9" />
+          <stop offset="45%" stopColor="#FFFFFF" stopOpacity="0.4" />
+          <stop offset="45.1%" stopColor="#FFFFFF" stopOpacity="0.05" />
+          <stop offset="100%" stopColor="#FFFFFF" stopOpacity="0.2" />
         </linearGradient>
         <linearGradient
-          id="shGloss"
+          id="glassEdge"
           x1="0"
           y1="0"
           x2="0"
-          y2="60"
+          y2="100"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stopColor="#FFFFFF" stopOpacity="0.9" />
-          <stop offset="1" stopColor="#FFFFFF" stopOpacity="0" />
+          <stop offset="0%" stopColor="#FFFFFF" stopOpacity="1" />
+          <stop offset="100%" stopColor="#FFFFFF" stopOpacity="0.3" />
         </linearGradient>
-        <filter id="shadowSh" x="-20%" y="-20%" width="140%" height="140%">
+        <filter id="glassShadow" x="-20%" y="-20%" width="140%" height="140%">
           <feDropShadow
             dx="0"
-            dy="5"
-            stdDeviation="4"
+            dy="4"
+            stdDeviation="3"
             floodColor="#000000"
-            floodOpacity="0.6"
+            floodOpacity="0.5"
           />
         </filter>
       </defs>
-      <g filter="url(#shadowSh)">
+
+      <g filter="url(#glassShadow)">
         <path
           d="M50 10 C50 10 15 20 15 20 C15 55 15 75 50 95 C85 75 85 55 85 20 C85 20 50 10 50 10 Z"
-          fill="url(#shRim)"
+          fill="url(#glassBase)"
+          stroke="url(#glassEdge)"
+          strokeWidth="3"
+          strokeLinejoin="round"
         />
         <path
-          d="M50 14 C50 14 20 23 20 23 C20 53 20 71 50 88 C80 71 80 53 80 23 C80 23 50 14 50 14 Z"
-          fill="url(#sh1)"
-        />
-        <path
-          d="M50 14 C50 14 20 23 20 23 C20 40 80 40 80 23 C80 23 50 14 50 14 Z"
-          fill="url(#shGloss)"
-        />
-        <path
-          d="M32 50 L45 62 L68 38"
+          d="M35 50 L45 62 L65 38"
           stroke="#FFFFFF"
-          strokeWidth="8"
+          strokeWidth="6"
           strokeLinecap="round"
           strokeLinejoin="round"
         />
@@ -91,50 +78,30 @@ function CpuIcon({ className = "" }: { className?: string }) {
     >
       <defs>
         <linearGradient
-          id="cpuB"
-          x1="0"
-          y1="0"
-          x2="100"
-          y2="100"
-          gradientUnits="userSpaceOnUse"
-        >
-          <stop stopColor="#444444" />
-          <stop offset="1" stopColor="#111111" />
-        </linearGradient>
-        <linearGradient
-          id="cpuRim"
+          id="glassBase"
           x1="0"
           y1="0"
           x2="0"
           y2="100"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stopColor="#888888" />
-          <stop offset="1" stopColor="#000000" />
+          <stop offset="0%" stopColor="#FFFFFF" stopOpacity="0.9" />
+          <stop offset="45%" stopColor="#FFFFFF" stopOpacity="0.4" />
+          <stop offset="45.1%" stopColor="#FFFFFF" stopOpacity="0.05" />
+          <stop offset="100%" stopColor="#FFFFFF" stopOpacity="0.2" />
         </linearGradient>
         <linearGradient
-          id="cpuG"
+          id="glassEdge"
           x1="0"
           y1="0"
           x2="0"
-          y2="50"
-          gradientUnits="userSpaceOnUse"
-        >
-          <stop stopColor="#FFFFFF" stopOpacity="0.4" />
-          <stop offset="1" stopColor="#FFFFFF" stopOpacity="0" />
-        </linearGradient>
-        <linearGradient
-          id="pin"
-          x1="0"
-          y1="0"
-          x2="100"
           y2="100"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stopColor="#FFD700" />
-          <stop offset="1" stopColor="#B36B00" />
+          <stop offset="0%" stopColor="#FFFFFF" stopOpacity="1" />
+          <stop offset="100%" stopColor="#FFFFFF" stopOpacity="0.3" />
         </linearGradient>
-        <filter id="shadowCpu" x="-20%" y="-20%" width="140%" height="140%">
+        <filter id="glassShadow" x="-20%" y="-20%" width="140%" height="140%">
           <feDropShadow
             dx="0"
             dy="4"
@@ -144,34 +111,34 @@ function CpuIcon({ className = "" }: { className?: string }) {
           />
         </filter>
       </defs>
-      <g filter="url(#shadowCpu)">
-        <rect x="25" y="8" width="8" height="15" fill="url(#pin)" rx="3" />
-        <rect x="46" y="8" width="8" height="15" fill="url(#pin)" rx="3" />
-        <rect x="67" y="8" width="8" height="15" fill="url(#pin)" rx="3" />
-        <rect x="25" y="77" width="8" height="15" fill="url(#pin)" rx="3" />
-        <rect x="46" y="77" width="8" height="15" fill="url(#pin)" rx="3" />
-        <rect x="67" y="77" width="8" height="15" fill="url(#pin)" rx="3" />
-        <rect x="8" y="25" width="15" height="8" fill="url(#pin)" rx="3" />
-        <rect x="8" y="46" width="15" height="8" fill="url(#pin)" rx="3" />
-        <rect x="8" y="67" width="15" height="8" fill="url(#pin)" rx="3" />
-        <rect x="77" y="25" width="15" height="8" fill="url(#pin)" rx="3" />
-        <rect x="77" y="46" width="15" height="8" fill="url(#pin)" rx="3" />
-        <rect x="77" y="67" width="15" height="8" fill="url(#pin)" rx="3" />
 
+      <g filter="url(#glassShadow)">
         <rect
-          x="15"
-          y="15"
-          width="70"
-          height="70"
-          rx="16"
-          fill="url(#cpuRim)"
+          x="20"
+          y="20"
+          width="60"
+          height="60"
+          rx="12"
+          fill="url(#glassBase)"
+          stroke="url(#glassEdge)"
+          strokeWidth="3"
         />
-        <rect x="17" y="17" width="66" height="66" rx="14" fill="url(#cpuB)" />
-        <rect x="17" y="17" width="66" height="30" rx="14" fill="url(#cpuG)" />
-
-        <rect x="32" y="32" width="36" height="36" rx="6" fill="url(#pin)" />
-        <rect x="35" y="35" width="30" height="30" rx="4" fill="#333333" />
-        <rect x="42" y="42" width="16" height="16" rx="2" fill="#00E5FF" />
+        <rect
+          x="35"
+          y="35"
+          width="30"
+          height="30"
+          rx="6"
+          fill="url(#glassBase)"
+          stroke="url(#glassEdge)"
+          strokeWidth="2"
+        />
+        <path
+          d="M30 10 V20 M50 10 V20 M70 10 V20 M30 80 V90 M50 80 V90 M70 80 V90 M10 30 H20 M10 50 H20 M10 70 H20 M80 30 H90 M80 50 H90 M80 70 H90"
+          stroke="url(#glassBase)"
+          strokeWidth="4"
+          strokeLinecap="round"
+        />
       </g>
     </svg>
   );
@@ -182,43 +149,35 @@ function GdprIcon({ className = "" }: { className?: string }) {
     <svg
       className={className}
       viewBox="0 0 100 100"
+      fill="none"
       xmlns="http://www.w3.org/2000/svg"
     >
       <defs>
         <linearGradient
-          id="gRim"
+          id="glassBase"
           x1="0"
           y1="0"
           x2="0"
           y2="100"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stopColor="#66AAFF" />
-          <stop offset="1" stopColor="#002266" />
+          <stop offset="0%" stopColor="#FFFFFF" stopOpacity="0.9" />
+          <stop offset="45%" stopColor="#FFFFFF" stopOpacity="0.4" />
+          <stop offset="45.1%" stopColor="#FFFFFF" stopOpacity="0.05" />
+          <stop offset="100%" stopColor="#FFFFFF" stopOpacity="0.2" />
         </linearGradient>
         <linearGradient
-          id="gBase"
-          x1="0"
-          y1="0"
-          x2="100"
-          y2="100"
-          gradientUnits="userSpaceOnUse"
-        >
-          <stop stopColor="#0055FF" />
-          <stop offset="1" stopColor="#001144" />
-        </linearGradient>
-        <linearGradient
-          id="gGloss"
+          id="glassEdge"
           x1="0"
           y1="0"
           x2="0"
-          y2="50"
+          y2="100"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stopColor="#FFFFFF" stopOpacity="0.6" />
-          <stop offset="1" stopColor="#FFFFFF" stopOpacity="0" />
+          <stop offset="0%" stopColor="#FFFFFF" stopOpacity="1" />
+          <stop offset="100%" stopColor="#FFFFFF" stopOpacity="0.3" />
         </linearGradient>
-        <filter id="shadowG" x="-20%" y="-20%" width="140%" height="140%">
+        <filter id="glassShadow" x="-20%" y="-20%" width="140%" height="140%">
           <feDropShadow
             dx="0"
             dy="4"
@@ -227,42 +186,26 @@ function GdprIcon({ className = "" }: { className?: string }) {
             floodOpacity="0.5"
           />
         </filter>
-        <polygon
-          id="star3d"
-          points="0,-4 1.17,-0.38 5,-0.38 1.91,1.86 3.09,5.62 0,3.38 -3.09,5.62 -1.91,1.86 -5,-0.38 -1.17,-0.38"
-          fill="#FFD700"
-        />
       </defs>
-      <g filter="url(#shadowG)">
-        <circle cx="50" cy="50" r="46" fill="url(#gRim)" />
-        <circle cx="50" cy="50" r="43" fill="url(#gBase)" />
-        <path
-          d="M9 50 A41 41 0 0 1 91 50 C91 25 70 20 50 20 C30 20 9 25 9 50 Z"
-          fill="url(#gGloss)"
+
+      <g filter="url(#glassShadow)">
+        <circle
+          cx="50"
+          cy="50"
+          r="42"
+          fill="url(#glassBase)"
+          stroke="url(#glassEdge)"
+          strokeWidth="3"
         />
-
-        <use href="#star3d" x="50" y="16" />
-        <use href="#star3d" x="67" y="20.5" />
-        <use href="#star3d" x="80" y="33" />
-        <use href="#star3d" x="84" y="50" />
-        <use href="#star3d" x="80" y="67" />
-        <use href="#star3d" x="67" y="79.5" />
-        <use href="#star3d" x="50" y="84" />
-        <use href="#star3d" x="33" y="79.5" />
-        <use href="#star3d" x="20" y="67" />
-        <use href="#star3d" x="16" y="50" />
-        <use href="#star3d" x="20" y="33" />
-        <use href="#star3d" x="33" y="20.5" />
-
         <text
           x="50"
           y="58"
           fill="#FFFFFF"
           fontFamily="-apple-system, sans-serif"
           fontWeight="800"
-          fontSize="22"
+          fontSize="26"
           textAnchor="middle"
-          style={{ filter: "drop-shadow(0px 2px 2px rgba(0,0,0,0.5))" }}
+          style={{ filter: "drop-shadow(0px 2px 2px rgba(0,0,0,0.3))" }}
         >
           GDPR
         </text>
@@ -281,50 +224,30 @@ function ServerOffIcon({ className = "" }: { className?: string }) {
     >
       <defs>
         <linearGradient
-          id="srvB"
+          id="glassBase"
           x1="0"
           y1="0"
           x2="0"
           y2="100"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stopColor="#666666" />
-          <stop offset="1" stopColor="#222222" />
+          <stop offset="0%" stopColor="#FFFFFF" stopOpacity="0.9" />
+          <stop offset="45%" stopColor="#FFFFFF" stopOpacity="0.4" />
+          <stop offset="45.1%" stopColor="#FFFFFF" stopOpacity="0.05" />
+          <stop offset="100%" stopColor="#FFFFFF" stopOpacity="0.2" />
         </linearGradient>
         <linearGradient
-          id="srvF"
+          id="glassEdge"
           x1="0"
           y1="0"
           x2="0"
           y2="100"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stopColor="#333333" />
-          <stop offset="1" stopColor="#000000" />
+          <stop offset="0%" stopColor="#FFFFFF" stopOpacity="1" />
+          <stop offset="100%" stopColor="#FFFFFF" stopOpacity="0.3" />
         </linearGradient>
-        <linearGradient
-          id="redSlash"
-          x1="0"
-          y1="0"
-          x2="100"
-          y2="100"
-          gradientUnits="userSpaceOnUse"
-        >
-          <stop stopColor="#FF3B30" />
-          <stop offset="1" stopColor="#990000" />
-        </linearGradient>
-        <linearGradient
-          id="redGloss"
-          x1="0"
-          y1="0"
-          x2="50"
-          y2="50"
-          gradientUnits="userSpaceOnUse"
-        >
-          <stop stopColor="#FFFFFF" stopOpacity="0.8" />
-          <stop offset="1" stopColor="#FFFFFF" stopOpacity="0" />
-        </linearGradient>
-        <filter id="shadowSrv" x="-20%" y="-20%" width="140%" height="140%">
+        <filter id="glassShadow" x="-20%" y="-20%" width="140%" height="140%">
           <feDropShadow
             dx="0"
             dy="4"
@@ -333,43 +256,58 @@ function ServerOffIcon({ className = "" }: { className?: string }) {
             floodOpacity="0.5"
           />
         </filter>
-        <filter id="shadowRed" x="-20%" y="-20%" width="140%" height="140%">
-          <feDropShadow
-            dx="2"
-            dy="2"
-            stdDeviation="2"
-            floodColor="#000000"
-            floodOpacity="0.7"
-          />
-        </filter>
       </defs>
-      <g filter="url(#shadowSrv)">
-        <rect x="18" y="12" width="64" height="76" rx="8" fill="url(#srvB)" />
-        <rect x="22" y="16" width="56" height="68" rx="4" fill="url(#srvF)" />
 
-        <rect x="28" y="26" width="44" height="12" rx="2" fill="#222222" />
-        <circle cx="34" cy="32" r="3" fill="#00E5FF" />
-        <circle cx="44" cy="32" r="3" fill="#333333" />
+      <g filter="url(#glassShadow)">
+        <rect
+          x="25"
+          y="15"
+          width="50"
+          height="20"
+          rx="4"
+          fill="url(#glassBase)"
+          stroke="url(#glassEdge)"
+          strokeWidth="2"
+        />
+        <circle cx="35" cy="25" r="3" fill="#FFFFFF" />
+        <circle cx="45" cy="25" r="3" fill="#FFFFFF" />
 
-        <rect x="28" y="44" width="44" height="12" rx="2" fill="#222222" />
-        <circle cx="34" cy="50" r="3" fill="#00E5FF" />
-        <circle cx="44" cy="50" r="3" fill="#333333" />
+        <rect
+          x="25"
+          y="40"
+          width="50"
+          height="20"
+          rx="4"
+          fill="url(#glassBase)"
+          stroke="url(#glassEdge)"
+          strokeWidth="2"
+        />
+        <circle cx="35" cy="50" r="3" fill="#FFFFFF" />
+        <circle cx="45" cy="50" r="3" fill="#FFFFFF" />
 
-        <rect x="28" y="62" width="44" height="12" rx="2" fill="#222222" />
-        <circle cx="34" cy="68" r="3" fill="#00E5FF" />
-        <circle cx="44" cy="68" r="3" fill="#333333" />
-      </g>
-      <g filter="url(#shadowRed)">
+        <rect
+          x="25"
+          y="65"
+          width="50"
+          height="20"
+          rx="4"
+          fill="url(#glassBase)"
+          stroke="url(#glassEdge)"
+          strokeWidth="2"
+        />
+        <circle cx="35" cy="75" r="3" fill="#FFFFFF" />
+        <circle cx="45" cy="75" r="3" fill="#FFFFFF" />
+
         <path
-          d="M15 85 L85 15"
-          stroke="url(#redSlash)"
-          strokeWidth="12"
+          d="M20 80 L80 20"
+          stroke="url(#glassBase)"
+          strokeWidth="8"
           strokeLinecap="round"
         />
         <path
-          d="M18 82 L82 18"
-          stroke="url(#redGloss)"
-          strokeWidth="4"
+          d="M20 80 L80 20"
+          stroke="#FFFFFF"
+          strokeWidth="2"
           strokeLinecap="round"
         />
       </g>
@@ -387,76 +325,65 @@ function LockIcon({ className = "" }: { className?: string }) {
     >
       <defs>
         <linearGradient
-          id="lShackle"
+          id="glassBase"
           x1="0"
           y1="0"
-          x2="100"
-          y2="50"
-          gradientUnits="userSpaceOnUse"
-        >
-          <stop stopColor="#E6E6E6" />
-          <stop offset="0.5" stopColor="#FFFFFF" />
-          <stop offset="1" stopColor="#808080" />
-        </linearGradient>
-        <linearGradient
-          id="lBody"
-          x1="0"
-          y1="40"
-          x2="100"
+          x2="0"
           y2="100"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stopColor="#FFD700" />
-          <stop offset="1" stopColor="#E68A00" />
+          <stop offset="0%" stopColor="#FFFFFF" stopOpacity="0.9" />
+          <stop offset="45%" stopColor="#FFFFFF" stopOpacity="0.4" />
+          <stop offset="45.1%" stopColor="#FFFFFF" stopOpacity="0.05" />
+          <stop offset="100%" stopColor="#FFFFFF" stopOpacity="0.2" />
         </linearGradient>
         <linearGradient
-          id="lGloss"
+          id="glassEdge"
           x1="0"
-          y1="40"
+          y1="0"
           x2="0"
-          y2="70"
+          y2="100"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stopColor="#FFFFFF" stopOpacity="0.8" />
-          <stop offset="1" stopColor="#FFFFFF" stopOpacity="0" />
+          <stop offset="0%" stopColor="#FFFFFF" stopOpacity="1" />
+          <stop offset="100%" stopColor="#FFFFFF" stopOpacity="0.3" />
         </linearGradient>
-        <filter id="shadowL" x="-20%" y="-20%" width="140%" height="140%">
+        <filter id="glassShadow" x="-20%" y="-20%" width="140%" height="140%">
           <feDropShadow
             dx="0"
-            dy="5"
-            stdDeviation="4"
+            dy="4"
+            stdDeviation="3"
             floodColor="#000000"
             floodOpacity="0.5"
           />
         </filter>
       </defs>
-      <g filter="url(#shadowL)">
+
+      <g filter="url(#glassShadow)">
         <path
-          d="M30 45 V28 C30 15 70 15 70 28 V45"
-          stroke="url(#lShackle)"
+          d="M30 45 V30 C30 18 70 18 70 30 V45"
+          stroke="url(#glassBase)"
           strokeWidth="12"
           strokeLinecap="round"
         />
         <path
-          d="M30 45 V28 C30 15 70 15 70 28 V45"
+          d="M30 45 V30 C30 18 70 18 70 30 V45"
           stroke="#FFFFFF"
           strokeWidth="4"
-          strokeOpacity="0.6"
           strokeLinecap="round"
         />
-
-        <rect x="20" y="42" width="60" height="48" rx="10" fill="url(#lBody)" />
         <rect
           x="20"
-          y="42"
+          y="45"
           width="60"
-          height="24"
-          rx="10"
-          fill="url(#lGloss)"
+          height="45"
+          rx="8"
+          fill="url(#glassBase)"
+          stroke="url(#glassEdge)"
+          strokeWidth="3"
         />
-
-        <circle cx="50" cy="60" r="6" fill="#333333" />
-        <path d="M48 60 L46 76 H54 L52 60 Z" fill="#333333" />
+        <circle cx="50" cy="62" r="6" fill="#FFFFFF" />
+        <path d="M48 62 L46 75 H54 L52 62 Z" fill="#FFFFFF" />
       </g>
     </svg>
   );
@@ -472,92 +399,66 @@ function ShieldLockIcon({ className = "" }: { className?: string }) {
     >
       <defs>
         <linearGradient
-          id="slBase"
-          x1="0"
-          y1="0"
-          x2="100"
-          y2="100"
-          gradientUnits="userSpaceOnUse"
-        >
-          <stop stopColor="#0A84FF" />
-          <stop offset="1" stopColor="#003399" />
-        </linearGradient>
-        <linearGradient
-          id="slRim"
+          id="glassBase"
           x1="0"
           y1="0"
           x2="0"
           y2="100"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stopColor="#66AAFF" />
-          <stop offset="1" stopColor="#001144" />
+          <stop offset="0%" stopColor="#FFFFFF" stopOpacity="0.9" />
+          <stop offset="45%" stopColor="#FFFFFF" stopOpacity="0.4" />
+          <stop offset="45.1%" stopColor="#FFFFFF" stopOpacity="0.05" />
+          <stop offset="100%" stopColor="#FFFFFF" stopOpacity="0.2" />
         </linearGradient>
         <linearGradient
-          id="slGloss"
+          id="glassEdge"
           x1="0"
           y1="0"
           x2="0"
-          y2="60"
+          y2="100"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stopColor="#FFFFFF" stopOpacity="0.8" />
-          <stop offset="1" stopColor="#FFFFFF" stopOpacity="0" />
+          <stop offset="0%" stopColor="#FFFFFF" stopOpacity="1" />
+          <stop offset="100%" stopColor="#FFFFFF" stopOpacity="0.3" />
         </linearGradient>
-        <linearGradient
-          id="slLock"
-          x1="0"
-          y1="45"
-          x2="100"
-          y2="80"
-          gradientUnits="userSpaceOnUse"
-        >
-          <stop stopColor="#FFD700" />
-          <stop offset="1" stopColor="#E68A00" />
-        </linearGradient>
-        <filter id="shadowSL" x="-20%" y="-20%" width="140%" height="140%">
+        <filter id="glassShadow" x="-20%" y="-20%" width="140%" height="140%">
           <feDropShadow
             dx="0"
-            dy="5"
-            stdDeviation="4"
-            floodColor="#000000"
-            floodOpacity="0.6"
-          />
-        </filter>
-        <filter id="shadowLock" x="-20%" y="-20%" width="140%" height="140%">
-          <feDropShadow
-            dx="0"
-            dy="2"
-            stdDeviation="2"
+            dy="4"
+            stdDeviation="3"
             floodColor="#000000"
             floodOpacity="0.5"
           />
         </filter>
       </defs>
-      <g filter="url(#shadowSL)">
+
+      <g filter="url(#glassShadow)">
         <path
-          d="M50 8 C50 8 12 18 12 18 C12 55 12 75 50 96 C88 75 88 55 88 18 C88 18 50 8 50 8 Z"
-          fill="url(#slRim)"
+          d="M50 10 C50 10 15 20 15 20 C15 55 15 75 50 95 C85 75 85 55 85 20 C85 20 50 10 50 10 Z"
+          fill="url(#glassBase)"
+          stroke="url(#glassEdge)"
+          strokeWidth="3"
+          strokeLinejoin="round"
         />
         <path
-          d="M50 12 C50 12 16 21 16 21 C16 53 16 71 50 89 C84 71 84 53 84 21 C84 21 50 12 50 12 Z"
-          fill="url(#slBase)"
-        />
-        <path
-          d="M50 12 C50 12 16 21 16 21 C16 40 84 40 84 21 C84 21 50 12 50 12 Z"
-          fill="url(#slGloss)"
-        />
-      </g>
-      <g filter="url(#shadowLock)">
-        <path
-          d="M40 45 V35 C40 25 60 25 60 35 V45"
-          stroke="#E6E6E6"
-          strokeWidth="8"
+          d="M40 45 V35 C40 28 60 28 60 35 V45"
+          stroke="#FFFFFF"
+          strokeWidth="6"
           strokeLinecap="round"
         />
-        <rect x="34" y="45" width="32" height="26" rx="6" fill="url(#slLock)" />
-        <circle cx="50" cy="55" r="4" fill="#333333" />
-        <path d="M49 55 L48 64 H52 L51 55 Z" fill="#333333" />
+        <rect
+          x="34"
+          y="45"
+          width="32"
+          height="26"
+          rx="4"
+          fill="url(#glassBase)"
+          stroke="url(#glassEdge)"
+          strokeWidth="2"
+        />
+        <circle cx="50" cy="55" r="4" fill="#FFFFFF" />
+        <path d="M49 55 L48 62 H52 L51 55 Z" fill="#FFFFFF" />
       </g>
     </svg>
   );
@@ -573,102 +474,81 @@ function ShareOffIcon({ className = "" }: { className?: string }) {
     >
       <defs>
         <linearGradient
-          id="soNode"
+          id="glassBase"
           x1="0"
           y1="0"
-          x2="100"
+          x2="0"
           y2="100"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stopColor="#32ADE6" />
-          <stop offset="1" stopColor="#004488" />
+          <stop offset="0%" stopColor="#FFFFFF" stopOpacity="0.9" />
+          <stop offset="45%" stopColor="#FFFFFF" stopOpacity="0.4" />
+          <stop offset="45.1%" stopColor="#FFFFFF" stopOpacity="0.05" />
+          <stop offset="100%" stopColor="#FFFFFF" stopOpacity="0.2" />
         </linearGradient>
         <linearGradient
-          id="soLine"
+          id="glassEdge"
           x1="0"
           y1="0"
-          x2="100"
+          x2="0"
           y2="100"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stopColor="#E6E6E6" />
-          <stop offset="1" stopColor="#888888" />
+          <stop offset="0%" stopColor="#FFFFFF" stopOpacity="1" />
+          <stop offset="100%" stopColor="#FFFFFF" stopOpacity="0.3" />
         </linearGradient>
-        <linearGradient
-          id="redSlash"
-          x1="0"
-          y1="0"
-          x2="100"
-          y2="100"
-          gradientUnits="userSpaceOnUse"
-        >
-          <stop stopColor="#FF3B30" />
-          <stop offset="1" stopColor="#990000" />
-        </linearGradient>
-        <linearGradient
-          id="redGloss"
-          x1="0"
-          y1="0"
-          x2="50"
-          y2="50"
-          gradientUnits="userSpaceOnUse"
-        >
-          <stop stopColor="#FFFFFF" stopOpacity="0.8" />
-          <stop offset="1" stopColor="#FFFFFF" stopOpacity="0" />
-        </linearGradient>
-        <filter id="shadowSO" x="-20%" y="-20%" width="140%" height="140%">
+        <filter id="glassShadow" x="-20%" y="-20%" width="140%" height="140%">
           <feDropShadow
             dx="0"
-            dy="3"
-            stdDeviation="2"
+            dy="4"
+            stdDeviation="3"
             floodColor="#000000"
             floodOpacity="0.5"
           />
         </filter>
-        <filter id="shadowRed" x="-20%" y="-20%" width="140%" height="140%">
-          <feDropShadow
-            dx="2"
-            dy="2"
-            stdDeviation="2"
-            floodColor="#000000"
-            floodOpacity="0.7"
-          />
-        </filter>
       </defs>
-      <g filter="url(#shadowSO)">
+
+      <g filter="url(#glassShadow)">
         <path
-          d="M30 50 L70 25"
-          stroke="url(#soLine)"
+          d="M30 50 L70 25 M30 50 L70 75"
+          stroke="url(#glassBase)"
+          strokeWidth="8"
+          strokeLinecap="round"
+        />
+        <circle
+          cx="30"
+          cy="50"
+          r="12"
+          fill="url(#glassBase)"
+          stroke="url(#glassEdge)"
+          strokeWidth="2"
+        />
+        <circle
+          cx="70"
+          cy="25"
+          r="12"
+          fill="url(#glassBase)"
+          stroke="url(#glassEdge)"
+          strokeWidth="2"
+        />
+        <circle
+          cx="70"
+          cy="75"
+          r="12"
+          fill="url(#glassBase)"
+          stroke="url(#glassEdge)"
+          strokeWidth="2"
+        />
+        <path
+          d="M20 80 L80 20"
+          stroke="url(#glassBase)"
           strokeWidth="8"
           strokeLinecap="round"
         />
         <path
-          d="M30 50 L70 75"
-          stroke="url(#soLine)"
-          strokeWidth="8"
-          strokeLinecap="round"
-        />
-
-        <circle cx="30" cy="50" r="14" fill="url(#soNode)" />
-        <circle cx="30" cy="45" r="10" fill="#FFFFFF" fillOpacity="0.3" />
-
-        <circle cx="70" cy="25" r="14" fill="url(#soNode)" />
-        <circle cx="70" cy="20" r="10" fill="#FFFFFF" fillOpacity="0.3" />
-
-        <circle cx="70" cy="75" r="14" fill="url(#soNode)" />
-        <circle cx="70" cy="70" r="10" fill="#FFFFFF" fillOpacity="0.3" />
-      </g>
-      <g filter="url(#shadowRed)">
-        <path
-          d="M15 85 L85 15"
-          stroke="url(#redSlash)"
-          strokeWidth="12"
-          strokeLinecap="round"
-        />
-        <path
-          d="M18 82 L82 18"
-          stroke="url(#redGloss)"
-          strokeWidth="4"
+          d="M20 80 L80 20"
+          stroke="#FFFFFF"
+          strokeWidth="2"
           strokeLinecap="round"
         />
       </g>
@@ -686,86 +566,79 @@ function BriefcaseIcon({ className = "" }: { className?: string }) {
     >
       <defs>
         <linearGradient
-          id="bcBase"
+          id="glassBase"
           x1="0"
-          y1="20"
+          y1="0"
           x2="0"
-          y2="90"
+          y2="100"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stopColor="#8B5A2B" />
-          <stop offset="1" stopColor="#3E2713" />
+          <stop offset="0%" stopColor="#FFFFFF" stopOpacity="0.9" />
+          <stop offset="45%" stopColor="#FFFFFF" stopOpacity="0.4" />
+          <stop offset="45.1%" stopColor="#FFFFFF" stopOpacity="0.05" />
+          <stop offset="100%" stopColor="#FFFFFF" stopOpacity="0.2" />
         </linearGradient>
         <linearGradient
-          id="bcRim"
+          id="glassEdge"
           x1="0"
-          y1="20"
+          y1="0"
           x2="0"
-          y2="90"
+          y2="100"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stopColor="#A06934" />
-          <stop offset="1" stopColor="#25170B" />
+          <stop offset="0%" stopColor="#FFFFFF" stopOpacity="1" />
+          <stop offset="100%" stopColor="#FFFFFF" stopOpacity="0.3" />
         </linearGradient>
-        <linearGradient
-          id="bcGloss"
-          x1="0"
-          y1="20"
-          x2="0"
-          y2="50"
-          gradientUnits="userSpaceOnUse"
-        >
-          <stop stopColor="#FFFFFF" stopOpacity="0.4" />
-          <stop offset="1" stopColor="#FFFFFF" stopOpacity="0" />
-        </linearGradient>
-        <linearGradient
-          id="bcGold"
-          x1="0"
-          y1="30"
-          x2="0"
-          y2="50"
-          gradientUnits="userSpaceOnUse"
-        >
-          <stop stopColor="#FFD700" />
-          <stop offset="1" stopColor="#CC8800" />
-        </linearGradient>
-        <filter id="shadowBC" x="-20%" y="-20%" width="140%" height="140%">
+        <filter id="glassShadow" x="-20%" y="-20%" width="140%" height="140%">
           <feDropShadow
             dx="0"
-            dy="5"
-            stdDeviation="4"
+            dy="4"
+            stdDeviation="3"
             floodColor="#000000"
-            floodOpacity="0.6"
+            floodOpacity="0.5"
           />
         </filter>
       </defs>
-      <g filter="url(#shadowBC)">
+
+      <g filter="url(#glassShadow)">
         <path
-          d="M38 25 V14 C38 10 62 10 62 14 V25"
-          stroke="#A06934"
+          d="M38 30 V18 C38 12 62 12 62 18 V30"
+          stroke="url(#glassBase)"
           strokeWidth="8"
           strokeLinecap="round"
         />
-        <rect x="14" y="24" width="72" height="62" rx="8" fill="url(#bcRim)" />
-        <rect x="16" y="26" width="68" height="58" rx="6" fill="url(#bcBase)" />
-        <rect
-          x="16"
-          y="26"
-          width="68"
-          height="20"
-          rx="6"
-          fill="url(#bcGloss)"
-        />
-
         <path
-          d="M16 40 Q 50 50 84 40"
-          fill="none"
-          stroke="#25170B"
+          d="M38 30 V18 C38 12 62 12 62 18 V30"
+          stroke="#FFFFFF"
+          strokeWidth="2"
+          strokeLinecap="round"
+        />
+        <rect
+          x="15"
+          y="30"
+          width="70"
+          height="55"
+          rx="8"
+          fill="url(#glassBase)"
+          stroke="url(#glassEdge)"
           strokeWidth="3"
         />
-
-        <rect x="28" y="36" width="10" height="12" rx="3" fill="url(#bcGold)" />
-        <rect x="62" y="36" width="10" height="12" rx="3" fill="url(#bcGold)" />
+        <path
+          d="M15 45 Q 50 60 85 45"
+          fill="none"
+          stroke="url(#glassEdge)"
+          strokeWidth="3"
+        />
+        <rect
+          x="42"
+          y="42"
+          width="16"
+          height="12"
+          rx="3"
+          fill="url(#glassBase)"
+          stroke="#FFFFFF"
+          strokeWidth="2"
+        />
       </g>
     </svg>
   );
