@@ -243,8 +243,18 @@ export default function PrivacySection() {
         <div className="max-w-7xl mx-auto px-6 md:px-12">
         <div className="mb-4">
           <div className="flex flex-wrap items-center gap-x-4 gap-y-2 mb-6">
-            <div className="text-sm font-medium">Privacy &amp; Security</div>
-
+            <SpotlightButton 
+              className="pointer-events-auto hover:-translate-y-0" 
+              style={{ 
+                borderWidth: '0.5px', 
+                borderStyle: 'solid', 
+                borderColor: 'rgba(255,255,255,0.1)', 
+                cursor: 'default' 
+              }}
+              icon={false}
+            >
+              Privacy &amp; Security
+            </SpotlightButton>
           </div>
           <h2 className="no-word-split text-3xl md:text-4xl lg:text-5xl font-normal tracking-tight leading-[1.2] mb-10">
             Your data stays<br />where it belongs.

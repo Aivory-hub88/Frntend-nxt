@@ -93,7 +93,18 @@ export default function PreFooterCTA() {
         <div style={{ zoom: 0.85 }}>
           <div className="max-w-7xl mx-auto px-6 md:px-12">
           {/* Headline */}
-          <div className="text-sm font-medium mb-6">Direct Engagement</div>
+          <SpotlightButton 
+            className="mb-6 pointer-events-auto hover:-translate-y-0" 
+            style={{ 
+              borderWidth: '0.5px', 
+              borderStyle: 'solid', 
+              borderColor: 'rgba(255,255,255,0.1)', 
+              cursor: 'default' 
+            }}
+            icon={false}
+          >
+            Direct Engagement
+          </SpotlightButton>
           <h2 className="no-word-split text-3xl md:text-4xl lg:text-5xl font-normal tracking-tight leading-[1.2] mb-6">
             Prefer to Work With Our Team Directly?
           </h2>
