@@ -57,6 +57,19 @@ function SpotlightCard({ children, className = '' }: { children: React.ReactNode
   );
 }
 
+
+// ── Main Layout ──
+const renderTitle = (title: string) => {
+  const words = title.split(' ');
+  if (words.length <= 1) return <span className="italic" style={{ color: '#e4effd' }}>{title}</span>;
+  const lastWord = words.pop();
+  return (
+    <>
+      {words.join(' ')} <span className="italic" style={{ color: '#e4effd' }}>{lastWord}</span>
+    </>
+  );
+};
+
 export function InteractiveGridShowcase() {
   return (
     <section id="framework" className="relative text-white py-24 md:py-32 overflow-hidden">
