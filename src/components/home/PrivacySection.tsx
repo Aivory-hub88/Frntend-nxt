@@ -280,7 +280,7 @@ export default function PrivacySection() {
                     icon={badge.icon}
                     roundedClass="rounded-md"
                     className="!items-start h-full w-full normal-case"
-                    style={{ textTransform: 'none' }}
+                    style={{ textTransform: 'none', backgroundColor: 'rgba(20, 20, 26, 0.3)' }}
                   >
                     <p className="text-sm md:text-[15px] font-medium leading-snug whitespace-pre-line text-[#dadada] group-hover:text-white transition-colors">{badge.text}</p>
                   </SpotlightButton>
@@ -295,7 +295,7 @@ export default function PrivacySection() {
                     icon={badge.icon}
                     roundedClass="rounded-md"
                     className="!items-start h-full w-full normal-case"
-                    style={{ textTransform: 'none' }}
+                    style={{ textTransform: 'none', backgroundColor: 'rgba(20, 20, 26, 0.3)' }}
                   >
                     <p className="text-sm md:text-[15px] font-medium leading-snug whitespace-pre-line text-[#dadada] group-hover:text-white transition-colors">{badge.text}</p>
                   </SpotlightButton>
