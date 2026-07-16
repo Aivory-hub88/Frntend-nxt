@@ -16,7 +16,7 @@ export default function AIReadySection() {
               className="text-5xl md:text-6xl lg:text-7xl font-light tracking-tight leading-[1.1] text-white m-0 text-left"
               style={{ fontFamily: "'Manrope', sans-serif" }}
             >
-              Where do<br />we <span className="italic" style={{ color: '#e4effd' }}>start?</span>
+              Where do<br />we <span className="italic pr-2" style={{ color: '#e4effd' }}>start?</span>
             </h2>
           </div>
 
