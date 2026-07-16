@@ -74,7 +74,8 @@ const ServiceCard = ({ service }: { service: typeof services[0] }) => {
   return (
     <div
       ref={cardRef}
-      className="relative spotlight-card auto-spotlight border border-white/10 p-8 transition-colors !bg-black/10 backdrop-blur-sm overflow-hidden rounded-xl"
+      className="relative spotlight-card auto-spotlight border border-white/10 p-8 transition-colors overflow-hidden rounded-xl"
+      style={{ backgroundColor: 'rgba(20, 20, 26, 0.1)' }}
     >
       <h3 className="text-xl font-normal text-white mb-3 relative z-10">{service.title}</h3>
       <p className="text-[#dadada] font-light leading-relaxed relative z-10">{service.description}</p>
