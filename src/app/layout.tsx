@@ -81,8 +81,7 @@ export default async function RootLayout({
           href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700;800&family=Doto:wght@400;700;900&display=swap"
           rel="stylesheet"
         />
-      </head>
-      <body className="bg-background text-white font-manrope antialiased" style={{ fontFamily: 'var(--font-manrope), Manrope, sans-serif' }}>
+      <body className="bg-background text-white font-manrope antialiased overflow-x-hidden w-full" style={{ fontFamily: 'var(--font-manrope), Manrope, sans-serif' }}>
         <JsonLd
           data={{
             '@context': 'https://schema.org',

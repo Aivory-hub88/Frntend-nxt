@@ -1221,23 +1221,23 @@ export function RoadmapAnimation() {
       {/* Roadmap: wave milestone UI (unchanged sticky-scroll layout) */}
       <div className={`col-start-1 row-start-1 flex flex-col justify-center space-y-8 w-full h-full relative z-10 transition-all duration-500 ${phase === 'roadmap' ? 'opacity-100 scale-100' : 'opacity-0 scale-95 pointer-events-none'}`}>
       {/* Top nodes */}
-      <div className="flex items-center justify-between w-full mx-auto relative px-8">
-        <div className="absolute top-1/2 left-[52px] right-[52px] h-[1px] bg-white/10 -translate-y-1/2 -z-10" />
+      <div className="flex items-center justify-between w-full mx-auto relative px-4 sm:px-8">
+        <div className="absolute top-1/2 left-[36px] sm:left-[52px] right-[36px] sm:right-[52px] h-[1px] bg-white/10 -translate-y-1/2 -z-10" />
         
         {/* Progress Line W1 to W2 */}
-        <div className={`absolute top-1/2 left-[52px] right-1/2 h-[1px] bg-[#bbe2ef] -translate-y-1/2 -z-10 origin-left transition-all duration-700 ${step >= 5 ? 'scale-x-100 opacity-100' : 'scale-x-0 opacity-0'}`} />
+        <div className={`absolute top-1/2 left-[36px] sm:left-[52px] right-1/2 h-[1px] bg-[#bbe2ef] -translate-y-1/2 -z-10 origin-left transition-all duration-700 ${step >= 5 ? 'scale-x-100 opacity-100' : 'scale-x-0 opacity-0'}`} />
         
         {/* Progress Line W2 to W3 */}
-        <div className={`absolute top-1/2 left-1/2 right-[52px] h-[1px] bg-[#bbe2ef] -translate-y-1/2 -z-10 origin-left transition-all duration-700 ${step >= 9 ? 'scale-x-100 opacity-100' : 'scale-x-0 opacity-0'}`} />
+        <div className={`absolute top-1/2 left-1/2 right-[36px] sm:right-[52px] h-[1px] bg-[#bbe2ef] -translate-y-1/2 -z-10 origin-left transition-all duration-700 ${step >= 9 ? 'scale-x-100 opacity-100' : 'scale-x-0 opacity-0'}`} />
 
         {/* Traveling light pulses that ride the connectors as each wave unlocks */}
         {step >= 5 && (
-          <span className="absolute top-1/2 left-[52px] right-1/2 -translate-y-1/2 h-[3px] overflow-hidden pointer-events-none">
+          <span className="absolute top-1/2 left-[36px] sm:left-[52px] right-1/2 -translate-y-1/2 h-[3px] overflow-hidden pointer-events-none">
             <span className="roadmap-comet" />
           </span>
         )}
         {step >= 9 && (
-          <span className="absolute top-1/2 left-1/2 right-[52px] -translate-y-1/2 h-[3px] overflow-hidden pointer-events-none">
+          <span className="absolute top-1/2 left-1/2 right-[36px] sm:right-[52px] -translate-y-1/2 h-[3px] overflow-hidden pointer-events-none">
             <span className="roadmap-comet" />
           </span>
         )}
@@ -1260,9 +1260,9 @@ export function RoadmapAnimation() {
       </div>
 
       {/* Deliverables list */}
-      <div className="relative mx-auto w-full max-w-md">
+      <div className="relative mx-auto w-full max-w-md px-1 sm:px-0">
         <div aria-hidden className="roadmap-glow absolute -inset-4 -z-10 rounded-3xl blur-xl" style={{ background: 'radial-gradient(circle at 50% 38%, rgba(187, 226, 239,0.18), transparent 70%)' }} />
-        <SpotlightCard className="p-6 w-full space-y-4 shadow-lg transition-all duration-500">
+        <SpotlightCard className="p-4 sm:p-6 w-full space-y-4 shadow-lg transition-all duration-500">
           <div key={currentWaveIdx} className="roadmap-title-in text-[13.5px] text-white uppercase tracking-widest font-light" style={{ fontFamily: "'Doto', 'Courier New', monospace" }}>
             {currentData.title}
           </div>

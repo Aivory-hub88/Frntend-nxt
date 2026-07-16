@@ -166,10 +166,10 @@ export default function FeatureCards() {
             {/* Diagnostic Stats Section */}
             <div className="w-full max-w-[1000px] mx-auto flex flex-col items-center">
               <div className="uppercase tracking-[0.2em] text-[#d0d0d4] text-[10px] md:text-xs font-semibold mb-3">
-                From Diagnostic to Deployment
+                FROM ASSESSMENT TO DEPLOYMENT, DONE IN MINUTES
               </div>
               <h3 className="text-xl md:text-3xl font-light text-white mb-12">
-                Days of consulting, compressed into minutes
+                No more weeks of back-and-forth consulting sessions. Just clarity, fast.
               </h3>
 
               <div ref={statsRef} className="flex flex-nowrap justify-center items-stretch relative flex-row w-full mt-4">
