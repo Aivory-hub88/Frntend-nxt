@@ -9,9 +9,10 @@ interface SpotlightButtonProps {
   icon?: boolean | ReactNode;
   roundedClass?: string;
   iconClassName?: string;
+  style?: React.CSSProperties;
 }
 
-export function SpotlightButton({ href, onClick, children, className = '', icon = true, roundedClass = 'rounded-[24px]', iconClassName = 'w-4 h-4 text-[#a3aa96] shrink-0' }: SpotlightButtonProps) {
+export function SpotlightButton({ href, onClick, children, className = '', icon = true, roundedClass = 'rounded-[24px]', iconClassName = 'w-4 h-4 text-[#a3aa96] shrink-0', style }: SpotlightButtonProps) {
   const btnRef = useRef<HTMLAnchorElement & HTMLButtonElement>(null);
 
   useEffect(() => {
@@ -103,7 +104,7 @@ export function SpotlightButton({ href, onClick, children, className = '', icon 
         ref={btnRef as any}
         href={href}
         className={combinedClasses}
-        style={defaultStyle}
+        style={{ ...defaultStyle, ...style }}
       >
         {IconEl}
         <span className="relative z-10 w-full text-left">{children}</span>
@@ -117,7 +118,7 @@ export function SpotlightButton({ href, onClick, children, className = '', icon 
       type="button"
       onClick={onClick}
       className={combinedClasses}
-      style={defaultStyle}
+      style={{ ...defaultStyle, ...style }}
     >
       {IconEl}
       <span className="relative z-10 w-full text-left">{children}</span>

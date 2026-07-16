@@ -133,11 +133,11 @@ const privacyPoints = [
 ];
 
 const badges = [
-  'GDPR ready',
-  'No Data Training',
-  'Local Processing Only',
-  'Zero Server Logging',
-  'End to End Private',
+  { label: 'Zero server logging', icon: 'ti ti-server-off' },
+  { label: 'End to end private', icon: 'ti ti-lock' },
+  { label: 'Encrypted at rest', icon: 'ti ti-shield-lock' },
+  { label: 'No third-party sharing', icon: 'ti ti-share-off' },
+  { label: 'Enterprise grade', icon: 'ti ti-briefcase' },
 ];
 
 const trustBadges = ['Enterprise Grade', 'GDPR Compliant', 'SOC 2 Ready'];
@@ -181,11 +181,13 @@ export default function PrivacySection() {
             <div className="flex flex-wrap gap-4">
               {badges.map((badge) => (
                 <SpotlightButton 
-                  key={badge}
+                  key={badge.label}
+                  icon={<i className={`${badge.icon} text-[#a3aa96] shrink-0 text-[16px]`}></i>}
                   roundedClass="rounded-sm"
-                  className="text-xs md:text-sm normal-case font-medium"
+                  className="text-xs md:text-sm normal-case font-medium uppercase-override-disabled"
+                  style={{ textTransform: 'none' }}
                 >
-                  {badge}
+                  {badge.label}
                 </SpotlightButton>
               ))}
             </div>
