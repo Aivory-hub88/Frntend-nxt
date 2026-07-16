@@ -125,6 +125,98 @@ function GdprIcon({ className = '' }: { className?: string }) {
     </svg>
   );
 }
+function ServerOffIcon({ className = '' }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="srvBase" x1="0" y1="0" x2="100" y2="100" gradientUnits="userSpaceOnUse">
+          <stop stopColor="#2A2A2A" />
+          <stop offset="1" stopColor="#111111" />
+        </linearGradient>
+        <linearGradient id="srvHighlight" x1="0" y1="0" x2="0" y2="100" gradientUnits="userSpaceOnUse">
+          <stop stopColor="#555555" />
+          <stop offset="1" stopColor="#222222" />
+        </linearGradient>
+      </defs>
+      <rect x="20" y="10" width="60" height="80" rx="8" fill="url(#srvBase)" stroke="#555555" strokeWidth="2" />
+      <rect x="25" y="25" width="50" height="10" rx="2" fill="url(#srvHighlight)" />
+      <rect x="25" y="45" width="50" height="10" rx="2" fill="url(#srvHighlight)" />
+      <rect x="25" y="65" width="50" height="10" rx="2" fill="url(#srvHighlight)" />
+      <path d="M15 85 L85 15" stroke="#D4AF37" strokeWidth="6" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+function LockIcon({ className = '' }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="lockBase" x1="0" y1="40" x2="0" y2="100" gradientUnits="userSpaceOnUse">
+          <stop stopColor="#A68A27" />
+          <stop offset="1" stopColor="#5C4B16" />
+        </linearGradient>
+      </defs>
+      <path d="M30 40 V25 C30 15 70 15 70 25 V40" stroke="#888888" strokeWidth="10" strokeLinecap="round" />
+      <rect x="20" y="40" width="60" height="50" rx="8" fill="url(#lockBase)" stroke="#D4AF37" strokeWidth="2" />
+      <circle cx="50" cy="65" r="8" fill="#111111" />
+      <path d="M48 65 L46 80 H54 L52 65 Z" fill="#111111" />
+    </svg>
+  );
+}
+
+function ShieldLockIcon({ className = '' }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="shieldLockBase" x1="50" y1="0" x2="50" y2="100" gradientUnits="userSpaceOnUse">
+          <stop stopColor="#3D320E" />
+          <stop offset="1" stopColor="#1F1907" />
+        </linearGradient>
+      </defs>
+      <path d="M50 5 L10 20 V45 C10 70 30 90 50 95 C70 90 90 70 90 45 V20 L50 5 Z" fill="url(#shieldLockBase)" stroke="#D4AF37" strokeWidth="3" />
+      <path d="M40 45 V35 C40 28 60 28 60 35 V45" stroke="#A68A27" strokeWidth="6" strokeLinecap="round" />
+      <rect x="35" y="45" width="30" height="25" rx="4" fill="#D4AF37" />
+      <circle cx="50" cy="57" r="4" fill="#111111" />
+    </svg>
+  );
+}
+
+function ShareOffIcon({ className = '' }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="shareGrad" x1="0" y1="0" x2="100" y2="100" gradientUnits="userSpaceOnUse">
+          <stop stopColor="#A68A27" />
+          <stop offset="1" stopColor="#5C4B16" />
+        </linearGradient>
+      </defs>
+      <circle cx="25" cy="50" r="12" fill="url(#shareGrad)" />
+      <circle cx="75" cy="25" r="12" fill="url(#shareGrad)" />
+      <circle cx="75" cy="75" r="12" fill="url(#shareGrad)" />
+      <path d="M35 45 L65 30" stroke="url(#shareGrad)" strokeWidth="6" strokeLinecap="round" />
+      <path d="M35 55 L65 70" stroke="url(#shareGrad)" strokeWidth="6" strokeLinecap="round" />
+      <path d="M15 85 L85 15" stroke="#D4AF37" strokeWidth="6" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+function BriefcaseIcon({ className = '' }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="briefcaseBase" x1="0" y1="20" x2="0" y2="90" gradientUnits="userSpaceOnUse">
+          <stop stopColor="#333333" />
+          <stop offset="1" stopColor="#111111" />
+        </linearGradient>
+      </defs>
+      <path d="M40 25 V15 C40 10 60 10 60 15 V25" stroke="#D4AF37" strokeWidth="6" strokeLinecap="round" />
+      <rect x="15" y="25" width="70" height="60" rx="6" fill="url(#briefcaseBase)" stroke="#5C4B16" strokeWidth="3" />
+      <rect x="15" y="25" width="70" height="15" fill="#222222" />
+      <rect x="30" y="35" width="10" height="10" rx="2" fill="#D4AF37" />
+      <rect x="60" y="35" width="10" height="10" rx="2" fill="#D4AF37" />
+    </svg>
+  );
+}
 
 const privacyPoints = [
   { text: 'We don\'t train\non your data.', icon: <ShieldIcon className="w-6 h-6 shrink-0 text-[#D4AF37]" /> },
@@ -133,11 +225,11 @@ const privacyPoints = [
 ];
 
 const badges = [
-  { label: 'Zero server logging', icon: 'ti ti-server-off' },
-  { label: 'End to end private', icon: 'ti ti-lock' },
-  { label: 'Encrypted at rest', icon: 'ti ti-shield-lock' },
-  { label: 'No third-party sharing', icon: 'ti ti-share-off' },
-  { label: 'Enterprise grade', icon: 'ti ti-briefcase' },
+  { text: 'Zero server logging', icon: <ServerOffIcon className="w-6 h-6 shrink-0" /> },
+  { text: 'End to end private', icon: <LockIcon className="w-6 h-6 shrink-0" /> },
+  { text: 'Encrypted at rest', icon: <ShieldLockIcon className="w-6 h-6 shrink-0" /> },
+  { text: 'No third-party sharing', icon: <ShareOffIcon className="w-6 h-6 shrink-0" /> },
+  { text: 'Enterprise grade', icon: <BriefcaseIcon className="w-6 h-6 shrink-0" /> },
 ];
 
 const trustBadges = ['Enterprise Grade', 'GDPR Compliant', 'SOC 2 Ready'];
@@ -163,33 +255,52 @@ export default function PrivacySection() {
               No training. No logging. No exceptions. Everything runs in your browser.
             </p>
 
-            {/* Privacy Points */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16 max-w-4xl">
-              {privacyPoints.map((point) => (
-                <SpotlightButton 
-                  key={point.text} 
-                  icon={point.icon}
-                  roundedClass="rounded-md"
-                  className="!items-start h-full"
-                >
-                  <p className="text-sm md:text-[15px] font-medium leading-snug whitespace-pre-line text-[#dadada] group-hover:text-white transition-colors">{point.text}</p>
-                </SpotlightButton>
-              ))}
-            </div>
-
-            {/* Badges */}
-            <div className="flex flex-wrap gap-4">
-              {badges.map((badge) => (
-                <SpotlightButton 
-                  key={badge.label}
-                  icon={<i className={`${badge.icon} text-[#a3aa96] shrink-0 text-[16px]`}></i>}
-                  roundedClass="rounded-sm"
-                  className="text-xs md:text-sm normal-case font-medium uppercase-override-disabled"
-                  style={{ textTransform: 'none' }}
-                >
-                  {badge.label}
-                </SpotlightButton>
-              ))}
+            {/* Privacy & Badges Stack (3-2-3) */}
+            <div className="flex flex-col gap-6 md:gap-8 w-full max-w-5xl mx-auto items-center mt-12 mb-16">
+              {/* Row 1: 3 boxes */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 w-full">
+                {privacyPoints.map((point) => (
+                  <SpotlightButton 
+                    key={point.text} 
+                    icon={point.icon}
+                    roundedClass="rounded-md"
+                    className="!items-start h-full w-full normal-case"
+                    style={{ textTransform: 'none' }}
+                  >
+                    <p className="text-sm md:text-[15px] font-medium leading-snug whitespace-pre-line text-[#dadada] group-hover:text-white transition-colors">{point.text}</p>
+                  </SpotlightButton>
+                ))}
+              </div>
+              
+              {/* Row 2: 2 boxes */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 w-full md:max-w-3xl mx-auto">
+                {badges.slice(0, 2).map((badge) => (
+                  <SpotlightButton 
+                    key={badge.text}
+                    icon={badge.icon}
+                    roundedClass="rounded-md"
+                    className="!items-start h-full w-full normal-case"
+                    style={{ textTransform: 'none' }}
+                  >
+                    <p className="text-sm md:text-[15px] font-medium leading-snug whitespace-pre-line text-[#dadada] group-hover:text-white transition-colors">{badge.text}</p>
+                  </SpotlightButton>
+                ))}
+              </div>
+              
+              {/* Row 3: 3 boxes */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 w-full">
+                {badges.slice(2, 5).map((badge) => (
+                  <SpotlightButton 
+                    key={badge.text}
+                    icon={badge.icon}
+                    roundedClass="rounded-md"
+                    className="!items-start h-full w-full normal-case"
+                    style={{ textTransform: 'none' }}
+                  >
+                    <p className="text-sm md:text-[15px] font-medium leading-snug whitespace-pre-line text-[#dadada] group-hover:text-white transition-colors">{badge.text}</p>
+                  </SpotlightButton>
+                ))}
+              </div>
             </div>
           </div>
         </div>
