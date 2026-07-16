@@ -219,9 +219,9 @@ function BriefcaseIcon({ className = '' }: { className?: string }) {
 }
 
 const privacyPoints = [
-  { text: 'We don\'t train\non your data.', icon: <ShieldIcon className="w-6 h-6 shrink-0 text-[#D4AF37]" /> },
-  { text: 'Processed locally.\nStored locally.', icon: <CpuIcon className="w-6 h-6 shrink-0 text-[#D4AF37]" /> },
-  { text: 'GDPR compliant\nby design.', icon: <GdprIcon className="w-6 h-6 shrink-0" /> },
+  { text: 'We don\'t train on your data.', icon: <ShieldIcon className="w-6 h-6 shrink-0 text-[#D4AF37]" /> },
+  { text: 'Processed and Stored Locally', icon: <CpuIcon className="w-6 h-6 shrink-0 text-[#D4AF37]" /> },
+  { text: 'GDPR compliant by design.', icon: <GdprIcon className="w-6 h-6 shrink-0" /> },
 ];
 
 const badges = [
