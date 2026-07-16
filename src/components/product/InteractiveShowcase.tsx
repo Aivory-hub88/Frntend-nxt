@@ -69,7 +69,10 @@ function SpotlightCard({
       style={{
         // Constant look, no backdrop-filter — see InteractiveGrid SpotlightCard note
         // (the scroll-gated frost swap made cards flash/glitch on every scroll).
-        backgroundColor: "var(--card-bg, rgba(14, 14, 18, 0.94))",
+        // semi-transparent tint keeps the animated backdrop faintly visible with
+        // zero per-frame blur cost and zero state flips. Still var-driven so the
+        // mobile media rule in globals.css can go near-opaque for cheap rendering.
+        backgroundColor: "var(--card-bg, rgba(14, 14, 18, 0.98))",
         backdropFilter: "var(--card-frost, none)",
         WebkitBackdropFilter: "var(--card-frost, none)",
         ...style,
@@ -2366,7 +2369,7 @@ export function BlueprintAnimation() {
 
             {/* Card 1: Constraint → Resolution */}
             <div
-              className={`group relative flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 rounded-2xl p-3.5 sm:p-4 border border-white/10 overflow-hidden bg-gradient-to-br from-white/[0.055] to-white/[0.015] ${phase === "blueprint" ? "animate-[blueprint-card-enter_0.7s_ease-out_forwards]" : "opacity-0"}`}
+              className={`group relative flex items-center justify-between gap-1.5 sm:gap-3 rounded-xl sm:rounded-2xl p-2.5 sm:p-4 border border-white/10 overflow-hidden bg-gradient-to-br from-white/[0.055] to-white/[0.015] ${phase === "blueprint" ? "animate-[blueprint-card-enter_0.7s_ease-out_forwards]" : "opacity-0"}`}
               style={{
                 boxShadow:
                   "0 12px 30px -14px rgba(0,0,0,0.65), inset 0 1px 0 rgba(255,255,255,0.06)",
@@ -2393,16 +2396,16 @@ export function BlueprintAnimation() {
                   </svg>
                 </div>
                 <div className="flex flex-col min-w-0">
-                  <span className="text-[9px] sm:text-[10px] text-white/65 uppercase tracking-wider mb-0.5">
+                  <span className="text-[7.5px] sm:text-[10px] text-white/65 uppercase tracking-wider mb-0.5">
                     Constraint Detected
                   </span>
-                  <span className="text-xs sm:text-sm text-white/90 font-medium leading-snug truncate">
+                  <span className="text-[9px] sm:text-sm text-white/90 font-medium leading-tight sm:leading-snug truncate">
                     Partially Centralized Data
                   </span>
                 </div>
               </div>
               {/* connector */}
-              <div className="hidden sm:flex w-[28px] sm:w-[50px] shrink-0 h-3 z-10 items-center mx-0.5 sm:mx-2">
+              <div className="flex w-[16px] sm:w-[50px] shrink-0 h-3 z-10 items-center mx-0.5 sm:mx-2">
                 <div className="relative h-[1px] w-full bg-white/20">
                   {/* Premium Node Connector (Mini) */}
                   <div className="absolute left-1/2 top-[0.5px] -translate-x-1/2 -translate-y-1/2 flex items-center justify-center">
@@ -2413,12 +2416,12 @@ export function BlueprintAnimation() {
                 </div>
               </div>
               {/* right */}
-              <div className="flex items-center gap-2.5 sm:flex-1 min-w-0 sm:pl-4 pl-0 sm:justify-end sm:text-right relative z-10">
-                <div className="flex flex-col min-w-0 w-full sm:text-right">
-                  <span className="text-[9px] sm:text-[10px] text-[#bbe2ef]/80 uppercase tracking-wider mb-0.5">
+              <div className="flex items-center gap-2 sm:gap-2.5 flex-1 min-w-0 pl-1 sm:pl-4 justify-end text-right relative z-10">
+                <div className="flex flex-col min-w-0 w-full text-right">
+                  <span className="text-[7.5px] sm:text-[10px] text-[#bbe2ef]/80 uppercase tracking-wider mb-0.5">
                     Resolution Layer
                   </span>
-                  <span className="text-xs sm:text-sm text-white/90 font-medium leading-snug truncate">
+                  <span className="text-[9px] sm:text-sm text-white/90 font-medium leading-tight sm:leading-snug truncate">
                     Autonomous Data Sync
                   </span>
                 </div>
@@ -2442,7 +2445,7 @@ export function BlueprintAnimation() {
 
             {/* Card 2: Objective → Action */}
             <div
-              className={`group relative flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 rounded-2xl p-3.5 sm:p-4 border border-white/10 overflow-hidden bg-gradient-to-br from-white/[0.055] to-white/[0.015] ${phase === "blueprint" ? "animate-[blueprint-card-enter_0.7s_ease-out_forwards]" : "opacity-0"}`}
+              className={`group relative flex items-center justify-between gap-1.5 sm:gap-3 rounded-xl sm:rounded-2xl p-2.5 sm:p-4 border border-white/10 overflow-hidden bg-gradient-to-br from-white/[0.055] to-white/[0.015] ${phase === "blueprint" ? "animate-[blueprint-card-enter_0.7s_ease-out_forwards]" : "opacity-0"}`}
               style={{
                 boxShadow:
                   "0 12px 30px -14px rgba(0,0,0,0.65), inset 0 1px 0 rgba(255,255,255,0.06)",
@@ -2465,18 +2468,18 @@ export function BlueprintAnimation() {
                   </svg>
                 </div>
                 <div className="flex flex-col min-w-0">
-                  <span className="text-[9px] sm:text-[10px] text-white/65 uppercase tracking-wider mb-0.5">
+                  <span className="text-[7.5px] sm:text-[10px] text-white/65 uppercase tracking-wider mb-0.5">
                     Objective Targeted
                   </span>
-                  <span className="text-xs sm:text-sm text-white/90 font-medium leading-snug truncate">
+                  <span className="text-[9px] sm:text-sm text-white/90 font-medium leading-tight sm:leading-snug truncate">
                     Scale Ops (No Headcount)
                   </span>
                 </div>
               </div>
-              <div className="hidden sm:flex w-[28px] sm:w-[50px] shrink-0 h-3 z-10 items-center mx-0.5 sm:mx-2">
+              <div className="flex w-[16px] sm:w-[50px] shrink-0 h-3 z-10 items-center mx-0.5 sm:mx-2">
                 <div className="relative h-[1px] w-full bg-white/20">
                   {/* Premium Node Connector (Mini) */}
-                  <div className="absolute left-1/2 top-[0.5px] -translate-x-1/2 -translate-y-1/2 flex items-center justify-center">
+                  <div className="absolute left-1/2 top-[0.5px] -translate-x-1/2 -translate-y-1/2 flex items-center justify-center transform scale-75 sm:scale-100">
                     <div
                       className="absolute w-[18px] h-[18px] rounded-full border border-[#bbe2ef]/40 animate-[ping_2.5s_cubic-bezier(0,0,0.2,1)_infinite] opacity-60"
                       style={{ animationDelay: "0.4s" }}
@@ -2486,12 +2489,12 @@ export function BlueprintAnimation() {
                   </div>
                 </div>
               </div>
-              <div className="flex items-center gap-2.5 sm:flex-1 min-w-0 sm:pl-4 pl-0 sm:justify-end sm:text-right relative z-10">
-                <div className="flex flex-col min-w-0 w-full sm:text-right">
-                  <span className="text-[9px] sm:text-[10px] text-[#bbe2ef]/80 uppercase tracking-wider mb-0.5">
+              <div className="flex items-center gap-2 sm:gap-2.5 flex-1 min-w-0 pl-1 sm:pl-4 justify-end text-right relative z-10">
+                <div className="flex flex-col min-w-0 w-full text-right">
+                  <span className="text-[7.5px] sm:text-[10px] text-[#bbe2ef]/80 uppercase tracking-wider mb-0.5">
                     Action Engine
                   </span>
-                  <span className="text-xs sm:text-sm text-white/90 font-medium leading-snug truncate">
+                  <span className="text-[9px] sm:text-sm text-white/90 font-medium leading-tight sm:leading-snug truncate">
                     Automated Triage Flow
                   </span>
                 </div>
