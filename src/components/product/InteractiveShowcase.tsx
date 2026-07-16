@@ -150,7 +150,7 @@ const DIMS = [
   { label: 'Process Audit', val: 30, delay: 0.8 },
 ];
 
-function DiagnosticAnimation() {
+export function DiagnosticAnimation() {
   const [phase, setPhase] = useState<'intro' | 'company' | 'form' | 'thinking' | 'score' | 'improvements' | 'document'>('intro');
   const [stepIdx, setStepIdx] = useState(0);
   const [selectedIdx, setSelectedIdx] = useState<number | null>(null);
@@ -551,7 +551,7 @@ function DiagnosticAnimation() {
   );
 }
 
-function ConsoleAnimation() {
+export function ConsoleAnimation() {
   const [phase, setPhase] = useState<
     'typing' | 'sent' | 'ai_typing' | 'ai_confirm' | 'user_typing_yes' | 'user_yes' | 'thinking' | 'response'
   >('typing');
@@ -737,7 +737,7 @@ function ConsoleAnimation() {
 }
 
 // ── 05. Workflow ──
-function WorkflowAnimation() {
+export function WorkflowAnimation() {
   const [phase, setPhase] = useState<
     'typing' | 'sent' | 'ai_typing' | 'ai_confirm' | 'user_typing_yes' | 'user_yes' | 'generating' | 'generated' | 'buttons'
   >('typing');
@@ -988,7 +988,7 @@ function WorkflowAnimation() {
   );
 }
 
-function RoadmapAnimation() {
+export function RoadmapAnimation() {
   const [phase, setPhase] = useState<'intro' | 'ingest' | 'roadmap'>('intro');
   const [step, setStep] = useState(0);
 
@@ -1379,7 +1379,7 @@ function IntroAnimation() {
   );
 }
 
-function BlueprintAnimation() {
+export function BlueprintAnimation() {
   const [phase, setPhase] = useState<'intro' | 'import' | 'generate' | 'blueprint' | 'complete'>('intro');
   const timerRefs = useRef<ReturnType<typeof setTimeout>[]>([]);
 
