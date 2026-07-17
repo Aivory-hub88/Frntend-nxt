@@ -60,7 +60,7 @@ export function HalftoneWave() {
           
           // Elegant Rim Lighting for 3D depth
           float rim = 1.0 - max(0.0, dot(viewDir, normal));
-          rim = smoothstep(0.5, 1.0, rim);
+          rim = smoothstep(0.25, 1.0, rim); // Widened rim radius
           
           // NEW: Top-down spotlight (sharper and more elegant)
           vec3 topLightDir = normalize(vec3(0.0, 1.0, 0.4));
