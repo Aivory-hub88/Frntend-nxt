@@ -723,7 +723,7 @@ export default function PrivacySection() {
               </p>
 
               {/* Privacy & Badges Grid (3 columns: 3-3-2) */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-5 w-full max-w-5xl mx-auto items-start mt-12 mb-16">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-5 w-full max-w-5xl items-start mt-12 mb-16">
                 {[...privacyPoints, ...badges].map((item) => (
                   <SpotlightButton
                     key={item.text}
