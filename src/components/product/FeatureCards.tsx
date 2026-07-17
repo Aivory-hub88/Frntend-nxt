@@ -169,11 +169,11 @@ export default function FeatureCards() {
               <div className="uppercase tracking-[0.2em] text-[#d0d0d4] text-[10px] md:text-xs font-semibold mb-3">
                 FROM ASSESSMENT TO DEPLOYMENT, DONE IN MINUTES
               </div>
-              <h3 className="text-[13px] md:text-xl font-light text-white mb-12">
+              <h3 className="text-[13px] md:text-xl font-light text-white mb-12" style={{ zoom: 0.75 }}>
                 No more weeks of back-and-forth consulting sessions. Just clarity, fast.
               </h3>
 
-              <div ref={statsRef} className="flex flex-nowrap justify-center items-stretch relative flex-row w-full mt-4" style={{ zoom: 0.8 }}>
+              <div ref={statsRef} className="flex flex-nowrap justify-center items-stretch relative flex-row w-full mt-4" style={{ zoom: 0.6 }}>
                 <DiagnosticStatItem target={10} prefix="" suffix="min" title="AI Readiness Assessment" subtitle="not days of sessions" active={statsActive} delay={0} />
                 <div
                   className="w-px self-stretch relative min-h-[100px] hidden md:block"
