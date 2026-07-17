@@ -110,7 +110,7 @@ export function SpotlightButton({ href, onClick, children, className = '', icon 
         style={{ ...defaultStyle, ...style }}
       >
         {IconEl}
-        <span className="relative z-10 w-full text-left">{children}</span>
+        <span className="relative z-10 w-auto text-left">{children}</span>
       </a>
     );
   }
@@ -124,7 +124,7 @@ export function SpotlightButton({ href, onClick, children, className = '', icon 
       style={{ ...defaultStyle, ...style }}
     >
       {IconEl}
-      <span className="relative z-10 w-full text-left">{children}</span>
+      <span className="relative z-10 w-auto text-left">{children}</span>
     </button>
   );
 }
