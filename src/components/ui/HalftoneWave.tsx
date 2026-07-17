@@ -164,7 +164,14 @@ export function HalftoneWave() {
           vec3 accent = mix(accentA, accentB, shimmer);
           float accentGate = mix(0.5, 1.0, indigoGradient);
           // Moderately increased the accent multiplier for turbulence without being too neon
+          // Moderately increased the accent multiplier for turbulence without being too neon
           finalColor += accent * ((0.22 + uScroll * 0.18) * accentGate);
+
+          // INCREASED COLOR BANDING EFFECT (Posterization)
+          // Steps the smooth gradient into distinct color bands for a cooler, stylized look
+          float bands = 7.0; 
+          finalColor = floor(finalColor * bands + 0.5) / bands;
+
 
 
 
