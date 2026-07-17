@@ -166,11 +166,13 @@ export function HalftoneWave() {
           // Moderately increased the accent multiplier for turbulence without being too neon
           // Moderately increased the accent multiplier for turbulence without being too neon
           finalColor += accent * ((0.22 + uScroll * 0.18) * accentGate);
-
-          // INCREASED COLOR BANDING EFFECT (Posterization)
-          // Steps the smooth gradient into distinct color bands for a cooler, stylized look
-          float bands = 7.0; 
-          finalColor = floor(finalColor * bands + 0.5) / bands;
+          
+          // ELEGANT COLOR BANDING
+          // 32 steps mixed at 50% opacity so it adds a subtle retro contour texture 
+          // without destroying the core color structure and hue.
+          float bands = 32.0;
+          vec3 bandedColor = floor(finalColor * bands + 0.5) / bands;
+          finalColor = mix(finalColor, bandedColor, 0.45);
 
 
 
