@@ -165,7 +165,7 @@ export default function FeatureCards() {
 
             {/* Diagnostic Stats Section */}
             <div className="w-full max-w-[1000px] mx-auto flex flex-col items-center">
-              <div className="uppercase tracking-[0.2em] text-[#d0d0d4] text-[13px] md:text-[16px] font-semibold mb-3">
+              <div className="uppercase tracking-[0.2em] text-[#d0d0d4] text-[16px] md:text-[19px] font-semibold mb-3">
                 FROM ASSESSMENT TO DEPLOYMENT, DONE IN MINUTES
               </div>
               <h3 className="text-xl md:text-3xl font-light text-white mb-12">
