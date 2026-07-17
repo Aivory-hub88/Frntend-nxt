@@ -114,7 +114,7 @@ export function HalftoneWave() {
           float scrollT = smoothstep(0.0, 0.4, uScroll);
           
           // Original Colors
-          vec3 amberCore = vec3(0.768, 0.361, 0.251); // #c45c40
+          vec3 primaryCore = vec3(0.737, 0.306, 0.208); // #bc4e35
           vec3 pinkCore = vec3(0.808, 0.004, 0.310);  // #ce014f (Deep pink/red requested for hero)
           vec3 corePurple = vec3(0.176, 0.0, 0.518); // #2d0084 (Deep violet/purple)
           vec3 origEdge = vec3(0.04, 0.18, 0.32);
@@ -125,16 +125,16 @@ export function HalftoneWave() {
           vec3 heroEdge = vec3(0.15, 0.08, 0.65);  // Deep blue-purple edges (brighter blue)
           vec3 heroIndigo = vec3(0.2, 0.1, 0.4);  // Subtle purple/indigo glow (brighter)
           
-          // The core transitions from Pink to Amber as you scroll down
-          vec3 dynamicCore = mix(pinkCore, amberCore, scrollT);
+          // The core transitions from Pink to Orange as you scroll down
+          vec3 dynamicCore = mix(pinkCore, primaryCore, scrollT);
           
           // Create a shimmering effect mixing the dynamic core color and #2d0084 Purple
-          // The purple fades out on scroll, leaving only the amber core.
+          // The purple fades out on scroll, leaving only the orange core.
           float purpleAmount = (1.0 - scrollT) * 0.85;
           float coreShimmer = 0.5 + 0.5 * sin(uTime * 2.0 + vLocalPos.x * 6.0 - vLocalPos.y * 5.0 + cos(uTime + vLocalPos.z * 4.0));
           vec3 mixedCore = mix(dynamicCore, corePurple, coreShimmer * purpleAmount);
           
-          // Keep the amber/purple transition smoothly fading towards the edge.
+          // Keep the orange/purple transition smoothly fading towards the edge.
           // Tighter radius in hero section (scrollT = 0), widening as you scroll down.
           float radiusGateEnd = mix(0.4, 0.75, scrollT); 
           float coreRadiusGate = 1.0 - smoothstep(0.1, radiusGateEnd, normalizedDepth);
@@ -167,12 +167,7 @@ export function HalftoneWave() {
           // Moderately increased the accent multiplier for turbulence without being too neon
           finalColor += accent * ((0.22 + uScroll * 0.18) * accentGate);
           
-          // ELEGANT COLOR BANDING
-          // 32 steps mixed at 50% opacity so it adds a subtle retro contour texture 
-          // without destroying the core color structure and hue.
-          float bands = 32.0;
-          vec3 bandedColor = floor(finalColor * bands + 0.5) / bands;
-          finalColor = mix(finalColor, bandedColor, 0.45);
+
 
 
 
