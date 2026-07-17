@@ -152,7 +152,8 @@ export default function FeatureCards() {
   return (
     <>
       <div ref={animRef} className={`animate-on-scroll ${isVisible ? 'is-visible' : ''} w-full pt-24 pb-12 relative overflow-hidden`} id="features" style={{ zIndex: 1 }}>
-        <div className="max-w-[1400px] mx-auto px-6 md:px-12 lg:px-24 relative z-[1]">
+        <div style={{ zoom: 0.8 }}>
+          <div className="max-w-[1400px] mx-auto px-6 md:px-12 lg:px-24 relative z-[1]">
           <div className="text-center flex flex-col justify-center items-center">
             <h2 className="text-2xl md:text-3xl font-light tracking-tight mb-6 leading-tight text-white max-w-3xl">
               Turn your AI Confusion<br />
@@ -185,6 +186,7 @@ export default function FeatureCards() {
                 />
                 <DiagnosticStatItem target={0} prefix="" suffix="" title="False Starts" subtitle="one clear starting point" active={statsActive} delay={200} />
               </div>
+            </div>
             </div>
           </div>
         </div>
