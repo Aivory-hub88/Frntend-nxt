@@ -2679,7 +2679,7 @@ export function InteractiveShowcase() {
               className="lg:min-h-[40vh] flex flex-col justify-center"
             >
               <SpotlightButton
-                className="mb-6 pointer-events-auto hover:-translate-y-0 inline-flex w-fit"
+                className="mb-6 pointer-events-auto hover:-translate-y-0 inline-flex w-fit self-start"
                 style={{
                   borderWidth: "0.5px",
                   borderStyle: "solid",
