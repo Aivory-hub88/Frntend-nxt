@@ -88,15 +88,10 @@ const showcaseProducts = [
     title: "Deep Assessment",
     description: (
       <>
-        In this stage, Aivory runs a Deep Assessment across your current
-        operations, constraints, and data environment to understand where AI can
-        create the most impact.{" "}
+        With Aivory&apos;s deterministic framework, all you need to do is input your operations, constraints, and data. We&apos;ll map your readiness, execution gaps, and what&apos;s needed to move forward.{" "}
         <span className="font-semibold text-white">
-          Using a high-intelligence deterministic engine
+          No lengthy consulting cycles.
         </span>
-        , it maps readiness, surfaces execution gaps, and identifies the
-        conditions needed to move forward faster without relying on long
-        traditional consulting cycles.
       </>
     ),
     features: [
