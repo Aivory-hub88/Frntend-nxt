@@ -36,7 +36,7 @@ export default function AIReadySection() {
 
           {/* Right Column */}
           <div className="w-full md:w-1/2 flex flex-col justify-start text-left">
-            <p className="text-white/80 font-light leading-relaxed text-lg md:text-xl m-0 max-w-xl">
+            <p className="text-white/80 font-light leading-relaxed text-[14px] md:text-[16px] m-0 max-w-xl">
               That&rsquo;s the question that stops most AI adoption before it
               begins.{" "}
               <span className="text-white font-medium">Aivory answers it.</span>
@@ -52,7 +52,7 @@ export default function AIReadySection() {
               No guesswork. No noise.
             </p>
             <p
-              className="text-white font-normal leading-relaxed mt-12 text-2xl md:text-3xl lg:text-4xl"
+              className="text-white font-normal leading-relaxed mt-12 text-xl md:text-2xl lg:text-3xl"
               style={{ fontFamily: "'Manrope', sans-serif" }}
             >
               AI that works, from day one.
