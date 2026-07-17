@@ -173,7 +173,7 @@ export default function FeatureCards() {
                 No more weeks of back-and-forth consulting sessions. Just clarity, fast.
               </h3>
 
-              <div ref={statsRef} className="flex flex-nowrap justify-center items-stretch relative flex-row w-full mt-4">
+              <div ref={statsRef} className="flex flex-nowrap justify-center items-stretch relative flex-row w-full mt-4" style={{ zoom: 0.8 }}>
                 <DiagnosticStatItem target={10} prefix="" suffix="min" title="AI Readiness Assessment" subtitle="not days of sessions" active={statsActive} delay={0} />
                 <div
                   className="w-px self-stretch relative min-h-[100px] hidden md:block"
