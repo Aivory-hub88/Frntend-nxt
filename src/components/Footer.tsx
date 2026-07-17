@@ -31,7 +31,7 @@ export default function Footer() {
   const { ref, isVisible } = useScrollAnimation();
 
   return (
-    <footer className="w-full bg-[#050505] text-white pt-24 pb-12 font-sans">
+    <footer className="w-full bg-transparent text-white pt-24 pb-12 font-sans">
       <div ref={ref} className={`animate-on-scroll ${isVisible ? 'is-visible' : ''}`}>
         <div className="max-w-7xl mx-auto px-6 md:px-12">
           {/* 5-column grid */}
