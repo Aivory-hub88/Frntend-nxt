@@ -52,7 +52,7 @@ export default function AIReadySection() {
               No guesswork. No noise.
             </p>
             <p
-              className="text-white font-medium leading-relaxed mt-12 text-2xl md:text-3xl lg:text-4xl"
+              className="text-white font-normal leading-relaxed mt-12 text-2xl md:text-3xl lg:text-4xl"
               style={{ fontFamily: "'Manrope', sans-serif" }}
             >
               AI that works, from day one.
