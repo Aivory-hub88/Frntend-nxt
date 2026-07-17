@@ -114,7 +114,7 @@ export function HalftoneWave() {
           float scrollT = smoothstep(0.0, 0.4, uScroll);
           
           // Original Colors
-          vec3 amberCore = vec3(0.808, 0.290, 0.004); // #ce4a01 (Requested orange/amber color)
+          vec3 amberCore = vec3(0.768, 0.361, 0.251); // #c45c40
           vec3 pinkCore = vec3(0.808, 0.004, 0.310);  // #ce014f (Deep pink/red requested for hero)
           vec3 corePurple = vec3(0.176, 0.0, 0.518); // #2d0084 (Deep violet/purple)
           vec3 origEdge = vec3(0.04, 0.18, 0.32);
