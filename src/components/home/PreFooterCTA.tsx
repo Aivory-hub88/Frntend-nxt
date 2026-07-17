@@ -94,7 +94,7 @@ export default function PreFooterCTA() {
           <div className="max-w-7xl mx-auto px-6 md:px-12">
           {/* Headline */}
           <SpotlightButton 
-            className="mb-6 pointer-events-auto hover:-translate-y-0" 
+            className="mb-6 pointer-events-auto hover:-translate-y-0 w-fit" 
             style={{ 
               borderWidth: '0.5px', 
               borderStyle: 'solid', 

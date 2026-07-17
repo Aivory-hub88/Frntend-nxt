@@ -697,7 +697,7 @@ export default function PrivacySection() {
           <div className="mb-4">
             <div className="flex flex-wrap items-center gap-x-4 gap-y-2 mb-6">
               <SpotlightButton
-                className="pointer-events-auto hover:-translate-y-0"
+                className="pointer-events-auto hover:-translate-y-0 w-fit"
                 style={{
                   borderWidth: "0.5px",
                   borderStyle: "solid",
