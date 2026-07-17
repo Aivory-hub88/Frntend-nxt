@@ -3,7 +3,9 @@
 import { MouseEvent, useRef, useEffect, useState } from 'react';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
-import { HalftoneWave } from '@/components/ui/HalftoneWave';
+import dynamic from 'next/dynamic';
+
+const HalftoneWave = dynamic(() => import('@/components/ui/HalftoneWave').then((mod) => mod.HalftoneWave), { ssr: false });
 import { SpotlightButton } from '@/components/ui/SpotlightButton';
 
 // Reusable Spotlight Card Component
