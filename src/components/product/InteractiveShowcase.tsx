@@ -69,7 +69,7 @@ function SpotlightCard({
       style={{
         // Constant look, no backdrop-filter — see InteractiveGrid SpotlightCard note
         // (the scroll-gated frost swap made cards flash/glitch on every scroll).
-        backgroundColor: "var(--card-bg, rgba(20, 20, 26, 0.78))",
+        backgroundColor: "var(--card-bg, rgba(8, 8, 12, 0.5))",
         backdropFilter: "var(--card-frost, none)",
         WebkitBackdropFilter: "var(--card-frost, none)",
         ...style,
@@ -2679,11 +2679,13 @@ export function InteractiveShowcase() {
               className="lg:min-h-[40vh] flex flex-col justify-center"
             >
               <SpotlightButton
-                className="mb-6 pointer-events-auto hover:-translate-y-0 inline-flex"
+                className="mb-6 pointer-events-auto hover:-translate-y-0 inline-flex w-fit self-start"
                 style={{
                   borderWidth: "0.5px",
                   borderStyle: "solid",
                   borderColor: "rgba(255,255,255,0.1)",
+                  width: "fit-content",
+                  alignSelf: "flex-start",
                   cursor: "default",
                 }}
                 icon={false}

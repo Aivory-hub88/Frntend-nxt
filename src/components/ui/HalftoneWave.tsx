@@ -3,8 +3,15 @@
 import React, { useRef, useEffect } from 'react';
 import * as THREE from 'three';
 
-export function HalftoneWave() {
+export function HalftoneWave({ active = true }: { active?: boolean } = {}) {
   const mountRef = useRef<HTMLDivElement>(null);
+  // Mirrors the `active` prop into a ref so the render loop (set up once
+  // below) can read the latest value without needing to tear down and
+  // rebuild the whole WebGL scene whenever the caller toggles visibility.
+  const activeRef = useRef(active);
+  useEffect(() => {
+    activeRef.current = active;
+  }, [active]);
 
   useEffect(() => {
     if (!mountRef.current) return;
@@ -19,7 +26,10 @@ export function HalftoneWave() {
     const camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 100);
     camera.position.z = 15;
 
-    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: 'high-performance', stencil: false });
+    // antialias off: the fragment shader renders a deliberately blocky ASCII/
+    // dot pattern via discard, so MSAA smoothing is wasted GPU fill-rate --
+    // there are no soft edges here for it to actually improve.
+    const renderer = new THREE.WebGLRenderer({ antialias: false, alpha: true, powerPreference: 'high-performance', stencil: false });
     renderer.setSize(width, height);
     
     const isMobile = window.innerWidth < 1024;
@@ -58,9 +68,11 @@ export function HalftoneWave() {
           
           float normalizedDepth = smoothstep(2.0, 6.0, vDepth);
           
-          // Elegant Rim Lighting for 3D depth
+          // Elegant Rim Lighting for 3D depth -- wider radius than the original
+          // so the effect carries further across the surface (visible at more
+          // rotation angles, not just the most grazing edges)
           float rim = 1.0 - max(0.0, dot(viewDir, normal));
-          rim = smoothstep(0.5, 1.0, rim);
+          rim = smoothstep(0.25, 1.0, rim);
           
           // NEW: Top-down spotlight (sharper and more elegant)
           vec3 topLightDir = normalize(vec3(0.0, 1.0, 0.4));
@@ -174,13 +186,8 @@ export function HalftoneWave() {
 
 
 
-          // 4. RADIAL VIGNETTE (Abyss Effect)
-          vec2 screenPos = gl_FragCoord.xy / uResolution.xy;
-          vec2 vignetteCenter = vec2(0.5) + uMouse * 0.05;
-          float distFromCenter = distance(screenPos, vignetteCenter);
-          // 0.85 -> 0.35 smoothly fades to pitch black at edges
-          float vignette = smoothstep(0.85, 0.35, distFromCenter);
-          finalColor *= vignette * 1.05; // 5% brighter
+          // 4. RADIAL VIGNETTE -- disabled entirely (was darkening the edges
+          // toward the corners; finalColor now passes through unmodified).
 
           // Soft alpha falloff at the true silhouette: fades opacity out as
           // density approaches 0 (the outer edge of the bloom), instead of the
@@ -195,7 +202,7 @@ export function HalftoneWave() {
     // ==========================================
     // 1. MAIN 6-LOBE FLOWER (Base)
     // ==========================================
-    const geometry = new THREE.SphereGeometry(1, 128, 128);
+    const geometry = new THREE.SphereGeometry(1, 160, 160);
     const material = new THREE.ShaderMaterial({
       uniforms,
       side: THREE.FrontSide, 
@@ -482,7 +489,12 @@ export function HalftoneWave() {
     let lastRenderTime = 0;
     const renderLoop = (timestamp: number) => {
       animationFrameId = requestAnimationFrame(renderLoop);
-      if (isVisible) {
+      // Skip the render (and all the per-frame math above it) while the
+      // caller has faded this out (e.g. scrolled into a section that hides
+      // it) -- this is the actual GPU-saving gate, IntersectionObserver
+      // alone can't catch this since the canvas is a fixed full-viewport
+      // background that's always "intersecting".
+      if (isVisible && activeRef.current) {
         // Remove artificial fps limit to let requestAnimationFrame run at native display refresh rate (60Hz/120Hz)
         // This fixes the "turun frame rate" and stuttering issues.
         const time = clock.getElapsedTime();
@@ -507,9 +519,13 @@ export function HalftoneWave() {
         smoothMouseY += (targetMouseY - smoothMouseY) * 0.05;
         uniforms.uMouse.value.set(smoothMouseX, smoothMouseY);
 
-        // Lock the Y-axis facing direction, add mouse drag offset, hover parallax, spin on Z-axis
-        group.rotation.y = (Math.PI / 1.5) + (floatRot * 0.5) + dragRotationY + smoothMouseX * 0.15;
-        group.rotation.z = time * 0.15; // Counter-clockwise pinwheel spin
+        // Lock the Y-axis facing direction to a fixed pose (no automatic
+        // idle wobble) so the hero flower holds that angle -- only user
+        // interaction (drag / mouse parallax) nudges it. All the visible
+        // motion instead comes from the elegant, continuous Z-axis turbine
+        // spin below.
+        group.rotation.y = (Math.PI / 1.5) + dragRotationY + smoothMouseX * 0.15;
+        group.rotation.z = time * 0.15; // Counter-clockwise turbine spin
         
         uniforms.uScroll.value += (targetScroll - uniforms.uScroll.value) * 0.05;
         

@@ -39,8 +39,52 @@ function CssGradientFallback() {
     </div>
   );
 }
+// Scroll anchors: the flower fades OUT crossing into #features ("Turn your
+// AI Confusion...") and fades back IN crossing into #prefooter-cta ("Direct
+// Engagement"), staying hidden through Stats / Pricing / Privacy in between.
+function crossProgress(top: number, vh: number): number {
+  const triggerLine = vh * 0.6;
+  // Narrower band than before -- the crossfade resolves faster so the
+  // pre-footer content and the footer read as one consistent color instead
+  // of sitting in a prolonged half-blended state.
+  const band = vh * 0.22;
+  const t = (triggerLine - top) / band;
+  return t < 0 ? 0 : t > 1 ? 1 : t;
+}
+
+function useFlowerScrollOpacity() {
+  const [opacity, setOpacity] = useState(1);
+  useEffect(() => {
+    let ticking = false;
+    const update = () => {
+      ticking = false;
+      const featuresEl = document.getElementById('features');
+      const preFooterEl = document.getElementById('prefooter-cta');
+      if (!featuresEl || !preFooterEl) return;
+      const vh = window.innerHeight;
+      const hideT = crossProgress(featuresEl.getBoundingClientRect().top, vh);
+      const showT = crossProgress(preFooterEl.getBoundingClientRect().top, vh);
+      setOpacity(1 - hideT + hideT * showT);
+    };
+    const onScroll = () => {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(update);
+    };
+    update();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll);
+    return () => {
+      window.removeEventListener('scroll', onScroll);
+      window.removeEventListener('resize', onScroll);
+    };
+  }, []);
+  return opacity;
+}
+
 export function HalftoneWaveWrapper() {
   const [useWebgl, setUseWebgl] = useState(false);
+  const opacity = useFlowerScrollOpacity();
   useEffect(() => {
     const prefersReduced = window.matchMedia(
       '(prefers-reduced-motion: reduce)'
@@ -53,9 +97,58 @@ export function HalftoneWaveWrapper() {
       ((cb: IdleRequestCallback) =>
         window.setTimeout(() => cb({} as IdleDeadline), 300));
     const cic = window.cancelIdleCallback || window.clearTimeout;
-    const id = ric(() => setUseWebgl(true));
+    // Hard timeout ceiling -- some real-world conditions (busy main thread,
+    // background tabs, low-power throttling) can delay or never fire a plain
+    // requestIdleCallback, silently stranding the page on the static CSS
+    // fallback forever. A timeout guarantees the flower still mounts.
+    const id = ric(() => setUseWebgl(true), { timeout: 2000 });
     return () => cic(id as number);
   }, []);
-  if (useWebgl) return <HalftoneWave />;
-  return <CssGradientFallback />;
+  return (
+    <>
+      {/* Always-on, very subtle base wash -- present continuously from the
+          hero all the way through the pre-footer (independent of the flower
+          crossfade below), so the page has a constant thread of depth/color
+          instead of reading as flat black in the hero and pricing/footer
+          stretch where the stronger crossfaded wash below is at 0. Single
+          deep-indigo tone (#130e30), full-bleed so it never falls off to
+          black at the edges. */}
+      <div
+        className="absolute inset-0 pointer-events-none"
+        aria-hidden="true"
+        style={{
+          background: 'radial-gradient(55% 50% at 50% 40%, rgba(90,124,184,0.16) 0%, rgba(90,124,184,0.06) 60%, transparent 100%)',
+        }}
+      />
+      {/* Deep-indigo ambient wash, fixed to the viewport so it scrolls
+          seamlessly through #features -> Stats -> Pricing -> Privacy with no
+          visible section seam -- it's just the flower's opacity, inverted,
+          so the two crossfade into each other at the same scroll points.
+          NOTE: no grid-line texture here anymore -- InteractiveGrid (used
+          inside #features) already paints its own bg-grid-pattern that
+          scrolls with the page content; this layer is  (scrolls with
+          the viewport instead), so stacking a second grid here drifted out
+          of phase with that one as the page scrolled and read as a
+          double/moire pattern. */}
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{ opacity: 1 - opacity, transition: 'opacity 500ms ease' }}
+        aria-hidden="true"
+      >
+        <div
+          className="absolute inset-0"
+          style={{
+            background: 'radial-gradient(52% 46% at 50% 40%, rgba(90,124,184,0.20) 0%, rgba(90,124,184,0.08) 60%, transparent 100%)',
+          }}
+        />
+      </div>
+      <div style={{ opacity, transition: 'opacity 500ms ease' }}>
+        {useWebgl ? (
+          <HalftoneWave active={opacity > 0.02} />
+        ) : (
+          <CssGradientFallback />
+        )}
+      </div>
+    </>
+  );
 }

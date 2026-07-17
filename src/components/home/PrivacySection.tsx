@@ -723,19 +723,21 @@ export default function PrivacySection() {
               </p>
 
               {/* Privacy & Badges Grid (3 columns: 3-3-2) */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 w-full max-w-5xl mx-auto items-start mt-12 mb-16">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-5 w-full max-w-5xl mx-auto items-start mt-12 mb-16">
                 {[...privacyPoints, ...badges].map((item) => (
                   <SpotlightButton
                     key={item.text}
                     icon={item.icon}
-                    roundedClass="rounded-md"
-                    className="!items-start h-full w-full normal-case"
+                    roundedClass="rounded-lg"
+                    className="!items-center h-full w-full normal-case"
                     style={{
                       textTransform: "none",
                       backgroundColor: "rgba(20, 20, 26, 0.3)",
                       borderWidth: "0.5px",
                       borderStyle: "solid",
-                      borderColor: "rgba(255,255,255,0.05)",
+                      borderColor: "rgba(255,255,255,0.035)",
+                      padding: "0.75rem 1.25rem",
+                      boxShadow: "none",
                     }}
                   >
                     <p className="text-sm md:text-[15px] font-medium leading-snug whitespace-pre-line text-[#dadada] group-hover:text-white transition-colors">
