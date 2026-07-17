@@ -90,7 +90,7 @@ export default function PreFooterCTA() {
   return (
     <>
       <section ref={ref} className={`animate-on-scroll ${isVisible ? 'is-visible' : ''} w-full text-white pt-12 pb-24 font-sans`}>
-        <div style={{ zoom: 0.87 }}>
+        <div style={{ zoom: 0.78 }}>
           <div className="max-w-7xl mx-auto px-6 md:px-12">
           {/* Headline */}
           <SpotlightButton 
