@@ -94,17 +94,17 @@ function DiagnosticStatItem({
         className="font-light text-white leading-none mb-4 flex items-baseline justify-center [font-variant-numeric:tabular-nums]"
         style={{
           fontFamily: "'Manrope', sans-serif",
-          fontSize: 'clamp(3rem, 5vw, 4.5rem)',
+          fontSize: 'clamp(1.95rem, 3.25vw, 2.9rem)',
           textShadow: '0 0 40px rgba(124, 58, 237, 0.35)',
         }}
       >
         {prefix}{value}
-        {suffix && <span style={{ fontSize: 'clamp(1.5rem, 2.5vw, 2.5rem)', marginLeft: '2px' }}>{suffix}</span>}
+        {suffix && <span style={{ fontSize: 'clamp(0.97rem, 1.62vw, 1.62rem)', marginLeft: '2px' }}>{suffix}</span>}
       </div>
-      <div className="text-[#e4e4e7] text-[13px] md:text-[15px] font-medium tracking-wide mb-1.5">
+      <div className="text-[#e4e4e7] text-[8px] md:text-[10px] font-medium tracking-wide mb-1.5">
         {title}
       </div>
-      <div className="text-[#8a8a92] text-[11px] md:text-[13px] font-normal">
+      <div className="text-[#8a8a92] text-[7px] md:text-[8px] font-normal">
         {subtitle}
       </div>
     </div>
@@ -154,21 +154,21 @@ export default function FeatureCards() {
       <div ref={animRef} className={`animate-on-scroll ${isVisible ? 'is-visible' : ''} w-full pt-24 pb-12 relative overflow-hidden`} id="features" style={{ zIndex: 1 }}>
         <div className="max-w-[1400px] mx-auto px-6 md:px-12 lg:px-24 relative z-[1]">
           <div className="text-center flex flex-col justify-center items-center">
-            <h2 className="text-4xl md:text-5xl font-light tracking-tight mb-6 leading-tight text-white max-w-3xl">
+            <h2 className="text-2xl md:text-3xl font-light tracking-tight mb-6 leading-tight text-white max-w-3xl">
               Turn your AI Confusion<br />
               Into AI <span className="italic" style={{ color: '#e4effd' }}>Execution</span>
             </h2>
-            <p className="text-white/75 max-w-2xl font-light leading-relaxed mb-16">
+            <p className="text-[10px] md:text-xs text-white/75 max-w-2xl font-light leading-relaxed mb-16">
               Aivory™ helps organizations discover where AI creates value,
               design the right systems, and deploy AI with confidence
             </p>
 
             {/* Diagnostic Stats Section */}
             <div className="w-full max-w-[1000px] mx-auto flex flex-col items-center">
-              <div className="uppercase tracking-[0.2em] text-[#d0d0d4] text-[16px] md:text-[19px] font-semibold mb-3">
+              <div className="uppercase tracking-[0.2em] text-[#d0d0d4] text-[10px] md:text-xs font-semibold mb-3">
                 FROM ASSESSMENT TO DEPLOYMENT, DONE IN MINUTES
               </div>
-              <h3 className="text-xl md:text-3xl font-light text-white mb-12">
+              <h3 className="text-[13px] md:text-xl font-light text-white mb-12">
                 No more weeks of back-and-forth consulting sessions. Just clarity, fast.
               </h3>
 
