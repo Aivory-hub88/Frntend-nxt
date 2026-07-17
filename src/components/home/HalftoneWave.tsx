@@ -76,7 +76,7 @@ export function HalftoneWave() {
           // Reduced spotlight influence on density to avoid solid bright blocks
           float density = 1.0 - normalizedDepth + (rim * 0.5) + (spotlight * 0.2);
           // + 0.1 boost to density as requested by user (10% increase)
-          density = clamp(density + 0.1, 0.0, 0.95);
+          density = clamp(density, 0.0, 0.9); // Clamp below 1.0 to prevent full solid blocks
           
           // 2. ASCII SCREEN-SPACE GRID
           // LIGHT ordered (4x4 Bayer) dither on the character selection, keyed to
@@ -165,7 +165,7 @@ export function HalftoneWave() {
           float accentGate = mix(0.5, 1.0, indigoGradient);
           // Moderately increased the accent multiplier for turbulence without being too neon
           // Moderately increased the accent multiplier for turbulence without being too neon
-          finalColor += accent * ((0.22 + uScroll * 0.18) * accentGate);
+          finalColor += accent * ((0.11 + uScroll * 0.12) * accentGate);
           
 
 
