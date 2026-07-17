@@ -2684,6 +2684,8 @@ export function InteractiveShowcase() {
                   borderWidth: "0.5px",
                   borderStyle: "solid",
                   borderColor: "rgba(255,255,255,0.1)",
+                  width: "fit-content",
+                  alignSelf: "flex-start",
                   cursor: "default",
                 }}
                 icon={false}

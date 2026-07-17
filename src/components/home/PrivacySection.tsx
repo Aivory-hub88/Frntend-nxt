@@ -702,6 +702,7 @@ export default function PrivacySection() {
                   borderWidth: "0.5px",
                   borderStyle: "solid",
                   borderColor: "rgba(255,255,255,0.1)",
+                  width: "fit-content",
                   cursor: "default",
                 }}
                 icon={false}
