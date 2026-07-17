@@ -15,7 +15,7 @@ export default function AIReadySection() {
           {/* Left Column */}
           <div className="w-full md:w-1/2 flex justify-start">
             <h2
-              className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-light tracking-tight leading-[1.1] text-white m-0 text-left"
+              className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-light tracking-tight leading-[1.1] text-white m-0 text-left"
               style={{ fontFamily: "'Manrope', sans-serif" }}
             >
               Where do
