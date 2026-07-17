@@ -142,8 +142,8 @@ export function HalftoneWave() {
           // Reduced intensity in hero section (0.35) so it's not overpowering, scales to 1.0 on scroll
           float coreMixFactor = max(0.35, scrollT) * coreRadiusGate; 
           vec3 coreColor = mix(heroCore, mixedCore, coreMixFactor);
-          vec3 edgeColor = mix(heroEdge, origEdge, scrollT);
-          vec3 indigoColor = mix(heroIndigo, origIndigo, scrollT);
+          vec3 edgeColor = heroEdge; // Keep hero blue color when scrolled
+          vec3 indigoColor = heroIndigo; // Keep hero indigo color when scrolled
           
           // Base mix between core and edge
           vec3 finalColor = mix(coreColor, edgeColor, normalizedDepth + rim * 0.5);
