@@ -692,7 +692,7 @@ export default function PrivacySection() {
       ref={ref}
       className={`animate-on-scroll ${isVisible ? "is-visible" : ""} w-full text-white pt-24 pb-12 font-sans`}
     >
-      <div style={{ zoom: 0.76 }}>
+      <div style={{ zoom: 0.87 }}>
         <div className="max-w-7xl mx-auto px-6 md:px-12">
           <div className="mb-4">
             <div className="flex flex-wrap items-center gap-x-4 gap-y-2 mb-6">
