@@ -706,6 +706,7 @@ export default function PrivacySection() {
                   cursor: "default",
                 }}
                 icon={false}
+                roundedClass="rounded-[10px]"
               >
                 Privacy &amp; Security
               </SpotlightButton>
@@ -728,7 +729,7 @@ export default function PrivacySection() {
                   <SpotlightButton
                     key={item.text}
                     icon={item.icon}
-                    roundedClass="rounded-lg"
+                    roundedClass="rounded-[10px]"
                     className="!items-center h-full w-full normal-case"
                     style={{
                       textTransform: "none",

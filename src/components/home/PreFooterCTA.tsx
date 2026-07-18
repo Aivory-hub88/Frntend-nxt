@@ -105,6 +105,7 @@ export default function PreFooterCTA() {
               cursor: 'default' 
             }}
             icon={false}
+            roundedClass="rounded-[10px]"
           >
             Direct Engagement
           </SpotlightButton>
