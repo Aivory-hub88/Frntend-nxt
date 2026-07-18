@@ -71,7 +71,7 @@ export function SpotlightButton({ href, onClick, children, className = '', icon 
     };
   }, []);
 
-  const baseClasses = `inline-flex items-center gap-3 text-white no-underline uppercase cursor-pointer transition-all duration-500 min-h-[44px] pointer-events-auto spotlight-card auto-spotlight ${roundedClass} border-t border-l border-white/10 border-b border-r border-black/20 shadow-[0_8px_32px_rgba(0,0,0,0.4)] hover:-translate-y-1 hover:border-white/10 hover:shadow-[0_0_30px_rgba(174,201,157,0.05)]`;
+  const baseClasses = `inline-flex items-center gap-3 text-white no-underline uppercase cursor-pointer transition-all duration-500 min-h-[44px] pointer-events-auto spotlight-card auto-spotlight ${roundedClass} border border-white/5 shadow-[0_8px_32px_rgba(0,0,0,0.4)] hover:-translate-y-1 hover:border-white/10 hover:shadow-[0_0_30px_rgba(174,201,157,0.05)]`;
   const combinedClasses = `${baseClasses} ${className}`;
 
   const defaultStyle = {
