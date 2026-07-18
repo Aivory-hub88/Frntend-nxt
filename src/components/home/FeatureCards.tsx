@@ -154,14 +154,11 @@ export default function FeatureCards() {
       <div ref={animRef} className={`animate-on-scroll ${isVisible ? 'is-visible' : ''} w-full pt-24 pb-12 relative overflow-hidden`} id="features" style={{ zIndex: 1 }}>
         <div className="max-w-[1400px] mx-auto px-6 md:px-12 lg:px-24 relative z-[1]">
           <div className="text-center flex flex-col justify-center items-center">
-            <h2 className="text-4xl md:text-5xl font-light tracking-tight mb-6 leading-tight text-white max-w-3xl">
+            <h2 className=\"text-4xl md:text-5xl font-light tracking-tight mb-16 leading-tight text-white max-w-3xl\">
               Turn your AI Confusion<br />
               Into AI <span className="italic" style={{ color: '#e4effd' }}>Execution</span>
             </h2>
-            <p className="text-white/75 max-w-2xl font-light leading-relaxed mb-16">
-              Aivory™ helps organizations discover where AI creates value,
-              design the right systems, and deploy AI with confidence
-            </p>
+            
 
             {/* Diagnostic Stats Section */}
             <div className="w-full max-w-[850px] mx-auto flex flex-col items-center">
@@ -169,7 +166,7 @@ export default function FeatureCards() {
                 FROM ASSESSMENT TO DEPLOYMENT, DONE IN MINUTES
               </div>
               <h3 className="text-xl md:text-3xl font-light text-white mb-12" style={{ zoom: 0.95 }}>
-                No more weeks of back-and-forth consulting sessions. Just clarity, fast.
+                No more weeks of back-and-forth consulting sessions.<br />Just clarity, fast.
               </h3>
 
               <div ref={statsRef} className="flex flex-nowrap justify-center items-stretch relative flex-row w-full mt-4" style={{ zoom: 0.76 }}>
