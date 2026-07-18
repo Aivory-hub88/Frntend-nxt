@@ -710,7 +710,7 @@ export default function PrivacySection() {
                 Privacy &amp; Security
               </SpotlightButton>
             </div>
-            <h2 className="no-word-split text-3xl md:text-4xl lg:text-5xl font-normal tracking-tight leading-[1.2] mb-10">
+            <h2 className="no-word-split text-3xl md:text-4xl lg:text-5xl font-light tracking-tight leading-[1.2] mb-10" style={{ fontFamily: "'Manrope', sans-serif", fontWeight: 300 }}>
               Your data stays
               <br />
               where it belongs.

@@ -108,7 +108,7 @@ export default function PreFooterCTA() {
           >
             Direct Engagement
           </SpotlightButton>
-          <h2 className="no-word-split text-3xl md:text-4xl lg:text-5xl font-normal tracking-tight leading-[1.2] mb-6">
+          <h2 className="no-word-split text-3xl md:text-4xl lg:text-5xl font-light tracking-tight leading-[1.2] mb-6" style={{ fontFamily: "'Manrope', sans-serif", fontWeight: 300 }}>
             Prefer to Work With Our Team Directly?
           </h2>
           <p className="text-[#dadada] text-lg md:text-xl font-light mb-10 max-w-4xl">
