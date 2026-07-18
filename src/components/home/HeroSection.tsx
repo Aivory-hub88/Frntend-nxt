@@ -93,24 +93,25 @@ export default function HeroSection() {
         className="relative z-10 flex flex-col items-center justify-center text-center w-full max-w-4xl px-5 md:px-8 pt-16 pb-16 md:pt-24 md:pb-24"
         style={{ willChange: 'transform' }}
       >
-        <h1
-          className="text-[36px] md:text-[56px] font-light mb-4 tracking-tight text-white/90 text-center leading-[1.1] animate-slide-up-1 pointer-events-none select-none"
-          style={{ fontFamily: "'Manrope', sans-serif", animationDelay: '0.2s' }}
-        >
-          Make AI make sense
-          <span
-            style={{
-              fontSize: '0.7em',
-              verticalAlign: 'middle',
-              position: 'relative',
-              top: '-0.3em',
-            }}
+        <div className="animate-slide-up-1 mb-4" style={{ animationDelay: '0.2s' }}>
+          <h1
+            className="silver-swipe-text text-[36px] md:text-[56px] font-light tracking-tight text-center leading-[1.1] pointer-events-none select-none"
+            style={{ fontFamily: "'Manrope', sans-serif" }}
           >
-            ®
-          </span>
-          <br />
-          for your business
-        </h1>
+            Make AI make sense
+            <span
+              style={{
+                fontSize: '0.7em',
+                verticalAlign: 'middle',
+                position: 'relative',
+                top: '-0.3em',
+              }}
+            >
+              ®
+            </span>
+            <br />
+            for your business
+          </h1>
         </div>
 
         {/* Rotating subtitle with initial slide up */}
