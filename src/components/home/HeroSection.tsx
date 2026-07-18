@@ -102,7 +102,7 @@ export default function HeroSection() {
             <span
               style={{
                 fontSize: '0.7em',
-                verticalAlign: 'super',
+                verticalAlign: '0.2em',
               }}
             >
               ®
