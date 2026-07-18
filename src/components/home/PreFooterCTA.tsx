@@ -128,8 +128,23 @@ export default function PreFooterCTA() {
             <SpotlightButton 
               onClick={() => setIsModalOpen(true)}
               className="text-xs md:text-sm"
+              roundedClass="rounded-[10px]"
             >
               Talk to Our Team
+            </SpotlightButton>
+            <SpotlightButton 
+              href="/free-diagnostic"
+              className="text-xs md:text-sm"
+              roundedClass="rounded-[10px]"
+            >
+              Start With Free Assessment
+            </SpotlightButton>
+            <SpotlightButton 
+              href="/free-diagnostic"
+              className="text-xs md:text-sm"
+              roundedClass="rounded-[10px]"
+            >
+              Start Deep Assessment
             </SpotlightButton>
           </div>
           </div>
