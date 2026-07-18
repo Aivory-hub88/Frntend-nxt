@@ -72,7 +72,7 @@ export function HalftoneWave({ active = true }: { active?: boolean } = {}) {
           // so the effect carries further across the surface (visible at more
           // rotation angles, not just the most grazing edges)
           float rim = 1.0 - max(0.0, dot(viewDir, normal));
-          rim = smoothstep(0.1, 1.0, rim);
+          rim = smoothstep(-0.1, 0.8, rim);
           
           // NEW: Top-down spotlight (sharper and more elegant)
           vec3 topLightDir = normalize(vec3(0.0, 1.0, 0.4));
