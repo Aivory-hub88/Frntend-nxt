@@ -438,7 +438,7 @@ export function InteractiveGrid() {
             Your AI Operations <span className="italic" style={{ color: '#e4effd' }}>Stack.</span>
           </h3>
           <p className="text-white max-w-xl mx-auto font-light leading-relaxed">
-            Agents that act, integrations that connect, and templates that ship fast.
+            Agents that act, easy to deploy, no code needed, integrations that connect, and templates that ship fast.
           </p>
         </div>
 
