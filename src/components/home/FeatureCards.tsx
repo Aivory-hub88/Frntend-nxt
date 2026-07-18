@@ -154,7 +154,7 @@ export default function FeatureCards() {
       <div ref={animRef} className={`animate-on-scroll ${isVisible ? 'is-visible' : ''} w-full pt-24 pb-12 relative overflow-hidden`} id="features" style={{ zIndex: 1 }}>
         <div className="max-w-[1400px] mx-auto px-6 md:px-12 lg:px-24 relative z-[1]">
           <div className="text-center flex flex-col justify-center items-center">
-            <h2 className=\"text-4xl md:text-5xl font-light tracking-tight mb-16 leading-tight text-white max-w-3xl\">
+            <h2 className="text-4xl md:text-5xl font-light tracking-tight mb-16 leading-tight text-white max-w-3xl">
               Turn your AI Confusion<br />
               Into AI <span className="italic" style={{ color: '#e4effd' }}>Execution</span>
             </h2>
