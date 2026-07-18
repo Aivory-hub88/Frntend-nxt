@@ -282,7 +282,8 @@ export function HalftoneWave({ active = true }: { active?: boolean } = {}) {
 
     // Initial positioning (Immersive, framing the text from below)
     group.position.set(startX, startY, 0);
-    group.scale.set(2.24, 2.24, 2.24); 
+    const initialScale = isMobile ? 1.6 : 2.24;
+    group.scale.set(initialScale, initialScale, initialScale); 
 
     // Scroll mapping state
     let targetScroll = 0;
@@ -290,7 +291,7 @@ export function HalftoneWave({ active = true }: { active?: boolean } = {}) {
     let currentScrollRotationX = 0.5;
     let targetX = startX;
     let targetY = startY;
-    let targetScale = 2.24;
+    let targetScale = isMobile ? 1.6 : 2.24;
 
     // ── Cached section anchors (layout read only on mount / resize) ──
     // Reading getBoundingClientRect() on every scroll event forced a
@@ -338,7 +339,7 @@ export function HalftoneWave({ active = true }: { active?: boolean } = {}) {
       const progress = Math.min(scrollY / 800, 1.0);
       
       targetY = startY + (endY - startY) * progress;
-      targetScale = 2.24 - (0.84 * progress); // Shrink perfectly back from 1.6 to 1.0
+      targetScale = (isMobile ? 1.6 : 2.24) - ((isMobile ? 0.6 : 0.84) * progress); // Shrink perfectly back from 1.6 to 1.0
 
       if (privacyAt !== Infinity) {
         const shrinkStart = Math.max(0, privacyAt - window.innerHeight); // Start shrinking when it enters viewport
