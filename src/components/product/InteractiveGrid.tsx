@@ -570,7 +570,7 @@ function IntegrationsMarquee() {
   const logos = [
     { name: 'Zoom', icon: '/integrations/icons/zoom.svg' },
     { name: 'Letta', icon: '' }, // no clean transparent icon-only mark available — text label only
-    { name: 'Glean', icon: '/integrations/icons/glean.png' },
+    { name: 'Glean', icon: '/integrations/icons/glean.svg' },
     { name: 'HubSpot', icon: '/integrations/icons/hubspot-svgrepo-com.svg' },
     { name: 'Slack', icon: '/integrations/icons/slack.svg' },
     { name: 'Salesforce', icon: '/integrations/icons/salesforce.svg' },
