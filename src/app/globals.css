@@ -926,3 +926,28 @@ body,
 .roadmap-glow {
   animation: roadmap-glow-breathe 4s ease-in-out infinite;
 }
+
+
+@keyframes silver-swipe {
+  0% {
+    background-position: -200% center;
+  }
+  100% {
+    background-position: 200% center;
+  }
+}
+.silver-swipe-text {
+  background: linear-gradient(
+    105deg,
+    rgba(255,255,255,1) 35%,
+    rgba(180,180,180,1) 48%,
+    rgba(255,255,255,1) 52%,
+    rgba(180,180,180,1) 56%,
+    rgba(255,255,255,1) 65%
+  );
+  background-size: 200% auto;
+  color: transparent;
+  -webkit-background-clip: text;
+  background-clip: text;
+  animation: silver-swipe 5s linear infinite;
+}
