@@ -364,7 +364,8 @@ export function HalftoneWave({ active = true }: { active?: boolean } = {}) {
       }
       const heroX = startX + (endX - startX) * progress; // hero → right
       let x = heroX;
-      if (centerAt !== Infinity) {
+      // User requested flower to stay on the right instead of centering
+      // if (centerAt !== Infinity) {
         if (rightAt !== Infinity && scrollY >= rightAt) {
           x = endX; // "speaks your customer's language" section → right
         } else if (scrollY >= centerAt) {
@@ -388,8 +389,10 @@ export function HalftoneWave({ active = true }: { active?: boolean } = {}) {
             x = heroX; // strictly right
           }
         }
-      }
       
+      // }
+      
+      // Footer right-shift override
       // Footer right-shift override
       if (footerAt !== Infinity) {
          const shiftStart = Math.max(0, footerAt - 800);
