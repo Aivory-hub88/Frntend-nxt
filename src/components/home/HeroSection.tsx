@@ -100,7 +100,7 @@ export default function HeroSection() {
           Make AI make sense
           <span
             style={{
-              fontSize: '0.35em',
+              fontSize: '0.7em',
               verticalAlign: 'middle',
               position: 'relative',
               top: '-0.3em',
