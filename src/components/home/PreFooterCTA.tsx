@@ -4,6 +4,7 @@ import { useState, useRef, useEffect } from 'react';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
 import ContactModal from './ContactModal';
 import { SpotlightButton } from '@/components/ui/SpotlightButton';
+import { PlanConfirmModal } from '@/components/payment/PlanConfirmModal';
 
 /* ─── Arrow Icon ─── */
 function ArrowIcon({ className = '' }: { className?: string }) {
@@ -86,6 +87,7 @@ const ServiceCard = ({ service }: { service: typeof services[0] }) => {
 export default function PreFooterCTA() {
   const { ref, isVisible } = useScrollAnimation();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [checkoutProductId, setCheckoutProductId] = useState<string | null>(null);
 
   return (
     <>
@@ -140,7 +142,7 @@ export default function PreFooterCTA() {
               Start With Free Assessment
             </SpotlightButton>
             <SpotlightButton 
-              href="/free-diagnostic"
+              onClick={() => setCheckoutProductId('ai_snapshot')}
               className="text-xs md:text-sm"
               roundedClass="rounded-[10px]"
             >
@@ -150,6 +152,14 @@ export default function PreFooterCTA() {
           </div>
         </div>
       </section>
+
+      {/* Checkout Modal */}
+      {checkoutProductId && (
+        <PlanConfirmModal
+          productId={checkoutProductId}
+          onClose={() => setCheckoutProductId(null)}
+        />
+      )}
 
       {/* Contact Modal */}
       <ContactModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
