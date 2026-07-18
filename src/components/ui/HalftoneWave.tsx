@@ -365,30 +365,7 @@ export function HalftoneWave({ active = true }: { active?: boolean } = {}) {
       const heroX = startX + (endX - startX) * progress; // hero → right
       let x = heroX;
       // User requested flower to stay on the right instead of centering
-      // if (centerAt !== Infinity) {
-        if (rightAt !== Infinity && scrollY >= rightAt) {
-          x = endX; // "speaks your customer's language" section → right
-        } else if (scrollY >= centerAt) {
-          if (rightAt !== Infinity) {
-            // Stay centered through the middle, then ease center → right over
-            // the last stretch (max 600px) before the language section.
-            const band = Math.min(600, Math.max(1, rightAt - centerAt));
-            x = lerp(0, endX, smooth(rightAt - band, rightAt, scrollY));
-          } else {
-            x = 0; // Operational Framework → center (no right anchor found)
-          }
-        } else {
-          // It should stay on the right until reaching the 'showcase' section,
-          // then quickly transition to the center. We'll use a shorter band
-          // so it waits until the section actually enters before moving.
-          const transitionBand = 300; // transition happens over 300px of scrolling
-          const startTransitionAt = centerAt - transitionBand;
-          if (scrollY >= startTransitionAt) {
-            x = lerp(heroX, 0, smooth(startTransitionAt, centerAt, scrollY)); // right → center
-          } else {
-            x = heroX; // strictly right
-          }
-        }
+      // x is simply heroX across the whole scroll
       
       // }
       
