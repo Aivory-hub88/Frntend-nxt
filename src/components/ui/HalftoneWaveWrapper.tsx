@@ -53,7 +53,7 @@ function crossProgress(top: number, vh: number): number {
 }
 
 function useFlowerScrollOpacity() {
-  const [opacity, setOpacity] = useState(0.98);
+  const [opacity, setOpacity] = useState(1);
   useEffect(() => {
     let ticking = false;
     const update = () => {
@@ -64,7 +64,11 @@ function useFlowerScrollOpacity() {
       const vh = window.innerHeight;
       const hideT = crossProgress(statsEl.getBoundingClientRect().top, vh);
       const showT = crossProgress(preFooterEl.getBoundingClientRect().top, vh);
-      setOpacity(0.98 - (hideT * 0.98) + (showT * 0.98));
+      // 100% at hero, 98% during operational framework, fades out at stats
+      const scrollY = window.scrollY;
+      const heroT = Math.min(scrollY / (vh * 0.5), 1.0); // Transition in first 50vh
+      const baseOpacity = 1.0 - (heroT * 0.02); // 1.0 -> 0.98
+      setOpacity(baseOpacity - (hideT * baseOpacity) + (showT * baseOpacity));
     };
     const onScroll = () => {
       if (ticking) return;
