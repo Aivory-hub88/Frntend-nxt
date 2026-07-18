@@ -353,7 +353,7 @@ export function DiagnosticAnimation() {
                 <span className="text-[10px] text-[#bbe2ef] font-medium tracking-wider uppercase">
                   Company Name
                 </span>
-                <div className="w-full h-10 bg-[#111111]/80 border border-white/10 rounded-md flex items-center px-3 relative overflow-hidden">
+                <div className="w-full h-10 bg-white/5 backdrop-blur-md border border-white/10 shadow-[0_4px_16px_rgba(0,0,0,0.1)] rounded-md flex items-center px-3 relative overflow-hidden">
                   <span className="text-sm text-white/90 relative z-10 flex items-center">
                     {companyNameTyped}
                     <motion.span
@@ -374,7 +374,7 @@ export function DiagnosticAnimation() {
                   Company Size
                 </span>
                 <div
-                  className={`w-full h-10 bg-[#111111]/80 border ${companySizeState === "open" || companySizeState === "selected" ? "border-[#bbe2ef]/50 ring-1 ring-[#bbe2ef]/30" : "border-white/10"} rounded-md flex items-center justify-between px-3 relative transition-all duration-300`}
+                  className={`w-full h-10 bg-white/5 backdrop-blur-md shadow-[0_4px_16px_rgba(0,0,0,0.1)] border ${companySizeState === "open" || companySizeState === "selected" ? "border-[#bbe2ef]/50 ring-1 ring-[#bbe2ef]/30" : "border-white/10"} rounded-md flex items-center justify-between px-3 relative transition-all duration-300`}
                 >
                   <span
                     className={`text-sm ${companySizeState === "done" ? "text-white/90" : "text-white/40"}`}
@@ -411,7 +411,7 @@ export function DiagnosticAnimation() {
                         stiffness: 400,
                         damping: 30,
                       }}
-                      className="absolute top-full left-0 right-0 mt-2 bg-[#1a1a1a] border border-white/10 rounded-md overflow-hidden z-30 shadow-[0_10px_40px_rgba(0,0,0,0.8)]"
+                      className="absolute top-full left-0 right-0 mt-2 bg-white/10 backdrop-blur-lg border border-white/20 rounded-md overflow-hidden z-30 shadow-[0_10px_40px_rgba(0,0,0,0.8)]"
                     >
                       <div className="p-1 flex flex-col gap-0.5">
                         {[
@@ -753,7 +753,7 @@ export function DiagnosticAnimation() {
               <span className="text-[10px] sm:text-[11px] text-[#bbe2ef]/90 uppercase tracking-[0.22em] font-medium px-3 py-1 bg-[#0d0d0d]/80 border border-white/5 rounded-md whitespace-nowrap backdrop-blur-sm shadow-[0_4px_12px_rgba(0,0,0,0.5)]">
                 Deep Assessment Results
               </span>
-              <span className="text-xs sm:text-sm text-white/70 bg-[#111111]/80 px-4 py-1 rounded-full backdrop-blur-sm mt-2 opacity-0 animate-[fade-in-text_2.0s_ease-out_forwards]">
+              <span className="text-xs sm:text-sm text-white/70 bg-white/10 backdrop-blur-md border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.2)] px-4 py-1 rounded-full backdrop-blur-sm mt-2 opacity-0 animate-[fade-in-text_2.0s_ease-out_forwards]">
                 Document generated & ready
               </span>
             </div>
@@ -1187,7 +1187,7 @@ export function WorkflowAnimation() {
           transition={{ type: "spring", stiffness: 300, damping: 24 }}
           className="flex justify-end"
         >
-          <div className="bg-[#2A2A2A] rounded-3xl rounded-tr-md px-4 py-2 sm:px-5 sm:py-3 text-white/90 text-[12px] sm:text-[14px] max-w-[95%] sm:max-w-[90%] leading-relaxed shadow-md">
+          <div className="bg-white/10 backdrop-blur-md border border-white/20 rounded-3xl rounded-tr-md shadow-[0_8px_32px_rgba(0,0,0,0.2)] px-4 py-2 sm:px-5 sm:py-3 text-white/90 text-[12px] sm:text-[14px] max-w-[95%] sm:max-w-[90%] leading-relaxed shadow-md">
             {fullText}
           </div>
         </motion.div>
@@ -1201,7 +1201,7 @@ export function WorkflowAnimation() {
           transition={{ type: "spring", stiffness: 300, damping: 24 }}
           className={`flex items-center gap-2 ${phase === "ai_typing" ? "" : "hidden"}`}
         >
-          <div className="bg-[#111111] border border-white/5 rounded-3xl rounded-tl-md px-4 py-2 sm:px-4 sm:py-2.5 shadow-sm flex items-center justify-center">
+          <div className="bg-white/5 backdrop-blur-md border border-white/10 rounded-3xl rounded-tl-md shadow-[0_8px_32px_rgba(0,0,0,0.2)] px-4 py-2 sm:px-4 sm:py-2.5 shadow-sm flex items-center justify-center">
             <div className="relative w-4 h-4 opacity-80">
               {[
                 { top: "5%", left: "50%", delay: 0 },
@@ -1229,7 +1229,7 @@ export function WorkflowAnimation() {
         <div
           className={`flex justify-start transition-all duration-300 ease-out ${["ai_confirm", "user_typing_yes", "user_yes", "generating", "generated", "buttons"].includes(phase) ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4 hidden"}`}
         >
-          <div className="bg-[#111111] border border-white/5 rounded-3xl rounded-tl-md px-4 py-2 sm:px-5 sm:py-3 text-white/80 text-[12px] sm:text-[14px] max-w-[95%] sm:max-w-[90%] leading-relaxed shadow-md">
+          <div className="bg-white/5 backdrop-blur-md border border-white/10 rounded-3xl rounded-tl-md shadow-[0_8px_32px_rgba(0,0,0,0.2)] px-4 py-2 sm:px-5 sm:py-3 text-white/80 text-[12px] sm:text-[14px] max-w-[95%] sm:max-w-[90%] leading-relaxed shadow-md">
             I can help with that. I will configure a <b>Gmail</b> trigger, an AI
             extractor agent, and a <b>Slack</b> action. Proceed?
           </div>
@@ -1238,7 +1238,7 @@ export function WorkflowAnimation() {
         <div
           className={`flex justify-end transition-all duration-300 ease-out ${["user_yes", "generating", "generated", "buttons"].includes(phase) ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4 hidden"}`}
         >
-          <div className="bg-[#2A2A2A] rounded-3xl rounded-tr-md px-4 py-2 sm:px-5 sm:py-3 text-white/90 text-[12px] sm:text-[14px] max-w-[95%] sm:max-w-[90%] leading-relaxed shadow-md">
+          <div className="bg-white/10 backdrop-blur-md border border-white/20 rounded-3xl rounded-tr-md shadow-[0_8px_32px_rgba(0,0,0,0.2)] px-4 py-2 sm:px-5 sm:py-3 text-white/90 text-[12px] sm:text-[14px] max-w-[95%] sm:max-w-[90%] leading-relaxed shadow-md">
             {yesText}
           </div>
         </div>
@@ -1756,7 +1756,7 @@ export function RoadmapAnimation() {
                 }}
               />
             </div>
-            <span className="text-xs sm:text-sm text-white/70 bg-[#111111]/80 px-4 py-1 rounded-full backdrop-blur-sm opacity-0 animate-[fade-in-text_4.0s_ease-out_forwards] -mt-2">
+            <span className="text-xs sm:text-sm text-white/70 bg-white/10 backdrop-blur-md border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.2)] px-4 py-1 rounded-full backdrop-blur-sm opacity-0 animate-[fade-in-text_4.0s_ease-out_forwards] -mt-2">
               Sequencing blueprint into phased waves
             </span>
           </motion.div>
@@ -1804,8 +1804,8 @@ export function RoadmapAnimation() {
                 <div
                   className={`w-10 h-10 rounded-full border flex items-center justify-center text-xs transition-all duration-500 relative z-10 ${
                     isActive
-                      ? "border-[#bbe2ef] bg-[#111111] text-[#bbe2ef] font-semibold scale-110 shadow-[0_0_15px_rgba(187, 226, 239,0.3)]"
-                      : "border-white/10 bg-[#111111] text-white/60 scale-100"
+                      ? "border-[#bbe2ef] bg-white/10 backdrop-blur-md border-white/20 text-[#bbe2ef] font-semibold scale-110 shadow-[0_0_15px_rgba(187, 226, 239,0.3)]"
+                      : "border-white/10 bg-white/5 backdrop-blur-md text-white/60 scale-100"
                   }`}
                   style={{ fontFamily: "'Doto', 'Courier New', monospace" }}
                 >
@@ -2289,7 +2289,7 @@ export function BlueprintAnimation() {
 
                 {/* Engine Context */}
                 <div className="flex flex-col items-center gap-4 z-10 relative mt-2 w-full max-w-[420px]">
-                  <span className="text-xs sm:text-sm text-white/70 bg-[#111111]/80 px-4 py-1 rounded-full backdrop-blur-sm opacity-0 animate-[fade-in-text_4.5s_ease-out_forwards]">
+                  <span className="text-xs sm:text-sm text-white/70 bg-white/10 backdrop-blur-md border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.2)] px-4 py-1 rounded-full backdrop-blur-sm opacity-0 animate-[fade-in-text_4.5s_ease-out_forwards]">
                     Engine processing from Deep Assessment result
                   </span>
                   <div className="flex flex-wrap justify-center gap-3 sm:gap-4 w-full">
@@ -2525,7 +2525,7 @@ export function BlueprintAnimation() {
               <div className="flex flex-col items-center gap-3 animate-fade-in-up">
                 <div className="relative flex flex-col items-center gap-3 z-20">
                   <div
-                    className="relative w-36 h-[104px] bg-[#111111] border border-white/10 rounded-xl overflow-hidden flex flex-col"
+                    className="relative w-36 h-[104px] bg-white/5 backdrop-blur-md border border-white/20 rounded-xl shadow-[0_8px_32px_rgba(0,0,0,0.2)] overflow-hidden flex flex-col"
                     style={{
                       boxShadow:
                         "0 14px 34px -10px rgba(0,0,0,0.75), 0 0 22px rgba(187, 226, 239,0.14), inset 0 1px 0 rgba(255,255,255,0.06)",
