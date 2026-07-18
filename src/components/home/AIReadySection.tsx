@@ -16,7 +16,7 @@ export default function AIReadySection() {
           <div className="w-full md:w-1/2 flex justify-start">
             <h2
               className="text-4xl sm:text-5xl md:text-[44px] lg:text-[54px] font-light tracking-tight leading-[1.1] text-white m-0 text-left"
-              style={{ fontFamily: "'Manrope', sans-serif" }}
+              style={{ fontFamily: "'Manrope', sans-serif", fontWeight: 300 }}
             >
               Where do
               <br />
@@ -52,8 +52,8 @@ export default function AIReadySection() {
               No guesswork. No noise.
             </p>
             <p
-              className="text-white font-normal leading-relaxed mt-12 text-xl md:text-2xl lg:text-3xl"
-              style={{ fontFamily: "'Manrope', sans-serif" }}
+              className="text-white font-light leading-relaxed mt-12 text-xl md:text-2xl lg:text-3xl"
+              style={{ fontFamily: "'Manrope', sans-serif", fontWeight: 300 }}
             >
               AI that works, from day one.
             </p>

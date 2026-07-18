@@ -434,7 +434,7 @@ export function InteractiveGrid() {
           >
             THE PLATFORM
           </SpotlightButton>
-          <h3 className="text-4xl md:text-5xl font-light tracking-normal mb-4">
+          <h3 className="text-4xl md:text-5xl font-light tracking-normal mb-4" style={{ fontFamily: "'Manrope', sans-serif", fontWeight: 300 }}>
             Your AI Operations <span className="italic" style={{ color: '#e4effd' }}>Stack.</span>
           </h3>
           <p className="text-white max-w-xl mx-auto font-light leading-relaxed">
