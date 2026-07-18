@@ -94,7 +94,7 @@ export default function HeroSection() {
         style={{ willChange: 'transform' }}
       >
         <h1
-          className="silver-swipe-text text-[36px] md:text-[56px] font-light mb-4 tracking-tight text-center leading-[1.1] animate-slide-up-1 pointer-events-none select-none"
+          className="text-[36px] md:text-[56px] font-light mb-4 tracking-tight text-white/90 text-center leading-[1.1] animate-slide-up-1 pointer-events-none select-none"
           style={{ fontFamily: "'Manrope', sans-serif", animationDelay: '0.2s' }}
         >
           Make AI make sense
@@ -111,6 +111,7 @@ export default function HeroSection() {
           <br />
           for your business
         </h1>
+        </div>
 
         {/* Rotating subtitle with initial slide up */}
         <div className="w-full animate-slide-up-2 pointer-events-none select-none" style={{ animationDelay: '0.4s' }}>
