@@ -855,7 +855,7 @@ export function ConsoleAnimation() {
           transition={{ type: "spring", stiffness: 300, damping: 24 }}
           className="flex justify-end"
         >
-          <div className="bg-[#2A2A2A] rounded-2xl rounded-tr-sm px-4 py-2 sm:px-5 sm:py-2.5 text-white/90 text-[12px] sm:text-[14px] max-w-[90%] shadow-md">
+          <div className="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl rounded-tr-sm px-4 py-2 sm:px-5 sm:py-2.5 text-white/90 text-[12px] sm:text-[14px] max-w-[90%] shadow-[0_8px_32px_rgba(0,0,0,0.2)]">
             {fullText}
           </div>
         </motion.div>
@@ -869,7 +869,7 @@ export function ConsoleAnimation() {
           transition={{ type: "spring", stiffness: 300, damping: 24 }}
           className={`flex items-center gap-2 ${phase === "ai_typing" ? "" : "hidden"}`}
         >
-          <div className="bg-[#111111] border border-white/5 rounded-2xl rounded-tl-sm px-4 py-2 sm:px-4 sm:py-2.5 shadow-sm flex items-center justify-center">
+          <div className="bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl rounded-tl-sm px-4 py-2 sm:px-4 sm:py-2.5 shadow-[0_8px_32px_rgba(0,0,0,0.2)] flex items-center justify-center">
             <div className="relative w-4 h-4 opacity-80">
               {[
                 { top: "5%", left: "50%", delay: 0 },
@@ -919,7 +919,7 @@ export function ConsoleAnimation() {
           transition={{ type: "spring", stiffness: 300, damping: 24 }}
           className={`flex justify-start ${["ai_confirm", "user_typing_yes", "user_yes", "thinking", "response"].includes(phase) ? "" : "hidden"}`}
         >
-          <div className="bg-[#111111] border border-white/5 rounded-2xl rounded-tl-sm px-4 py-2 sm:px-4 sm:py-3 text-white/80 text-[12px] sm:text-[14px] max-w-[90%] leading-relaxed shadow-md">
+          <div className="bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl rounded-tl-sm px-4 py-2 sm:px-4 sm:py-3 text-white/80 text-[12px] sm:text-[14px] max-w-[90%] leading-relaxed shadow-[0_8px_32px_rgba(0,0,0,0.2)]">
             Sure. Should I focus on a specific pipeline, or run a comprehensive
             end-to-end audit?
           </div>
@@ -936,7 +936,7 @@ export function ConsoleAnimation() {
           transition={{ type: "spring", stiffness: 300, damping: 24 }}
           className={`flex justify-end ${["user_yes", "thinking", "response"].includes(phase) ? "" : "hidden"}`}
         >
-          <div className="bg-[#2A2A2A] rounded-2xl rounded-tr-sm px-4 py-2 sm:px-5 sm:py-2.5 text-white/90 text-[12px] sm:text-[14px] max-w-[90%] shadow-md">
+          <div className="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl rounded-tr-sm px-4 py-2 sm:px-5 sm:py-2.5 text-white/90 text-[12px] sm:text-[14px] max-w-[90%] shadow-[0_8px_32px_rgba(0,0,0,0.2)]">
             {yesText}
           </div>
         </motion.div>
@@ -1020,7 +1020,7 @@ export function ConsoleAnimation() {
         </motion.div>
       </div>
 
-      <div className="absolute bottom-2 sm:bottom-4 left-4 right-4 bg-[#222222] border border-white/5 rounded-full pl-3 pr-2 py-2 flex items-center gap-3 shadow-lg">
+      <div className="absolute bottom-2 sm:bottom-4 left-4 right-4 bg-white/10 backdrop-blur-lg border border-white/20 rounded-full pl-3 pr-2 py-2 flex items-center gap-3 shadow-[0_8px_32px_rgba(0,0,0,0.3)]">
         <button className="w-7 h-7 rounded-full flex items-center justify-center text-white/60 hover:text-white/85 transition-colors shrink-0">
           <svg
             width="18"
@@ -1436,7 +1436,7 @@ export function WorkflowAnimation() {
         )}
       </div>
 
-      <div className="absolute bottom-2 sm:bottom-4 left-4 right-4 bg-[#222222] border border-white/5 rounded-full pl-3 pr-2 py-2 flex items-center gap-3 shadow-lg">
+      <div className="absolute bottom-2 sm:bottom-4 left-4 right-4 bg-white/10 backdrop-blur-lg border border-white/20 rounded-full pl-3 pr-2 py-2 flex items-center gap-3 shadow-[0_8px_32px_rgba(0,0,0,0.3)]">
         <button className="w-7 h-7 rounded-full flex items-center justify-center text-white/60 hover:text-white/85 transition-colors shrink-0">
           <svg
             width="18"
