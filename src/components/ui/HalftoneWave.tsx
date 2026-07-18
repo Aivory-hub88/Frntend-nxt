@@ -137,8 +137,8 @@ export function HalftoneWave({ active = true }: { active?: boolean } = {}) {
           
           // Hero Colors (Premium Elegance: Midnight Core / Deep Blue-Purple Edges)
           vec3 heroCore = vec3(0.02, 0.03, 0.06); // Deep midnight core (slightly brighter)
-          vec3 heroEdge = vec3(0.096, 0.048, 0.42);  // Deep blue-purple edges (brighter blue)
-          vec3 heroIndigo = vec3(0.12, 0.06, 0.24);  // Subtle purple/indigo glow (brighter)
+          vec3 heroEdge = vec3(0.11, 0.055, 0.483);  // Deep blue-purple edges (brighter blue)
+          vec3 heroIndigo = vec3(0.138, 0.069, 0.276);  // Subtle purple/indigo glow (brighter)
           
           // The core transitions from Pink to Orange as you scroll down
           vec3 dynamicCore = mix(pinkCore, primaryCore, scrollT);
@@ -205,7 +205,7 @@ export function HalftoneWave({ active = true }: { active?: boolean } = {}) {
     // ==========================================
     // 1. MAIN 6-LOBE FLOWER (Base)
     // ==========================================
-    const geometry = new THREE.SphereGeometry(1, 160, 160);
+    const geometry = new THREE.SphereGeometry(1, 256, 256);
     const material = new THREE.ShaderMaterial({
       uniforms,
       side: THREE.FrontSide, 
