@@ -111,7 +111,7 @@ export function InteractiveGridShowcase() {
               <h4 className="text-xl font-medium mb-2">{renderTitle(showcaseProducts[0].title)}</h4>
               <p className="text-white/70 text-[13px] font-light leading-relaxed">{showcaseProducts[0].description}</p>
             </div>
-            <div className="relative z-10 flex-1 min-h-[260px] bg-[#0A0A0A] border border-white/5 rounded-xl mt-auto overflow-hidden min-w-0 w-full">
+            <div className="relative z-10 flex-1 min-h-[260px] bg-[#0A0A0A] border border-white/5 rounded-xl mt-auto overflow-hidden min-w-0 w-full" style={{ zoom: 0.82 }}>
               <DiagnosticAnimation />
             </div>
           </SpotlightCard>
@@ -123,7 +123,7 @@ export function InteractiveGridShowcase() {
               <h4 className="text-xl font-medium mb-2">{renderTitle(showcaseProducts[1].title)}</h4>
               <p className="text-white/70 text-[13px] font-light leading-relaxed">{showcaseProducts[1].description}</p>
             </div>
-            <div className="relative z-10 flex-1 min-h-[260px] bg-[#0A0A0A] border border-white/5 rounded-xl mt-auto overflow-hidden min-w-0 w-full">
+            <div className="relative z-10 flex-1 min-h-[260px] bg-[#0A0A0A] border border-white/5 rounded-xl mt-auto overflow-hidden min-w-0 w-full" style={{ zoom: 0.82 }}>
               <BlueprintAnimation />
             </div>
           </SpotlightCard>
@@ -135,7 +135,7 @@ export function InteractiveGridShowcase() {
               <h4 className="text-xl font-medium mb-2">{renderTitle(showcaseProducts[2].title)}</h4>
               <p className="text-white/70 text-[13px] font-light leading-relaxed">{showcaseProducts[2].description}</p>
             </div>
-            <div className="relative z-10 flex-1 min-h-[260px] bg-[#0A0A0A] border border-white/5 rounded-xl mt-auto overflow-hidden min-w-0 w-full">
+            <div className="relative z-10 flex-1 min-h-[260px] bg-[#0A0A0A] border border-white/5 rounded-xl mt-auto overflow-hidden min-w-0 w-full" style={{ zoom: 0.82 }}>
               <RoadmapAnimation />
             </div>
           </SpotlightCard>
