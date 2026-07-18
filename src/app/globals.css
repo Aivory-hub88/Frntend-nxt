@@ -946,7 +946,9 @@ body,
     rgba(255,255,255,1) 65%
   );
   background-size: 200% auto;
+  color: #ffffff;
   color: transparent;
+  -webkit-text-fill-color: transparent;
   -webkit-background-clip: text;
   background-clip: text;
   animation: silver-swipe 5s linear infinite;
