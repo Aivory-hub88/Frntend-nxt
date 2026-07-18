@@ -339,7 +339,7 @@ export function HalftoneWave({ active = true }: { active?: boolean } = {}) {
       const progress = Math.min(scrollY / 800, 1.0);
       
       targetY = startY + (endY - startY) * progress;
-      targetScale = (isMobile ? 1.6 : 2.24) - ((isMobile ? 0.6 : 0.84) * progress); // Shrink perfectly back from 1.6 to 1.0
+      targetScale = (isMobile ? 1.6 : 2.24) - ((isMobile ? 0.6 : 1.24) * progress); // Shrink perfectly back from 1.6 to 1.0
 
       if (privacyAt !== Infinity) {
         const shrinkStart = Math.max(0, privacyAt - window.innerHeight); // Start shrinking when it enters viewport
