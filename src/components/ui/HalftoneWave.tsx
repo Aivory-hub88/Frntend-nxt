@@ -137,8 +137,8 @@ export function HalftoneWave({ active = true }: { active?: boolean } = {}) {
           
           // Hero Colors (Premium Elegance: Midnight Core / Deep Blue-Purple Edges)
           vec3 heroCore = vec3(0.02, 0.03, 0.06); // Deep midnight core (slightly brighter)
-          vec3 heroEdge = vec3(0.15, 0.08, 0.65);  // Deep blue-purple edges (brighter blue)
-          vec3 heroIndigo = vec3(0.2, 0.1, 0.4);  // Subtle purple/indigo glow (brighter)
+          vec3 heroEdge = vec3(0.08, 0.04, 0.35);  // Deep blue-purple edges (brighter blue)
+          vec3 heroIndigo = vec3(0.1, 0.05, 0.2);  // Subtle purple/indigo glow (brighter)
           
           // The core transitions from Pink to Orange as you scroll down
           vec3 dynamicCore = mix(pinkCore, primaryCore, scrollT);
