@@ -53,18 +53,18 @@ function crossProgress(top: number, vh: number): number {
 }
 
 function useFlowerScrollOpacity() {
-  const [opacity, setOpacity] = useState(1);
+  const [opacity, setOpacity] = useState(0.95);
   useEffect(() => {
     let ticking = false;
     const update = () => {
       ticking = false;
-      const featuresEl = document.getElementById('features');
+      const statsEl = document.getElementById('stats');
       const preFooterEl = document.getElementById('prefooter-cta');
-      if (!featuresEl || !preFooterEl) return;
+      if (!statsEl || !preFooterEl) return;
       const vh = window.innerHeight;
-      const hideT = crossProgress(featuresEl.getBoundingClientRect().top, vh);
+      const hideT = crossProgress(statsEl.getBoundingClientRect().top, vh);
       const showT = crossProgress(preFooterEl.getBoundingClientRect().top, vh);
-      setOpacity(1 - hideT + hideT * showT);
+      setOpacity(0.95 - (hideT * 0.95) + (showT * 0.95));
     };
     const onScroll = () => {
       if (ticking) return;

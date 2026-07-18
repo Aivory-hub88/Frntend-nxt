@@ -103,7 +103,7 @@ export default function StatsSection() {
   }, []);
 
   return (
-    <div ref={animRef} className={`animate-on-scroll ${isVisible ? 'is-visible' : ''} w-full relative overflow-hidden`} style={{ padding: '110px 0 120px 0' }}>
+    <div id="stats" ref={animRef} className={`animate-on-scroll ${isVisible ? 'is-visible' : ''} w-full relative overflow-hidden`} style={{ padding: '110px 0 120px 0' }}>
 
 
 
