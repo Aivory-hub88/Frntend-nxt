@@ -73,7 +73,7 @@ export function HalftoneWave({ active = true }: { active?: boolean } = {}) {
           // rotation angles, not just the most grazing edges)
           float rimRaw = 1.0 - max(0.0, dot(viewDir, normal));
           // Smoothstep but with a very wide radius so the rim reaches deep inside
-          float rimSmooth = smoothstep(0.0, 1.0, rimRaw);
+          float rimSmooth = smoothstep(0.2, 1.0, rimRaw);
           // Quantize (posterize) into 4 distinct sharp bands (patahan tegas dan banyak)
           float rim = floor(rimSmooth * 4.0) / 3.0;
           
