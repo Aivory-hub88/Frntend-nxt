@@ -29,6 +29,10 @@ const SITE_DESCRIPTION =
 const DEFAULT_OG_IMAGE = '/og-image.jpg';
 
 export const metadata: Metadata = {
+  icons: {
+    icon: "/icon.svg",
+    apple: "/icon.svg",
+  },
   metadataBase: new URL(SITE_URL),
   title: {
     default: SITE_TITLE,
@@ -57,6 +61,8 @@ export const metadata: Metadata = {
 
 import { headers } from 'next/headers';
 import { LanguageProvider } from '@/components/context/LanguageContext';
+import AiTrap from '@/components/security/AiTrap';
+import CanaryLink from '@/components/security/CanaryLink';
 
 // aivory.uk is served by a Cloudflare Worker that reverse-proxies this app
 // (see the aivory-uk-reverse-proxy Worker), forwarding the real hostname via
@@ -98,6 +104,8 @@ export default async function RootLayout({
           }}
         />
         <LanguageProvider initialLanguage={initialLanguage}>
+          <AiTrap />
+          <CanaryLink />
           {children}
         </LanguageProvider>
       </body>
