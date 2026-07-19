@@ -151,7 +151,7 @@ export function HalftoneWave({ active = true }: { active?: boolean } = {}) {
           
           // Keep the orange/purple transition smoothly fading towards the edge.
           // Tighter radius in hero section (scrollT = 0), widening as you scroll down.
-          float radiusGateEnd = 0.4; 
+          float radiusGateEnd = 0.75; 
           float coreRadiusGate = 1.0 - smoothstep(0.1, radiusGateEnd, normalizedDepth);
           
           // Reduced intensity in hero section (0.35) so it's not overpowering, scales to 1.0 on scroll
