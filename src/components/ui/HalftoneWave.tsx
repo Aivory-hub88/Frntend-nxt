@@ -131,27 +131,27 @@ export function HalftoneWave({ active = true }: { active?: boolean } = {}) {
           // Original Colors
           vec3 primaryCore = vec3(0.737, 0.306, 0.208); // #bc4e35
           vec3 pinkCore = vec3(0.808, 0.004, 0.310);  // #ce014f (Deep pink/red requested for hero)
-          vec3 corePurple = vec3(0.194, 0.0, 0.570); // #2d0084 (Deep violet/purple)
+          vec3 corePurple = vec3(0.202, 0.0, 0.596); // #2d0084 (Deep violet/purple)
           vec3 origEdge = vec3(0.04, 0.18, 0.32);
           vec3 origIndigo = vec3(0.215, 0.078, 0.474); // #371479
           
           // Hero Colors (Premium Elegance: Midnight Core / Deep Blue-Purple Edges)
           vec3 heroCore = vec3(0.02, 0.03, 0.06); // Deep midnight core (slightly brighter)
-          vec3 heroEdge = vec3(0.121, 0.061, 0.531);  // Deep blue-purple edges (brighter blue)
-          vec3 heroIndigo = vec3(0.152, 0.076, 0.304);  // Subtle purple/indigo glow (brighter)
+          vec3 heroEdge = vec3(0.127, 0.063, 0.555);  // Deep blue-purple edges (brighter blue)
+          vec3 heroIndigo = vec3(0.159, 0.079, 0.317);  // Subtle purple/indigo glow (brighter)
           
           // The core transitions from Pink to Orange as you scroll down
           vec3 dynamicCore = mix(pinkCore, primaryCore, scrollT);
           
           // Create a shimmering effect mixing the dynamic core color and #2d0084 Purple
           // The purple fades out on scroll, leaving only the orange core.
-          float purpleAmount = (1.0 - scrollT) * 0.935;
+          float purpleAmount = (1.0 - scrollT) * 0.977;
           float coreShimmer = 0.5 + 0.5 * sin(uTime * 2.0 + vLocalPos.x * 6.0 - vLocalPos.y * 5.0 + cos(uTime + vLocalPos.z * 4.0));
           vec3 mixedCore = mix(dynamicCore, corePurple, coreShimmer * purpleAmount);
           
           // Keep the orange/purple transition smoothly fading towards the edge.
           // Tighter radius in hero section (scrollT = 0), widening as you scroll down.
-          float radiusGateEnd = 0.75; 
+          float radiusGateEnd = mix(0.75, 0.4, scrollT); 
           float coreRadiusGate = 1.0 - smoothstep(0.1, radiusGateEnd, normalizedDepth);
           
           // Reduced intensity in hero section (0.35) so it's not overpowering, scales to 1.0 on scroll
