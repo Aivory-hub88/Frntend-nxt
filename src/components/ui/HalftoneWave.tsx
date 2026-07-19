@@ -172,7 +172,7 @@ export function HalftoneWave({ active = true }: { active?: boolean } = {}) {
           // Add a subtle orange laser-beam sparkle at the core (5% intensity, tiny radius)
           float orangeLaser = pow(1.0 - smoothstep(0.0, 0.15, normalizedDepth), 4.0);
           float laserSparkle = 0.5 + 0.5 * sin(uTime * 5.0 + vLocalPos.z * 12.0);
-          finalColor += primaryCore * orangeLaser * laserSparkle * 0.05;
+          finalColor += primaryCore * orangeLaser * laserSparkle * 0.05 * (1.0 - scrollT);
 
           // Subtle living color nuance — a soft violet <-> teal shimmer that
           // harmonizes with the midnight / indigo palette. Kept low so it never
