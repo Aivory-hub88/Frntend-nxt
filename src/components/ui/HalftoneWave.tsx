@@ -169,10 +169,10 @@ export function HalftoneWave({ active = true }: { active?: boolean } = {}) {
           // Apply Indigo as a subtle additive glow
           float indigoGradient = smoothstep(0.2, 0.8, normalizedDepth + rim);
           finalColor += indigoColor * indigoGradient * 0.4;
-          // Add a very thin, subtle orange laser-beam ring at the Silhouette Edge (elegant, not intense)
-          float orangeLaser = smoothstep(0.95, 1.0, rim);
+          // Add a very thin, elegant true-orange laser-beam ring at the Silhouette Edge
+          float orangeLaser = smoothstep(0.96, 1.0, rim);
           float laserSparkle = 0.5 + 0.5 * sin(uTime * 4.0 + vLocalPos.y * 12.0);
-          finalColor += primaryCore * orangeLaser * laserSparkle * 0.15 * (1.0 - scrollT);
+          finalColor += vec3(1.0, 0.45, 0.0) * orangeLaser * laserSparkle * 0.4 * (1.0 - scrollT);
 
           // Subtle living color nuance — a soft violet <-> teal shimmer that
           // harmonizes with the midnight / indigo palette. Kept low so it never
