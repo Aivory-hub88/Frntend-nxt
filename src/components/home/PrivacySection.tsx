@@ -712,15 +712,14 @@ export default function PrivacySection() {
               </SpotlightButton>
             </div>
             <h2 className="no-word-split text-3xl md:text-4xl lg:text-5xl font-light tracking-tight leading-[1.2] mb-10" style={{ fontFamily: "'Manrope', sans-serif", fontWeight: 300 }}>
-              Your data stays
+              Data sovereignty is
               <br />
-              where it belongs.
+              non-negotiable.
             </h2>
 
             <div className="border-t border-white/20 pt-8 mt-12">
               <p className="text-lg md:text-xl font-light mb-12">
-                No training. No logging. No exceptions. Everything runs in your
-                browser.
+                Zero model training. Zero third-party logging. Your operational data remains entirely within your control.
               </p>
 
               {/* Privacy & Badges Grid (3 columns: 3-3-2) */}

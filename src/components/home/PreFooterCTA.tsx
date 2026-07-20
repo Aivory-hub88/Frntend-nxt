@@ -110,10 +110,10 @@ export default function PreFooterCTA() {
             Direct Engagement
           </SpotlightButton>
           <h2 className="no-word-split text-3xl md:text-4xl lg:text-5xl font-light tracking-tight leading-[1.2] mb-6" style={{ fontFamily: "'Manrope', sans-serif", fontWeight: 300 }}>
-            Prefer to Work With Our Team Directly?
+            Direct Engagement.
           </h2>
           <p className="text-[#dadada] text-lg md:text-xl font-light mb-10 max-w-4xl">
-            Work directly with Aivory™ experts to validate your strategy, design custom AI systems, train your teams, and accelerate implementation.
+            Partner with our enterprise team to audit operations, architect transformation roadmaps, and deploy governed AI systems at scale.
           </p>
 
           {/* Divider */}

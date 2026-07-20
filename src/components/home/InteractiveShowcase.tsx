@@ -85,67 +85,76 @@ const showcaseProducts = [
   {
     id: "diagnostic",
     step: "01. DISCOVER",
-    title: "Deep Assessment",
+    title: "Business Operations Assessment",
     description: (
       <>
-        With Aivory&apos;s deterministic framework, all you need to do is input your operations, constraints, and data. We&apos;ll map your readiness, execution gaps, and what&apos;s needed to move forward.{" "}
-        <span className="font-semibold text-white">
-          No lengthy consulting cycles.
-        </span>
+        Every transformation requires an operational baseline. Assess current workflows, identify structural bottlenecks, and determine where AI can drive measurable impact.
       </>
     ),
     features: [
-      "Operational Gaps Audit",
-      "Infrastructure Readiness",
-      "Constraint & Risk Check",
+      "Operational Health",
+      "Process Maturity",
+      "Transformation Priorities",
     ],
   },
   {
     id: "blueprint",
     step: "02. DESIGN",
-    title: "AI System Blueprint",
+    title: "Transformation Blueprint",
     description:
-      "Aivory maps your diagnostic results into a recommended system architecture. This blueprint defines how data, processing layers, and automation models interface, creating a clear architectural blueprint tailored to your bottlenecks.",
+      "Data without direction is noise. We map assessment insights into a structured architectural blueprint, ensuring infrastructure and operations align before execution begins.",
     features: [
-      "Data Pipeline Mapping",
-      "Integration Layers",
-      "Orchestration Blueprint",
+      "Operational Priorities",
+      "Transformation Roadmap",
+      "AI Implementation Plan",
     ],
   },
   {
     id: "roadmap",
     step: "03. PLAN",
-    title: "Implementation Roadmap",
+    title: "Transformation Roadmap",
     description:
-      "A sequenced, phased plan designed to target your high-impact bottlenecks first. We split the implementation into manageable waves, ensuring each deployment phase reaches specific, measurable milestones.",
+      "Avoid false starts. Execution requires phased deployments. We sequence transformation into measurable milestones, prioritising high-impact operational improvements.",
     features: [
-      "Phased Deployment Waves",
-      "Milestone Checkpoints",
-      "Actionable Targets",
-    ],
-  },
-  {
-    id: "console",
-    step: "04. CONTROL",
-    title: "AI Console",
-    description:
-      "A unified strategic interface. Query your systems, review diagnostic assessments, track operational telemetry, and instruct automated agents, keeping you in complete control from start to finish.",
-    features: [
-      "Conversational Consultation",
-      "System Telemetry",
-      "Agent Dispatch Control",
+      "Strategic Priorities",
+      "Measurable Milestones",
+      "Phased Execution",
     ],
   },
   {
     id: "workflow",
-    step: "05. BUILD",
+    step: "04. BUILD",
     title: "Workflow Builder",
     description:
-      "Say it, and it builds. Plain language becomes executable automation — no code, no complexity, just intent turned into action across your entire stack.",
+      "Execution must be frictionless. Turn operational logic into automated workflows using plain language. No code. Direct integration into existing systems.",
     features: [
-      "Natural Language → Live Workflow",
-      "No Code, No Setup Friction",
-      "Connects Your Entire Stack",
+      "Natural Language to Workflow",
+      "No Code Setup",
+      "Stack Integration",
+    ],
+  },
+  {
+    id: "agents",
+    step: "05. DEPLOY",
+    title: "AI Agents",
+    description:
+      "AI is not a standalone tool. It is an execution layer. Deploy governed agents directly into business workflows to automate tasks and accelerate decision making.",
+    features: [
+      "Governed Execution",
+      "Task Automation",
+      "Decision Acceleration",
+    ],
+  },
+  {
+    id: "console",
+    step: "06. CONTROL",
+    title: "Operations Console",
+    description:
+      "Transformation requires oversight. A unified interface to monitor system telemetry, track operational performance, and govern AI execution across the enterprise.",
+    features: [
+      "System Telemetry",
+      "Performance Tracking",
+      "Enterprise Governance",
     ],
   },
 ];
@@ -334,7 +343,7 @@ export function DiagnosticAnimation() {
               className="flex items-center justify-center w-full h-full absolute inset-0"
             >
               <span className="text-sm sm:text-base text-white/90 font-medium">
-                Lets begin your AI Readiness Assessment
+                Lets begin your Business Operations Assessment
               </span>
             </motion.div>
           )}

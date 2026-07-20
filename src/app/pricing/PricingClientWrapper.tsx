@@ -22,10 +22,10 @@ export default function PricingClientWrapper() {
       <div className="max-w-7xl mx-auto px-6">
         <div className="text-center mb-12">
           <h1 className="text-[36px] md:text-[56px] font-normal tracking-tight text-[#1a1a1a]" style={{ fontFamily: "'Manrope', sans-serif" }}>
-            Priced for Progress.
+            Transformation is a journey.
           </h1>
           <p className="text-[#494949] text-xl max-w-2xl mx-auto font-light leading-relaxed mt-4">
-            From your first assessment to full deployment, pick the stage that fits where you are today.
+            Not a software purchase. Pricing designed to support operational scale and continuous execution.
           </p>
         </div>
 

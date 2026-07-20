@@ -10,11 +10,11 @@ interface StatItem {
 }
 
 const stats: StatItem[] = [
-  { target: 30, suffix: '+', label: 'Seamless Integrations' },
-  { target: 50, suffix: '+', label: 'Intelligent Workflows' },
-  { target: 8, suffix: '', label: 'Core Enterprise Architectures' },
-  { target: 5, suffix: '', label: 'Deployable AI Agents' },
-  { target: 1, suffix: '', label: 'Mission to Make AI Make Sense®' },
+  { target: 30, suffix: '+', label: 'Enterprise Integrations' },
+  { target: 50, suffix: '+', label: 'Automated Workflows' },
+  { target: 8, suffix: '', label: 'Core Architectures' },
+  { target: 5, suffix: '', label: 'Autonomous Agents' },
+  { target: 1, suffix: '', label: 'Unified Platform' },
 ];
 
 function useCountUp(target: number, active: boolean, duration = 2000) {

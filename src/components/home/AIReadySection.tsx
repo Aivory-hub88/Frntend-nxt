@@ -18,9 +18,9 @@ export default function AIReadySection() {
               className="text-4xl sm:text-5xl md:text-[44px] lg:text-[54px] font-light tracking-tight leading-[1.1] text-white m-0 text-left"
               style={{ fontFamily: "'Manrope', sans-serif", fontWeight: 300 }}
             >
-              Where do
+              Transformation requires
               <br />
-              we{" "}
+              operational{" "}
               <span 
                 className="italic inline-block" 
                 style={{ 
@@ -29,7 +29,7 @@ export default function AIReadySection() {
                   marginRight: "-0.25em" 
                 }}
               >
-                start?
+                clarity.
               </span>
             </h2>
           </div>
@@ -37,25 +37,11 @@ export default function AIReadySection() {
           {/* Right Column */}
           <div className="w-full md:w-1/2 flex flex-col justify-start text-left">
             <p className="text-white/80 font-light leading-relaxed text-[14px] md:text-[16px] m-0 max-w-xl">
-              That&rsquo;s the question that stops most AI adoption before it
-              begins.{" "}
-              <span className="text-white font-medium">Aivory answers it.</span>
+              Most organisations deploy AI before understanding their operations.{" "}
+              <span className="text-white font-medium">We reverse the model.</span>
               <br />
               <br />
-              Assess your readiness. Get a plan built for your business. Launch
-              it.{" "}
-              <span className="text-white font-medium">
-                Not a consultant. A system.
-              </span>
-              <br />
-              <br />
-              No guesswork. No noise.
-            </p>
-            <p
-              className="text-white font-light leading-relaxed mt-12 text-xl md:text-2xl lg:text-3xl"
-              style={{ fontFamily: "'Manrope', sans-serif", fontWeight: 300 }}
-            >
-              AI that works, from day one.
+              Assess operations. Identify bottlenecks. Deploy AI where it creates measurable impact.
             </p>
           </div>
         </div>
