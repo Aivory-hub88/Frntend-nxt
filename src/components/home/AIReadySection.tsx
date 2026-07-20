@@ -15,7 +15,7 @@ export default function AIReadySection() {
           {/* Left Column */}
           <div className="w-full md:w-1/2 flex justify-start">
             <h2
-              className="text-4xl sm:text-5xl md:text-[44px] lg:text-[54px] font-light tracking-tight leading-[1.1] text-white m-0 text-left"
+              className="text-3xl sm:text-4xl md:text-[31px] lg:text-[38px] font-light tracking-tight leading-[1.1] text-white m-0 text-left"
               style={{ fontFamily: "'Manrope', sans-serif", fontWeight: 300 }}
             >
               Transformation requires
@@ -41,7 +41,10 @@ export default function AIReadySection() {
               <span className="text-white font-medium">We reverse the model.</span>
               <br />
               <br />
-              Assess operations. Identify bottlenecks. Deploy AI where it creates measurable impact.
+              Assess operations. Identify bottlenecks.{" "}
+              <span className="text-white font-medium">
+                Deploy AI where it creates measurable impact.
+              </span>
             </p>
           </div>
         </div>
