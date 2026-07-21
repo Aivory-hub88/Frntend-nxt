@@ -5,7 +5,7 @@ const SvgBastionHeroSection = (props: SVGProps<SVGSVGElement>) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     id="Bastion_Hero_Section_svg__Layer_1"
-    viewBox="-150 0 2150 363.3"
+    viewBox="-373 0 2600 363.3"
     {...props}
   >
     <defs>
