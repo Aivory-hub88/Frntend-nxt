@@ -18,20 +18,6 @@ export default function BastionHero() {
             </p>
           </FadeUpChild>
           
-          <FadeUpChild>
-            <p className="text-base md:text-lg text-[#B3B3B3] max-w-2xl mx-auto leading-relaxed mb-16 font-light">
-              Aivory Bastion continuously reasons across your infrastructure to identify, contain, and learn from evolving threats without relying on static rules or constant human intervention.
-            </p>
-          </FadeUpChild>
-          
-          <FadeUpChild className="flex flex-col sm:flex-row items-center justify-center gap-6">
-            <Link 
-              href="mailto:sales@aivory.id" 
-              className="text-white border border-[#1F1F1F] bg-[#101010] px-8 py-4 rounded-full font-medium hover:bg-[#1F1F1F] transition-colors w-full sm:w-auto"
-            >
-              Contact Sales
-            </Link>
-          </FadeUpChild>
         </FadeUp>
       </div>
     </section>
