@@ -9,6 +9,7 @@ export default function BastionVisualHero() {
             src="/Bastion_Hero_Section.svg" 
             alt="Aivory Bastion" 
             className="w-full h-auto object-contain"
+            style={{ transform: 'scale(1.15)', transformOrigin: 'center' }}
           />
         </FadeUp>
       </div>
