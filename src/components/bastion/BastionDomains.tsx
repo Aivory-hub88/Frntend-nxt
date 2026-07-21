@@ -36,14 +36,14 @@ export default function BastionDomains() {
             Defense Intelligence Domains
           </h2>
         </FadeUp>
-        <FadeUp staggerChildren={0.1} className="flex flex-col max-w-4xl">
+        <FadeUp staggerChildren={0.1} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-12 gap-y-16">
           {domains.map((domain, index) => (
             <FadeUpChild 
               key={index} 
-              className="border-b border-[#1F1F1F] pb-12 mb-12 last:border-b-0 last:pb-0 last:mb-0"
+              className="border-t border-[#333333] pt-8"
             >
-              <h3 className="text-2xl md:text-3xl font-bold text-[#FFFFFF] mb-6">{domain.title}</h3>
-              <p className="text-lg md:text-xl text-[#B3B3B3] font-light leading-relaxed">
+              <h3 className="text-xl md:text-2xl font-light text-[#FFFFFF] mb-4">{domain.title}</h3>
+              <p className="text-base md:text-lg text-[#B3B3B3] font-light leading-relaxed">
                 {domain.description}
               </p>
             </FadeUpChild>
