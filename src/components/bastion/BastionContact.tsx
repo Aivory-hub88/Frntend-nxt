@@ -19,32 +19,32 @@ export default function BastionContact() {
           <div className="w-full">
             <form className="flex flex-col gap-10" onSubmit={(e) => e.preventDefault()}>
               <div className="flex flex-col gap-2">
-                <label className="text-[10px] tracking-widest text-[#808080] uppercase">First Name: <span className="text-red-500">*</span></label>
-                <input type="text" className="bg-transparent border-b border-[#333333] focus:border-white outline-none py-2 text-white transition-colors" required />
+                <label className="text-[10px] tracking-widest text-white uppercase">First Name: <span className="text-red-500">*</span></label>
+                <input type="text" className="bg-transparent border-b border-white focus:border-white outline-none py-2 text-white transition-colors" required />
               </div>
               <div className="flex flex-col gap-2">
-                <label className="text-[10px] tracking-widest text-[#808080] uppercase">Last Name: <span className="text-red-500">*</span></label>
-                <input type="text" className="bg-transparent border-b border-[#333333] focus:border-white outline-none py-2 text-white transition-colors" required />
+                <label className="text-[10px] tracking-widest text-white uppercase">Last Name: <span className="text-red-500">*</span></label>
+                <input type="text" className="bg-transparent border-b border-white focus:border-white outline-none py-2 text-white transition-colors" required />
               </div>
               <div className="flex flex-col gap-2">
-                <label className="text-[10px] tracking-widest text-[#808080] uppercase">Job Title: <span className="text-red-500">*</span></label>
-                <input type="text" className="bg-transparent border-b border-[#333333] focus:border-white outline-none py-2 text-white transition-colors" required />
+                <label className="text-[10px] tracking-widest text-white uppercase">Job Title: <span className="text-red-500">*</span></label>
+                <input type="text" className="bg-transparent border-b border-white focus:border-white outline-none py-2 text-white transition-colors" required />
               </div>
               <div className="flex flex-col gap-2">
-                <label className="text-[10px] tracking-widest text-[#808080] uppercase">Company/Institution Name: <span className="text-red-500">*</span></label>
-                <input type="text" className="bg-transparent border-b border-[#333333] focus:border-white outline-none py-2 text-white transition-colors" required />
+                <label className="text-[10px] tracking-widest text-white uppercase">Company/Institution Name: <span className="text-red-500">*</span></label>
+                <input type="text" className="bg-transparent border-b border-white focus:border-white outline-none py-2 text-white transition-colors" required />
               </div>
               <div className="flex flex-col gap-2">
-                <label className="text-[10px] tracking-widest text-[#808080] uppercase">Business Email: <span className="text-red-500">*</span></label>
-                <input type="email" className="bg-transparent border-b border-[#333333] focus:border-white outline-none py-2 text-white transition-colors" required />
+                <label className="text-[10px] tracking-widest text-white uppercase">Business Email: <span className="text-red-500">*</span></label>
+                <input type="email" className="bg-transparent border-b border-white focus:border-white outline-none py-2 text-white transition-colors" required />
               </div>
               <div className="flex flex-col gap-2">
-                <label className="text-[10px] tracking-widest text-[#808080] uppercase">Phone Number:</label>
-                <input type="tel" className="bg-transparent border-b border-[#333333] focus:border-white outline-none py-2 text-white transition-colors" />
+                <label className="text-[10px] tracking-widest text-white uppercase">Phone Number:</label>
+                <input type="tel" className="bg-transparent border-b border-white focus:border-white outline-none py-2 text-white transition-colors" />
               </div>
               <div className="flex flex-col gap-2">
-                <label className="text-[10px] tracking-widest text-[#808080] uppercase">Country: <span className="text-red-500">*</span></label>
-                <select className="bg-transparent border-b border-[#333333] focus:border-white outline-none py-2 text-[#808080] appearance-none transition-colors" required defaultValue="">
+                <label className="text-[10px] tracking-widest text-white uppercase">Country: <span className="text-red-500">*</span></label>
+                <select className="bg-transparent border-b border-white focus:border-white outline-none py-2 text-white appearance-none transition-colors" required defaultValue="">
                   <option value="" disabled>Select...</option>
                   <option value="ID" className="text-black">Indonesia</option>
                   <option value="SG" className="text-black">Singapore</option>
