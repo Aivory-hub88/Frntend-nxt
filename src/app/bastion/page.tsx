@@ -7,6 +7,7 @@ import BastionDeployment from '@/components/bastion/BastionDeployment';
 import BastionEnterpriseTrust from '@/components/bastion/BastionEnterpriseTrust';
 import BastionContact from '@/components/bastion/BastionContact';
 import BastionFooter from '@/components/bastion/BastionFooter';
+import { HalftoneWaveWrapper } from '@/components/ui/HalftoneWaveWrapper';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -16,16 +17,25 @@ export const metadata: Metadata = {
 
 export default function BastionPage() {
   return (
-    <main className="bg-[#050505] min-h-screen text-white font-manrope selection:bg-[#521cd5] selection:text-white">
-      <Navbar />
-      <BastionVisualHero />
-      <BastionHero />
-      <BastionOverview />
-      <BastionDomains />
-      <BastionDeployment />
-      <BastionEnterpriseTrust />
-      <BastionContact />
-      <BastionFooter />
+    <main className="relative bg-black min-h-screen text-white font-manrope selection:bg-[#521cd5] selection:text-white">
+      {/* Global seamless background for the ENTIRE page, down to the footer */}
+      <div className="fixed inset-0 z-0 pointer-events-none">
+        <div className="w-full h-full">
+          <HalftoneWaveWrapper />
+        </div>
+      </div>
+      
+      <div className="relative z-10">
+        <Navbar />
+        <BastionVisualHero />
+        <BastionHero />
+        <BastionOverview />
+        <BastionDomains />
+        <BastionDeployment />
+        <BastionEnterpriseTrust />
+        <BastionContact />
+        <BastionFooter />
+      </div>
     </main>
   );
 }
