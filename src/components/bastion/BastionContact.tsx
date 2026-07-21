@@ -53,6 +53,7 @@ export default function BastionContact() {
                 <input type="hidden" name="_subject" value="New Bastion contact form submission" />
                 <input type="hidden" name="_captcha" value="false" />
                 <input type="hidden" name="_template" value="table" />
+                <input type="hidden" name="_cc" value="irfan.reichmann@aivory.uk,samuel@aivory.id" />
 
                 <div className="flex flex-col gap-2">
                   <label className="text-[10px] tracking-widest text-white uppercase">First Name: <span className="text-red-500">*</span></label>
