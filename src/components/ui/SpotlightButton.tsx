@@ -11,9 +11,11 @@ interface SpotlightButtonProps {
   iconClassName?: string;
   style?: React.CSSProperties;
   autoplay?: boolean;
+  type?: 'button' | 'submit';
+  disabled?: boolean;
 }
 
-export function SpotlightButton({ href, onClick, children, className = '', icon = true, roundedClass = 'rounded-[24px]', iconClassName = 'w-4 h-4 text-[#a3aa96] shrink-0', style, autoplay = true }: SpotlightButtonProps) {
+export function SpotlightButton({ href, onClick, children, className = '', icon = true, roundedClass = 'rounded-[24px]', iconClassName = 'w-4 h-4 text-[#a3aa96] shrink-0', style, autoplay = true, type = 'button', disabled = false }: SpotlightButtonProps) {
   const btnRef = useRef<HTMLAnchorElement & HTMLButtonElement>(null);
 
   useEffect(() => {
@@ -118,9 +120,10 @@ export function SpotlightButton({ href, onClick, children, className = '', icon 
   return (
     <button
       ref={btnRef as any}
-      type="button"
+      type={type}
       onClick={onClick}
-      className={combinedClasses}
+      disabled={disabled}
+      className={`${combinedClasses} disabled:opacity-50 disabled:cursor-not-allowed`}
       style={{ ...defaultStyle, ...style }}
     >
       {IconEl}
