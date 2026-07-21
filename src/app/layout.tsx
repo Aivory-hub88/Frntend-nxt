@@ -61,8 +61,8 @@ export const metadata: Metadata = {
 
 import { headers } from 'next/headers';
 import { LanguageProvider } from '@/components/context/LanguageContext';
-import AiTrap from '@/components/security/AiTrap';
-import CanaryLink from '@/components/security/CanaryLink';
+// import AiTrap from '@/components/security/AiTrap';
+// import CanaryLink from '@/components/security/CanaryLink';
 
 // aivory.uk is served by a Cloudflare Worker that reverse-proxies this app
 // (see the aivory-uk-reverse-proxy Worker), forwarding the real hostname via
@@ -104,8 +104,8 @@ export default async function RootLayout({
           }}
         />
         <LanguageProvider initialLanguage={initialLanguage}>
-          <AiTrap />
-          <CanaryLink />
+          {/* <AiTrap /> */}
+          {/* <CanaryLink /> */}
           {children}
         </LanguageProvider>
       </body>

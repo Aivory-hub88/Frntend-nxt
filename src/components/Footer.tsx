@@ -11,6 +11,7 @@ const productLinks = [
   { label: 'Workflow Builder', href: '/product' },
   { label: 'AI Agents', href: '/product' },
   { label: 'Template Library', href: '/product' },
+  { label: 'Bastion', href: '/bastion' },
 ];
 
 const companyLinks = [
