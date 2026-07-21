@@ -3,7 +3,7 @@ import Link from 'next/link';
 
 export default function BastionHero() {
   return (
-    <section className="relative flex items-center justify-center bg-[#050505] text-white py-32 overflow-hidden">
+    <section className="relative flex items-center justify-center bg-transparent text-white py-32 overflow-hidden">
       <div className="max-w-7xl mx-auto px-6 md:px-12 relative z-10 w-full text-center">
         <FadeUp staggerChildren={0.2} className="flex flex-col items-center">
           <FadeUpChild>

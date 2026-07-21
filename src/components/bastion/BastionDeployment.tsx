@@ -86,7 +86,7 @@ const deployments = [
 
 export default function BastionDeployment() {
   return (
-    <section className="bg-[#050505] text-white py-32 border-t border-[#1F1F1F] overflow-hidden">
+    <section className="bg-transparent text-white py-32 border-t border-[#1F1F1F] overflow-hidden">
       <div className="max-w-[1600px] mx-auto px-6 md:px-12">
         <FadeUp className="mb-16 md:mb-24">
           <h2 className="text-4xl md:text-6xl lg:text-[72px] tracking-tight font-light leading-tight text-[#FFFFFF] max-w-4xl">

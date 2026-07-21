@@ -6,7 +6,7 @@ import BastionDomains from '@/components/bastion/BastionDomains';
 import BastionDeployment from '@/components/bastion/BastionDeployment';
 import BastionEnterpriseTrust from '@/components/bastion/BastionEnterpriseTrust';
 import BastionContact from '@/components/bastion/BastionContact';
-import BastionFooter from '@/components/bastion/BastionFooter';
+import Footer from '@/components/Footer';
 import BastionBackground from '@/components/bastion/BastionBackground';
 import { Metadata } from 'next';
 
@@ -30,7 +30,7 @@ export default function BastionPage() {
         <BastionDeployment />
         <BastionEnterpriseTrust />
         <BastionContact />
-        <BastionFooter />
+        <Footer />
       </div>
     </main>
   );
