@@ -1,4 +1,5 @@
 import Navbar from '@/components/home/Navbar';
+import BastionVisualHero from '@/components/bastion/BastionVisualHero';
 import BastionHero from '@/components/bastion/BastionHero';
 import BastionOverview from '@/components/bastion/BastionOverview';
 import BastionDomains from '@/components/bastion/BastionDomains';
@@ -17,6 +18,7 @@ export default function BastionPage() {
   return (
     <main className="bg-[#050505] min-h-screen text-white font-manrope selection:bg-[#521cd5] selection:text-white">
       <Navbar />
+      <BastionVisualHero />
       <BastionHero />
       <BastionOverview />
       <BastionDomains />

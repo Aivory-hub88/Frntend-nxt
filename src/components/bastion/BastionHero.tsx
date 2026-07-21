@@ -3,7 +3,7 @@ import Link from 'next/link';
 
 export default function BastionHero() {
   return (
-    <section className="relative min-h-[90vh] flex items-center justify-center bg-[#050505] text-white pt-32 pb-24 overflow-hidden">
+    <section className="relative flex items-center justify-center bg-[#050505] text-white py-32 overflow-hidden">
       <div className="max-w-7xl mx-auto px-6 md:px-12 relative z-10 w-full text-center">
         <FadeUp staggerChildren={0.2} className="flex flex-col items-center">
           <FadeUpChild>
@@ -24,15 +24,9 @@ export default function BastionHero() {
             </p>
           </FadeUpChild>
           
-          <FadeUpChild className="flex flex-col sm:flex-row items-center gap-6">
+          <FadeUpChild className="flex flex-col sm:flex-row items-center justify-center gap-6">
             <Link 
-              href="/contact" 
-              className="bg-white text-black px-8 py-4 rounded-full font-medium hover:bg-gray-200 transition-colors w-full sm:w-auto"
-            >
-              Book Enterprise Demo
-            </Link>
-            <Link 
-              href="/contact" 
+              href="mailto:sales@aivory.id" 
               className="text-white border border-[#1F1F1F] bg-[#101010] px-8 py-4 rounded-full font-medium hover:bg-[#1F1F1F] transition-colors w-full sm:w-auto"
             >
               Contact Sales
