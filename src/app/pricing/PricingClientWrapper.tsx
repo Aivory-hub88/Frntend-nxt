@@ -22,10 +22,10 @@ export default function PricingClientWrapper() {
       <div className="max-w-7xl mx-auto px-6">
         <div className="text-center mb-12">
           <h1 className="text-[36px] md:text-[56px] font-normal tracking-tight text-[#1a1a1a]" style={{ fontFamily: "'Manrope', sans-serif" }}>
-            Transformation is a journey.
+            Priced for Progress.
           </h1>
           <p className="text-[#494949] text-xl max-w-2xl mx-auto font-light leading-relaxed mt-4">
-            Not a software purchase. Pricing designed to support operational scale and continuous execution.
+            Every transformation begins with understanding how your organisation operates. Assess first, build your transformation strategy, then deploy AI with confidence.
           </p>
         </div>
 

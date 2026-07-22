@@ -54,46 +54,50 @@ interface PricingCard {
 
 const cards: PricingCard[] = [
   {
-    title: 'AI Readiness\nDeep Assessment',
-    price: 29,
-    frequency: 'One time',
-    description: 'Know exactly where your business stands on AI before you build anything.',
+    title: 'Business Operations\nAssessment',
+    price: 79,
+    frequency: 'One-time',
+    description: 'Gain a clear understanding of how your organisation operates before making AI decisions.',
     features: [
-      'AI readiness score ·',
-      'Business objective mapping ·',
-      'Gap & constraint analysis ·',
-      'AI opportunity identification ·',
-      'Data & process readiness',
+      '• Operational maturity assessment',
+      '• Business objective alignment',
+      '• Operational bottleneck analysis',
+      '• AI opportunity mapping',
+      '• Process and data readiness',
     ],
-    cta: 'Start Deep Assessment',
+    cta: 'Begin Assessment',
     productId: PRODUCT_IDS.DEEP_DIAGNOSTIC,
   },
   {
-    title: 'AI System\nBlueprint + Roadmap',
-    price: 85,
-    frequency: 'One time',
-    description: 'Your full AI architecture and execution plan, built around your business, not a template.',
+    title: 'Transformation\nBlueprint',
+    price: 249,
+    frequency: 'One-time',
+    description: 'Transform operational insights into a practical blueprint for business transformation and governed AI deployment.',
     features: [
-      '• Full AI system blueprint',
-      '• Workflow architecture',
-      '• Agent structure design',
-      '• Deployment-ready plan',
-      '• Phased implementation roadmap',
-      '• KPI targets per phase',
+      '• Operational transformation blueprint',
+      '• Future-state workflow architecture',
+      '• AI deployment strategy',
+      '• Integration recommendations',
+      '• Executive implementation framework',
     ],
-    cta: 'Generate Blueprint',
+    cta: 'Request Blueprint',
     productId: PRODUCT_IDS.BLUEPRINT,
   },
   {
-    title: 'Full Stack Bundle',
-    subtitle: 'Deep Assessment + Blueprint + Roadmap',
-    price: 99,
-    frequency: 'One time',
-    description: 'Everything in one. Know, plan, execute in order.',
-    features: ['• Deep Assessment', '• Blueprint', '• Roadmap'],
-    cta: 'View Deployment Plans',
+    title: 'Complete Transformation Package',
+    subtitle: 'Business Operations Assessment\n+\nTransformation Blueprint\n+\nTransformation Roadmap',
+    price: 299,
+    frequency: 'One-time',
+    description: 'Everything required to move from operational assessment to a clear transformation strategy.',
+    features: [
+      '• Business Operations Assessment',
+      '• Transformation Blueprint',
+      '• Transformation Roadmap',
+      '• AI opportunity prioritisation',
+      '• Executive implementation plan',
+    ],
+    cta: 'Start Transformation',
     productId: PRODUCT_IDS.FULL_STACK,
-    savings: 'Save 13%',
     mostPopular: true,
   },
 ];
@@ -142,7 +146,7 @@ export default function PricingStepOne({ currency }: { currency?: 'IDR' | 'USD' 
           </div>
           <h2 className="text-3xl md:text-5xl lg:text-6xl font-normal tracking-tight mb-6">Start With Clarity.</h2>
           <p className="text-xl text-[#494949] font-light leading-relaxed">
-            A structured assessment that tells you exactly what to build, why it matters, and where to begin.
+            Every transformation begins with understanding how your organisation operates. Assess first, build your transformation strategy, then deploy AI with confidence.
           </p>
         </div>
 
@@ -157,19 +161,19 @@ export default function PricingStepOne({ currency }: { currency?: 'IDR' | 'USD' 
             >
               {/* Title area */}
               <div className="flex-grow flex flex-col">
-                <div className="min-h-[96px] pb-6">
-                  <div className="h-7 mb-4">
+                <div className="min-h-[170px] pb-4">
+                  <div className="h-6 mb-3">
                     {card.mostPopular && (
-                      <span className="inline-flex items-center px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.15em] text-[#494949] border border-[#494949] rounded-full">
-                        Most Popular
+                      <span className="inline-flex items-center px-3 py-1 text-[9px] font-bold uppercase tracking-[0.15em] text-[#494949] border border-[#494949] rounded-full">
+                        Best Value
                       </span>
                     )}
                   </div>
-                  <h3 className="max-w-[410px] text-[22px] md:text-[24px] lg:text-[28px] font-normal leading-[1.1] text-[#494949] whitespace-pre-line">
+                  <h3 className="max-w-[410px] text-[18px] md:text-[20px] lg:text-[24px] font-normal leading-[1.1] text-[#494949] whitespace-pre-line">
                     {card.title}
                   </h3>
                   {card.subtitle && (
-                    <p className="mt-3 text-[14px] md:text-[15px] font-bold leading-tight text-[#8a8f8d]">
+                    <p className="mt-2 text-[12px] md:text-[13px] font-bold leading-tight text-[#8a8f8d]">
                       {card.subtitle}
                     </p>
                   )}

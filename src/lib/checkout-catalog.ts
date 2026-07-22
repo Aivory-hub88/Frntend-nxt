@@ -17,30 +17,36 @@ export interface CheckoutServiceInfo {
 const CHECKOUT_SERVICE_INFO: Record<string, CheckoutServiceInfo> = {
   [PRODUCT_IDS.DEEP_DIAGNOSTIC]: {
     description:
-      'Know exactly where your business stands on AI before you build anything.',
+      'Gain a clear understanding of how your organisation operates before making AI decisions.',
     features: [
-      'AI readiness score',
-      'Business objective mapping',
-      'Gap & constraint analysis',
-      'AI opportunity identification',
-      'Data & process readiness',
+      'Operational maturity assessment',
+      'Business objective alignment',
+      'Operational bottleneck analysis',
+      'AI opportunity mapping',
+      'Process and data readiness',
     ],
   },
   [PRODUCT_IDS.BLUEPRINT]: {
     description:
-      'Your full AI architecture and execution plan, built around your business, not a template.',
+      'Transform operational insights into a practical blueprint for business transformation and governed AI deployment.',
     features: [
-      'Full AI system blueprint',
-      'Workflow architecture',
-      'Agent structure design',
-      'Deployment-ready plan',
-      'Phased implementation roadmap',
-      'KPI targets per phase',
+      'Operational transformation blueprint',
+      'Future-state workflow architecture',
+      'AI deployment strategy',
+      'Integration recommendations',
+      'Executive implementation framework',
     ],
   },
   [PRODUCT_IDS.FULL_STACK]: {
-    description: 'Everything in one. Know, plan, execute — in order.',
-    features: ['Deep Assessment', 'Blueprint', 'Roadmap'],
+    description:
+      'Everything required to move from operational assessment to a clear transformation strategy.',
+    features: [
+      'Business Operations Assessment',
+      'Transformation Blueprint',
+      'Transformation Roadmap',
+      'AI opportunity prioritisation',
+      'Executive implementation plan',
+    ],
   },
   [PRODUCT_IDS.FOUNDATION]: {
     description:
