@@ -1,3 +1,6 @@
+'use client';
+
+import { useRef, useState, useEffect } from 'react';
 import { FadeUp, FadeUpChild } from './FadeUp';
 
 // Common stroke properties for geometric backgrounds
@@ -84,6 +87,77 @@ const deployments = [
   { name: 'Container Platforms', bg: SvgContainer }
 ];
 
+function DeploymentCard({ deployment }: { deployment: typeof deployments[0] }) {
+  const cardRef = useRef<HTMLDivElement>(null);
+  const Bg = deployment.bg;
+
+  useEffect(() => {
+    const startTime = Math.random() * 10000;
+    let animationFrameId: number;
+    let isHovering = false;
+
+    const animate = (time: number) => {
+      if (cardRef.current && !isHovering) {
+        const rect = cardRef.current.getBoundingClientRect();
+        const centerX = rect.width / 2;
+        const centerY = rect.height / 2;
+        const radiusX = rect.width / 2;
+        const radiusY = rect.height / 2;
+        const speed = 0.001; 
+        const angle = (time + startTime) * speed;
+        
+        const x = centerX + radiusX * Math.cos(angle);
+        const y = centerY - radiusY * Math.sin(angle);
+        
+        cardRef.current.style.setProperty('--mouse-x', `${x}px`);
+        cardRef.current.style.setProperty('--mouse-y', `${y}px`);
+      }
+      animationFrameId = requestAnimationFrame(animate);
+    };
+
+    animationFrameId = requestAnimationFrame(animate);
+
+    const el = cardRef.current;
+    if (el) {
+      el.addEventListener('mouseenter', () => isHovering = true);
+      el.addEventListener('mouseleave', () => isHovering = false);
+    }
+
+    return () => {
+      cancelAnimationFrame(animationFrameId);
+      if (el) {
+        el.removeEventListener('mouseenter', () => isHovering = true);
+        el.removeEventListener('mouseleave', () => isHovering = false);
+      }
+    };
+  }, []);
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (!cardRef.current) return;
+    const rect = cardRef.current.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    cardRef.current.style.setProperty('--mouse-x', `${x}px`);
+    cardRef.current.style.setProperty('--mouse-y', `${y}px`);
+  };
+
+  return (
+    <FadeUpChild className="w-full">
+      <div 
+        ref={cardRef}
+        onMouseMove={handleMouseMove}
+        className="group relative bg-black rounded-[24px] border border-white/10 overflow-hidden aspect-[3/4] transition-colors hover:border-white/20 flex items-end p-6 md:p-8 spotlight-card auto-spotlight w-full"
+      >
+        <Bg />
+        <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent z-10" />
+        <span className="relative z-20 text-sm md:text-base font-medium text-[#EAEAEA] group-hover:text-white transition-colors">
+          {deployment.name}
+        </span>
+      </div>
+    </FadeUpChild>
+  );
+}
+
 export default function BastionDeployment() {
   return (
     <section className="bg-transparent text-white py-32 overflow-hidden">
@@ -95,21 +169,9 @@ export default function BastionDeployment() {
         </FadeUp>
         
         <FadeUp staggerChildren={0.1} className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 lg:gap-6">
-          {deployments.map((deployment, index) => {
-            const Bg = deployment.bg;
-            return (
-              <FadeUpChild 
-                key={index} 
-                className="group relative bg-black rounded-[24px] border border-white/10 overflow-hidden aspect-[3/4] transition-colors hover:border-white/20 flex items-end p-6 md:p-8"
-              >
-                <Bg />
-                <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent z-10" />
-                <span className="relative z-20 text-sm md:text-base font-medium text-[#EAEAEA] group-hover:text-white transition-colors">
-                  {deployment.name}
-                </span>
-              </FadeUpChild>
-            );
-          })}
+          {deployments.map((deployment, index) => (
+            <DeploymentCard key={index} deployment={deployment} />
+          ))}
         </FadeUp>
       </div>
     </section>
