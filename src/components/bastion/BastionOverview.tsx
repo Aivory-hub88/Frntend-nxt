@@ -11,9 +11,9 @@ export default function BastionOverview() {
           <FadeUp className="flex flex-col justify-start">
             <h2 className="text-3xl md:text-5xl font-light leading-tight mb-8 text-[#FFFFFF] flex flex-wrap items-center gap-4">
               <span>Govern AI with confidence.</span>
-              <div className="flex-shrink-0">
+              <span className="flex-shrink-0">
                 <ThinkingOrb state="solving" size={84} speed={0.25} />
-              </div>
+              </span>
             </h2>
             <p className="text-lg text-[#B3B3B3] font-light leading-relaxed mb-6">
               Enterprise AI requires more than intelligence. It requires governance, visibility, security, and operational trust.
