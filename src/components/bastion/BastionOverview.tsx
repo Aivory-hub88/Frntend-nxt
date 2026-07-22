@@ -1,9 +1,41 @@
 'use client';
 
 import { FadeUp, FadeUpChild } from './FadeUp';
-import dynamic from 'next/dynamic';
 
-const ThinkingOrb = dynamic(() => import('thinking-orbs').then(mod => mod.ThinkingOrb), { ssr: false });
+const AnimatedOrb = ({ size = 84 }: { size?: number }) => {
+  const dots = [];
+  const numDots = 48;
+  const goldenRatio = (1 + Math.sqrt(5)) / 2;
+  
+  for (let i = 0; i < numDots; i++) {
+    const t = i / (numDots - 1);
+    const inclination = Math.acos(1 - 2 * t);
+    const azimuth = 2 * Math.PI * i / goldenRatio;
+    
+    const x = Math.sin(inclination) * Math.cos(azimuth);
+    const y = Math.sin(inclination) * Math.sin(azimuth);
+    const z = Math.cos(inclination);
+    
+    const radius = 40;
+    const cx = 50 + x * radius;
+    const cy = 50 + y * radius;
+    const r = 1 + (z + 1) * 0.75;
+    const opacity = 0.3 + (z + 1) * 0.35;
+    
+    dots.push(
+      <circle key={i} cx={cx} cy={cy} r={r} fill="#FFFFFF" opacity={opacity} />
+    );
+  }
+  
+  return (
+    <div className="relative flex items-center justify-center" style={{ width: size, height: size }}>
+      <svg viewBox="0 0 100 100" className="w-full h-full animate-[spin_12s_linear_infinite]">
+        {dots}
+      </svg>
+      <div className="absolute inset-0 m-auto rounded-full bg-white/5 blur-lg animate-pulse" style={{ width: '70%', height: '70%' }} />
+    </div>
+  );
+};
 
 export default function BastionOverview() {
   return (
@@ -14,7 +46,7 @@ export default function BastionOverview() {
             <div role="heading" aria-level={2} className="text-3xl md:text-5xl font-light leading-tight mb-8 text-[#FFFFFF] flex flex-wrap items-center gap-4">
               <span>Govern AI with confidence.</span>
               <span className="flex-shrink-0">
-                <ThinkingOrb state="solving" size={84} speed={0.25} />
+                <AnimatedOrb size={84} />
               </span>
             </div>
             <p className="text-lg text-[#B3B3B3] font-light leading-relaxed mb-6">
