@@ -43,9 +43,9 @@ export default function BastionOverview() {
       <div className="max-w-7xl mx-auto px-6 md:px-12">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-16 md:gap-24">
           <FadeUp className="flex flex-col justify-start">
-            <div role="heading" aria-level={2} className="text-3xl md:text-5xl font-light leading-tight mb-8 text-[#FFFFFF] flex flex-wrap items-center gap-4">
-              <span>Govern AI with confidence.</span>
-              <span className="flex-shrink-0">
+            <div role="heading" aria-level={2} className="text-3xl md:text-5xl font-light leading-tight mb-8 text-[#FFFFFF]">
+              Govern AI with confidence.
+              <span className="inline-block ml-4 align-middle translate-y-[-4px]">
                 <AnimatedOrb size={84} />
               </span>
             </div>
