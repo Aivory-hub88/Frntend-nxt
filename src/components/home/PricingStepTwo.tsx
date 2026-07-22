@@ -44,67 +44,75 @@ interface Plan {
   name: string;
   description: string;
   price: number;
+  customPriceString?: string;
   frequency: string;
+  billingNote?: string;
   features: string[];
   cta: string;
   productId?: string;
-  overageUSD?: number;
   mostPopular?: boolean;
 }
 
 const plans: Plan[] = [
   {
-    name: 'Foundation',
-    description: 'For individuals and solo professionals deploying their first AI agent.',
-    price: 20,
-    frequency: '(month)',
+    name: 'Operational',
+    description: 'For organisations beginning their operational transformation journey.',
+    price: 39,
+    frequency: '/month',
+    billingNote: 'Billed annually',
     features: [
-      '1,500 conversations/month',
-      '1 active agent',
-      '3 workflow build',
-      'Telegram or Slack (choose one)',
-      'Multilingual by default',
+      'Operational Workspace',
+      'Business Workflows',
+      '1 AI Workforce',
+      'Operational Dashboard',
+      'Standard Governance',
+      'Telegram or Slack',
+      'Multilingual',
     ],
-    cta: 'Start With Foundation',
+    cta: 'Request Licence',
     productId: PRODUCT_IDS.FOUNDATION,
-    overageUSD: 0.015
   },
   {
-    name: 'Pro',
-    description: 'For growing teams running AI operations daily.',
-    price: 44,
-    frequency: '(month)',
+    name: 'Business',
+    description: 'For growing organisations modernising multiple business functions.',
+    price: 99,
+    frequency: '/month',
+    billingNote: 'Billed annually',
     features: [
-      '5,000 conversations/month',
-      '3 active agents',
-      '7 workflow build',
-      'Telegram + Slack + Email',
-      'Multilingual by default',
-      'Conditional logic & branching',
-      'Multi-step agent flows'
+      'Multi-team Workspace',
+      'Advanced Business Workflows',
+      '3 AI Workforce Units',
+      'Executive Dashboard',
+      'Department Governance',
+      'Multi-channel Deployment',
+      'Operational Orchestration',
+      'Usage Analytics',
     ],
-    cta: 'Start With Pro',
+    cta: 'Request Licence',
     productId: PRODUCT_IDS.PRO,
-    overageUSD: 0.012,
-    mostPopular: true
+    mostPopular: true,
   },
   {
     name: 'Enterprise',
-    description: 'For organizations scaling AI across operations.',
-    price: 499,
-    frequency: '(month)',
+    description: 'For organisation-wide transformation with enterprise governance.',
+    price: 0,
+    customPriceString: 'Custom',
+    frequency: 'Contact Sales',
+    billingNote: 'Custom scope & deployment',
     features: [
-      'Unlimited conversations',
-      'Unlimited agents',
-      'Unlimited workflow build',
-      'All channels + WhatsApp Business',
-      'Custom integrations',
-      'Advanced orchestration',
-      'Multi-team workspace',
-      'Dedicated support + SLA guarantee'
+      'Unlimited Operational Workspaces',
+      'Unlimited AI Workforce',
+      'Unlimited Business Workflows',
+      'Enterprise Integrations',
+      'Advanced Governance',
+      'Audit Logs',
+      'SSO',
+      'Private Deployment',
+      'Dedicated Success Manager',
+      'SLA',
     ],
-    cta: 'Contact Sales',
-    // No productId: Enterprise is sales-assisted, not self-serve checkout.
+    cta: 'Talk to Sales',
+    // Enterprise is sales-assisted, not self-serve checkout.
   },
 ];
 
@@ -132,12 +140,13 @@ export default function PricingStepTwo({ currency }: { currency?: 'IDR' | 'USD' 
   };
 
   // Helper to format exactly or fallback
-  const getFormattedPrice = (basePrice: number) => {
+  const getFormattedPrice = (plan: Plan) => {
+    if (plan.customPriceString) return plan.customPriceString;
     const activeCurrency = currency || (language === 'id' ? 'IDR' : 'USD');
-    if (activeCurrency === 'USD') return `$${basePrice}`;
+    if (activeCurrency === 'USD') return `$${plan.price}`;
     
     // For IDR, use dynamic exchangeRate with 5% margin
-    const idrValue = basePrice * (exchangeRate * 1.05);
+    const idrValue = plan.price * (exchangeRate * 1.05);
     if (idrValue >= 1000000) {
       const juta = idrValue / 1000000;
       return `Rp ${parseFloat(juta.toFixed(2))} jt`;
@@ -148,18 +157,6 @@ export default function PricingStepTwo({ currency }: { currency?: 'IDR' | 'USD' 
     return `Rp ${Math.round(idrValue)}`;
   };
 
-  const getFormattedOverage = (overageUSD?: number) => {
-    if (!overageUSD) return null;
-    const activeCurrency = currency || (language === 'id' ? 'IDR' : 'USD');
-    if (activeCurrency === 'USD') return `${overageUSD}/conversation`;
-    
-    // IDR with 5% margin
-    const idrValue = overageUSD * (exchangeRate * 1.05);
-    // Round to nearest 10 for cleaner look in IDR (e.g. 243 -> 240)
-    const roundedIdr = Math.round(idrValue / 10) * 10;
-    return `Rp ${roundedIdr}/conversation`;
-  };
-
   return (
     <section ref={ref} onMouseMove={handleMouseMove} className={`animate-on-scroll ${isVisible ? 'is-visible' : ''} spotlight-section w-full bg-[#dfe4e5] text-[#494949] py-24 font-sans`}>
       <div className="max-w-7xl mx-auto px-6 md:px-12 relative z-10">
@@ -167,14 +164,14 @@ export default function PricingStepTwo({ currency }: { currency?: 'IDR' | 'USD' 
         <div className="mb-20 text-center md:text-left">
           <div className="inline-block mb-6">
             <div className="flex items-center gap-2.5">
-              <span className="text-[22px] md:text-[26px] font-extrabold text-[#494949]">Step 2</span>
+              <span className="text-[22px] md:text-[26px] font-extrabold text-[#494949]">Step 2 — Platform Licensing</span>
               <StepIcon />
             </div>
             <div className="w-full h-[3px] bg-[#c4c9b8] mt-2 rounded-full" />
           </div>
-          <h2 className="text-3xl md:text-5xl lg:text-6xl font-normal tracking-tight mb-6">Pick Your Plan. Deploy Today.</h2>
+          <h2 className="text-3xl md:text-5xl lg:text-6xl font-normal tracking-tight mb-6">License the operational capability your organisation needs.</h2>
           <p className="text-xl text-[#494949] font-light leading-relaxed">
-            Launch agents, build workflows from natural language, and scale your AI operations from one platform.
+            Continue your transformation with Aivory's Operational Intelligence Platform. Modernise operations, orchestrate intelligent workflows, and deploy governed AI across your organisation.
           </p>
         </div>
 
@@ -182,7 +179,6 @@ export default function PricingStepTwo({ currency }: { currency?: 'IDR' | 'USD' 
         <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 mb-20 items-stretch gap-y-12 md:gap-x-8 md:gap-y-0">
           {plans.map((plan, idx) => {
             const activeCurrency = currency || (language === 'id' ? 'IDR' : 'USD');
-            const overageText = getFormattedOverage(plan.overageUSD);
 
             return (
             <div 
@@ -193,47 +189,41 @@ export default function PricingStepTwo({ currency }: { currency?: 'IDR' | 'USD' 
             >
               {/* Title */}
               <div className="flex-grow flex flex-col">
-                <div className="min-h-[96px] pb-6">
-                  <div className="h-7 mb-4">
+                <div className="min-h-[160px] pb-4">
+                  <div className="h-6 mb-3">
                     {plan.mostPopular && (
-                      <span className="inline-flex items-center px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.15em] text-[#494949] border border-[#494949] rounded-full">
-                        Most Popular
+                      <span className="inline-flex items-center px-3 py-1 text-[9px] font-bold uppercase tracking-[0.15em] text-[#494949] border border-[#494949] rounded-full">
+                        Best Value
                       </span>
                     )}
                   </div>
-                  <h3 className="max-w-[380px] text-[22px] md:text-[24px] lg:text-[28px] font-normal leading-[1.1] text-[#494949]">
+                  <h3 className="max-w-[380px] text-[18px] md:text-[20px] lg:text-[24px] font-normal leading-[1.1] text-[#494949]">
                     {plan.name}
                   </h3>
-                  <p className="mt-3 max-w-[340px] text-[15px] md:text-[17px] font-medium leading-[1.25] text-[#494949]">
+                  <p className="mt-2 max-w-[340px] text-[13px] md:text-[14px] font-medium leading-[1.25] text-[#494949]">
                     {plan.description}
                   </p>
                 </div>
 
               {/* Price */}
               <div className="flex items-center justify-start gap-3 py-6 mt-2">
-                <span className={`transition-all duration-300 ${activeCurrency === 'IDR' ? 'text-[28px] sm:text-[32px] md:text-[38px]' : 'text-[42px] sm:text-[48px] md:text-[52px]'} font-extrabold leading-none whitespace-nowrap text-[#1a1a1a]`}>
-                  {getFormattedPrice(plan.price)}
+                <span className={`transition-all duration-300 ${activeCurrency === 'IDR' && !plan.customPriceString ? 'text-[28px] sm:text-[32px] md:text-[38px]' : 'text-[42px] sm:text-[48px] md:text-[52px]'} font-extrabold leading-none whitespace-nowrap text-[#1a1a1a]`}>
+                  {getFormattedPrice(plan)}
                 </span>
                 <div className="flex flex-col pt-1">
                   <span className="text-[14px] sm:text-[15px] md:text-[16px] font-normal leading-none text-[#494949] mb-[6px]">
-                    {activeCurrency === 'IDR' ? plan.frequency.replace('(month)', '(bulan)') : plan.frequency}
+                    {plan.frequency}
                   </span>
                   <div className="w-full h-[5px] bg-[#c4c9b8]" />
                 </div>
               </div>
 
-              {/* Overage */}
-              {overageText ? (
+              {/* Billing Note */}
+              {plan.billingNote && (
                 <div className="mt-4 text-[13px] font-semibold text-[#8a8f8d] transition-opacity duration-300">
-                  Overage: {overageText}
-                </div>
-              ) : (
-                <div className="mt-4 text-[13px] text-transparent select-none" aria-hidden="true">
-                  Spacer
+                  {plan.billingNote}
                 </div>
               )}
-
-              {/* Features */}
 
               {/* Features */}
               <ul className="mt-14 space-y-2 text-[16px] md:text-[18px] font-medium leading-[1.35] text-[#494949]">
@@ -272,7 +262,7 @@ export default function PricingStepTwo({ currency }: { currency?: 'IDR' | 'USD' 
         {/* Bottom note */}
         <div className="mt-16 text-center">
           <p className="text-[15px] md:text-[17px] font-medium leading-tight text-[#494949]">
-            No hidden fees. No locked contracts. Cancel anytime. Your AI system, your pace.
+            Enterprise governance. Predictable licensing. Business operations transformation powered by AI.
           </p>
         </div>
       </div>

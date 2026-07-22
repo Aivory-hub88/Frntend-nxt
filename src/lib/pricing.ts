@@ -131,23 +131,23 @@ export const ONE_TIME_PRODUCTS: OneTimeProduct[] = [
 export const SUBSCRIPTION_PRODUCTS: SubscriptionProduct[] = [
   {
     id: PRODUCT_IDS.FOUNDATION,
-    name: 'Foundation',
-    price: 20,
+    name: 'Operational Licence',
+    price: 39,
     currency: PRICING_CURRENCY,
     kind: 'subscription',
     interval: 'month',
   },
   {
     id: PRODUCT_IDS.PRO,
-    name: 'Pro',
-    price: 44,
+    name: 'Business Licence',
+    price: 99,
     currency: PRICING_CURRENCY,
     kind: 'subscription',
     interval: 'month',
   },
   {
     id: PRODUCT_IDS.ENTERPRISE,
-    name: 'Enterprise',
+    name: 'Enterprise Licence',
     price: 499,
     currency: PRICING_CURRENCY,
     kind: 'subscription',
