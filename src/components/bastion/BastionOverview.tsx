@@ -1,4 +1,5 @@
 import { FadeUp, FadeUpChild } from './FadeUp';
+import { ThinkingOrb } from 'thinking-orbs';
 
 export default function BastionOverview() {
   return (
@@ -6,9 +7,14 @@ export default function BastionOverview() {
       <div className="max-w-7xl mx-auto px-6 md:px-12">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-16 md:gap-24">
           <FadeUp className="flex flex-col justify-start">
-            <h2 className="text-3xl md:text-5xl font-light leading-tight mb-8 text-[#FFFFFF]">
-              Govern AI with confidence.
-            </h2>
+            <div className="flex items-center gap-6 mb-8">
+              <h2 className="text-3xl md:text-5xl font-light leading-tight text-[#FFFFFF]">
+                Govern AI with confidence.
+              </h2>
+              <div className="flex-shrink-0">
+                <ThinkingOrb state="solving" size={64} speed={0.25} />
+              </div>
+            </div>
             <p className="text-lg text-[#B3B3B3] font-light leading-relaxed mb-6">
               Enterprise AI requires more than intelligence. It requires governance, visibility, security, and operational trust.
             </p>
