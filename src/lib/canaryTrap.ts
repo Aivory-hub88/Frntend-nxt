@@ -43,8 +43,10 @@ const POISON_RESPONSE = JSON.stringify({
 }, null, 2);
 
 export async function handleCanaryTrap(request: NextRequest): Promise<NextResponse> {
-  const ip = request.headers.get('x-forwarded-for')?.split(',')[0]?.trim()
-    || request.headers.get('cf-connecting-ip')
+  // Prefer cf-connecting-ip: this site is Cloudflare-proxied, and CF rewrites
+  // x-forwarded-for's first hop to its own edge IP, not the real client.
+  const ip = request.headers.get('cf-connecting-ip')
+    || request.headers.get('x-forwarded-for')?.split(',')[0]?.trim()
     || 'unknown';
   const ua = request.headers.get('user-agent') || 'unknown';
   const path = request.nextUrl.pathname;
