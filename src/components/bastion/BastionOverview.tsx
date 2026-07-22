@@ -1,7 +1,9 @@
 'use client';
 
 import { FadeUp, FadeUpChild } from './FadeUp';
-import { ThinkingOrb } from 'thinking-orbs';
+import dynamic from 'next/dynamic';
+
+const ThinkingOrb = dynamic(() => import('thinking-orbs').then(mod => mod.ThinkingOrb), { ssr: false });
 
 export default function BastionOverview() {
   return (
