@@ -12,7 +12,7 @@ const badges = [
 
 export default function BastionEnterpriseTrust() {
   return (
-    <section className="bg-transparent text-white py-32 border-t border-[#1F1F1F]">
+    <section className="bg-transparent text-white py-32">
       <div className="max-w-7xl mx-auto px-6 md:px-12">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-16 md:gap-24 mb-16">
           <FadeUp className="flex flex-col justify-start">

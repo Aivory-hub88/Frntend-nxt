@@ -29,7 +29,7 @@ const domains = [
 
 export default function BastionDomains() {
   return (
-    <section className="bg-transparent text-white py-32 border-t border-[#1F1F1F]">
+    <section className="bg-transparent text-white py-32">
       <div className="max-w-7xl mx-auto px-6 md:px-12">
         <FadeUp className="mb-16">
           <h2 className="text-3xl md:text-5xl font-light leading-tight text-[#FFFFFF]">
