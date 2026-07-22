@@ -148,9 +148,11 @@ function DeploymentCard({ deployment }: { deployment: typeof deployments[0] }) {
         onMouseMove={handleMouseMove}
         className="group relative bg-black rounded-[24px] border border-white/10 overflow-hidden aspect-[3/4] transition-colors hover:border-white/20 flex items-end p-6 md:p-8 spotlight-card auto-spotlight w-full"
       >
-        <Bg />
-        <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent z-10" />
-        <span className="relative z-20 text-sm md:text-base font-medium text-[#EAEAEA] group-hover:text-white transition-colors">
+        <div className="!absolute inset-0 z-0 pointer-events-none">
+          <Bg />
+        </div>
+        <div className="!absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent z-10 pointer-events-none" />
+        <span className="relative z-20 text-sm md:text-base font-medium text-[#EAEAEA] group-hover:text-white transition-colors pointer-events-none">
           {deployment.name}
         </span>
       </div>
