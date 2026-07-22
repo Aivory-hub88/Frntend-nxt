@@ -8,73 +8,152 @@ const FORMSUBMIT_ENDPOINT = 'https://formsubmit.co/ajax/sales@aivory.uk';
 
 type SubmitState = 'idle' | 'submitting' | 'success' | 'error';
 
+/* ─── Glass Icons ─── */
+function ShieldIcon({ className = '' }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="glassBase1" x1="0" y1="0" x2="0" y2="100" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stopColor="#FFFFFF" stopOpacity="0.9" />
+          <stop offset="45%" stopColor="#FFFFFF" stopOpacity="0.4" />
+          <stop offset="45.1%" stopColor="#FFFFFF" stopOpacity="0.05" />
+          <stop offset="100%" stopColor="#FFFFFF" stopOpacity="0.2" />
+        </linearGradient>
+        <linearGradient id="glassEdge1" x1="0" y1="0" x2="0" y2="100" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stopColor="#FFFFFF" stopOpacity="1" />
+          <stop offset="100%" stopColor="#FFFFFF" stopOpacity="0.3" />
+        </linearGradient>
+      </defs>
+      <path
+        d="M50 10 C50 10 15 20 15 20 C15 55 15 75 50 95 C85 75 85 55 85 20 C85 20 50 10 50 10 Z"
+        fill="url(#glassBase1)"
+        stroke="url(#glassEdge1)"
+        strokeWidth="3"
+        strokeLinejoin="round"
+      />
+      <path d="M35 50 L45 62 L65 38" stroke="#FFFFFF" strokeWidth="6" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
+function CpuIcon({ className = '' }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="glassBase2" x1="0" y1="0" x2="0" y2="100" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stopColor="#FFFFFF" stopOpacity="0.9" />
+          <stop offset="45%" stopColor="#FFFFFF" stopOpacity="0.4" />
+          <stop offset="45.1%" stopColor="#FFFFFF" stopOpacity="0.05" />
+          <stop offset="100%" stopColor="#FFFFFF" stopOpacity="0.2" />
+        </linearGradient>
+        <linearGradient id="glassEdge2" x1="0" y1="0" x2="0" y2="100" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stopColor="#FFFFFF" stopOpacity="1" />
+          <stop offset="100%" stopColor="#FFFFFF" stopOpacity="0.3" />
+        </linearGradient>
+      </defs>
+      <rect x="20" y="20" width="60" height="60" rx="12" fill="url(#glassBase2)" stroke="url(#glassEdge2)" strokeWidth="3" />
+      <rect x="35" y="35" width="30" height="30" rx="6" fill="url(#glassBase2)" stroke="url(#glassEdge2)" strokeWidth="2" />
+    </svg>
+  );
+}
+
+function LayersIcon({ className = '' }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="glassBase3" x1="0" y1="0" x2="0" y2="100" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stopColor="#FFFFFF" stopOpacity="0.9" />
+          <stop offset="45%" stopColor="#FFFFFF" stopOpacity="0.4" />
+          <stop offset="45.1%" stopColor="#FFFFFF" stopOpacity="0.05" />
+          <stop offset="100%" stopColor="#FFFFFF" stopOpacity="0.2" />
+        </linearGradient>
+        <linearGradient id="glassEdge3" x1="0" y1="0" x2="0" y2="100" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stopColor="#FFFFFF" stopOpacity="1" />
+          <stop offset="100%" stopColor="#FFFFFF" stopOpacity="0.3" />
+        </linearGradient>
+      </defs>
+      <path d="M50 20 L85 38 L50 56 L15 38 Z" fill="url(#glassBase3)" stroke="url(#glassEdge3)" strokeWidth="3" />
+      <path d="M15 52 L50 70 L85 52" stroke="url(#glassEdge3)" strokeWidth="3" strokeLinecap="round" />
+      <path d="M15 66 L50 84 L85 66" stroke="url(#glassEdge3)" strokeWidth="3" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+function BriefcaseIcon({ className = '' }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="glassBase4" x1="0" y1="0" x2="0" y2="100" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stopColor="#FFFFFF" stopOpacity="0.9" />
+          <stop offset="45%" stopColor="#FFFFFF" stopOpacity="0.4" />
+          <stop offset="45.1%" stopColor="#FFFFFF" stopOpacity="0.05" />
+          <stop offset="100%" stopColor="#FFFFFF" stopOpacity="0.2" />
+        </linearGradient>
+        <linearGradient id="glassEdge4" x1="0" y1="0" x2="0" y2="100" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stopColor="#FFFFFF" stopOpacity="1" />
+          <stop offset="100%" stopColor="#FFFFFF" stopOpacity="0.3" />
+        </linearGradient>
+      </defs>
+      <path d="M38 30 V18 C38 12 62 12 62 18 V30" stroke="url(#glassBase4)" strokeWidth="8" strokeLinecap="round" />
+      <rect x="15" y="30" width="70" height="55" rx="8" fill="url(#glassBase4)" stroke="url(#glassEdge4)" strokeWidth="3" />
+    </svg>
+  );
+}
+
 const services = [
   {
     title: 'Operational Assessment',
     description:
       'Understand how your organisation operates today, identify operational bottlenecks, and uncover the highest-value transformation opportunities.',
+    icon: <ShieldIcon className="w-6 h-6 shrink-0" />,
   },
   {
     title: 'Transformation Design',
     description:
       'Design future operating models, intelligent workflows, governance frameworks, and AI deployment strategies tailored to your organisation.',
+    icon: <CpuIcon className="w-6 h-6 shrink-0" />,
   },
   {
     title: 'Enterprise Implementation',
     description:
       'Deploy governed AI systems, operational workflows, and enterprise integrations with measurable business outcomes.',
+    icon: <LayersIcon className="w-6 h-6 shrink-0" />,
   },
   {
     title: 'Executive Enablement',
     description:
       'Prepare leadership and operational teams with the knowledge, governance, and frameworks required to manage long-term transformation.',
+    icon: <BriefcaseIcon className="w-6 h-6 shrink-0" />,
   },
 ];
 
 const ServiceCard = ({ service }: { service: (typeof services)[0] }) => {
-  const cardRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    let animationFrameId: number;
-    const startTime = Math.random() * 10000;
-
-    const animate = (time: number) => {
-      if (cardRef.current) {
-        const rect = cardRef.current.getBoundingClientRect();
-        const centerX = rect.width / 2;
-        const centerY = rect.height / 2;
-
-        const radiusX = rect.width / 2;
-        const radiusY = rect.height / 2;
-
-        const speed = 0.001;
-        const angle = (time + startTime) * speed;
-
-        const x = centerX + radiusX * Math.cos(angle);
-        const y = centerY - radiusY * Math.sin(angle);
-
-        cardRef.current.style.setProperty('--mouse-x', `${x}px`);
-        cardRef.current.style.setProperty('--mouse-y', `${y}px`);
-      }
-      animationFrameId = requestAnimationFrame(animate);
-    };
-
-    animationFrameId = requestAnimationFrame(animate);
-
-    return () => {
-      cancelAnimationFrame(animationFrameId);
-    };
-  }, []);
-
   return (
-    <div
-      ref={cardRef}
-      className="relative spotlight-card auto-spotlight border border-white/10 p-8 transition-colors overflow-hidden rounded-xl"
-      style={{ backgroundColor: 'rgba(20, 20, 26, 0.2)' }}
+    <SpotlightButton
+      icon={false}
+      roundedClass="rounded-[10px]"
+      className="!items-start h-full w-full normal-case p-8 text-left group"
+      style={{
+        textTransform: 'none',
+        backgroundColor: 'rgba(20, 20, 26, 0.3)',
+        borderWidth: '0.5px',
+        borderStyle: 'solid',
+        borderColor: 'rgba(255, 255, 255, 0.035)',
+        boxShadow: 'none',
+      }}
     >
-      <h3 className="text-xl font-normal text-white mb-3 relative z-10">{service.title}</h3>
-      <p className="text-[#dadada] font-light leading-relaxed relative z-10">{service.description}</p>
-    </div>
+      <div className="flex flex-col gap-4 relative z-10 w-full text-left">
+        <div className="flex items-center gap-3">
+          {service.icon}
+          <h3 className="text-xl font-normal text-white group-hover:text-white transition-colors">
+            {service.title}
+          </h3>
+        </div>
+        <p className="text-[#dadada] font-light leading-relaxed text-base">
+          {service.description}
+        </p>
+      </div>
+    </SpotlightButton>
   );
 };
 
