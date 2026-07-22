@@ -15,7 +15,7 @@ export default function BastionVisualHero() {
   return (
     <section className="relative min-h-screen flex items-end justify-center bg-transparent overflow-hidden pt-20 pb-16 md:pb-24">
       <div className="w-full max-w-[1600px] mx-auto px-6 md:px-12 flex justify-center items-center">
-        <div className="w-full flex justify-center" style={{ transform: 'scale(1.265) translateY(5%)' }}>
+        <div className="w-full flex justify-center items-center">
           <style dangerouslySetInnerHTML={{ __html: `
             @keyframes imageGlitch {
               0% { clip-path: inset(20% 0 80% 0); transform: translate(-2px, 2px); filter: drop-shadow(-2px 0 cyan) drop-shadow(2px 0 red); }
@@ -38,7 +38,7 @@ export default function BastionVisualHero() {
           <img
             src="/Bastion_2_copy.svg"
             alt="Bastion"
-            className={`w-full h-auto object-contain transition-opacity duration-300 ${isGlitching ? 'glitch-anim' : 'opacity-100'}`}
+            className={`w-[90%] md:w-[75%] lg:w-[65%] max-w-6xl h-auto object-contain transition-opacity duration-300 ${isGlitching ? 'glitch-anim' : 'opacity-100'}`}
           />
         </div>
       </div>
