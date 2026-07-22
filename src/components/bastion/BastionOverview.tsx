@@ -1,3 +1,5 @@
+'use client';
+
 import { FadeUp, FadeUpChild } from './FadeUp';
 import { ThinkingOrb } from 'thinking-orbs';
 
