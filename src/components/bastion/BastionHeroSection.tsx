@@ -85,28 +85,27 @@ const SvgBastionHeroSection = (props: SVGProps<SVGSVGElement>) => {
             fontSize: "367.4px",
             filter: isGlitching ? 'drop-shadow(3px 0px #00ffff) drop-shadow(-3px 0px #ff0055)' : 'none',
           }}
-          transform="translate(343.5 331.6)"
+          transform="translate(188.8 326.7)"
         >
           <tspan x={0} y={0}>
             {displayText}
           </tspan>
         </text>
       </motion.g>
+      {/* Icon paths from Bastion_2_copy.svg */}
+      <g>
+        <path
+          d="M37.4 326.7l65.9-109.2c19.9-33 33-40.7 83.5-40.7h58.1v149.9h-30.2v-120.7c-75.8 0-72.5-2.2-95.9 36.5l-48.8 84.2H37.4Z"
+          fill="#fff"
+        />
+        <path
+          d="M171.8 295.5v31.1h-54.2l5.3-10.1c3.9-6.9 7.1-13.3 12.8-16.2 0 0 6.6-4.6 18.1-4.6h18.3l-.2-.2Z"
+          fill="#fff"
+        />
+      </g>
       <path
-        d="m70.2 208.2 54.4-90.2c16.4-27.2 27.2-33.6 69-33.6h48v123.9h-24.9V106c-46 0-55-5.2-77.1 30.6l-42.3 71.7H70.2Z"
-        className="Bastion_Hero_Section_svg__st2"
-      />
-      <path
-        d="M186.1 182.5v25.6h-44.9l4.3-8.4c3.2-5.6 5.9-10.9 10.6-13.5 0 0 5.5-3.7 14.9-3.7h15Z"
-        className="Bastion_Hero_Section_svg__st2"
-      />
-      <path
-        d="m332.5 208.2-54.4 90.2c-16.4 27.2-27.2 33.6-69 33.6h-48V208.1H186v102.3c46 0 55 5.2 77.1-30.6l42.3-71.7h27.1Z"
-        className="Bastion_Hero_Section_svg__st2"
-      />
-      <path
-        d="M216.6 233.8v-25.6h44.9l-4.3 8.4c-3.2 5.6-5.9 10.9-10.6 13.5 0 0-5.5 3.7-14.9 3.7h-15Z"
-        className="Bastion_Hero_Section_svg__st2"
+        d="M45.2 74.6l54.9 90.9c16.6 27.4 27.4 33.9 69.5 33.9h70s0-124.8 0-124.8h-25.1s0 100.5 0 100.5c-63.1 0-72 1.8-91.4-30.3l-40.6-70.1H45.2Z"
+        fill="#fff"
       />
       <text
         className="Bastion_Hero_Section_svg__st0"
