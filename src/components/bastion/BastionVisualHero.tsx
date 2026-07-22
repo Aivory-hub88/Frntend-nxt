@@ -38,7 +38,7 @@ export default function BastionVisualHero() {
           <img
             src="/Bastion_2_copy.svg"
             alt="Bastion"
-            className={`w-[90%] md:w-[75%] lg:w-[65%] max-w-6xl h-auto object-contain transition-opacity duration-300 ${isGlitching ? 'glitch-anim' : 'opacity-100'}`}
+            className={`w-[100%] md:w-[110%] h-auto object-contain transition-opacity duration-300 ${isGlitching ? 'glitch-anim' : 'opacity-100'}`}
           />
         </div>
       </div>
