@@ -17,11 +17,13 @@ export default function BastionEnterpriseTrust() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-16 md:gap-24 mb-16">
           <FadeUp className="flex flex-col justify-start">
             <h2 className="text-3xl md:text-5xl font-light leading-tight mb-8 text-[#FFFFFF]">
-              Enterprise Ready.
+              Trust every deployment.
             </h2>
-            <p className="text-lg text-[#B3B3B3] font-light leading-relaxed">
-              Built with enterprise-grade architecture, secure deployment models, comprehensive auditability, and operational transparency designed for organizations protecting mission-critical infrastructure.
-            </p>
+            <div className="space-y-4 text-lg text-[#B3B3B3] font-light leading-relaxed">
+              <p>Every deployment should be visible. Every workflow should be governed. Every decision should be accountable.</p>
+              <p>Deploy AI securely. Protect every workflow. Govern every decision. Build operational trust from day one.</p>
+              <p className="text-white font-normal pt-2">Bastion makes enterprise AI trustworthy at scale.</p>
+            </div>
           </FadeUp>
         </div>
 

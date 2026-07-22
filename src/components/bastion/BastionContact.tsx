@@ -37,9 +37,12 @@ export default function BastionContact() {
 
           {/* Left Column - Large Text */}
           <div className="flex flex-col justify-start">
-            <h2 className="text-5xl md:text-7xl lg:text-[5.5rem] font-light leading-[1.05] tracking-tight text-[#FFFFFF]">
-              Talk to our team.
+            <h2 className="text-4xl md:text-6xl lg:text-[4.5rem] font-light leading-[1.05] tracking-tight text-[#FFFFFF] mb-6">
+              Start the conversation.
             </h2>
+            <p className="text-lg md:text-xl text-[#B3B3B3] font-light leading-relaxed">
+              Tell us about your organisation, your AI initiatives, or your operational challenges. We'll help you determine how Bastion can support secure and governed AI deployment.
+            </p>
           </div>
 
           {/* Right Column - Form */}
@@ -102,7 +105,7 @@ export default function BastionContact() {
                     roundedClass="rounded-[10px]"
                     className="text-xs md:text-sm"
                   >
-                    {status === 'submitting' ? 'Sending...' : 'Submit'}
+                    {status === 'submitting' ? 'Sending...' : 'Start Conversation'}
                   </SpotlightButton>
                 </div>
               </form>

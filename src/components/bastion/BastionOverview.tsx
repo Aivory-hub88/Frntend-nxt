@@ -7,35 +7,42 @@ export default function BastionOverview() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-16 md:gap-24">
           <FadeUp className="flex flex-col justify-start">
             <h2 className="text-3xl md:text-5xl font-light leading-tight mb-8 text-[#FFFFFF]">
-              Built for infrastructure that cannot afford uncertainty.
+              Govern AI with confidence.
             </h2>
             <p className="text-lg text-[#B3B3B3] font-light leading-relaxed mb-6">
-              Bastion is an AI-native security operating layer that continuously observes infrastructure behavior, understands evolving threats, and autonomously coordinates defensive actions across cloud, applications, APIs, and edge environments.
+              Enterprise AI requires more than intelligence. It requires governance, visibility, security, and operational trust.
             </p>
             <p className="text-lg text-[#B3B3B3] font-light leading-relaxed">
-              Rather than relying on static signatures or isolated security tools, Bastion builds operational context from every interaction and improves with every decision.
+              Bastion helps organisations protect every AI deployment with enterprise-grade governance, policy enforcement, and complete operational visibility.
             </p>
           </FadeUp>
 
           <FadeUp staggerChildren={0.15} className="flex flex-col justify-center space-y-12">
             <FadeUpChild className="border-l border-[#1F1F1F] pl-6">
-              <h3 className="text-xl font-medium mb-3 text-[#FFFFFF]">Observe</h3>
+              <h3 className="text-xl font-medium mb-3 text-[#FFFFFF]">Visibility</h3>
               <p className="text-[#B3B3B3] font-light leading-relaxed">
-                Continuously analyzes infrastructure behavior across every layer.
+                Know every AI system operating across your organisation.
               </p>
             </FadeUpChild>
-            
+
             <FadeUpChild className="border-l border-[#1F1F1F] pl-6">
-              <h3 className="text-xl font-medium mb-3 text-[#FFFFFF]">Reason</h3>
+              <h3 className="text-xl font-medium mb-3 text-[#FFFFFF]">Governance</h3>
               <p className="text-[#B3B3B3] font-light leading-relaxed">
-                Correlates weak signals into contextual understanding.
+                Apply policies consistently across every deployment.
               </p>
             </FadeUpChild>
-            
+
             <FadeUpChild className="border-l border-[#1F1F1F] pl-6">
-              <h3 className="text-xl font-medium mb-3 text-[#FFFFFF]">Respond</h3>
+              <h3 className="text-xl font-medium mb-3 text-[#FFFFFF]">Security</h3>
               <p className="text-[#B3B3B3] font-light leading-relaxed">
-                Executes autonomous defensive actions in real time.
+                Protect sensitive information without slowing innovation.
+              </p>
+            </FadeUpChild>
+
+            <FadeUpChild className="border-l border-[#1F1F1F] pl-6">
+              <h3 className="text-xl font-medium mb-3 text-[#FFFFFF]">Auditability</h3>
+              <p className="text-[#B3B3B3] font-light leading-relaxed">
+                Maintain complete visibility and accountability across every AI interaction.
               </p>
             </FadeUpChild>
           </FadeUp>

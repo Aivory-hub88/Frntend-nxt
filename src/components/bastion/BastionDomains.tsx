@@ -2,29 +2,29 @@ import { FadeUp, FadeUpChild } from './FadeUp';
 
 const domains = [
   {
-    title: 'Situational Awareness',
-    description: 'Maintains continuous operational visibility across infrastructure.'
+    title: 'Visibility',
+    description: 'Know every AI system operating across your organisation.',
   },
   {
-    title: 'Behavioral Identity',
-    description: 'Recognizes trusted and untrusted behavior beyond static identities.'
+    title: 'Governance',
+    description: 'Apply policies consistently across every deployment.',
   },
   {
-    title: 'Threat Reasoning',
-    description: 'Correlates telemetry into meaningful security decisions.'
+    title: 'Security',
+    description: 'Protect sensitive information without slowing innovation.',
   },
   {
-    title: 'Autonomous Containment',
-    description: 'Responds immediately without disrupting legitimate operations.'
+    title: 'Auditability',
+    description: 'Maintain complete visibility and accountability across every AI interaction.',
   },
   {
-    title: 'Deception Architecture',
-    description: 'Redirects hostile actors into controlled environments.'
+    title: 'Operational Trust',
+    description: 'Ensure every AI action meets strict regulatory and enterprise standards.',
   },
   {
-    title: 'Continuous Evolution',
-    description: 'Improves defensive intelligence after every interaction.'
-  }
+    title: 'Continuous Assurance',
+    description: 'Maintain long-term security and compliance as AI capabilities evolve.',
+  },
 ];
 
 export default function BastionDomains() {
@@ -33,14 +33,14 @@ export default function BastionDomains() {
       <div className="max-w-7xl mx-auto px-6 md:px-12">
         <FadeUp className="mb-16">
           <h2 className="text-3xl md:text-5xl font-light leading-tight text-[#FFFFFF]">
-            Defense Intelligence Domains
+            Enterprise AI Assurance
           </h2>
         </FadeUp>
         <FadeUp staggerChildren={0.1} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-12 gap-y-16">
           {domains.map((domain, index) => (
-            <FadeUpChild 
-              key={index} 
-              className="border-t border-[#333333] pt-8"
+            <FadeUpChild
+              key={index}
+              className="pt-4"
             >
               <h3 className="text-xl md:text-2xl font-light text-[#FFFFFF] mb-4">{domain.title}</h3>
               <p className="text-base md:text-lg text-[#B3B3B3] font-light leading-relaxed">
