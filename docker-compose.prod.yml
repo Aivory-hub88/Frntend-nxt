@@ -74,6 +74,9 @@ services:
     restart: unless-stopped
     networks:
       - aivory-network
+    environment:
+      - HONEYPOT_INGEST_TOKEN=${HONEYPOT_INGEST_TOKEN}
+      - BACKEND_SERVICE_URL=http://avry-backend:8081
     labels:
       - "traefik.enable=true"
       - "traefik.docker.network=aivory-network"
@@ -85,6 +88,11 @@ services:
       - "traefik.http.routers.main-app-api.entrypoints=websecure,web"
       - "traefik.http.routers.main-app-api.tls.certresolver=letsencrypt"
       - "traefik.http.routers.main-app-api.priority=20"
+      - "traefik.http.routers.main-app-trap.rule=(Host(`aivory.id`) || Host(`www.aivory.id`) || Host(`stag.aivory.id`) || Host(`x.aivory.uk`)) && (PathPrefix(`/api/internal`) || PathPrefix(`/api/v2/config`) || PathPrefix(`/api/admin/settings`))"
+      - "traefik.http.routers.main-app-trap.entrypoints=websecure,web"
+      - "traefik.http.routers.main-app-trap.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.main-app-trap.priority=20"
+      - "traefik.http.routers.main-app-trap.service=main-app"
       - "traefik.http.services.main-app.loadbalancer.server.port=3000"
 
   # ── User Dashboard (port 9001) ─────────────────────────────────────────────
@@ -217,6 +225,7 @@ services:
       - SLACK_CLIENT_ID=${SLACK_CLIENT_ID:-}
       - SLACK_CLIENT_SECRET=${SLACK_CLIENT_SECRET:-}
       - SLACK_SIGNING_SECRET=${SLACK_SIGNING_SECRET:-}
+      - HONEYPOT_INGEST_TOKEN=${HONEYPOT_INGEST_TOKEN}
     extra_hosts:
       - "host.docker.internal:host-gateway"
     volumes:
