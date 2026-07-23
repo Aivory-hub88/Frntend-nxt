@@ -3,7 +3,7 @@
 import React, { useRef, useEffect } from 'react';
 import * as THREE from 'three';
 
-export function HalftoneWave({ active = true }: { active?: boolean } = {}) {
+export function HalftoneWave({ active = true, purpleColor }: { active?: boolean; purpleColor?: string } = {}) {
   const mountRef = useRef<HTMLDivElement>(null);
   // Mirrors the `active` prop into a ref so the render loop (set up once
   // below) can read the latest value without needing to tear down and
@@ -38,12 +38,23 @@ export function HalftoneWave({ active = true }: { active?: boolean } = {}) {
     
     mountRef.current.appendChild(renderer.domElement);
 
+    const hexToRgb = (hex: string) => {
+      const cleanHex = hex.replace('#', '');
+      const r = parseInt(cleanHex.substring(0, 2), 16) / 255;
+      const g = parseInt(cleanHex.substring(2, 4), 16) / 255;
+      const b = parseInt(cleanHex.substring(4, 6), 16) / 255;
+      return new THREE.Vector3(r, g, b);
+    };
+    const customPurpleVec = purpleColor ? hexToRgb(purpleColor) : new THREE.Vector3(0.202, 0.0, 0.596);
+
     const uniforms = {
       uTime: { value: 0.0 },
       uResolution: { value: new THREE.Vector2(width * baseDPR, height * baseDPR) },
       uPixelSize: { value: 4.5 }, // Reduced by 10% from 5.0
       uScroll: { value: 0.0 }, // Used to trigger the spreading petals effect
-      uMouse: { value: new THREE.Vector2(0, 0) }
+      uMouse: { value: new THREE.Vector2(0, 0) },
+      uCustomPurple: { value: customPurpleVec },
+      uUseCustomPurple: { value: purpleColor ? 1.0 : 0.0 }
     };
 
     // ==========================================
@@ -60,6 +71,8 @@ export function HalftoneWave({ active = true }: { active?: boolean } = {}) {
         uniform float uScroll;
         uniform float uTime;
         uniform vec2 uMouse;
+        uniform vec3 uCustomPurple;
+        uniform float uUseCustomPurple;
 
         void main() {
           // 1. LIGHTING & DENSITY
@@ -128,17 +141,17 @@ export function HalftoneWave({ active = true }: { active?: boolean } = {}) {
           // 3. ELEGANT COLOR MAPPING (Transition based on scroll)
           float scrollT = smoothstep(0.0, 0.4, uScroll);
           
-          // Original Colors
-          vec3 primaryCore = vec3(0.737, 0.306, 0.208); // #bc4e35
-          vec3 pinkCore = vec3(0.808, 0.004, 0.310);  // #ce014f (Deep pink/red requested for hero)
-          vec3 corePurple = vec3(0.202, 0.0, 0.596); // #2d0084 (Deep violet/purple)
-          vec3 origEdge = vec3(0.04, 0.18, 0.32);
-          vec3 origIndigo = vec3(0.215, 0.078, 0.474); // #371479
+          // Original Colors (Override purple with #2a545b for Bastion when uUseCustomPurple is 1.0)
+          vec3 primaryCore = mix(vec3(0.737, 0.306, 0.208), uCustomPurple * 1.2, uUseCustomPurple * 0.5); 
+          vec3 pinkCore = mix(vec3(0.808, 0.004, 0.310), uCustomPurple * 1.4, uUseCustomPurple);  
+          vec3 corePurple = mix(vec3(0.202, 0.0, 0.596), uCustomPurple, uUseCustomPurple); 
+          vec3 origEdge = mix(vec3(0.04, 0.18, 0.32), uCustomPurple * 0.5, uUseCustomPurple);
+          vec3 origIndigo = mix(vec3(0.215, 0.078, 0.474), uCustomPurple * 0.8, uUseCustomPurple); 
           
-          // Hero Colors (Premium Elegance: Midnight Core / Deep Blue-Purple Edges)
-          vec3 heroCore = vec3(0.02, 0.03, 0.06); // Deep midnight core (slightly brighter)
-          vec3 heroEdge = vec3(0.127, 0.063, 0.555);  // Deep blue-purple edges (brighter blue)
-          vec3 heroIndigo = vec3(0.159, 0.079, 0.317);  // Subtle purple/indigo glow (brighter)
+          // Hero Colors (Premium Elegance)
+          vec3 heroCore = vec3(0.02, 0.03, 0.06); 
+          vec3 heroEdge = mix(vec3(0.127, 0.063, 0.555), uCustomPurple * 1.2, uUseCustomPurple);  
+          vec3 heroIndigo = mix(vec3(0.159, 0.079, 0.317), uCustomPurple * 0.7, uUseCustomPurple);
           
           // The core transitions from Pink to Orange as you scroll down
           vec3 dynamicCore = mix(pinkCore, primaryCore, scrollT);

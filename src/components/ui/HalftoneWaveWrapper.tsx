@@ -86,7 +86,7 @@ function useFlowerScrollOpacity() {
   return opacity;
 }
 
-export function HalftoneWaveWrapper() {
+export function HalftoneWaveWrapper({ purpleColor }: { purpleColor?: string } = {}) {
   const [useWebgl, setUseWebgl] = useState(false);
   const opacity = useFlowerScrollOpacity();
   useEffect(() => {
@@ -121,19 +121,15 @@ export function HalftoneWaveWrapper() {
         className="absolute inset-0 pointer-events-none"
         aria-hidden="true"
         style={{
-          background: 'radial-gradient(55% 50% at 50% 40%, rgba(90,124,184,0.16) 0%, rgba(90,124,184,0.06) 60%, transparent 100%)',
+          background: purpleColor 
+            ? 'radial-gradient(55% 50% at 50% 40%, rgba(42,84,91,0.25) 0%, rgba(20,40,45,0.08) 60%, transparent 100%)'
+            : 'radial-gradient(55% 50% at 50% 40%, rgba(90,124,184,0.16) 0%, rgba(90,124,184,0.06) 60%, transparent 100%)',
         }}
       />
       {/* Deep-indigo ambient wash, fixed to the viewport so it scrolls
           seamlessly through #features -> Stats -> Pricing -> Privacy with no
           visible section seam -- it's just the flower's opacity, inverted,
-          so the two crossfade into each other at the same scroll points.
-          NOTE: no grid-line texture here anymore -- InteractiveGrid (used
-          inside #features) already paints its own bg-grid-pattern that
-          scrolls with the page content; this layer is  (scrolls with
-          the viewport instead), so stacking a second grid here drifted out
-          of phase with that one as the page scrolled and read as a
-          double/moire pattern. */}
+          so the two crossfade into each other at the same scroll points. */}
       <div
         className="absolute inset-0 pointer-events-none"
         style={{ opacity: 1 - opacity, transition: 'opacity 500ms ease' }}
@@ -142,13 +138,15 @@ export function HalftoneWaveWrapper() {
         <div
           className="absolute inset-0"
           style={{
-            background: 'radial-gradient(52% 46% at 50% 40%, rgba(90,124,184,0.20) 0%, rgba(90,124,184,0.08) 60%, transparent 100%)',
+            background: purpleColor
+              ? 'radial-gradient(52% 46% at 50% 40%, rgba(42,84,91,0.30) 0%, rgba(20,40,45,0.10) 60%, transparent 100%)'
+              : 'radial-gradient(52% 46% at 50% 40%, rgba(90,124,184,0.20) 0%, rgba(90,124,184,0.08) 60%, transparent 100%)',
           }}
         />
       </div>
       <div style={{ opacity, transition: 'opacity 500ms ease' }}>
         {useWebgl ? (
-          <HalftoneWave active={opacity > 0.02} />
+          <HalftoneWave active={opacity > 0.02} purpleColor={purpleColor} />
         ) : (
           <CssGradientFallback />
         )}
