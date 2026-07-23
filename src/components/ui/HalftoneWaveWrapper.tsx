@@ -121,9 +121,7 @@ export function HalftoneWaveWrapper({ purpleColor }: { purpleColor?: string } = 
         className="absolute inset-0 pointer-events-none"
         aria-hidden="true"
         style={{
-          background: purpleColor 
-            ? 'radial-gradient(55% 50% at 50% 40%, rgba(42,84,91,0.25) 0%, rgba(20,40,45,0.08) 60%, transparent 100%)'
-            : 'radial-gradient(55% 50% at 50% 40%, rgba(90,124,184,0.16) 0%, rgba(90,124,184,0.06) 60%, transparent 100%)',
+          background: 'radial-gradient(55% 50% at 50% 40%, rgba(90,124,184,0.16) 0%, rgba(90,124,184,0.06) 60%, transparent 100%)',
         }}
       />
       {/* Deep-indigo ambient wash, fixed to the viewport so it scrolls
@@ -138,9 +136,7 @@ export function HalftoneWaveWrapper({ purpleColor }: { purpleColor?: string } = 
         <div
           className="absolute inset-0"
           style={{
-            background: purpleColor
-              ? 'radial-gradient(52% 46% at 50% 40%, rgba(42,84,91,0.30) 0%, rgba(20,40,45,0.10) 60%, transparent 100%)'
-              : 'radial-gradient(52% 46% at 50% 40%, rgba(90,124,184,0.20) 0%, rgba(90,124,184,0.08) 60%, transparent 100%)',
+            background: 'radial-gradient(52% 46% at 50% 40%, rgba(90,124,184,0.20) 0%, rgba(90,124,184,0.08) 60%, transparent 100%)',
           }}
         />
       </div>

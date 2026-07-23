@@ -141,17 +141,17 @@ export function HalftoneWave({ active = true, purpleColor }: { active?: boolean;
           // 3. ELEGANT COLOR MAPPING (Transition based on scroll)
           float scrollT = smoothstep(0.0, 0.4, uScroll);
           
-          // Original Colors (Override purple with #2a545b for Bastion when uUseCustomPurple is 1.0)
-          vec3 primaryCore = mix(vec3(0.737, 0.306, 0.208), uCustomPurple * 1.2, uUseCustomPurple * 0.5); 
-          vec3 pinkCore = mix(vec3(0.808, 0.004, 0.310), uCustomPurple * 1.4, uUseCustomPurple);  
-          vec3 corePurple = mix(vec3(0.202, 0.0, 0.596), uCustomPurple, uUseCustomPurple); 
-          vec3 origEdge = mix(vec3(0.04, 0.18, 0.32), uCustomPurple * 0.5, uUseCustomPurple);
-          vec3 origIndigo = mix(vec3(0.215, 0.078, 0.474), uCustomPurple * 0.8, uUseCustomPurple); 
+          // Original Colors
+          vec3 primaryCore = vec3(0.737, 0.306, 0.208); // #bc4e35
+          vec3 pinkCore = vec3(0.808, 0.004, 0.310);  // #ce014f (Deep pink/red)
+          vec3 corePurple = mix(vec3(0.202, 0.0, 0.596), uCustomPurple, uUseCustomPurple); // Only override PURPLE with #2a545b
+          vec3 origEdge = vec3(0.04, 0.18, 0.32);
+          vec3 origIndigo = vec3(0.215, 0.078, 0.474); // #371479
           
-          // Hero Colors (Premium Elegance)
+          // Hero Colors (Keep Indigo/Blue edges 100% original)
           vec3 heroCore = vec3(0.02, 0.03, 0.06); 
-          vec3 heroEdge = mix(vec3(0.127, 0.063, 0.555), uCustomPurple * 1.2, uUseCustomPurple);  
-          vec3 heroIndigo = mix(vec3(0.159, 0.079, 0.317), uCustomPurple * 0.7, uUseCustomPurple);
+          vec3 heroEdge = vec3(0.127, 0.063, 0.555);  
+          vec3 heroIndigo = vec3(0.159, 0.079, 0.317);
           
           // The core transitions from Pink to Orange as you scroll down
           vec3 dynamicCore = mix(pinkCore, primaryCore, scrollT);
