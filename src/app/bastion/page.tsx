@@ -18,12 +18,12 @@ export const metadata: Metadata = {
 
 export default function BastionPage() {
   return (
-    <main className="relative bg-black min-h-screen text-white font-manrope selection:bg-[#521cd5] selection:text-white">
+    <main className="relative bg-black min-h-screen text-white font-manrope selection:bg-[#2a545b] selection:text-white">
       
-      {/* Global Ambient Background Gradient Wash (Fixed across ENTIRE page) */}
+      {/* Global Ambient Background Gradient Wash (Fixed across ENTIRE page in #2a545b teal) */}
       <BastionBackground mode="gradient-only" className="fixed inset-0 z-0 pointer-events-none overflow-hidden" />
 
-      {/* 1. Hero Section (Flower Animation ONLY appears here) */}
+      {/* 1. Hero Section (Flower Animation ONLY appears here with #2a545b palette) */}
       <div className="relative overflow-hidden min-h-screen z-10">
         <BastionBackground mode="flower-only" scale={1} className="absolute inset-0 z-0 pointer-events-none overflow-hidden" />
         <div className="relative z-10">

@@ -141,37 +141,34 @@ export function HalftoneWave({ active = true, purpleColor }: { active?: boolean;
           // 3. ELEGANT COLOR MAPPING (Transition based on scroll)
           float scrollT = smoothstep(0.0, 0.4, uScroll);
           
-          // Original Colors
+          // Original Colors (Override ALL purple/indigo/violet with #2a545b when uUseCustomPurple is 1.0)
           vec3 primaryCore = vec3(0.737, 0.306, 0.208); // #bc4e35
           vec3 pinkCore = vec3(0.808, 0.004, 0.310);  // #ce014f (Deep pink/red)
-          vec3 corePurple = mix(vec3(0.202, 0.0, 0.596), uCustomPurple, uUseCustomPurple); // Only override PURPLE with #2a545b
-          vec3 origEdge = vec3(0.04, 0.18, 0.32);
-          vec3 origIndigo = vec3(0.215, 0.078, 0.474); // #371479
+          vec3 corePurple = mix(vec3(0.202, 0.0, 0.596), uCustomPurple, uUseCustomPurple);
+          vec3 origEdge = mix(vec3(0.04, 0.18, 0.32), uCustomPurple * 0.4, uUseCustomPurple);
+          vec3 origIndigo = mix(vec3(0.215, 0.078, 0.474), uCustomPurple * 0.7, uUseCustomPurple);
           
-          // Hero Colors (Keep Indigo/Blue edges 100% original)
+          // Hero Colors (Override purple/indigo with #2a545b for Bastion)
           vec3 heroCore = vec3(0.02, 0.03, 0.06); 
-          vec3 heroEdge = vec3(0.127, 0.063, 0.555);  
-          vec3 heroIndigo = vec3(0.159, 0.079, 0.317);
+          vec3 heroEdge = mix(vec3(0.127, 0.063, 0.555), uCustomPurple * 1.3, uUseCustomPurple);  
+          vec3 heroIndigo = mix(vec3(0.159, 0.079, 0.317), uCustomPurple * 0.8, uUseCustomPurple);
           
           // The core transitions from Pink to Orange as you scroll down
           vec3 dynamicCore = mix(pinkCore, primaryCore, scrollT);
           
-          // Create a shimmering effect mixing the dynamic core color and #2d0084 Purple
-          // The purple fades out on scroll, leaving only the orange core.
+          // Create a shimmering effect mixing the dynamic core color and Purple/#2a545b
           float purpleAmount = (1.0 - scrollT) * 0.977;
           float coreShimmer = 0.5 + 0.5 * sin(uTime * 2.0 + vLocalPos.x * 6.0 - vLocalPos.y * 5.0 + cos(uTime + vLocalPos.z * 4.0));
           vec3 mixedCore = mix(dynamicCore, corePurple, coreShimmer * purpleAmount);
           
           // Keep the orange/purple transition smoothly fading towards the edge.
-          // Tighter radius in hero section (scrollT = 0), widening as you scroll down.
           float radiusGateEnd = mix(0.75, 0.4, scrollT); 
           float coreRadiusGate = 1.0 - smoothstep(0.1, radiusGateEnd, normalizedDepth);
           
-          // Reduced intensity in hero section (0.35) so it's not overpowering, scales to 1.0 on scroll
           float coreMixFactor = max(0.35, scrollT) * coreRadiusGate; 
           vec3 coreColor = mix(heroCore, mixedCore, coreMixFactor);
-          vec3 edgeColor = mix(heroEdge, vec3(0.08, 0.04, 0.35), scrollT); // Fade back to less vibrant when scrolled
-          vec3 indigoColor = mix(heroIndigo, vec3(0.1, 0.05, 0.2), scrollT); // Fade back to less vibrant when scrolled
+          vec3 edgeColor = mix(heroEdge, mix(vec3(0.08, 0.04, 0.35), uCustomPurple * 0.6, uUseCustomPurple), scrollT); 
+          vec3 indigoColor = mix(heroIndigo, mix(vec3(0.1, 0.05, 0.2), uCustomPurple * 0.5, uUseCustomPurple), scrollT); 
           
           // Base mix between core and edge
           vec3 finalColor = mix(coreColor, edgeColor, normalizedDepth + rim * 0.5);
@@ -184,17 +181,12 @@ export function HalftoneWave({ active = true, purpleColor }: { active?: boolean;
           finalColor += indigoColor * indigoGradient * 0.4;
           
 
-          // Subtle living color nuance — a soft violet <-> teal shimmer that
-          // harmonizes with the midnight / indigo palette. Kept low so it never
-          // looks monotone, and a touch stronger while the flower moves (scroll).
-          vec3 accentA = vec3(0.30, 0.16, 0.55); // soft violet
-          vec3 accentB = vec3(0.08, 0.28, 0.42); // soft teal
-          // More complex and dramatic shimmer pattern
+          // Living color nuance - override violet accent with #2a545b
+          vec3 accentA = mix(vec3(0.30, 0.16, 0.55), uCustomPurple * 1.1, uUseCustomPurple); 
+          vec3 accentB = mix(vec3(0.08, 0.28, 0.42), uCustomPurple * 0.9, uUseCustomPurple); 
           float shimmer = 0.5 + 0.5 * sin(uTime * 1.2 + vLocalPos.y * 5.0 + vLocalPos.x * 4.0 + sin(uTime * 0.8 + vLocalPos.z * 3.0));
           vec3 accent = mix(accentA, accentB, shimmer);
           float accentGate = mix(0.5, 1.0, indigoGradient);
-          // Moderately increased the accent multiplier for turbulence without being too neon
-          // Moderately increased the accent multiplier for turbulence without being too neon
           finalColor += accent * ((0.11 + uScroll * 0.12) * accentGate);
           
 
