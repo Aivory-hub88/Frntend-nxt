@@ -122,7 +122,7 @@ export function HalftoneWaveWrapper({ purpleColor }: { purpleColor?: string } = 
         aria-hidden="true"
         style={{
           background: purpleColor 
-            ? 'radial-gradient(55% 50% at 50% 40%, rgba(42,84,91,0.30) 0%, rgba(20,40,45,0.12) 60%, transparent 100%)'
+            ? 'radial-gradient(55% 50% at 50% 40%, rgba(22,84,68,0.30) 0%, rgba(10,35,28,0.12) 60%, transparent 100%)'
             : 'radial-gradient(55% 50% at 50% 40%, rgba(90,124,184,0.16) 0%, rgba(90,124,184,0.06) 60%, transparent 100%)',
         }}
       />
@@ -139,7 +139,7 @@ export function HalftoneWaveWrapper({ purpleColor }: { purpleColor?: string } = 
           className="absolute inset-0"
           style={{
             background: purpleColor
-              ? 'radial-gradient(52% 46% at 50% 40%, rgba(42,84,91,0.35) 0%, rgba(20,40,45,0.15) 60%, transparent 100%)'
+              ? 'radial-gradient(52% 46% at 50% 40%, rgba(22,84,68,0.35) 0%, rgba(10,35,28,0.15) 60%, transparent 100%)'
               : 'radial-gradient(52% 46% at 50% 40%, rgba(90,124,184,0.20) 0%, rgba(90,124,184,0.08) 60%, transparent 100%)',
           }}
         />
