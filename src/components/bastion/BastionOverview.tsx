@@ -9,14 +9,19 @@ export default function BastionOverview() {
       <div className="max-w-7xl mx-auto px-6 md:px-12">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-16 md:gap-24">
           <FadeUp className="flex flex-col justify-start">
-            <div className="flex items-center gap-8 md:gap-12 mb-8">
-              <div role="heading" aria-level={2} className="text-3xl md:text-5xl font-light leading-tight text-[#FFFFFF]">
-                Adaptive defense for <br className="hidden md:block" /> modern enterprises.
+            
+            {/* Heading and Scaled Orb Header */}
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6 mb-8">
+              <div role="heading" aria-level={2} className="text-3xl md:text-5xl font-light leading-[1.2] text-[#FFFFFF] tracking-tight max-w-lg">
+                Adaptive defense for modern enterprises.
               </div>
-              <div className="flex-shrink-0">
-                <ThinkingOrb state="solving" size={64} theme="dark" />
+              <div className="shrink-0 flex items-center justify-center p-6">
+                <div style={{ transform: 'scale(2.2)', transformOrigin: 'center' }}>
+                  <ThinkingOrb state="solving" size={64} theme="dark" />
+                </div>
               </div>
             </div>
+
             <p className="text-lg text-[#B3B3B3] font-light leading-relaxed mb-6">
               Enterprise threats evolve continuously. Traditional security reacts after compromise.
             </p>
