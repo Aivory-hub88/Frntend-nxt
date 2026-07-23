@@ -23,7 +23,7 @@ export default function BastionPage() {
       {/* Global Ambient Background Gradient Wash (Fixed across ENTIRE page) */}
       <BastionBackground mode="gradient-only" className="fixed inset-0 z-0 pointer-events-none overflow-hidden" />
 
-      {/* 1. Hero Section (With Full-Size Flower Animation) */}
+      {/* 1. Hero Section (Flower Animation ONLY appears here) */}
       <div className="relative overflow-hidden min-h-screen z-10">
         <BastionBackground mode="flower-only" scale={1} className="absolute inset-0 z-0 pointer-events-none overflow-hidden" />
         <div className="relative z-10">
@@ -33,22 +33,15 @@ export default function BastionPage() {
         </div>
       </div>
 
-      {/* 2. Middle Sections (Gradient Wash Only, NO Flower Animation) */}
+      {/* 2. Middle & Footer Sections (Gradient Wash Only, NO Flower Animation) */}
       <div className="relative z-10">
         <BastionOverview />
         <BastionMetrics />
         <BastionDeployment />
         <BastionEnterpriseTrust />
-      </div>
-
-      {/* 3. Footer / Closing Section (With Scaled-Down Flower Animation, 55% size) */}
-      <div className="relative overflow-hidden z-10">
-        <BastionBackground mode="flower-only" scale={0.55} className="absolute inset-0 z-0 pointer-events-none overflow-hidden" />
-        <div className="relative z-10">
-          <BastionClosing />
-          <BastionContact />
-          <Footer />
-        </div>
+        <BastionClosing />
+        <BastionContact />
+        <Footer />
       </div>
 
     </main>
