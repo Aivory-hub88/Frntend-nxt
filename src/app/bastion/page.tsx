@@ -19,21 +19,35 @@ export const metadata: Metadata = {
 export default function BastionPage() {
   return (
     <main className="relative bg-black min-h-screen text-white font-manrope selection:bg-[#521cd5] selection:text-white">
-      {/* Global static background gradient for the ENTIRE page */}
-      <BastionBackground />
       
-      <div className="relative z-10">
-        <Navbar />
-        <BastionVisualHero />
-        <BastionHero />
+      {/* 1. Hero Section (With Flower Animation Background) */}
+      <div className="relative overflow-hidden min-h-screen">
+        <BastionBackground className="absolute inset-0 z-0 pointer-events-none overflow-hidden" />
+        <div className="relative z-10">
+          <Navbar />
+          <BastionVisualHero />
+          <BastionHero />
+        </div>
+      </div>
+
+      {/* 2. Middle Sections (Pure Solid Black Background, NO Flower Animation) */}
+      <div className="relative z-10 bg-black">
         <BastionOverview />
         <BastionMetrics />
         <BastionDeployment />
         <BastionEnterpriseTrust />
-        <BastionClosing />
-        <BastionContact />
-        <Footer />
       </div>
+
+      {/* 3. Footer / Closing Section (With Flower Animation Background) */}
+      <div className="relative overflow-hidden">
+        <BastionBackground className="absolute inset-0 z-0 pointer-events-none overflow-hidden" />
+        <div className="relative z-10">
+          <BastionClosing />
+          <BastionContact />
+          <Footer />
+        </div>
+      </div>
+
     </main>
   );
 }
