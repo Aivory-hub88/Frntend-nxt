@@ -5,18 +5,18 @@ import { motion } from 'framer-motion';
 
 const metrics = [
   // Left side
-  { id: 'n1', value: '24/7', label: 'Continuous Monitoring', x: 250, y: 250, startX: 720, startY: 300 },
-  { id: 'n3', value: '100%', label: 'Security Visibility', x: 150, y: 420, startX: 680, startY: 450 },
-  { id: 'n5', value: 'Continuous', label: 'Operational Intelligence', x: 280, y: 620, startX: 750, startY: 600 },
-  // Right side
-  { id: 'n2', value: 'Adaptive', label: 'Threat Response', x: 1050, y: 220, startX: 920, startY: 280 },
-  { id: 'n4', value: 'Zero Trust', label: 'Access Protection', x: 1120, y: 420, startX: 980, startY: 450 },
-  { id: 'n6', value: 'Enterprise', label: 'Operational Resilience', x: 1050, y: 620, startX: 900, startY: 600 },
+  { id: 'n1', value: '24/7', label: 'Continuous Monitoring', x: 220, y: 180, startX: 580, startY: 240 },
+  { id: 'n3', value: '100%', label: 'Security Visibility', x: 140, y: 350, startX: 520, startY: 350 },
+  { id: 'n5', value: 'Continuous', label: 'Operational Intelligence', x: 240, y: 520, startX: 600, startY: 460 },
+  // Right side (pulled inward so they NEVER get cut off on the right)
+  { id: 'n2', value: 'Adaptive', label: 'Threat Response', x: 920, y: 180, startX: 780, startY: 240 },
+  { id: 'n4', value: 'Zero Trust', label: 'Access Protection', x: 950, y: 350, startX: 840, startY: 350 },
+  { id: 'n6', value: 'Enterprise', label: 'Operational Resilience', x: 900, y: 520, startX: 780, startY: 460 },
 ];
 
 export default function BastionMetrics() {
   return (
-    <section className="bg-transparent text-white py-32 border-t border-white/5 relative z-10">
+    <section className="bg-transparent text-white py-32 border-t border-white/5 relative z-10 overflow-hidden">
       
       {/* Header Section */}
       <div className="max-w-7xl mx-auto px-6 md:px-12 relative z-20">
@@ -48,11 +48,11 @@ export default function BastionMetrics() {
       </div>
 
       {/* Desktop Layout (Palantir HUD Animation over original background) */}
-      <div className="hidden md:block relative w-full max-w-[1400px] mx-auto h-[800px] -mt-20 pointer-events-none">
+      <div className="hidden md:block relative w-full max-w-7xl mx-auto h-[650px] -mt-20 pointer-events-none px-6 md:px-12">
         
         {/* Transparent SVG Canvas for Callout Lines */}
         <svg
-          viewBox="0 0 1200 800"
+          viewBox="0 0 1200 700"
           className="absolute inset-0 w-full h-full"
         >
           {metrics.map((metric, i) => (
