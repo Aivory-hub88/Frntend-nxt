@@ -2,7 +2,6 @@ import Navbar from '@/components/home/Navbar';
 import BastionVisualHero from '@/components/bastion/BastionVisualHero';
 import BastionHero from '@/components/bastion/BastionHero';
 import BastionOverview from '@/components/bastion/BastionOverview';
-import BastionDomains from '@/components/bastion/BastionDomains';
 import BastionMetrics from '@/components/bastion/BastionMetrics';
 import BastionCapabilities from '@/components/bastion/BastionCapabilities';
 import BastionDeployment from '@/components/bastion/BastionDeployment';
@@ -29,7 +28,6 @@ export default function BastionPage() {
         <BastionVisualHero />
         <BastionHero />
         <BastionOverview />
-        <BastionDomains />
         <BastionMetrics />
         <BastionCapabilities />
         <BastionDeployment />
