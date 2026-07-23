@@ -165,9 +165,12 @@ export default function BastionDeployment() {
     <section className="bg-transparent text-white py-32 overflow-hidden">
       <div className="max-w-[1600px] mx-auto px-6 md:px-12">
         <FadeUp className="mb-16 md:mb-24">
-          <h2 className="text-4xl md:text-6xl lg:text-[72px] tracking-tight font-light leading-tight text-[#FFFFFF] max-w-4xl">
+          <h2 className="text-4xl md:text-6xl lg:text-[72px] tracking-tight font-light leading-tight text-[#FFFFFF] max-w-4xl mb-6">
             From one to many environments
           </h2>
+          <div className="max-w-3xl text-lg md:text-xl text-[#B3B3B3] font-light leading-relaxed">
+            <p>Whether securing a single application or protecting enterprise-wide infrastructure, Bastion delivers consistent AI-powered defense across every environment without sacrificing visibility, operational control, or resilience.</p>
+          </div>
         </FadeUp>
         
         <FadeUp staggerChildren={0.1} className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 lg:gap-6">

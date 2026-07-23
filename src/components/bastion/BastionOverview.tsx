@@ -45,17 +45,17 @@ export default function BastionOverview() {
           <FadeUp className="flex flex-col justify-start">
             <div className="flex items-center gap-8 md:gap-12 mb-8">
               <div role="heading" aria-level={2} className="text-3xl md:text-5xl font-light leading-tight text-[#FFFFFF]">
-                Govern AI with<br className="hidden md:block" /> confidence.
+                Adaptive defense for <br className="hidden md:block" /> modern enterprises.
               </div>
               <div className="flex-shrink-0">
                 <AnimatedOrb size={96} />
               </div>
             </div>
             <p className="text-lg text-[#B3B3B3] font-light leading-relaxed mb-6">
-              Enterprise AI requires more than intelligence. It requires governance, visibility, security, and operational trust.
+              Enterprise threats evolve continuously. Traditional security reacts after compromise.
             </p>
             <p className="text-lg text-[#B3B3B3] font-light leading-relaxed">
-              Bastion helps organisations protect every AI deployment with enterprise-grade governance, policy enforcement, and complete operational visibility.
+              Bastion combines AI-powered detection, adaptive defense, and continuous monitoring to protect digital assets before threats become incidents.
             </p>
           </FadeUp>
 

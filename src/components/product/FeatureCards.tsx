@@ -156,8 +156,8 @@ export default function FeatureCards() {
           <div className="max-w-[1400px] mx-auto px-6 md:px-12 lg:px-24 relative z-[1]">
           <div className="text-center flex flex-col justify-center items-center">
             <h2 className="text-2xl md:text-3xl font-light tracking-tight mb-6 leading-tight text-white max-w-3xl" style={{ fontFamily: "'Manrope', sans-serif", fontWeight: 300 }}>
-              Turn your AI Confusion<br />
-              Into AI <span className="italic" style={{ color: '#e4effd' }}>Execution</span>
+              Turn operational complexity<br />
+              into business <span className="italic" style={{ color: '#e4effd' }}>clarity.</span>
             </h2>
             <p className="text-[10px] md:text-xs text-white/75 max-w-2xl font-light leading-relaxed mb-16">
               Aivory™ helps organizations discover where AI creates value,
@@ -166,20 +166,20 @@ export default function FeatureCards() {
 
             {/* Diagnostic Stats Section */}
             <div className="w-full max-w-[850px] mx-auto flex flex-col items-center">
-              <div className="uppercase tracking-[0.2em] text-[#d0d0d4] text-[10px] md:text-xs font-semibold mb-3">
-                FROM ASSESSMENT TO DEPLOYMENT, DONE IN MINUTES
+              <div className="uppercase tracking-[0.2em] text-[#d0d0d4] text-[14px] md:text-[17px] font-semibold mb-3">
+                FROM INSIGHT TO EXECUTION. IN MINUTES.
               </div>
-              <h3 className="text-[13px] md:text-xl font-light text-white mb-12" style={{ zoom: 0.95, fontFamily: "'Manrope', sans-serif", fontWeight: 300 }}>
-                No more weeks of back-and-forth consulting sessions. Just clarity, fast.
+              <h3 className="text-[10px] md:text-base font-light text-white mb-12" style={{ zoom: 0.95, fontFamily: "'Manrope', sans-serif", fontWeight: 300 }}>
+                Understand your operations, prioritise what matters, and deploy AI with confidence.
               </h3>
 
               <div ref={statsRef} className="flex flex-nowrap justify-center items-stretch relative flex-row w-full mt-4" style={{ zoom: 0.76 }}>
-                <DiagnosticStatItem target={10} prefix="" suffix="min" title="AI Readiness Assessment" subtitle="not days of sessions" active={statsActive} delay={0} />
+                <DiagnosticStatItem target={10} prefix="" suffix="min" title="Business Operations Assessment" subtitle="not days of sessions" active={statsActive} delay={0} />
                 <div
                   className="w-px self-stretch relative min-h-[100px] hidden md:block"
                   style={{ background: 'linear-gradient(180deg, transparent, rgba(255,255,255,0.14) 20%, rgba(255,255,255,0.14) 80%, transparent)' }}
                 />
-                <DiagnosticStatItem target={5} prefix="<" suffix="min" title="AI System Blueprint" subtitle="not weeks of decks" active={statsActive} delay={100} />
+                <DiagnosticStatItem target={5} prefix="<" suffix="min" title="Transformation Blueprint" subtitle="not weeks of decks" active={statsActive} delay={100} />
                 <div
                   className="w-px self-stretch relative min-h-[100px] hidden md:block"
                   style={{ background: 'linear-gradient(180deg, transparent, rgba(255,255,255,0.14) 20%, rgba(255,255,255,0.14) 80%, transparent)' }}

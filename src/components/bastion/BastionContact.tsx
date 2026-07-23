@@ -40,9 +40,10 @@ export default function BastionContact() {
             <h2 className="text-4xl md:text-6xl lg:text-[4.5rem] font-light leading-[1.05] tracking-tight text-[#FFFFFF] mb-6">
               Start the conversation.
             </h2>
-            <p className="text-lg md:text-xl text-[#B3B3B3] font-light leading-relaxed">
-              Tell us about your organisation, your AI initiatives, or your operational challenges. We'll help you determine how Bastion can support secure and governed AI deployment.
-            </p>
+            <div className="space-y-4 text-lg md:text-xl text-[#B3B3B3] font-light leading-relaxed">
+              <p>Tell us about your security priorities, digital infrastructure, or operational challenges.</p>
+              <p>We'll explore how Bastion can strengthen your enterprise security posture.</p>
+            </div>
           </div>
 
           {/* Right Column - Form */}

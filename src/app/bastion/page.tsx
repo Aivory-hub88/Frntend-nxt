@@ -3,8 +3,11 @@ import BastionVisualHero from '@/components/bastion/BastionVisualHero';
 import BastionHero from '@/components/bastion/BastionHero';
 import BastionOverview from '@/components/bastion/BastionOverview';
 import BastionDomains from '@/components/bastion/BastionDomains';
+import BastionMetrics from '@/components/bastion/BastionMetrics';
+import BastionCapabilities from '@/components/bastion/BastionCapabilities';
 import BastionDeployment from '@/components/bastion/BastionDeployment';
 import BastionEnterpriseTrust from '@/components/bastion/BastionEnterpriseTrust';
+import BastionClosing from '@/components/bastion/BastionClosing';
 import BastionContact from '@/components/bastion/BastionContact';
 import Footer from '@/components/Footer';
 import BastionBackground from '@/components/bastion/BastionBackground';
@@ -27,8 +30,11 @@ export default function BastionPage() {
         <BastionHero />
         <BastionOverview />
         <BastionDomains />
+        <BastionMetrics />
+        <BastionCapabilities />
         <BastionDeployment />
         <BastionEnterpriseTrust />
+        <BastionClosing />
         <BastionContact />
         <Footer />
       </div>

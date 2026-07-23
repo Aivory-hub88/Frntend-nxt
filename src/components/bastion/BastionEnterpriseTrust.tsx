@@ -169,9 +169,8 @@ export default function BastionEnterpriseTrust() {
               Trust every deployment.
             </h2>
             <div className="space-y-4 text-lg text-[#B3B3B3] font-light leading-relaxed">
-              <p>Every deployment should be visible. Every workflow should be governed. Every decision should be accountable.</p>
-              <p>Deploy AI securely. Protect every workflow. Govern every decision. Build operational trust from day one.</p>
-              <p className="text-white font-normal pt-2">Bastion makes enterprise AI trustworthy at scale.</p>
+              <p>Security should accelerate innovation, not slow it down.</p>
+              <p>Bastion enables organisations to deploy, operate, and scale digital infrastructure with confidence through continuous protection, adaptive defense, and enterprise-grade resilience.</p>
             </div>
           </FadeUp>
         </div>

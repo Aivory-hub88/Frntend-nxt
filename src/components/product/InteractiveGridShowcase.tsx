@@ -13,24 +13,28 @@ const LabFlaskCanvas = dynamic(
 // Product context text
 const showcaseProducts = [
   {
-    step: '01. DISCOVER', title: 'Deep Assessment',
-    description: 'We audit your current operations, constraints, and data accessibility. We map out a customized assessment to establish a realistic readiness baseline.',
+    step: '01. DISCOVER', title: 'Business Operations Assessment',
+    description: (
+      <>
+        Every successful transformation begins with operational clarity. Assess how your business operates, identify what limits performance, and prioritise the improvements that create the greatest business impact.
+      </>
+    ),
   },
   {
-    step: '02. DESIGN', title: 'AI System Blueprint',
-    description: 'Aivory maps your diagnostic results into a recommended system architecture, defining how data, processing layers, and automation models interface.',
+    step: '02. DESIGN', title: 'Transformation Blueprint',
+    description: 'Transform assessment insights into a practical roadmap for business improvement. Prioritise operational improvements, identify AI opportunities, and define a clear path from strategy to execution.',
   },
   {
-    step: '03. PLAN', title: 'Implementation Roadmap',
-    description: 'A sequenced, phased plan designed to target your high-impact bottlenecks first. We split the implementation into manageable deployment waves.',
+    step: '03. PLAN', title: 'Transformation Roadmap',
+    description: 'Turn strategy into action through a structured roadmap that prioritises operational improvements, delivers measurable milestones, and introduces AI where it creates the greatest business value.',
   },
   {
-    step: '04. CONTROL', title: 'AI Console',
-    description: 'A unified strategic interface. Query your systems, review diagnostic assessments, track operational telemetry, and instruct automated agents.',
+    step: '04. CONTROL', title: 'Operations Console',
+    description: 'A unified executive workspace for monitoring operations, tracking transformation progress, and managing governed AI from a single place.',
   },
   {
     step: '05. BUILD', title: 'Workflow Builder',
-    description: 'Say it, and it builds. Plain language becomes executable automation — no code, no complexity, just intent turned into action across your entire stack.',
+    description: 'Say it, and it builds!. Turn business processes into intelligent workflows using plain language. No code, no complexity. Just faster execution across your existing systems.',
   },
 ];
 
@@ -93,11 +97,11 @@ export function InteractiveGridShowcase() {
           >
             Operational Framework
           </SpotlightButton>
-          <h3 className="text-4xl md:text-5xl font-light tracking-normal mb-6 leading-tight">
-            From Assessment <br className="hidden md:block" />to Staged <span className="italic" style={{ color: '#e4effd' }}>Autonomy</span>
+          <h3 className="text-4xl md:text-5xl font-light tracking-normal mb-6 leading-tight" style={{ zoom: 0.7 }}>
+            From Operational Clarity <br className="hidden md:block" />to <span className="italic" style={{ color: '#e4effd' }}>Intelligent Operations</span>
           </h3>
           <p className="text-white/75 font-light leading-relaxed">
-            We take you step-by-step from auditing bottlenecks to running customized, automated system workflows. Explore the core product layers.
+            We guide organisations through every stage of transformation. From understanding how the business operates today to redesigning workflows and deploying governed AI that delivers measurable business outcomes.
           </p>
         </div>
 
