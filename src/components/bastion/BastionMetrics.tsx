@@ -14,7 +14,7 @@ const metrics: { value: string; label: string; state: OrbState }[] = [
 
 export default function BastionMetrics() {
   return (
-    <section className="bg-transparent text-white py-32 border-t border-white/5 relative z-10">
+    <section className="bg-transparent text-white py-32 relative z-10">
       <div className="max-w-7xl mx-auto px-6 md:px-12">
         
         {/* Header Section */}
