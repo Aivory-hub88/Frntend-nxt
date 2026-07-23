@@ -20,9 +20,12 @@ export default function BastionPage() {
   return (
     <main className="relative bg-black min-h-screen text-white font-manrope selection:bg-[#521cd5] selection:text-white">
       
-      {/* 1. Hero Section (With Flower Animation Background) */}
-      <div className="relative overflow-hidden min-h-screen">
-        <BastionBackground className="absolute inset-0 z-0 pointer-events-none overflow-hidden" />
+      {/* Global Ambient Background Gradient Wash (Fixed across ENTIRE page) */}
+      <BastionBackground mode="gradient-only" className="fixed inset-0 z-0 pointer-events-none overflow-hidden" />
+
+      {/* 1. Hero Section (With Full-Size Flower Animation) */}
+      <div className="relative overflow-hidden min-h-screen z-10">
+        <BastionBackground mode="flower-only" scale={1} className="absolute inset-0 z-0 pointer-events-none overflow-hidden" />
         <div className="relative z-10">
           <Navbar />
           <BastionVisualHero />
@@ -30,17 +33,17 @@ export default function BastionPage() {
         </div>
       </div>
 
-      {/* 2. Middle Sections (Pure Solid Black Background, NO Flower Animation) */}
-      <div className="relative z-10 bg-black">
+      {/* 2. Middle Sections (Gradient Wash Only, NO Flower Animation) */}
+      <div className="relative z-10">
         <BastionOverview />
         <BastionMetrics />
         <BastionDeployment />
         <BastionEnterpriseTrust />
       </div>
 
-      {/* 3. Footer / Closing Section (With Flower Animation Background) */}
-      <div className="relative overflow-hidden">
-        <BastionBackground className="absolute inset-0 z-0 pointer-events-none overflow-hidden" />
+      {/* 3. Footer / Closing Section (With Scaled-Down Flower Animation, 55% size) */}
+      <div className="relative overflow-hidden z-10">
+        <BastionBackground mode="flower-only" scale={0.55} className="absolute inset-0 z-0 pointer-events-none overflow-hidden" />
         <div className="relative z-10">
           <BastionClosing />
           <BastionContact />
