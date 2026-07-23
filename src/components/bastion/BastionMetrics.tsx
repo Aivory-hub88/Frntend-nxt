@@ -1,49 +1,15 @@
 'use client';
 
 import { FadeUp, FadeUpChild } from './FadeUp';
+import { ThinkingOrb, OrbState } from 'thinking-orbs';
 
-const AnimatedOrb = ({ size = 56 }: { size?: number }) => {
-  const dots = [];
-  const numDots = 40;
-  const goldenRatio = (1 + Math.sqrt(5)) / 2;
-  
-  for (let i = 0; i < numDots; i++) {
-    const t = i / (numDots - 1);
-    const inclination = Math.acos(1 - 2 * t);
-    const azimuth = 2 * Math.PI * i / goldenRatio;
-    
-    const x = Math.sin(inclination) * Math.cos(azimuth);
-    const y = Math.sin(inclination) * Math.sin(azimuth);
-    const z = Math.cos(inclination);
-    
-    const radius = 40;
-    const cx = 50 + x * radius;
-    const cy = 50 + y * radius;
-    const r = 1 + (z + 1) * 0.75;
-    const opacity = 0.3 + (z + 1) * 0.35;
-    
-    dots.push(
-      <circle key={i} cx={cx} cy={cy} r={r} fill="#FFFFFF" opacity={opacity} />
-    );
-  }
-  
-  return (
-    <div className="relative flex items-center justify-center shrink-0" style={{ width: size, height: size }}>
-      <svg viewBox="0 0 100 100" className="w-full h-full animate-[spin_12s_linear_infinite]">
-        {dots}
-      </svg>
-      <div className="absolute inset-0 m-auto rounded-full bg-white/5 blur-md animate-pulse" style={{ width: '70%', height: '70%' }} />
-    </div>
-  );
-};
-
-const metrics = [
-  { value: '24/7', label: 'Continuous Monitoring' },
-  { value: 'Adaptive', label: 'Threat Response' },
-  { value: 'Enterprise', label: 'Operational Resilience' },
-  { value: '100%', label: 'Security Visibility' },
-  { value: 'Continuous', label: 'Operational Intelligence' },
-  { value: 'Zero Trust', label: 'Access Protection' },
+const metrics: { value: string; label: string; state: OrbState }[] = [
+  { value: '24/7', label: 'Continuous Monitoring', state: 'listening' },
+  { value: 'Adaptive', label: 'Threat Response', state: 'solving' },
+  { value: 'Enterprise', label: 'Operational Resilience', state: 'working' },
+  { value: '100%', label: 'Security Visibility', state: 'searching' },
+  { value: 'Continuous', label: 'Operational Intelligence', state: 'composing' },
+  { value: 'Zero Trust', label: 'Access Protection', state: 'shaping' },
 ];
 
 export default function BastionMetrics() {
@@ -67,18 +33,20 @@ export default function BastionMetrics() {
             </div>
           </div>
           <div className="hidden lg:block shrink-0 mb-2">
-            <AnimatedOrb size={84} />
+            <ThinkingOrb state="solving" size={64} theme="dark" />
           </div>
         </FadeUp>
 
-        {/* 6 Metrics Grid with Animated Orb per item */}
+        {/* 6 Metrics Grid with unique ThinkingOrb state per item */}
         <FadeUp staggerChildren={0.08} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
           {metrics.map((metric, index) => (
             <FadeUpChild 
               key={index} 
               className="flex items-center gap-6 p-6 rounded-2xl bg-white/[0.03] border border-white/10 hover:border-white/25 hover:bg-white/[0.06] transition-all duration-300 backdrop-blur-md group shadow-lg"
             >
-              <AnimatedOrb size={52} />
+              <div className="shrink-0 flex items-center justify-center">
+                <ThinkingOrb state={metric.state} size={64} theme="dark" />
+              </div>
               <div className="flex flex-col min-w-0">
                 <span className="text-3xl md:text-4xl font-light text-white mb-1 tracking-tight truncate">
                   {metric.value}
