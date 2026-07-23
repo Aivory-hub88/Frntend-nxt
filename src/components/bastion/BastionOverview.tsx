@@ -1,41 +1,7 @@
 'use client';
 
 import { FadeUp, FadeUpChild } from './FadeUp';
-
-const AnimatedOrb = ({ size = 84 }: { size?: number }) => {
-  const dots = [];
-  const numDots = 48;
-  const goldenRatio = (1 + Math.sqrt(5)) / 2;
-  
-  for (let i = 0; i < numDots; i++) {
-    const t = i / (numDots - 1);
-    const inclination = Math.acos(1 - 2 * t);
-    const azimuth = 2 * Math.PI * i / goldenRatio;
-    
-    const x = Math.sin(inclination) * Math.cos(azimuth);
-    const y = Math.sin(inclination) * Math.sin(azimuth);
-    const z = Math.cos(inclination);
-    
-    const radius = 40;
-    const cx = 50 + x * radius;
-    const cy = 50 + y * radius;
-    const r = 1 + (z + 1) * 0.75;
-    const opacity = 0.3 + (z + 1) * 0.35;
-    
-    dots.push(
-      <circle key={i} cx={cx} cy={cy} r={r} fill="#FFFFFF" opacity={opacity} />
-    );
-  }
-  
-  return (
-    <div className="relative flex items-center justify-center" style={{ width: size, height: size }}>
-      <svg viewBox="0 0 100 100" className="w-full h-full animate-[spin_12s_linear_infinite]">
-        {dots}
-      </svg>
-      <div className="absolute inset-0 m-auto rounded-full bg-white/5 blur-lg animate-pulse" style={{ width: '70%', height: '70%' }} />
-    </div>
-  );
-};
+import { ThinkingOrb } from 'thinking-orbs';
 
 export default function BastionOverview() {
   return (
@@ -48,7 +14,7 @@ export default function BastionOverview() {
                 Adaptive defense for <br className="hidden md:block" /> modern enterprises.
               </div>
               <div className="flex-shrink-0">
-                <AnimatedOrb size={96} />
+                <ThinkingOrb state="solving" size={64} theme="dark" />
               </div>
             </div>
             <p className="text-lg text-[#B3B3B3] font-light leading-relaxed mb-6">
@@ -59,32 +25,25 @@ export default function BastionOverview() {
             </p>
           </FadeUp>
 
-          <FadeUp staggerChildren={0.15} className="flex flex-col justify-center space-y-12">
-            <FadeUpChild className="border-l border-[#1F1F1F] pl-6">
-              <h3 className="text-xl font-medium mb-3 text-[#FFFFFF]">Visibility</h3>
+          <FadeUp staggerChildren={0.15} className="space-y-12">
+            <FadeUpChild className="border-l-2 border-white/20 pl-6 py-2">
+              <h3 className="text-xl font-light text-white mb-2">Autonomous Operations</h3>
               <p className="text-[#B3B3B3] font-light leading-relaxed">
-                Know every AI system operating across your organisation.
+                Security logic executes continuously without human intervention, analyzing millions of telemetry signals per second.
               </p>
             </FadeUpChild>
 
-            <FadeUpChild className="border-l border-[#1F1F1F] pl-6">
-              <h3 className="text-xl font-medium mb-3 text-[#FFFFFF]">Governance</h3>
+            <FadeUpChild className="border-l-2 border-white/20 pl-6 py-2">
+              <h3 className="text-xl font-light text-white mb-2">Zero-Trust Posture</h3>
               <p className="text-[#B3B3B3] font-light leading-relaxed">
-                Apply policies consistently across every deployment.
+                Every request, endpoint, and data transaction is continuously verified in real time against contextual risk parameters.
               </p>
             </FadeUpChild>
 
-            <FadeUpChild className="border-l border-[#1F1F1F] pl-6">
-              <h3 className="text-xl font-medium mb-3 text-[#FFFFFF]">Security</h3>
+            <FadeUpChild className="border-l-2 border-white/20 pl-6 py-2">
+              <h3 className="text-xl font-light text-white mb-2">Resilient Infrastructure</h3>
               <p className="text-[#B3B3B3] font-light leading-relaxed">
-                Protect sensitive information without slowing innovation.
-              </p>
-            </FadeUpChild>
-
-            <FadeUpChild className="border-l border-[#1F1F1F] pl-6">
-              <h3 className="text-xl font-medium mb-3 text-[#FFFFFF]">Auditability</h3>
-              <p className="text-[#B3B3B3] font-light leading-relaxed">
-                Maintain complete visibility and accountability across every AI interaction.
+                Designed to isolate anomalies instantly while maintaining critical operational uptime across cloud environments.
               </p>
             </FadeUpChild>
           </FadeUp>
