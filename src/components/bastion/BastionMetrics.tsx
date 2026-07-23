@@ -18,7 +18,7 @@ export default function BastionMetrics() {
       <div className="max-w-7xl mx-auto px-6 md:px-12">
         
         {/* Header Section */}
-        <FadeUp className="mb-16 flex flex-col md:flex-row md:items-end justify-between gap-8">
+        <FadeUp className="mb-16">
           <div>
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-xs font-mono tracking-widest text-[#B3B3B3] uppercase mb-6 backdrop-blur-md">
               <span className="w-2 h-2 rounded-full bg-white animate-pulse" />
@@ -31,9 +31,6 @@ export default function BastionMetrics() {
               <p>Modern security is measured by resilience. Not only by prevention.</p>
               <p>Bastion continuously monitors, analyses, and strengthens your defensive posture while maintaining operational continuity.</p>
             </div>
-          </div>
-          <div className="hidden lg:block shrink-0 mb-2">
-            <ThinkingOrb state="solving" size={64} theme="dark" />
           </div>
         </FadeUp>
 
