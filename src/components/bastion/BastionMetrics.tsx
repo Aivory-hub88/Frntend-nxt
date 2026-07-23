@@ -1,143 +1,95 @@
 'use client';
 
 import { FadeUp, FadeUpChild } from './FadeUp';
-import { motion } from 'framer-motion';
+
+const AnimatedOrb = ({ size = 56 }: { size?: number }) => {
+  const dots = [];
+  const numDots = 40;
+  const goldenRatio = (1 + Math.sqrt(5)) / 2;
+  
+  for (let i = 0; i < numDots; i++) {
+    const t = i / (numDots - 1);
+    const inclination = Math.acos(1 - 2 * t);
+    const azimuth = 2 * Math.PI * i / goldenRatio;
+    
+    const x = Math.sin(inclination) * Math.cos(azimuth);
+    const y = Math.sin(inclination) * Math.sin(azimuth);
+    const z = Math.cos(inclination);
+    
+    const radius = 40;
+    const cx = 50 + x * radius;
+    const cy = 50 + y * radius;
+    const r = 1 + (z + 1) * 0.75;
+    const opacity = 0.3 + (z + 1) * 0.35;
+    
+    dots.push(
+      <circle key={i} cx={cx} cy={cy} r={r} fill="#FFFFFF" opacity={opacity} />
+    );
+  }
+  
+  return (
+    <div className="relative flex items-center justify-center shrink-0" style={{ width: size, height: size }}>
+      <svg viewBox="0 0 100 100" className="w-full h-full animate-[spin_12s_linear_infinite]">
+        {dots}
+      </svg>
+      <div className="absolute inset-0 m-auto rounded-full bg-white/5 blur-md animate-pulse" style={{ width: '70%', height: '70%' }} />
+    </div>
+  );
+};
 
 const metrics = [
-  // Left side
-  { id: 'n1', value: '24/7', label: 'Continuous Monitoring', x: 220, y: 180, startX: 580, startY: 240 },
-  { id: 'n3', value: '100%', label: 'Security Visibility', x: 140, y: 350, startX: 520, startY: 350 },
-  { id: 'n5', value: 'Continuous', label: 'Operational Intelligence', x: 240, y: 520, startX: 600, startY: 460 },
-  // Right side (pulled inward so they NEVER get cut off on the right)
-  { id: 'n2', value: 'Adaptive', label: 'Threat Response', x: 920, y: 180, startX: 780, startY: 240 },
-  { id: 'n4', value: 'Zero Trust', label: 'Access Protection', x: 950, y: 350, startX: 840, startY: 350 },
-  { id: 'n6', value: 'Enterprise', label: 'Operational Resilience', x: 900, y: 520, startX: 780, startY: 460 },
+  { value: '24/7', label: 'Continuous Monitoring' },
+  { value: 'Adaptive', label: 'Threat Response' },
+  { value: 'Enterprise', label: 'Operational Resilience' },
+  { value: '100%', label: 'Security Visibility' },
+  { value: 'Continuous', label: 'Operational Intelligence' },
+  { value: 'Zero Trust', label: 'Access Protection' },
 ];
 
 export default function BastionMetrics() {
   return (
-    <section className="bg-transparent text-white py-32 border-t border-white/5 relative z-10 overflow-hidden">
-      
-      {/* Header Section */}
-      <div className="max-w-7xl mx-auto px-6 md:px-12 relative z-20">
-        <FadeUp className="mb-12 md:mb-20">
-          <h2 className="text-3xl md:text-5xl lg:text-6xl font-light leading-tight text-white mb-6 tracking-tight">
-            Built for enterprise resilience.
-          </h2>
-          <div className="space-y-4 max-w-3xl text-lg text-[#B3B3B3] font-light leading-relaxed">
-            <p>Modern security is measured by resilience. Not only by prevention.</p>
-            <p>Bastion continuously monitors, analyses, and strengthens your defensive posture while maintaining operational continuity.</p>
+    <section className="bg-transparent text-white py-32 border-t border-white/5 relative z-10">
+      <div className="max-w-7xl mx-auto px-6 md:px-12">
+        
+        {/* Header Section */}
+        <FadeUp className="mb-16 flex flex-col md:flex-row md:items-end justify-between gap-8">
+          <div>
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-xs font-mono tracking-widest text-[#B3B3B3] uppercase mb-6 backdrop-blur-md">
+              <span className="w-2 h-2 rounded-full bg-white animate-pulse" />
+              Autonomous Resilience
+            </div>
+            <h2 className="text-3xl md:text-5xl lg:text-6xl font-light leading-tight text-white mb-6 tracking-tight">
+              Built for enterprise resilience.
+            </h2>
+            <div className="space-y-4 max-w-3xl text-lg text-[#B3B3B3] font-light leading-relaxed">
+              <p>Modern security is measured by resilience. Not only by prevention.</p>
+              <p>Bastion continuously monitors, analyses, and strengthens your defensive posture while maintaining operational continuity.</p>
+            </div>
+          </div>
+          <div className="hidden lg:block shrink-0 mb-2">
+            <AnimatedOrb size={84} />
           </div>
         </FadeUp>
-      </div>
 
-      {/* Mobile Layout (Standard Grid) */}
-      <div className="md:hidden max-w-7xl mx-auto px-6 relative z-20">
-        <FadeUp staggerChildren={0.1} className="grid grid-cols-2 gap-x-8 gap-y-12">
-          {metrics.map((metric) => (
-            <FadeUpChild key={`mobile-${metric.id}`} className="flex flex-col bg-black/40 backdrop-blur-sm border border-white/10 p-5 rounded-xl">
-              <span className="text-3xl font-light text-white mb-2 tracking-tight">
-                {metric.value}
-              </span>
-              <span className="text-xs text-[#B3B3B3] uppercase tracking-widest">
-                {metric.label}
-              </span>
+        {/* 6 Metrics Grid with Animated Orb per item */}
+        <FadeUp staggerChildren={0.08} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+          {metrics.map((metric, index) => (
+            <FadeUpChild 
+              key={index} 
+              className="flex items-center gap-6 p-6 rounded-2xl bg-white/[0.03] border border-white/10 hover:border-white/25 hover:bg-white/[0.06] transition-all duration-300 backdrop-blur-md group shadow-lg"
+            >
+              <AnimatedOrb size={52} />
+              <div className="flex flex-col min-w-0">
+                <span className="text-3xl md:text-4xl font-light text-white mb-1 tracking-tight truncate">
+                  {metric.value}
+                </span>
+                <span className="text-xs text-[#B3B3B3] uppercase tracking-widest font-mono font-medium truncate">
+                  {metric.label}
+                </span>
+              </div>
             </FadeUpChild>
           ))}
         </FadeUp>
-      </div>
-
-      {/* Desktop Layout (Palantir HUD Animation over original background) */}
-      <div className="hidden md:block relative w-full max-w-7xl mx-auto h-[650px] -mt-20 pointer-events-none px-6 md:px-12">
-        
-        {/* Transparent SVG Canvas for Callout Lines */}
-        <svg
-          viewBox="0 0 1200 700"
-          className="absolute inset-0 w-full h-full"
-        >
-          {metrics.map((metric, i) => (
-            <g key={`connection-${metric.id}`}>
-              {/* Animated drawing line */}
-              <motion.path
-                d={`M ${metric.startX} ${metric.startY} L ${metric.x} ${metric.y}`}
-                fill="none"
-                stroke="#FFFFFF"
-                strokeWidth="1"
-                strokeOpacity="0.2"
-                initial={{ pathLength: 0 }}
-                whileInView={{ pathLength: 1 }}
-                viewport={{ once: true, margin: "-100px" }}
-                transition={{ duration: 1.5, delay: 0.5 + (i * 0.1), ease: "easeOut" }}
-              />
-              {/* Origin dot on the flower */}
-              <motion.circle
-                cx={metric.startX}
-                cy={metric.startY}
-                r="2"
-                fill="#FFFFFF"
-                opacity="0.3"
-                initial={{ scale: 0 }}
-                whileInView={{ scale: 1 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: 0.2 + (i * 0.1) }}
-              />
-              {/* Anchor point at the card */}
-              <motion.circle
-                cx={metric.x}
-                cy={metric.y}
-                r="2"
-                fill="#FFFFFF"
-                opacity="0.5"
-                initial={{ scale: 0, opacity: 0 }}
-                whileInView={{ scale: 1, opacity: 0.5 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: 2 + (i * 0.1) }}
-              />
-              {/* Inner glowing dot */}
-              <motion.circle
-                cx={metric.x}
-                cy={metric.y}
-                r="1"
-                fill="#FFFFFF"
-                initial={{ opacity: 0 }}
-                whileInView={{ opacity: 1 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: 2.2 + (i * 0.1) }}
-              />
-            </g>
-          ))}
-        </svg>
-
-        {/* Floating Metric Cards (HTML) */}
-        {metrics.map((metric, i) => (
-          <motion.div
-            key={`card-${metric.id}`}
-            className="absolute flex flex-col items-center justify-center pointer-events-auto"
-            style={{
-              left: `${(metric.x / 1200) * 100}%`,
-              top: `${(metric.y / 800) * 100}%`,
-              transform: 'translate(-50%, -50%)',
-            }}
-            initial={{ opacity: 0, scale: 0.9, y: 10 }}
-            whileInView={{ opacity: 1, scale: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8, delay: 1 + (i * 0.1), type: "spring" }}
-          >
-            {/* Gentle continuous float */}
-            <motion.div
-              animate={{ y: [-2, 2, -2] }}
-              transition={{ duration: 6 + (i % 3), repeat: Infinity, ease: "easeInOut", delay: i * 0.3 }}
-              className="bg-black/20 backdrop-blur-sm border border-white/5 px-4 py-2.5 rounded flex flex-col items-start hover:bg-black/40 hover:border-white/10 transition-all duration-300 shadow-sm"
-            >
-              <span className="text-xl md:text-2xl font-light text-white tracking-tight mb-0.5">
-                {metric.value}
-              </span>
-              <span className="text-[8px] md:text-[9px] text-[#A1A1AA] uppercase tracking-[0.15em] font-medium whitespace-nowrap">
-                {metric.label}
-              </span>
-            </motion.div>
-          </motion.div>
-        ))}
 
       </div>
     </section>
