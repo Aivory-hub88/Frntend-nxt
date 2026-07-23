@@ -4,12 +4,14 @@ import { FadeUp, FadeUpChild } from './FadeUp';
 import { motion } from 'framer-motion';
 
 const metrics = [
-  { id: 'n1', value: '24/7', label: 'Continuous Monitoring', x: 200, y: 200, path: 'M 600 400 L 400 400 L 200 200' },
-  { id: 'n2', value: 'Adaptive', label: 'Threat Response', x: 1000, y: 200, path: 'M 600 400 L 800 400 L 1000 200' },
-  { id: 'n3', value: '100%', label: 'Security Visibility', x: 150, y: 450, path: 'M 600 400 L 150 450' },
-  { id: 'n4', value: 'Zero Trust', label: 'Access Protection', x: 1050, y: 450, path: 'M 600 400 L 1050 450' },
-  { id: 'n5', value: 'Continuous', label: 'Operational Intelligence', x: 250, y: 650, path: 'M 600 400 L 400 400 L 250 650' },
-  { id: 'n6', value: 'Enterprise', label: 'Operational Resilience', x: 950, y: 650, path: 'M 600 400 L 800 400 L 950 650' },
+  // Left side
+  { id: 'n1', value: '24/7', label: 'Continuous Monitoring', x: 250, y: 250, startX: 720, startY: 300 },
+  { id: 'n3', value: '100%', label: 'Security Visibility', x: 150, y: 420, startX: 680, startY: 450 },
+  { id: 'n5', value: 'Continuous', label: 'Operational Intelligence', x: 280, y: 620, startX: 750, startY: 600 },
+  // Right side
+  { id: 'n2', value: 'Adaptive', label: 'Threat Response', x: 1050, y: 220, startX: 920, startY: 280 },
+  { id: 'n4', value: 'Zero Trust', label: 'Access Protection', x: 1120, y: 420, startX: 980, startY: 450 },
+  { id: 'n6', value: 'Enterprise', label: 'Operational Resilience', x: 1050, y: 620, startX: 900, startY: 600 },
 ];
 
 export default function BastionMetrics() {
@@ -57,7 +59,7 @@ export default function BastionMetrics() {
             <g key={`connection-${metric.id}`}>
               {/* Animated drawing line */}
               <motion.path
-                d={metric.path}
+                d={`M ${metric.startX} ${metric.startY} L ${metric.x} ${metric.y}`}
                 fill="none"
                 stroke="#FFFFFF"
                 strokeWidth="1"
@@ -67,11 +69,23 @@ export default function BastionMetrics() {
                 viewport={{ once: true, margin: "-100px" }}
                 transition={{ duration: 1.5, delay: 0.5 + (i * 0.1), ease: "easeOut" }}
               />
+              {/* Origin dot on the flower */}
+              <motion.circle
+                cx={metric.startX}
+                cy={metric.startY}
+                r="2"
+                fill="#FFFFFF"
+                opacity="0.3"
+                initial={{ scale: 0 }}
+                whileInView={{ scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: 0.2 + (i * 0.1) }}
+              />
               {/* Anchor point at the card */}
               <motion.circle
                 cx={metric.x}
                 cy={metric.y}
-                r="3"
+                r="2"
                 fill="#FFFFFF"
                 opacity="0.5"
                 initial={{ scale: 0, opacity: 0 }}
@@ -111,14 +125,14 @@ export default function BastionMetrics() {
           >
             {/* Gentle continuous float */}
             <motion.div
-              animate={{ y: [-4, 4, -4] }}
+              animate={{ y: [-2, 2, -2] }}
               transition={{ duration: 6 + (i % 3), repeat: Infinity, ease: "easeInOut", delay: i * 0.3 }}
-              className="bg-black/50 backdrop-blur-md border border-white/10 px-8 py-5 rounded-xl flex flex-col items-center hover:bg-black/70 hover:border-white/30 transition-all duration-300"
+              className="bg-black/20 backdrop-blur-sm border border-white/5 px-4 py-2.5 rounded flex flex-col items-start hover:bg-black/40 hover:border-white/10 transition-all duration-300 shadow-sm"
             >
-              <span className="text-4xl lg:text-5xl font-light text-white tracking-tight mb-2">
+              <span className="text-xl md:text-2xl font-light text-white tracking-tight mb-0.5">
                 {metric.value}
               </span>
-              <span className="text-[10px] lg:text-xs text-[#B3B3B3] uppercase tracking-[0.2em] font-medium whitespace-nowrap">
+              <span className="text-[8px] md:text-[9px] text-[#A1A1AA] uppercase tracking-[0.15em] font-medium whitespace-nowrap">
                 {metric.label}
               </span>
             </motion.div>
