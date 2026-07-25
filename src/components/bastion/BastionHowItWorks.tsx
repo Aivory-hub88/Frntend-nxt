@@ -2,7 +2,7 @@
 
 import { useRef } from 'react';
 import { motion, useInView } from 'framer-motion';
-import { MetalFx } from 'metal-fx';
+import { MetallicBorder } from './MetallicBorder';
 
 /* ── tiny reusable pieces ─────────────────────────────────────────── */
 const Dot = ({ className = '' }: { className?: string }) => (
@@ -262,7 +262,7 @@ export default function BastionHowItWorks() {
                   animate={isInView ? scaleIn(0.35 + i * 0.15).animate : scaleIn(0.35 + i * 0.15).initial}
                   className="w-full"
                 >
-                  <MetalFx preset="silver" strength={0.90} disableGlow={true} style={{ width: '100%', display: 'flex', backgroundColor: 'rgba(255, 255, 255, 0.02)' }}>
+                  <MetallicBorder borderRadius="12px">
                     <div className="w-full border border-white/15 rounded-xl p-5 md:p-6 bg-white/[0.02] backdrop-blur-sm hover:border-white/25 transition-all group">
                       <div className="flex items-start justify-between mb-2">
                         <div className="flex items-center gap-3">
@@ -275,7 +275,7 @@ export default function BastionHowItWorks() {
                       </div>
                       <p className="text-xs md:text-sm text-white/50 font-light leading-relaxed pl-9">{step.desc}</p>
                     </div>
-                  </MetalFx>
+                  </MetallicBorder>
                 </motion.div>
                 {i < 2 && <ConnectorLine delay={0.35 + (i + 1) * 0.15} />}
               </div>
@@ -313,7 +313,7 @@ export default function BastionHowItWorks() {
                   animate={isInView ? scaleIn(1.0 + i * 0.15).animate : scaleIn(1.0 + i * 0.15).initial}
                   className="w-full"
                 >
-                  <MetalFx preset="silver" strength={0.90} disableGlow={true} style={{ width: '100%', display: 'flex', backgroundColor: 'rgba(255, 255, 255, 0.02)' }}>
+                  <MetallicBorder borderRadius="12px">
                     <div className="w-full border border-white/15 rounded-xl p-5 md:p-6 bg-white/[0.02] backdrop-blur-sm hover:border-white/25 transition-all group">
                       <div className="flex items-start justify-between mb-2">
                         <div className="flex items-center gap-3">
@@ -326,7 +326,7 @@ export default function BastionHowItWorks() {
                       </div>
                       <p className="text-xs md:text-sm text-white/50 font-light leading-relaxed pl-9">{step.desc}</p>
                     </div>
-                  </MetalFx>
+                  </MetallicBorder>
                 </motion.div>
                 {i < 2 && <ConnectorLine delay={1.0 + (i + 1) * 0.15} />}
               </div>

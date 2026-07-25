@@ -2,7 +2,7 @@
 
 import { useRef, useState, useEffect } from 'react';
 import { FadeUp, FadeUpChild } from './FadeUp';
-import { MetalFx } from 'metal-fx';
+import { MetallicBorder } from './MetallicBorder';
 
 // Common stroke properties for geometric backgrounds
 const s = "stroke-white/20 stroke-[0.5] fill-transparent";
@@ -144,7 +144,7 @@ function DeploymentCard({ deployment }: { deployment: typeof deployments[0] }) {
 
   return (
     <FadeUpChild className="w-full">
-      <MetalFx preset="silver" strength={0.90} disableGlow={true} style={{ width: '100%', display: 'flex', backgroundColor: '#000000' }}>
+      <MetallicBorder borderRadius="24px">
         <div 
           ref={cardRef}
           onMouseMove={handleMouseMove}
@@ -158,7 +158,7 @@ function DeploymentCard({ deployment }: { deployment: typeof deployments[0] }) {
             {deployment.name}
           </span>
         </div>
-      </MetalFx>
+      </MetallicBorder>
     </FadeUpChild>
   );
 }

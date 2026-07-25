@@ -2,7 +2,7 @@
 
 import { useRef, useEffect } from 'react';
 import { FadeUp, FadeUpChild } from './FadeUp';
-import { MetalFx } from 'metal-fx';
+import { MetallicBorder } from './MetallicBorder';
 
 const s = "stroke-white/20 stroke-[0.5] fill-transparent";
 
@@ -143,7 +143,7 @@ function TrustCard({ item }: { item: typeof trustItems[0] }) {
 
   return (
     <FadeUpChild className="w-full">
-      <MetalFx preset="silver" strength={0.90} disableGlow={true} style={{ width: '100%', display: 'flex', backgroundColor: '#0a0a0a' }}>
+      <MetallicBorder borderRadius="24px">
         <div 
           ref={cardRef}
           onMouseMove={handleMouseMove}
@@ -157,7 +157,7 @@ function TrustCard({ item }: { item: typeof trustItems[0] }) {
             {item.name}
           </span>
         </div>
-      </MetalFx>
+      </MetallicBorder>
     </FadeUpChild>
   );
 }

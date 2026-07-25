@@ -2,7 +2,7 @@
 
 import { FadeUp, FadeUpChild } from './FadeUp';
 import { ThinkingOrb, OrbState } from 'thinking-orbs';
-import { MetalFx } from 'metal-fx';
+import { MetallicBorder } from './MetallicBorder';
 
 const metrics: { value: string; label: string; state: OrbState }[] = [
   { value: '24/7', label: 'Continuous Monitoring', state: 'listening' },
@@ -42,7 +42,7 @@ export default function BastionMetrics() {
               key={index} 
               className="w-full"
             >
-              <MetalFx preset="silver" strength={0.90} disableGlow={true} style={{ width: '100%', display: 'flex', backgroundColor: 'rgba(255, 255, 255, 0.03)' }}>
+              <MetallicBorder borderRadius="16px">
                 <div className="w-full flex items-center gap-6 p-6 rounded-2xl bg-white/[0.03] border border-white/10 hover:border-white/25 hover:bg-white/[0.06] transition-all duration-300 backdrop-blur-md group shadow-lg">
                   <div className="shrink-0 flex items-center justify-center">
                     <ThinkingOrb state={metric.state} size={64} theme="dark" />
@@ -56,7 +56,7 @@ export default function BastionMetrics() {
                     </span>
                   </div>
                 </div>
-              </MetalFx>
+              </MetallicBorder>
             </FadeUpChild>
           ))}
         </FadeUp>
