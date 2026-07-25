@@ -23,7 +23,7 @@ export default function BastionVisualHero() {
           playsInline
           preload="auto"
           className="absolute inset-0 w-full h-full object-cover"
-          style={{ opacity: 0.45 }}
+          style={{ opacity: 0.85 }}
         >
           <source src="/Bastion_Knight_optimized.mp4" type="video/mp4" />
         </video>
@@ -31,7 +31,7 @@ export default function BastionVisualHero() {
         <div
           className="absolute inset-0"
           style={{
-            background: 'linear-gradient(to bottom, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0.15) 40%, rgba(0,0,0,0.6) 100%)',
+            background: 'linear-gradient(to bottom, rgba(0,0,0,0.25) 0%, rgba(0,0,0,0.05) 40%, rgba(0,0,0,0.45) 100%)',
           }}
         />
       </div>
