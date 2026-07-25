@@ -18,7 +18,6 @@ export function MetallicBorder({ children, borderRadius = '24px', className = "r
           animation: 'spin 4s linear infinite',
           background: 'conic-gradient(from 0deg, transparent 30%, rgba(200, 205, 215, 0.4) 45%, rgba(255, 255, 255, 1) 50%, rgba(200, 205, 215, 0.4) 55%, transparent 70%)',
           zIndex: 0,
-          transform: 'translateZ(0)',
           willChange: 'transform'
         }}
       />
