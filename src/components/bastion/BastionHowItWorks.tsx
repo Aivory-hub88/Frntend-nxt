@@ -183,14 +183,16 @@ export default function BastionHowItWorks() {
           <div className="space-y-8 hidden lg:block">
             {/* Sources panel */}
             <motion.div
-              className="border border-white/10 rounded-lg p-4"
+              className="w-full"
               {...slideLeft(0.2)}
               animate={isInView ? slideLeft(0.2).animate : slideLeft(0.2).initial}
             >
-              <div className="flex items-center justify-between mb-4">
-                <span className="text-xs font-mono text-white/60 tracking-wider">SOURCES</span>
-                <span className="text-white/20 text-[10px]">⊘</span>
-              </div>
+              <MetallicBorder borderRadius="8px" className="w-full block">
+                <div className="border border-transparent bg-white/[0.01] rounded-lg p-4 w-full">
+                  <div className="flex items-center justify-between mb-4">
+                    <span className="text-xs font-mono text-white/60 tracking-wider">SOURCES</span>
+                    <span className="text-white/20 text-[10px]">⊘</span>
+                  </div>
               <div className="space-y-2">
                 {sources.map((s, i) => (
                   <motion.div
@@ -204,15 +206,19 @@ export default function BastionHowItWorks() {
                   </motion.div>
                 ))}
               </div>
+                </div>
+              </MetallicBorder>
             </motion.div>
 
             {/* Continuous By Design */}
             <motion.div
-              className="border border-white/10 rounded-lg p-4"
+              className="w-full"
               {...slideLeft(0.6)}
               animate={isInView ? slideLeft(0.6).animate : slideLeft(0.6).initial}
             >
-              <span className="text-xs font-mono text-white/60 tracking-wider block mb-4">CONTINUOUS BY DESIGN</span>
+              <MetallicBorder borderRadius="8px" className="w-full block">
+                <div className="border border-transparent bg-white/[0.01] rounded-lg p-4 w-full">
+                  <span className="text-xs font-mono text-white/60 tracking-wider block mb-4">CONTINUOUS BY DESIGN</span>
               <div className="grid grid-cols-2 gap-2">
                 {continuousItems.map((c, i) => (
                   <motion.div
@@ -227,6 +233,8 @@ export default function BastionHowItWorks() {
                   </motion.div>
                 ))}
               </div>
+                </div>
+              </MetallicBorder>
             </motion.div>
           </div>
 
@@ -337,14 +345,16 @@ export default function BastionHowItWorks() {
           <div className="space-y-6 hidden lg:block">
             {/* Operational Intelligence */}
             <motion.div
-              className="border border-white/10 rounded-lg p-4"
+              className="w-full"
               {...slideRight(0.4)}
               animate={isInView ? slideRight(0.4).animate : slideRight(0.4).initial}
             >
-              <div className="flex items-center justify-between mb-4">
-                <span className="text-xs font-mono text-white/60 tracking-wider">OPERATIONAL INTELLIGENCE</span>
-                <span className="text-white/20 text-[10px]">⊘</span>
-              </div>
+              <MetallicBorder borderRadius="8px" className="w-full block">
+                <div className="border border-transparent bg-white/[0.01] rounded-lg p-4 w-full">
+                  <div className="flex items-center justify-between mb-4">
+                    <span className="text-xs font-mono text-white/60 tracking-wider">OPERATIONAL INTELLIGENCE</span>
+                    <span className="text-white/20 text-[10px]">⊘</span>
+                  </div>
               <div className="space-y-2">
                 {intelItems.map((item, i) => (
                   <motion.div
@@ -358,21 +368,27 @@ export default function BastionHowItWorks() {
                   </motion.div>
                 ))}
               </div>
+                </div>
+              </MetallicBorder>
             </motion.div>
 
             {/* Right-side outcome cards */}
             {rightCards.map((card, i) => (
               <motion.div
                 key={card.title}
-                className="border border-white/10 rounded-lg p-4"
+                className="w-full"
                 {...slideRight(0.8 + i * 0.15)}
                 animate={isInView ? slideRight(0.8 + i * 0.15).animate : slideRight(0.8 + i * 0.15).initial}
               >
-                <div className="flex items-center justify-between mb-2">
-                  <span className="text-xs font-mono text-white/80 tracking-wider font-semibold">{card.title}</span>
-                  <span className="text-white/20 text-[10px]">⊘</span>
-                </div>
-                <p className="text-[11px] text-white/40 font-light leading-relaxed">{card.desc}</p>
+                <MetallicBorder borderRadius="8px" className="w-full block">
+                  <div className="border border-transparent bg-white/[0.01] rounded-lg p-4 w-full">
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="text-xs font-mono text-white/80 tracking-wider font-semibold">{card.title}</span>
+                      <span className="text-white/20 text-[10px]">⊘</span>
+                    </div>
+                    <p className="text-[11px] text-white/40 font-light leading-relaxed">{card.desc}</p>
+                  </div>
+                </MetallicBorder>
               </motion.div>
             ))}
           </div>
@@ -382,11 +398,13 @@ export default function BastionHowItWorks() {
         <div className="lg:hidden mt-12 space-y-6">
           {/* Sources */}
           <motion.div
-            className="border border-white/10 rounded-lg p-4"
+            className="w-full"
             {...fadeUp(1.2)}
             animate={isInView ? fadeUp(1.2).animate : fadeUp(1.2).initial}
           >
-            <span className="text-xs font-mono text-white/60 tracking-wider block mb-3">SOURCES</span>
+            <MetallicBorder borderRadius="8px" className="w-full block">
+              <div className="border border-transparent bg-white/[0.01] rounded-lg p-4 w-full">
+                <span className="text-xs font-mono text-white/60 tracking-wider block mb-3">SOURCES</span>
             <div className="grid grid-cols-2 gap-2">
               {sources.map((s) => (
                 <div key={s.label} className="flex items-center gap-2 py-1.5 px-2 border border-white/5 rounded-md">
@@ -395,15 +413,19 @@ export default function BastionHowItWorks() {
                 </div>
               ))}
             </div>
+              </div>
+            </MetallicBorder>
           </motion.div>
 
           {/* Continuous */}
           <motion.div
-            className="border border-white/10 rounded-lg p-4"
+            className="w-full"
             {...fadeUp(1.3)}
             animate={isInView ? fadeUp(1.3).animate : fadeUp(1.3).initial}
           >
-            <span className="text-xs font-mono text-white/60 tracking-wider block mb-3">CONTINUOUS BY DESIGN</span>
+            <MetallicBorder borderRadius="8px" className="w-full block">
+              <div className="border border-transparent bg-white/[0.01] rounded-lg p-4 w-full">
+                <span className="text-xs font-mono text-white/60 tracking-wider block mb-3">CONTINUOUS BY DESIGN</span>
             <div className="grid grid-cols-3 gap-2">
               {continuousItems.map((c) => (
                 <div key={c.label} className="text-center py-2 border border-white/5 rounded-md">
@@ -412,15 +434,19 @@ export default function BastionHowItWorks() {
                 </div>
               ))}
             </div>
+              </div>
+            </MetallicBorder>
           </motion.div>
 
           {/* Operational Intelligence */}
           <motion.div
-            className="border border-white/10 rounded-lg p-4"
+            className="w-full"
             {...fadeUp(1.4)}
             animate={isInView ? fadeUp(1.4).animate : fadeUp(1.4).initial}
           >
-            <span className="text-xs font-mono text-white/60 tracking-wider block mb-3">OPERATIONAL INTELLIGENCE</span>
+            <MetallicBorder borderRadius="8px" className="w-full block">
+              <div className="border border-transparent bg-white/[0.01] rounded-lg p-4 w-full">
+                <span className="text-xs font-mono text-white/60 tracking-wider block mb-3">OPERATIONAL INTELLIGENCE</span>
             <div className="grid grid-cols-2 gap-1">
               {intelItems.map((item) => (
                 <div key={item} className="flex items-center gap-2 py-1">
@@ -429,18 +455,24 @@ export default function BastionHowItWorks() {
                 </div>
               ))}
             </div>
+              </div>
+            </MetallicBorder>
           </motion.div>
 
           {/* Outcome cards */}
           {rightCards.map((card, i) => (
             <motion.div
               key={card.title}
-              className="border border-white/10 rounded-lg p-4"
+              className="w-full"
               {...fadeUp(1.5 + i * 0.1)}
               animate={isInView ? fadeUp(1.5 + i * 0.1).animate : fadeUp(1.5 + i * 0.1).initial}
             >
-              <span className="text-xs font-mono text-white/80 tracking-wider font-semibold block mb-1">{card.title}</span>
-              <p className="text-[11px] text-white/40 font-light leading-relaxed">{card.desc}</p>
+              <MetallicBorder borderRadius="8px" className="w-full block">
+                <div className="border border-transparent bg-white/[0.01] rounded-lg p-4 w-full">
+                  <span className="text-xs font-mono text-white/80 tracking-wider font-semibold block mb-1">{card.title}</span>
+                  <p className="text-[11px] text-white/40 font-light leading-relaxed">{card.desc}</p>
+                </div>
+              </MetallicBorder>
             </motion.div>
           ))}
         </div>
