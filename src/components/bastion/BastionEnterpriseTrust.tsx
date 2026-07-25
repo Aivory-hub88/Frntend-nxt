@@ -2,6 +2,7 @@
 
 import { useRef, useEffect } from 'react';
 import { FadeUp, FadeUpChild } from './FadeUp';
+import { MetalFx } from 'metal-fx';
 
 const s = "stroke-white/20 stroke-[0.5] fill-transparent";
 
@@ -142,19 +143,21 @@ function TrustCard({ item }: { item: typeof trustItems[0] }) {
 
   return (
     <FadeUpChild className="w-full">
-      <div 
-        ref={cardRef}
-        onMouseMove={handleMouseMove}
-        className="group relative bg-black rounded-[24px] border border-white/10 overflow-hidden aspect-[4/3] md:aspect-[3/2] transition-colors hover:border-white/20 flex items-end p-6 md:p-8 spotlight-card auto-spotlight w-full"
-      >
-        <div className="!absolute inset-0 z-0 pointer-events-none">
-          <Bg />
+      <MetalFx preset="silver" strength={0.90} style={{ width: '100%', display: 'flex' }}>
+        <div 
+          ref={cardRef}
+          onMouseMove={handleMouseMove}
+          className="group relative bg-black rounded-[24px] border border-white/10 overflow-hidden aspect-[4/3] md:aspect-[3/2] transition-colors hover:border-white/20 flex items-end p-6 md:p-8 spotlight-card auto-spotlight w-full"
+        >
+          <div className="!absolute inset-0 z-0 pointer-events-none">
+            <Bg />
+          </div>
+          <div className="!absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent z-10 pointer-events-none" />
+          <span className="relative z-20 text-sm md:text-base font-medium text-[#EAEAEA] group-hover:text-white transition-colors pointer-events-none">
+            {item.name}
+          </span>
         </div>
-        <div className="!absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent z-10 pointer-events-none" />
-        <span className="relative z-20 text-sm md:text-base font-medium text-[#EAEAEA] group-hover:text-white transition-colors pointer-events-none">
-          {item.name}
-        </span>
-      </div>
+      </MetalFx>
     </FadeUpChild>
   );
 }

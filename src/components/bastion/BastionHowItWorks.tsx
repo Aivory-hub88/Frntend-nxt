@@ -2,6 +2,7 @@
 
 import { useRef } from 'react';
 import { motion, useInView } from 'framer-motion';
+import { MetalFx } from 'metal-fx';
 
 /* ── tiny reusable pieces ─────────────────────────────────────────── */
 const Dot = ({ className = '' }: { className?: string }) => (
@@ -257,20 +258,24 @@ export default function BastionHowItWorks() {
             {steps.slice(0, 3).map((step, i) => (
               <div key={step.num} className="w-full max-w-md">
                 <motion.div
-                  className="border border-white/15 rounded-xl p-5 md:p-6 bg-white/[0.02] backdrop-blur-sm hover:border-white/25 transition-all group"
                   {...scaleIn(0.35 + i * 0.15)}
                   animate={isInView ? scaleIn(0.35 + i * 0.15).animate : scaleIn(0.35 + i * 0.15).initial}
+                  className="w-full"
                 >
-                  <div className="flex items-start justify-between mb-2">
-                    <div className="flex items-center gap-3">
-                      <span className="text-lg md:text-xl font-mono text-white/25 font-light">{step.num}</span>
-                      <span className="text-sm md:text-base font-mono text-white font-semibold tracking-wider">{step.title}</span>
+                  <MetalFx preset="silver" strength={0.90} style={{ width: '100%', display: 'flex' }}>
+                    <div className="w-full border border-white/15 rounded-xl p-5 md:p-6 bg-[#0a0a0a] backdrop-blur-sm hover:border-white/25 transition-all group">
+                      <div className="flex items-start justify-between mb-2">
+                        <div className="flex items-center gap-3">
+                          <span className="text-lg md:text-xl font-mono text-white/25 font-light">{step.num}</span>
+                          <span className="text-sm md:text-base font-mono text-white font-semibold tracking-wider">{step.title}</span>
+                        </div>
+                        <div className="flex gap-1 opacity-30">
+                          <Dot /><Dot /><Dot />
+                        </div>
+                      </div>
+                      <p className="text-xs md:text-sm text-white/50 font-light leading-relaxed pl-9">{step.desc}</p>
                     </div>
-                    <div className="flex gap-1 opacity-30">
-                      <Dot /><Dot /><Dot />
-                    </div>
-                  </div>
-                  <p className="text-xs md:text-sm text-white/50 font-light leading-relaxed pl-9">{step.desc}</p>
+                  </MetalFx>
                 </motion.div>
                 {i < 2 && <ConnectorLine delay={0.35 + (i + 1) * 0.15} />}
               </div>
@@ -304,20 +309,24 @@ export default function BastionHowItWorks() {
             {steps.slice(3).map((step, i) => (
               <div key={step.num} className="w-full max-w-md">
                 <motion.div
-                  className="border border-white/15 rounded-xl p-5 md:p-6 bg-white/[0.02] backdrop-blur-sm hover:border-white/25 transition-all group"
                   {...scaleIn(1.0 + i * 0.15)}
                   animate={isInView ? scaleIn(1.0 + i * 0.15).animate : scaleIn(1.0 + i * 0.15).initial}
+                  className="w-full"
                 >
-                  <div className="flex items-start justify-between mb-2">
-                    <div className="flex items-center gap-3">
-                      <span className="text-lg md:text-xl font-mono text-white/25 font-light">{step.num}</span>
-                      <span className="text-sm md:text-base font-mono text-white font-semibold tracking-wider">{step.title}</span>
+                  <MetalFx preset="silver" strength={0.90} style={{ width: '100%', display: 'flex' }}>
+                    <div className="w-full border border-white/15 rounded-xl p-5 md:p-6 bg-[#0a0a0a] backdrop-blur-sm hover:border-white/25 transition-all group">
+                      <div className="flex items-start justify-between mb-2">
+                        <div className="flex items-center gap-3">
+                          <span className="text-lg md:text-xl font-mono text-white/25 font-light">{step.num}</span>
+                          <span className="text-sm md:text-base font-mono text-white font-semibold tracking-wider">{step.title}</span>
+                        </div>
+                        <div className="flex gap-1 opacity-30">
+                          <Dot /><Dot /><Dot />
+                        </div>
+                      </div>
+                      <p className="text-xs md:text-sm text-white/50 font-light leading-relaxed pl-9">{step.desc}</p>
                     </div>
-                    <div className="flex gap-1 opacity-30">
-                      <Dot /><Dot /><Dot />
-                    </div>
-                  </div>
-                  <p className="text-xs md:text-sm text-white/50 font-light leading-relaxed pl-9">{step.desc}</p>
+                  </MetalFx>
                 </motion.div>
                 {i < 2 && <ConnectorLine delay={1.0 + (i + 1) * 0.15} />}
               </div>
