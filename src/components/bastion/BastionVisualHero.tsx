@@ -13,7 +13,7 @@ export default function BastionVisualHero() {
   }, []);
 
   return (
-    <section className="relative min-h-screen flex items-end justify-center bg-transparent overflow-hidden pt-20 pb-16 md:pb-24">
+    <section className="relative min-h-screen flex items-end justify-center bg-transparent overflow-hidden pt-20 pb-6 md:pb-10">
       {/* Video Background */}
       <div className="absolute inset-0 z-0 overflow-hidden">
         <video
@@ -32,6 +32,15 @@ export default function BastionVisualHero() {
           className="absolute inset-0"
           style={{
             background: 'linear-gradient(to bottom, rgba(0,0,0,0.25) 0%, rgba(0,0,0,0.05) 40%, rgba(0,0,0,0.45) 100%)',
+          }}
+        />
+        {/* Cover Veo watermark in bottom-right corner */}
+        <div
+          className="absolute bottom-0 right-0 z-10"
+          style={{
+            width: '120px',
+            height: '60px',
+            background: 'radial-gradient(ellipse at bottom right, rgba(0,0,0,1) 40%, rgba(0,0,0,0.85) 70%, transparent 100%)',
           }}
         />
       </div>
