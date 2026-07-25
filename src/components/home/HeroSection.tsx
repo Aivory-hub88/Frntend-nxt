@@ -3,6 +3,7 @@
 import { useEffect, useRef } from 'react';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
 import RotatingText from './RotatingText';
+import { SpotlightButton } from '@/components/ui/SpotlightButton';
 
 export default function HeroSection() {
   const contentRef = useRef<HTMLDivElement>(null);
@@ -30,58 +31,7 @@ export default function HeroSection() {
     };
   }, []);
 
-  useEffect(() => {
-    const startTime = Math.random() * 10000;
-    let animationFrameId: number;
-    let isHovering = false;
-
-    const animate = (time: number) => {
-      if (btnRef.current && !isHovering) {
-        const rect = btnRef.current.getBoundingClientRect();
-        const centerX = rect.width / 2;
-        const centerY = rect.height / 2;
-        const radiusX = rect.width / 2;
-        const radiusY = rect.height / 2;
-        const speed = 0.004;
-        const angle = (time + startTime) * speed;
-
-        const x = centerX + radiusX * Math.cos(angle);
-        const y = centerY - radiusY * Math.sin(angle);
-
-        btnRef.current.style.setProperty('--mouse-x', `${x}px`);
-        btnRef.current.style.setProperty('--mouse-y', `${y}px`);
-      }
-      animationFrameId = requestAnimationFrame(animate);
-    };
-
-    animationFrameId = requestAnimationFrame(animate);
-
-    const el = btnRef.current;
-    
-    const handleMouseMove = (e: MouseEvent) => {
-      if (!el) return;
-      const rect = el.getBoundingClientRect();
-      const x = e.clientX - rect.left;
-      const y = e.clientY - rect.top;
-      el.style.setProperty('--mouse-x', `${x}px`);
-      el.style.setProperty('--mouse-y', `${y}px`);
-    };
-
-    if (el) {
-      el.addEventListener('mouseenter', () => (isHovering = true));
-      el.addEventListener('mouseleave', () => (isHovering = false));
-      el.addEventListener('mousemove', handleMouseMove);
-    }
-
-    return () => {
-      cancelAnimationFrame(animationFrameId);
-      if (el) {
-        el.removeEventListener('mouseenter', () => (isHovering = true));
-        el.removeEventListener('mouseleave', () => (isHovering = false));
-        el.removeEventListener('mousemove', handleMouseMove);
-      }
-    };
-  }, []);
+  // Mouse tracking logic removed since SpotlightButton handles it internally
 
   return (
     <div
@@ -117,38 +67,16 @@ export default function HeroSection() {
           <RotatingText />
         </div>
 
-        {/* CTA Button */}
         <div className="animate-slide-up-3 pointer-events-none" style={{ animationDelay: '0.6s' }}>
-          <a
-            ref={btnRef}
+          <SpotlightButton
             href="/free-diagnostic"
-            className="inline-flex items-center gap-3 text-white no-underline uppercase cursor-pointer transition-all duration-500 animate-gentle-bounce min-h-[44px] pointer-events-auto spotlight-card auto-spotlight rounded-[24px] border-t border-l border-white/10 border-b border-r border-black/20 shadow-[0_8px_32px_rgba(0,0,0,0.4)] hover:-translate-y-1 hover:border-white/10 hover:shadow-[0_0_30px_rgba(174,201,157,0.05)]"
+            className="pointer-events-auto w-fit animate-gentle-bounce"
             style={{
-              padding: '0.75rem 1.5rem',
-              fontFamily: "'Manrope', sans-serif",
-              fontWeight: 400,
-              fontSize: '0.75rem',
-              letterSpacing: '0.1em',
-              textTransform: 'uppercase',
-              backgroundColor: 'var(--card-bg, rgba(20, 20, 26, 0.78))',
-              backdropFilter: 'var(--card-frost, none)',
-              WebkitBackdropFilter: 'var(--card-frost, none)'
+              backgroundColor: 'var(--card-bg, rgba(20, 20, 26, 0.78))'
             }}
           >
-            <svg
-              className="w-4 h-4 text-[#a3aa96] relative z-10"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <path d="M17 7v10H7" />
-              <path d="M7 7l10 10" />
-            </svg>
-            <span className="relative z-10">START WITH FREE ASSESSMENT</span>
-          </a>
+            START WITH FREE ASSESSMENT
+          </SpotlightButton>
         </div>
       </div>
 
