@@ -2,6 +2,7 @@
 
 import { FadeUp, FadeUpChild } from './FadeUp';
 import { ThinkingOrb, OrbState } from 'thinking-orbs';
+import { MetalFx } from 'metal-fx';
 
 const metrics: { value: string; label: string; state: OrbState }[] = [
   { value: '24/7', label: 'Continuous Monitoring', state: 'listening' },
@@ -39,19 +40,23 @@ export default function BastionMetrics() {
           {metrics.map((metric, index) => (
             <FadeUpChild 
               key={index} 
-              className="flex items-center gap-6 p-6 rounded-2xl bg-white/[0.03] border border-white/10 hover:border-white/25 hover:bg-white/[0.06] transition-all duration-300 backdrop-blur-md group shadow-lg"
+              className="w-full"
             >
-              <div className="shrink-0 flex items-center justify-center">
-                <ThinkingOrb state={metric.state} size={64} theme="dark" />
-              </div>
-              <div className="flex flex-col min-w-0">
-                <span className="text-3xl md:text-4xl font-light text-white mb-1 tracking-tight truncate">
-                  {metric.value}
-                </span>
-                <span className="text-xs text-[#B3B3B3] uppercase tracking-widest font-mono font-medium truncate">
-                  {metric.label}
-                </span>
-              </div>
+              <MetalFx preset="silver" strength={0.90} style={{ width: '100%', display: 'flex' }}>
+                <div className="w-full flex items-center gap-6 p-6 rounded-2xl bg-white/[0.03] border border-white/10 hover:border-white/25 hover:bg-white/[0.06] transition-all duration-300 backdrop-blur-md group shadow-lg">
+                  <div className="shrink-0 flex items-center justify-center">
+                    <ThinkingOrb state={metric.state} size={64} theme="dark" />
+                  </div>
+                  <div className="flex flex-col min-w-0">
+                    <span className="text-3xl md:text-4xl font-light text-white mb-1 tracking-tight truncate">
+                      {metric.value}
+                    </span>
+                    <span className="text-xs text-[#B3B3B3] uppercase tracking-widest font-mono font-medium truncate">
+                      {metric.label}
+                    </span>
+                  </div>
+                </div>
+              </MetalFx>
             </FadeUpChild>
           ))}
         </FadeUp>
