@@ -13,7 +13,7 @@ export default function BastionVisualHero() {
   }, []);
 
   return (
-    <section className="relative min-h-screen flex items-end justify-center bg-transparent overflow-hidden pt-20 pb-6 md:pb-10">
+    <section className="relative min-h-screen flex items-end justify-center bg-transparent overflow-hidden pt-20 pb-0 md:pb-2">
       {/* Video Background */}
       <div className="absolute inset-0 z-0 overflow-hidden">
         <video
