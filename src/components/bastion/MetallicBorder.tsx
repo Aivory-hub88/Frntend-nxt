@@ -9,7 +9,7 @@ interface MetallicBorderProps {
 export function MetallicBorder({ children, borderRadius = '24px', className = "relative w-full h-full flex group" }: MetallicBorderProps) {
   return (
     <div 
-      className={`${className} overflow-hidden`} 
+      className={`relative overflow-hidden ${className}`} 
       style={{ borderRadius, padding: '1px', background: 'transparent' }}
     >
       <div 
