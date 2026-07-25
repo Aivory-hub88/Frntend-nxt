@@ -143,7 +143,7 @@ function TrustCard({ item }: { item: typeof trustItems[0] }) {
 
   return (
     <FadeUpChild className="w-full">
-      <MetalFx preset="silver" strength={0.90} disableGlow={true} style={{ width: '100%', display: 'flex' }}>
+      <MetalFx preset="silver" strength={0.90} disableGlow={true} normalizeHostStyles={false} style={{ width: '100%', display: 'flex' }}>
         <div 
           ref={cardRef}
           onMouseMove={handleMouseMove}
