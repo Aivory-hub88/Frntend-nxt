@@ -263,7 +263,7 @@ export default function BastionHowItWorks() {
                   className="w-full"
                 >
                   <MetalFx preset="silver" strength={0.90} style={{ width: '100%', display: 'flex' }}>
-                    <div className="w-full border border-white/15 rounded-xl p-5 md:p-6 bg-[#0a0a0a] backdrop-blur-sm hover:border-white/25 transition-all group">
+                    <div className="w-full border border-white/15 rounded-xl p-5 md:p-6 bg-white/[0.02] backdrop-blur-sm hover:border-white/25 transition-all group">
                       <div className="flex items-start justify-between mb-2">
                         <div className="flex items-center gap-3">
                           <span className="text-lg md:text-xl font-mono text-white/25 font-light">{step.num}</span>
@@ -314,7 +314,7 @@ export default function BastionHowItWorks() {
                   className="w-full"
                 >
                   <MetalFx preset="silver" strength={0.90} style={{ width: '100%', display: 'flex' }}>
-                    <div className="w-full border border-white/15 rounded-xl p-5 md:p-6 bg-[#0a0a0a] backdrop-blur-sm hover:border-white/25 transition-all group">
+                    <div className="w-full border border-white/15 rounded-xl p-5 md:p-6 bg-white/[0.02] backdrop-blur-sm hover:border-white/25 transition-all group">
                       <div className="flex items-start justify-between mb-2">
                         <div className="flex items-center gap-3">
                           <span className="text-lg md:text-xl font-mono text-white/25 font-light">{step.num}</span>
