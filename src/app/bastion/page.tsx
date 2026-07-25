@@ -23,9 +23,8 @@ export default function BastionPage() {
       {/* Global Ambient Background Gradient Wash (Fixed across ENTIRE page in #165444 emerald teal) */}
       <BastionBackground mode="gradient-only" className="fixed inset-0 z-0 pointer-events-none overflow-hidden" />
 
-      {/* 1. Hero Section (Flower Animation ONLY appears here with #165444 palette) */}
+      {/* 1. Hero Section (Video Background) */}
       <div className="relative overflow-hidden min-h-screen z-10">
-        <BastionBackground mode="flower-only" scale={1} className="absolute inset-0 z-0 pointer-events-none overflow-hidden" />
         <div className="relative z-10">
           <Navbar />
           <BastionVisualHero />
