@@ -38,11 +38,11 @@ export default function BastionContact() {
           {/* Left Column - Large Text */}
           <div className="flex flex-col justify-start">
             <h2 className="text-4xl md:text-6xl lg:text-[4.5rem] font-light leading-[1.05] tracking-tight text-[#FFFFFF] mb-6">
-              Start the conversation.
+              Let’s talk about your security posture.
             </h2>
             <div className="space-y-4 text-lg md:text-xl text-[#B3B3B3] font-light leading-relaxed">
-              <p>Tell us about your security priorities, digital infrastructure, or operational challenges.</p>
-              <p>We'll explore how Bastion can strengthen your enterprise security posture.</p>
+              <p>Share your current challenges around detection, response, or infrastructure resilience.</p>
+              <p>We’ll explore how Bastion can help you stay ahead of evolving threats.</p>
             </div>
           </div>
 
