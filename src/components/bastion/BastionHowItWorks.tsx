@@ -262,7 +262,7 @@ export default function BastionHowItWorks() {
                   animate={isInView ? scaleIn(0.35 + i * 0.15).animate : scaleIn(0.35 + i * 0.15).initial}
                   className="w-full"
                 >
-                  <MetalFx preset="silver" strength={0.90} disableGlow={true} normalizeHostStyles={false} style={{ width: '100%', display: 'flex' }}>
+                  <MetalFx preset="silver" strength={0.90} disableGlow={true} style={{ width: '100%', display: 'flex', backgroundColor: 'rgba(255, 255, 255, 0.02)' }}>
                     <div className="w-full border border-white/15 rounded-xl p-5 md:p-6 bg-white/[0.02] backdrop-blur-sm hover:border-white/25 transition-all group">
                       <div className="flex items-start justify-between mb-2">
                         <div className="flex items-center gap-3">
@@ -313,7 +313,7 @@ export default function BastionHowItWorks() {
                   animate={isInView ? scaleIn(1.0 + i * 0.15).animate : scaleIn(1.0 + i * 0.15).initial}
                   className="w-full"
                 >
-                  <MetalFx preset="silver" strength={0.90} disableGlow={true} normalizeHostStyles={false} style={{ width: '100%', display: 'flex' }}>
+                  <MetalFx preset="silver" strength={0.90} disableGlow={true} style={{ width: '100%', display: 'flex', backgroundColor: 'rgba(255, 255, 255, 0.02)' }}>
                     <div className="w-full border border-white/15 rounded-xl p-5 md:p-6 bg-white/[0.02] backdrop-blur-sm hover:border-white/25 transition-all group">
                       <div className="flex items-start justify-between mb-2">
                         <div className="flex items-center gap-3">
