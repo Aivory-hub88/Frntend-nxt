@@ -5,6 +5,7 @@ import BastionOverview from '@/components/bastion/BastionOverview';
 import BastionMetrics from '@/components/bastion/BastionMetrics';
 import BastionDeployment from '@/components/bastion/BastionDeployment';
 import BastionEnterpriseTrust from '@/components/bastion/BastionEnterpriseTrust';
+import BastionHowItWorks from '@/components/bastion/BastionHowItWorks';
 import BastionClosing from '@/components/bastion/BastionClosing';
 import BastionContact from '@/components/bastion/BastionContact';
 import Footer from '@/components/Footer';
@@ -38,6 +39,7 @@ export default function BastionPage() {
         <BastionMetrics />
         <BastionDeployment />
         <BastionEnterpriseTrust />
+        <BastionHowItWorks />
         <BastionClosing />
         <BastionContact />
         <Footer />
