@@ -37,9 +37,9 @@ export default function BastionPage() {
       <div className="relative z-10">
         <BastionOverview />
         <BastionMetrics />
+        <BastionHowItWorks />
         <BastionDeployment />
         <BastionEnterpriseTrust />
-        <BastionHowItWorks />
         <BastionClosing />
         <BastionContact />
         <Footer />

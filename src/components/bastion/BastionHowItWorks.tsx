@@ -167,8 +167,8 @@ export default function BastionHowItWorks() {
               <span key={n}>{n}</span>
             ))}
           </div>
-          <h2 className="text-3xl md:text-5xl lg:text-6xl font-light tracking-tight text-white mb-3" style={{ fontFamily: 'var(--font-manrope), sans-serif' }}>
-            HOW BASTION WORKS
+          <h2 className="text-3xl md:text-5xl lg:text-6xl font-light leading-tight text-white mb-6 tracking-tight">
+            How Bastion Works.
           </h2>
           <p className="text-sm md:text-base text-white/40 font-mono uppercase tracking-[0.2em]">
             Adaptive defense that evolves with every interaction.
