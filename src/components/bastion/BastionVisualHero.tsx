@@ -14,7 +14,29 @@ export default function BastionVisualHero() {
 
   return (
     <section className="relative min-h-screen flex items-end justify-center bg-transparent overflow-hidden pt-20 pb-16 md:pb-24">
-      <div className="w-full max-w-[1600px] mx-auto px-6 md:px-12 flex justify-center items-center">
+      {/* Video Background */}
+      <div className="absolute inset-0 z-0 overflow-hidden">
+        <video
+          autoPlay
+          loop
+          muted
+          playsInline
+          preload="auto"
+          className="absolute inset-0 w-full h-full object-cover"
+          style={{ opacity: 0.45 }}
+        >
+          <source src="/Bastion_Knight_optimized.mp4" type="video/mp4" />
+        </video>
+        {/* Dark overlay gradient for readability */}
+        <div
+          className="absolute inset-0"
+          style={{
+            background: 'linear-gradient(to bottom, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0.15) 40%, rgba(0,0,0,0.6) 100%)',
+          }}
+        />
+      </div>
+
+      <div className="relative z-10 w-full max-w-[1600px] mx-auto px-6 md:px-12 flex justify-center items-center">
         <div className="w-full flex justify-center items-center">
           <style dangerouslySetInnerHTML={{ __html: `
             @keyframes imageGlitch {
