@@ -2,70 +2,162 @@
 
 import { useRef, useEffect } from 'react';
 import { FadeUp, FadeUpChild } from './FadeUp';
-import { ShieldCheck, Lock, Network, FileSearch, Fingerprint, SlidersHorizontal } from 'lucide-react';
 import { MetallicBorder } from './MetallicBorder';
 
+const s = "stroke-white/20 stroke-[0.5] fill-transparent";
+
+const SvgIso = () => (
+  <svg viewBox="0 0 100 120" className="w-full h-full absolute inset-0 z-0">
+    <path d="M50 -20 L-20 20 V80 C-20 130 30 160 50 180 C70 160 120 130 120 80 V20 Z" className={s} />
+    <circle cx="50" cy="80" r="40" className={s} />
+    <circle cx="50" cy="80" r="20" className={s} />
+    <circle cx="50" cy="80" r="60" className={s} strokeDasharray="4 4" />
+  </svg>
+);
+
+const SvgSoc = () => (
+  <svg viewBox="0 0 100 120" className="w-full h-full absolute inset-0 z-0">
+    <rect x="-10" y="10" width="120" height="100" rx="10" className={s} />
+    <rect x="10" y="30" width="80" height="60" rx="5" className={s} />
+    <line x1="-20" y1="60" x2="120" y2="60" className={s} />
+    <line x1="50" y1="-20" x2="50" y2="140" className={s} />
+    <circle cx="50" cy="60" r="10" className={s} />
+    <circle cx="10" cy="30" r="8" className={s} />
+    <circle cx="90" cy="30" r="8" className={s} />
+    <circle cx="10" cy="90" r="8" className={s} />
+    <circle cx="90" cy="90" r="8" className={s} />
+  </svg>
+);
+
+const SvgZeroTrust = () => (
+  <svg viewBox="0 0 100 120" className="w-full h-full absolute inset-0 z-0">
+    <circle cx="50" cy="60" r="30" className={s} />
+    <circle cx="50" cy="60" r="60" className={s} />
+    <circle cx="50" cy="60" r="90" className={s} />
+    <line x1="50" y1="-30" x2="50" y2="150" className={s} strokeDasharray="4 4" />
+    <line x1="-40" y1="60" x2="140" y2="60" className={s} strokeDasharray="4 4" />
+    <path d="M-10 0 L110 120" className={s} />
+    <path d="M110 0 L-10 120" className={s} />
+  </svg>
+);
+
+const SvgAudit = () => (
+  <svg viewBox="0 0 100 120" className="w-full h-full absolute inset-0 z-0">
+    <rect x="10" y="10" width="80" height="100" rx="8" className={s} />
+    <line x1="25" y1="30" x2="75" y2="30" className={s} />
+    <line x1="25" y1="50" x2="60" y2="50" className={s} />
+    <line x1="25" y1="70" x2="75" y2="70" className={s} strokeDasharray="4 4" />
+    <line x1="25" y1="90" x2="50" y2="90" className={s} />
+    <circle cx="80" cy="90" r="25" className={s} />
+    <circle cx="80" cy="90" r="15" className={s} />
+    <line x1="97" y1="107" x2="120" y2="130" className={s} />
+  </svg>
+);
+
+const SvgCrypto = () => (
+  <svg viewBox="0 0 100 120" className="w-full h-full absolute inset-0 z-0">
+    <path d="M-20 60 Q 25 0 50 60 T 120 60" className={s} />
+    <path d="M-20 40 Q 25 -20 50 40 T 120 40" className={s} strokeDasharray="4 6" />
+    <path d="M-20 80 Q 25 20 50 80 T 120 80" className={s} strokeDasharray="4 6" />
+    <circle cx="50" cy="60" r="15" className={s} />
+    <circle cx="50" cy="60" r="5" className={s} />
+    <line x1="-20" y1="60" x2="120" y2="60" className={s} strokeDasharray="2 2" />
+  </svg>
+);
+
+const SvgPolicy = () => (
+  <svg viewBox="0 0 100 120" className="w-full h-full absolute inset-0 z-0">
+    <line x1="30" y1="-20" x2="30" y2="140" className={s} />
+    <line x1="70" y1="-20" x2="70" y2="140" className={s} />
+    <rect x="15" y="30" width="30" height="20" rx="4" className={s} />
+    <rect x="55" y="70" width="30" height="20" rx="4" className={s} />
+    <circle cx="30" cy="40" r="4" className={s} />
+    <circle cx="70" cy="80" r="4" className={s} />
+    <line x1="0" y1="40" x2="15" y2="40" className={s} />
+    <line x1="45" y1="40" x2="100" y2="40" className={s} strokeDasharray="2 4" />
+    <line x1="0" y1="80" x2="55" y2="80" className={s} strokeDasharray="2 4" />
+    <line x1="85" y1="80" x2="100" y2="80" className={s} />
+  </svg>
+);
+
 const trustItems = [
-  { 
-    name: 'ISO 27001*', 
-    desc: 'Adhering to international standards for information security management.',
-    icon: ShieldCheck 
-  },
-  { 
-    name: 'SOC 2*', 
-    desc: 'Designed with strict security, availability, and confidentiality controls.',
-    icon: Lock 
-  },
-  { 
-    name: 'Zero Trust Architecture', 
-    desc: 'Never trust, always verify. Granular access controls across all services.',
-    icon: Network 
-  },
-  { 
-    name: 'Audit Logging', 
-    desc: 'Comprehensive immutable audit trails for all system and user activities.',
-    icon: FileSearch 
-  },
-  { 
-    name: 'Encrypted Communications', 
-    desc: 'End-to-end encryption for data in transit using TLS 1.3 and at rest.',
-    icon: Fingerprint 
-  },
-  { 
-    name: 'Policy Governance', 
-    desc: 'Centralized enforcement of security policies across multi-cloud environments.',
-    icon: SlidersHorizontal 
-  }
+  { name: 'ISO 27001*', bg: SvgIso },
+  { name: 'SOC 2*', bg: SvgSoc },
+  { name: 'Zero Trust Architecture', bg: SvgZeroTrust },
+  { name: 'Audit Logging', bg: SvgAudit },
+  { name: 'Encrypted Communications', bg: SvgCrypto },
+  { name: 'Policy Governance', bg: SvgPolicy }
 ];
 
-function TrustCard({ item, index }: { item: typeof trustItems[0], index: number }) {
-  const Icon = item.icon;
-  
+function TrustCard({ item }: { item: typeof trustItems[0] }) {
+  const cardRef = useRef<HTMLDivElement>(null);
+  const Bg = item.bg;
+
+  useEffect(() => {
+    const startTime = Math.random() * 10000;
+    let animationFrameId: number;
+    let isHovering = false;
+
+    const animate = (time: number) => {
+      if (cardRef.current && !isHovering) {
+        const rect = cardRef.current.getBoundingClientRect();
+        const centerX = rect.width / 2;
+        const centerY = rect.height / 2;
+        const radiusX = rect.width / 2;
+        const radiusY = rect.height / 2;
+        const speed = 0.001; 
+        const angle = (time + startTime) * speed;
+        
+        const x = centerX + radiusX * Math.cos(angle);
+        const y = centerY - radiusY * Math.sin(angle);
+        
+        cardRef.current.style.setProperty('--mouse-x', `${x}px`);
+        cardRef.current.style.setProperty('--mouse-y', `${y}px`);
+      }
+      animationFrameId = requestAnimationFrame(animate);
+    };
+
+    animationFrameId = requestAnimationFrame(animate);
+
+    const el = cardRef.current;
+    if (el) {
+      el.addEventListener('mouseenter', () => isHovering = true);
+      el.addEventListener('mouseleave', () => isHovering = false);
+    }
+
+    return () => {
+      cancelAnimationFrame(animationFrameId);
+      if (el) {
+        el.removeEventListener('mouseenter', () => isHovering = true);
+        el.removeEventListener('mouseleave', () => isHovering = false);
+      }
+    };
+  }, []);
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (!cardRef.current) return;
+    const rect = cardRef.current.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    cardRef.current.style.setProperty('--mouse-x', `${x}px`);
+    cardRef.current.style.setProperty('--mouse-y', `${y}px`);
+  };
+
   return (
     <FadeUpChild className="w-full">
-      <MetallicBorder borderRadius="16px">
-        <div className="group relative w-full h-full bg-[#050505] rounded-[16px] border border-white/5 overflow-hidden transition-all duration-500 hover:bg-[#0a0a0a] p-8 flex flex-col justify-between min-h-[220px]">
-          
-          {/* Subtle glowing radial background on hover */}
-          <div className="absolute inset-0 bg-gradient-to-b from-white/[0.04] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
-          
-          <div className="relative z-10 flex flex-col gap-6">
-            <div className="w-12 h-12 rounded-full bg-white/[0.03] border border-white/10 flex items-center justify-center group-hover:scale-110 group-hover:bg-white/[0.06] group-hover:border-white/20 transition-all duration-500 shadow-[0_0_15px_rgba(255,255,255,0.0)] group-hover:shadow-[0_0_20px_rgba(255,255,255,0.05)]">
-              <Icon className="w-5 h-5 text-white/50 group-hover:text-white transition-colors duration-500" strokeWidth={1.5} />
-            </div>
-            
-            <div className="space-y-2">
-              <h3 className="text-lg font-medium text-[#EAEAEA] group-hover:text-white transition-colors duration-300">
-                {item.name}
-              </h3>
-              <p className="text-sm text-[#777777] leading-relaxed font-light group-hover:text-[#A0A0A0] transition-colors duration-300">
-                {item.desc}
-              </p>
-            </div>
+      <MetallicBorder borderRadius="24px">
+        <div 
+          ref={cardRef}
+          onMouseMove={handleMouseMove}
+          className="group relative bg-black rounded-[24px] border border-white/10 overflow-hidden aspect-[3/4] transition-colors hover:border-white/20 flex items-end p-6 md:p-8 spotlight-card auto-spotlight w-full"
+        >
+          <div className="!absolute inset-0 z-0 pointer-events-none">
+            <Bg />
           </div>
-
-          {/* Decorative corner accent */}
-          <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl from-white/[0.02] to-transparent rounded-bl-full pointer-events-none transform translate-x-8 -translate-y-8 group-hover:translate-x-0 group-hover:translate-y-0 transition-transform duration-700" />
+          <div className="!absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent z-10 pointer-events-none" />
+          <span className="relative z-20 text-sm md:text-base font-medium text-[#EAEAEA] group-hover:text-white transition-colors pointer-events-none">
+            {item.name}
+          </span>
         </div>
       </MetallicBorder>
     </FadeUpChild>
@@ -74,35 +166,25 @@ function TrustCard({ item, index }: { item: typeof trustItems[0], index: number 
 
 export default function BastionEnterpriseTrust() {
   return (
-    <section className="bg-transparent text-white py-32 border-t border-white/5 relative overflow-hidden">
-      
-      {/* Background Ambience */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-white/[0.015] blur-[120px] rounded-full pointer-events-none" />
+    <section className="bg-transparent text-white py-32 overflow-hidden">
+      <div className="max-w-[1600px] mx-auto px-6 md:px-12">
+        <FadeUp className="mb-16 md:mb-24">
+          <h2 className="text-4xl md:text-6xl lg:text-[72px] tracking-tight font-light leading-tight text-[#FFFFFF] max-w-4xl mb-6">
+            Trust every deployment.
+          </h2>
+          <div className="max-w-3xl text-lg md:text-xl text-[#B3B3B3] font-light leading-relaxed">
+            <p>Security should accelerate innovation, not slow it down. Bastion enables organisations to deploy, operate, and scale digital infrastructure with confidence through continuous protection, adaptive defense, and enterprise-grade resilience.</p>
+          </div>
+        </FadeUp>
 
-      <div className="max-w-[1400px] mx-auto px-6 md:px-12 relative z-10">
-        <div className="max-w-3xl mb-20">
-          <FadeUp className="flex flex-col justify-start">
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/[0.03] border border-white/10 mb-8 w-fit">
-              <span className="w-2 h-2 rounded-full bg-[#EAEAEA] animate-pulse" />
-              <span className="text-xs font-mono text-white/70 uppercase tracking-widest">Enterprise Ready</span>
-            </div>
-            <h2 className="text-4xl md:text-5xl lg:text-6xl font-light leading-tight mb-6 text-[#FFFFFF] tracking-tight">
-              Trust every deployment.
-            </h2>
-            <div className="text-lg md:text-xl text-[#888888] font-light leading-relaxed">
-              <p>Security should accelerate innovation, not slow it down. Bastion enables organisations to scale digital infrastructure with confidence through continuous protection and enterprise-grade resilience.</p>
-            </div>
-          </FadeUp>
-        </div>
-
-        <FadeUp staggerChildren={0.1} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <FadeUp staggerChildren={0.1} className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 lg:gap-6">
           {trustItems.map((item, index) => (
-            <TrustCard key={index} item={item} index={index} />
+            <TrustCard key={index} item={item} />
           ))}
         </FadeUp>
 
-        <FadeUp className="mt-16 flex justify-start">
-          <p className="text-xs text-[#555555] font-mono tracking-wide">
+        <FadeUp className="mt-8">
+          <p className="text-xs text-[#B3B3B3]/50 font-light text-center md:text-left">
             * Designed to support enterprise security practices. Formal certifications in progress.
           </p>
         </FadeUp>
