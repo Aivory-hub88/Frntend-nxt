@@ -27,6 +27,7 @@ import {
   isMidtransAvailable,
 } from '@/lib/payment';
 import { formatCheckoutPrice, type CheckoutCurrency } from '@/lib/checkout-format';
+import { SpotlightButton } from '@/components/ui/SpotlightButton';
 
 // Flip to false once Card/GoPay/DANA/QRIS are activated on the Midtrans
 // merchant account — the real gateway path (runRealPayment) is ready.
@@ -563,13 +564,15 @@ export function CheckoutForm({
                   {authError}
                 </p>
               )}
-              <button type="submit" disabled={authLoading} className={`${primaryBtn} mt-2`}>
-                {authLoading
-                  ? 'Please wait…'
-                  : authMode === 'signin'
-                    ? 'Sign In'
-                    : 'Create Account'}
-              </button>
+              <div className="mt-2 w-full">
+                <SpotlightButton type="submit" disabled={authLoading} className="w-full" roundedClass="rounded-lg">
+                  {authLoading
+                    ? 'Please wait…'
+                    : authMode === 'signin'
+                      ? 'Sign In'
+                      : 'Create Account'}
+                </SpotlightButton>
+              </div>
             </form>
             <p className="mt-4 text-center text-xs text-gray-400">
               This step is real — it authenticates against your live Aivory account.
@@ -618,14 +621,17 @@ export function CheckoutForm({
               ))}
             </div>
 
-            <button
-              type="button"
-              disabled={!channel}
-              onClick={() => setStep('details')}
-              className={`${primaryBtn} mt-6`}
-            >
-              Continue
-            </button>
+            <div className="mt-6 w-full">
+              <SpotlightButton
+                type="button"
+                disabled={!channel}
+                onClick={() => setStep('details')}
+                className="w-full"
+                roundedClass="rounded-lg"
+              >
+                Continue
+              </SpotlightButton>
+            </div>
             <MidtransBadge />
           </div>
         )}
@@ -778,18 +784,21 @@ export function CheckoutForm({
               </div>
             )}
 
-            <button
-              type="button"
-              disabled={!detailsValid}
-              onClick={handleDetailsContinue}
-              className={`${primaryBtn} mt-8`}
-            >
-              {channel === 'qris'
-                ? "I've scanned and paid"
-                : isEwallet
-                  ? 'Continue'
-                  : `Pay ${priceLabel}`}
-            </button>
+            <div className="mt-8 w-full">
+              <SpotlightButton
+                type="button"
+                disabled={!detailsValid}
+                onClick={handleDetailsContinue}
+                className="w-full"
+                roundedClass="rounded-lg"
+              >
+                {channel === 'qris'
+                  ? "I've scanned and paid"
+                  : isEwallet
+                    ? 'Continue'
+                    : `Pay ${priceLabel}`}
+              </SpotlightButton>
+            </div>
             <p className="mt-4 text-center text-xs text-gray-400">
               Preview only — no payment data is transmitted or stored.
             </p>

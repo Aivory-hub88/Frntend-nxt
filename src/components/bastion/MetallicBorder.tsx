@@ -3,11 +3,12 @@ import React, { ReactNode } from 'react';
 interface MetallicBorderProps {
   children: ReactNode;
   borderRadius?: string;
+  className?: string;
 }
 
-export function MetallicBorder({ children, borderRadius = '24px' }: MetallicBorderProps) {
+export function MetallicBorder({ children, borderRadius = '24px', className = "relative w-full h-full flex group" }: MetallicBorderProps) {
   return (
-    <div className="relative w-full h-full flex group">
+    <div className={className}>
       {children}
       <div 
         className="absolute inset-0 pointer-events-none"

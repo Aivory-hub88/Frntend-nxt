@@ -1,5 +1,6 @@
 'use client';
 import { useRef, useEffect, ReactNode } from 'react';
+import { MetallicBorder } from '../bastion/MetallicBorder';
 
 interface SpotlightButtonProps {
   href?: string;
@@ -73,7 +74,7 @@ export function SpotlightButton({ href, onClick, children, className = '', icon 
     };
   }, []);
 
-  const baseClasses = `inline-flex items-center gap-3 text-white no-underline uppercase cursor-pointer transition-all duration-500 min-h-[44px] pointer-events-auto spotlight-card auto-spotlight ${roundedClass} border border-white/5 shadow-[0_8px_32px_rgba(0,0,0,0.4)] hover:-translate-y-1 hover:border-white/10 hover:shadow-[0_0_30px_rgba(174,201,157,0.05)]`;
+  const baseClasses = `inline-flex items-center gap-3 text-white no-underline uppercase cursor-pointer transition-all duration-500 min-h-[44px] pointer-events-auto spotlight-card auto-spotlight ${roundedClass} border-none shadow-[0_8px_32px_rgba(0,0,0,0.4)] hover:-translate-y-1 hover:shadow-[0_0_30px_rgba(174,201,157,0.05)] w-full justify-center`;
   const combinedClasses = `${baseClasses} ${className}`;
 
   const defaultStyle = {
@@ -103,31 +104,47 @@ export function SpotlightButton({ href, onClick, children, className = '', icon 
     </svg>
   ) : (icon !== false ? icon : null);
 
+  const getRadius = () => {
+    if (roundedClass.includes('rounded-full')) return '9999px';
+    const match = roundedClass.match(/rounded-\[([^\]]+)\]/);
+    if (match) return match[1];
+    return '24px';
+  };
+
+  const innerContent = (
+    <>
+      {IconEl}
+      <span className="relative z-10 w-auto text-left">{children}</span>
+    </>
+  );
+
   if (href) {
     return (
-      <a
-        ref={btnRef as any}
-        href={href}
-        className={combinedClasses}
-        style={{ ...defaultStyle, ...style }}
-      >
-        {IconEl}
-        <span className="relative z-10 w-auto text-left">{children}</span>
-      </a>
+      <MetallicBorder borderRadius={getRadius()} className="relative inline-flex group w-full">
+        <a
+          ref={btnRef as any}
+          href={href}
+          className={combinedClasses}
+          style={{ ...defaultStyle, ...style }}
+        >
+          {innerContent}
+        </a>
+      </MetallicBorder>
     );
   }
 
   return (
-    <button
-      ref={btnRef as any}
-      type={type}
-      onClick={onClick}
-      disabled={disabled}
-      className={`${combinedClasses} disabled:opacity-50 disabled:cursor-not-allowed`}
-      style={{ ...defaultStyle, ...style }}
-    >
-      {IconEl}
-      <span className="relative z-10 w-auto text-left">{children}</span>
-    </button>
+    <MetallicBorder borderRadius={getRadius()} className="relative inline-flex group w-full">
+      <button
+        ref={btnRef as any}
+        type={type}
+        onClick={onClick}
+        disabled={disabled}
+        className={`${combinedClasses} disabled:opacity-50 disabled:cursor-not-allowed`}
+        style={{ ...defaultStyle, ...style }}
+      >
+        {innerContent}
+      </button>
+    </MetallicBorder>
   );
 }
