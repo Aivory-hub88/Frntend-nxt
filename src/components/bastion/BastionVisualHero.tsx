@@ -65,12 +65,39 @@ export default function BastionVisualHero() {
               animation: imageGlitch 0.2s cubic-bezier(.25, .46, .45, .94) both infinite;
               opacity: 0.8;
             }
+            .silver-swipe-image {
+              background: linear-gradient(
+                105deg,
+                rgba(255,255,255,1) 35%,
+                rgba(180,180,180,1) 48%,
+                rgba(255,255,255,1) 52%,
+                rgba(180,180,180,1) 56%,
+                rgba(255,255,255,1) 65%
+              );
+              background-size: 200% auto;
+              animation: silver-swipe 5s linear infinite;
+            }
           `}} />
-          <img
-            src="/Bastion_2_copy.svg"
-            alt="Bastion"
-            className={`w-[100%] md:w-[110%] h-auto object-contain transition-opacity duration-300 ${isGlitching ? 'glitch-anim' : 'opacity-100'}`}
-          />
+          <div className={`relative w-[100%] md:w-[110%] h-auto transition-opacity duration-300 ${isGlitching ? 'glitch-anim' : 'opacity-100'}`}>
+            <img
+              src="/Bastion_2_copy.svg"
+              alt="Bastion"
+              className="w-full h-auto opacity-0 pointer-events-none"
+            />
+            <div 
+              className="absolute inset-0 silver-swipe-image"
+              style={{
+                WebkitMaskImage: 'url(/Bastion_2_copy.svg)',
+                WebkitMaskSize: 'contain',
+                WebkitMaskRepeat: 'no-repeat',
+                WebkitMaskPosition: 'center',
+                maskImage: 'url(/Bastion_2_copy.svg)',
+                maskSize: 'contain',
+                maskRepeat: 'no-repeat',
+                maskPosition: 'center',
+              }}
+            />
+          </div>
         </div>
       </div>
     </section>
