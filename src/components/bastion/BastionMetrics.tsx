@@ -43,15 +43,21 @@ export default function BastionMetrics() {
               className="w-full"
             >
               <MetallicBorder borderRadius="16px">
-                <div className="w-full flex items-center gap-6 p-6 rounded-2xl bg-white/[0.03] border border-white/10 hover:border-white/25 hover:bg-white/[0.06] transition-all duration-300 backdrop-blur-md group shadow-lg">
-                  <div className="shrink-0 flex items-center justify-center">
-                    <ThinkingOrb state={metric.state} size={64} theme="dark" />
+                <div className="w-full flex flex-col p-6 md:p-8 rounded-2xl bg-white/[0.03] border border-white/10 hover:border-white/25 hover:bg-white/[0.06] transition-all duration-300 backdrop-blur-md group shadow-lg min-h-[420px]">
+                  <div className="text-3xl md:text-4xl font-light text-white mb-6">
+                    {String(index + 1).padStart(2, '0')}
                   </div>
-                  <div className="flex flex-col min-w-0">
-                    <span className="text-3xl md:text-4xl font-light text-white mb-1 tracking-tight truncate">
+                  
+                  <div className="flex-1 flex items-center justify-center py-4">
+                    <ThinkingOrb state={metric.state} size={140} theme="dark" />
+                  </div>
+                  
+                  <div className="mt-auto flex flex-col w-full">
+                    <span className="text-2xl md:text-3xl font-light text-white mb-4 tracking-tight">
                       {metric.value}
                     </span>
-                    <span className="text-xs text-[#B3B3B3] uppercase tracking-widest font-mono font-medium truncate">
+                    <div className="w-full h-px bg-white/20 mb-4" />
+                    <span className="text-xs text-[#B3B3B3] uppercase tracking-widest font-mono font-medium">
                       {metric.label}
                     </span>
                   </div>
