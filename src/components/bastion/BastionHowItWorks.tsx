@@ -47,9 +47,9 @@ const steps2 = [
 ];
 
 const classifications = [
-  { label: 'LEGITIMATE', sub: 'LOW RISK', icon: CheckCircle2, color: 'text-emerald-400', border: 'border-emerald-500/30', bg: 'bg-emerald-500/5' },
-  { label: 'SUSPICIOUS', sub: 'MEDIUM RISK', icon: AlertTriangle, color: 'text-amber-400', border: 'border-amber-500/30', bg: 'bg-amber-500/5' },
-  { label: 'MALICIOUS', sub: 'HIGH RISK', icon: XCircle, color: 'text-red-400', border: 'border-red-500/30', bg: 'bg-red-500/5' },
+  { label: 'LEGITIMATE', sub: 'LOW RISK', icon: CheckCircle2, color: 'text-emerald-400', border: 'border-emerald-500/40', gradient: 'from-emerald-500/15 to-transparent' },
+  { label: 'SUSPICIOUS', sub: 'MEDIUM RISK', icon: AlertTriangle, color: 'text-amber-400', border: 'border-amber-500/40', gradient: 'from-amber-500/15 to-transparent' },
+  { label: 'MALICIOUS', sub: 'HIGH RISK', icon: XCircle, color: 'text-red-400', border: 'border-red-500/40', gradient: 'from-red-500/15 to-transparent' },
 ];
 
 const sources = [
@@ -277,13 +277,15 @@ export default function BastionHowItWorks() {
               <PulseSequence index={3}>
                 <div className="grid grid-cols-3 gap-3 w-full">
                   {classifications.map((c) => (
-                    <div key={c.label} className={`border ${c.border} ${c.bg} rounded-lg p-3 flex flex-col items-center justify-center text-center gap-2 relative`}>
-                      <c.icon className={`w-5 h-5 ${c.color}`} strokeWidth={2} />
-                      <div>
-                        <span className={`text-[9px] font-mono font-bold tracking-wider block ${c.color}`}>{c.label}</span>
-                        <span className={`text-[8px] font-mono opacity-80 block ${c.color}`}>{c.sub}</span>
+                    <MetallicBorder key={c.label} borderRadius="8px" className="w-full">
+                      <div className={`w-full bg-transparent rounded-lg p-4 flex flex-col items-center justify-center text-center gap-3 relative bg-gradient-to-b ${c.gradient} border-t ${c.border}`}>
+                        <c.icon className={`w-6 h-6 ${c.color} drop-shadow-[0_0_8px_currentColor]`} strokeWidth={1.5} />
+                        <div>
+                          <span className={`text-[10px] font-mono font-medium tracking-widest block ${c.color} mb-1 drop-shadow-sm`}>{c.label}</span>
+                          <span className={`text-[8px] font-mono opacity-50 block text-white tracking-widest`}>{c.sub}</span>
+                        </div>
                       </div>
-                    </div>
+                    </MetallicBorder>
                   ))}
                 </div>
               </PulseSequence>
