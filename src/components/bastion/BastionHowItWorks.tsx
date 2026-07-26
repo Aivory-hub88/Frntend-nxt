@@ -213,7 +213,7 @@ export default function BastionHowItWorks() {
               <HorizontalFlow direction="right" delay={0.4} />
               <PulseSequence index={0}>
                 <MetallicBorder borderRadius="8px" className="w-full block">
-                  <div className="border border-transparent bg-[#080808] rounded-lg p-5 w-full h-full">
+                  <div className="border border-transparent bg-transparent rounded-lg p-5 w-full h-full">
                     <span className="text-[11px] font-mono text-white/40 tracking-widest block mb-4">1. SOURCES</span>
                     <div className="space-y-2">
                       {sources.map((s) => (
@@ -231,7 +231,7 @@ export default function BastionHowItWorks() {
               <HorizontalFlow direction="right" delay={0.5} />
               <PulseSequence index={4}>
                 <MetallicBorder borderRadius="8px" className="w-full block">
-                  <div className="border border-transparent bg-[#080808] rounded-lg p-5 w-full h-full">
+                  <div className="border border-transparent bg-transparent rounded-lg p-5 w-full h-full">
                     <span className="text-[11px] font-mono text-white/40 tracking-widest block mb-4">2. CONTINUOUS BY DESIGN</span>
                     <div className="grid grid-cols-2 gap-2">
                       {continuousItems.map((c) => (
@@ -255,7 +255,7 @@ export default function BastionHowItWorks() {
                 <motion.div {...scaleIn(0.4 + i * 0.1)} animate={isInView ? scaleIn(0.4 + i * 0.1).animate : scaleIn(0.4 + i * 0.1).initial} className="w-full">
                   <PulseSequence index={i}>
                     <MetallicBorder borderRadius="8px" className="w-full block">
-                      <div className="w-full border border-transparent rounded-lg p-5 bg-[#0a0a0a] flex items-start gap-4">
+                      <div className="w-full border border-transparent rounded-lg p-5 bg-transparent flex items-start gap-4">
                         <step.icon className="w-6 h-6 text-white/50 shrink-0 mt-0.5" strokeWidth={1.5} />
                         <div>
                           <div className="flex items-center gap-2 mb-1">
@@ -301,7 +301,7 @@ export default function BastionHowItWorks() {
                 <motion.div {...scaleIn(0.9 + i * 0.1)} animate={isInView ? scaleIn(0.9 + i * 0.1).animate : scaleIn(0.9 + i * 0.1).initial} className="w-full">
                   <PulseSequence index={i + 4}>
                     <MetallicBorder borderRadius="8px" className="w-full block">
-                      <div className="w-full border border-transparent rounded-lg p-5 bg-[#0a0a0a] flex items-start gap-4">
+                      <div className="w-full border border-transparent rounded-lg p-5 bg-transparent flex items-start gap-4">
                         <step.icon className="w-6 h-6 text-white/50 shrink-0 mt-0.5" strokeWidth={1.5} />
                         <div>
                           <div className="flex items-center gap-2 mb-1">
@@ -325,7 +325,7 @@ export default function BastionHowItWorks() {
               <HorizontalFlow direction="left" delay={0.4} />
               <PulseSequence index={0}>
                 <MetallicBorder borderRadius="8px" className="w-full block">
-                  <div className="border border-transparent bg-[#080808] rounded-lg p-5 w-full">
+                  <div className="border border-transparent bg-transparent rounded-lg p-5 w-full">
                     <span className="text-[11px] font-mono text-white/40 tracking-widest block mb-4">1. OPERATIONAL INTELLIGENCE</span>
                     <div className="space-y-1.5">
                       {intelItems.map((item) => (
@@ -345,7 +345,7 @@ export default function BastionHowItWorks() {
                 <HorizontalFlow direction="left" delay={0.5 + i * 0.1} />
                 <PulseSequence index={i + 4}>
                   <MetallicBorder borderRadius="8px" className="w-full block">
-                    <div className="border border-transparent bg-[#080808] rounded-lg p-4 w-full">
+                    <div className="border border-transparent bg-transparent rounded-lg p-4 w-full">
                       <span className="text-[10px] font-mono text-white/80 tracking-widest block mb-2">{i+2}. {card.title}</span>
                       <p className="text-[10px] text-white/40 leading-relaxed">{card.desc}</p>
                     </div>
