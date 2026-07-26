@@ -38,7 +38,7 @@ export default function BastionContact() {
           {/* Left Column - Large Text */}
           <div className="flex flex-col justify-start">
             <h2 className="text-4xl md:text-6xl lg:text-[4.5rem] font-light leading-[1.05] tracking-tight text-[#FFFFFF] mb-6">
-              Let’s talk about your security posture.
+              Request a Private Architecture Review
             </h2>
             <div className="space-y-4 text-lg md:text-xl text-[#B3B3B3] font-light leading-relaxed">
               <p>Share your current challenges around detection, response, or infrastructure resilience.</p>
