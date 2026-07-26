@@ -5,7 +5,8 @@ import { motion, useInView } from 'framer-motion';
 import { MetallicBorder } from './MetallicBorder';
 import { 
   Globe, Target, Network, Radar, Shield, BrainCircuit, Layers,
-  CheckCircle2, AlertTriangle, XCircle, ChevronDown, ShieldAlert
+  CheckCircle2, AlertTriangle, XCircle, ChevronDown, ShieldAlert,
+  ChevronLeft, ChevronRight
 } from 'lucide-react';
 
 /* ── data ──────────────────────────────────────────────────────────── */
@@ -107,10 +108,41 @@ const FlowArrow = ({ delay = 0, height = 24 }: { delay?: number, height?: number
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: '-10% 0px' });
   return (
-    <motion.div ref={ref} className="flex flex-col items-center py-1"
+    <motion.div ref={ref} className="flex flex-col items-center py-1 overflow-hidden"
       initial={{ opacity: 0 }} animate={inView ? { opacity: 1 } : {}} transition={{ duration: 0.3, delay }}>
-      <motion.div className="w-px bg-white/40" initial={{ height: 0 }} animate={inView ? { height } : {}} transition={{ duration: 0.4, delay: delay + 0.1 }} />
-      <ChevronDown className="w-4 h-4 text-white/40 -mt-1.5" />
+      <svg width="2" height={height} className="overflow-visible">
+        <motion.line 
+          x1="1" y1="0" x2="1" y2={height} 
+          stroke="rgba(255,255,255,0.3)" strokeWidth="1" strokeDasharray="3 3"
+          initial={{ strokeDashoffset: 6 }}
+          animate={{ strokeDashoffset: 0 }}
+          transition={{ duration: 0.6, repeat: Infinity, ease: 'linear' }}
+        />
+      </svg>
+      <ChevronDown className="w-4 h-4 text-white/30 -mt-1.5" />
+    </motion.div>
+  );
+};
+
+const HorizontalFlow = ({ direction = 'right', delay = 0, width = 48 }: { direction?: 'left'|'right', delay?: number, width?: number }) => {
+  const ref = useRef(null);
+  const inView = useInView(ref, { once: true, margin: '-10% 0px' });
+  
+  return (
+    <motion.div ref={ref} className={`absolute top-1/2 -translate-y-1/2 flex items-center z-0 hidden lg:flex ${direction === 'right' ? '-right-12' : '-left-12'}`}
+      style={{ width: `${width}px` }}
+      initial={{ opacity: 0 }} animate={inView ? { opacity: 1 } : {}} transition={{ duration: 0.3, delay }}>
+      {direction === 'left' && <ChevronLeft className="w-4 h-4 text-white/30 -mr-1 z-10 shrink-0" />}
+      <svg width="100%" height="2" className="overflow-visible grow">
+        <motion.line 
+          x1="0" y1="1" x2="100%" y2="1" 
+          stroke="rgba(255,255,255,0.3)" strokeWidth="1" strokeDasharray="3 3"
+          initial={{ strokeDashoffset: direction === 'right' ? 6 : -6 }}
+          animate={{ strokeDashoffset: 0 }}
+          transition={{ duration: 0.6, repeat: Infinity, ease: 'linear' }}
+        />
+      </svg>
+      {direction === 'right' && <ChevronRight className="w-4 h-4 text-white/30 -ml-1 z-10 shrink-0" />}
     </motion.div>
   );
 };
@@ -152,14 +184,10 @@ export default function BastionHowItWorks() {
         {/* ── Main 3-column layout ──────────────────────────────── */}
         <div className="grid grid-cols-1 lg:grid-cols-[260px_1fr_260px] gap-8 lg:gap-12 relative">
           
-          {/* Dashed connecting lines for desktop - visual only */}
-          <div className="hidden lg:block absolute inset-0 pointer-events-none opacity-20">
-             {/* We rely on proximity rather than drawing complex SVG lines to keep it clean */}
-          </div>
-
           {/* ─── LEFT COLUMN ────────────────────────────────────── */}
           <div className="space-y-8 flex flex-col justify-between">
-            <motion.div className="w-full" {...slideLeft(0.3)} animate={isInView ? slideLeft(0.3).animate : slideLeft(0.3).initial}>
+            <motion.div className="w-full relative" {...slideLeft(0.3)} animate={isInView ? slideLeft(0.3).animate : slideLeft(0.3).initial}>
+              <HorizontalFlow direction="right" delay={0.4} />
               <MetallicBorder borderRadius="8px" className="w-full block">
                 <div className="border border-transparent bg-[#080808] rounded-lg p-5 w-full h-full">
                   <span className="text-[11px] font-mono text-white/40 tracking-widest block mb-4">1. SOURCES</span>
@@ -174,7 +202,8 @@ export default function BastionHowItWorks() {
               </MetallicBorder>
             </motion.div>
 
-            <motion.div className="w-full" {...slideLeft(0.4)} animate={isInView ? slideLeft(0.4).animate : slideLeft(0.4).initial}>
+            <motion.div className="w-full relative" {...slideLeft(0.4)} animate={isInView ? slideLeft(0.4).animate : slideLeft(0.4).initial}>
+              <HorizontalFlow direction="right" delay={0.5} />
               <MetallicBorder borderRadius="8px" className="w-full block">
                 <div className="border border-transparent bg-[#080808] rounded-lg p-5 w-full h-full">
                   <span className="text-[11px] font-mono text-white/40 tracking-widest block mb-4">2. CONTINUOUS BY DESIGN</span>
@@ -257,7 +286,8 @@ export default function BastionHowItWorks() {
 
           {/* ─── RIGHT COLUMN ───────────────────────────────────── */}
           <div className="space-y-6 flex flex-col justify-start mt-8 lg:mt-0">
-            <motion.div className="w-full" {...slideRight(0.3)} animate={isInView ? slideRight(0.3).animate : slideRight(0.3).initial}>
+            <motion.div className="w-full relative" {...slideRight(0.3)} animate={isInView ? slideRight(0.3).animate : slideRight(0.3).initial}>
+              <HorizontalFlow direction="left" delay={0.4} />
               <MetallicBorder borderRadius="8px" className="w-full block">
                 <div className="border border-transparent bg-[#080808] rounded-lg p-5 w-full">
                   <span className="text-[11px] font-mono text-white/40 tracking-widest block mb-4">1. OPERATIONAL INTELLIGENCE</span>
@@ -274,7 +304,8 @@ export default function BastionHowItWorks() {
             </motion.div>
 
             {rightCards.map((card, i) => (
-              <motion.div key={card.title} className="w-full" {...slideRight(0.4 + i * 0.1)} animate={isInView ? slideRight(0.4 + i * 0.1).animate : slideRight(0.4 + i * 0.1).initial}>
+              <motion.div key={card.title} className="w-full relative" {...slideRight(0.4 + i * 0.1)} animate={isInView ? slideRight(0.4 + i * 0.1).animate : slideRight(0.4 + i * 0.1).initial}>
+                <HorizontalFlow direction="left" delay={0.5 + i * 0.1} />
                 <MetallicBorder borderRadius="8px" className="w-full block">
                   <div className="border border-transparent bg-[#080808] rounded-lg p-4 w-full">
                     <span className="text-[10px] font-mono text-white/80 tracking-widest block mb-2">{i+2}. {card.title}</span>
