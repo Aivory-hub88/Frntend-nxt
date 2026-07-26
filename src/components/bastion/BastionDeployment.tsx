@@ -171,7 +171,7 @@ export default function BastionDeployment() {
       <div className="max-w-[1600px] mx-auto px-6 md:px-12">
         <FadeUp className="mb-16 md:mb-24">
           <AnimatedHeadline
-            text="One Defense Layer.\nEvery Environment."
+            text={"One Defense Layer.\nEvery Environment."}
             as="h2"
             className="text-4xl md:text-6xl lg:text-[72px] tracking-tight font-light leading-tight text-[#FFFFFF] max-w-4xl mb-6"
           />
