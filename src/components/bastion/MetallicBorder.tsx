@@ -23,11 +23,12 @@ export function MetallicBorder({ children, borderRadius = '24px', className = "r
           maskComposite: 'exclude',
         }}
       >
+        <div className="absolute inset-0 bg-white/20" />
         <div 
-          className="absolute inset-[-100%] origin-center group-hover:opacity-100 opacity-60 transition-opacity duration-300"
+          className="absolute inset-[-100%] origin-center group-hover:opacity-100 opacity-60 transition-opacity duration-500"
           style={{
-            animation: 'spin 4s linear infinite',
-            background: 'conic-gradient(from 0deg, transparent 30%, rgba(200, 205, 215, 0.4) 45%, rgba(255, 255, 255, 1) 50%, rgba(200, 205, 215, 0.4) 55%, transparent 70%)',
+            animation: 'spin 5s linear infinite',
+            background: 'conic-gradient(from 0deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0) 20%, rgba(255,255,255,1) 25%, rgba(255,255,255,0) 30%, rgba(255,255,255,0) 70%, rgba(255,255,255,1) 75%, rgba(255,255,255,0) 80%, rgba(255,255,255,0) 100%)',
             willChange: 'transform'
           }}
         />
