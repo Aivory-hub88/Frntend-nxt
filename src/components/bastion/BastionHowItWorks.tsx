@@ -3,89 +3,66 @@
 import { useRef } from 'react';
 import { motion, useInView } from 'framer-motion';
 import { MetallicBorder } from './MetallicBorder';
-
-/* ── tiny reusable pieces ─────────────────────────────────────────── */
-const Dot = ({ className = '' }: { className?: string }) => (
-  <span className={`inline-block w-1.5 h-1.5 rounded-full bg-white/30 ${className}`} />
-);
-
-const StepIcon = ({ children, className = '' }: { children: React.ReactNode; className?: string }) => (
-  <div className={`w-10 h-10 md:w-12 md:h-12 rounded-lg border border-white/20 flex items-center justify-center text-white/50 ${className}`}>
-    {children}
-  </div>
-);
+import { 
+  Globe, Target, Network, Radar, Shield, BrainCircuit, Layers,
+  CheckCircle2, AlertTriangle, XCircle, ChevronDown, ShieldAlert
+} from 'lucide-react';
 
 /* ── data ──────────────────────────────────────────────────────────── */
-const steps = [
+const steps1 = [
   {
-    num: '01',
-    title: 'OBSERVE',
+    num: '01', title: 'OBSERVE',
     desc: 'AI-powered monitoring captures and normalizes all interactions in real time.',
-    icon: '⊕',
+    icon: Target,
   },
   {
-    num: '02',
-    title: 'ANALYZE',
+    num: '02', title: 'ANALYZE',
     desc: 'Behavioral analysis and correlation identify patterns, anomalies and emerging threats.',
-    icon: '⊞',
+    icon: Network,
   },
   {
-    num: '03',
-    title: 'CLASSIFY',
+    num: '03', title: 'CLASSIFY',
     desc: 'Traffic is classified based on risk scores and threat confidence in real time.',
-    icon: '◎',
-  },
-  {
-    num: '04',
-    title: 'RESPOND',
-    desc: 'Adaptive response engine contains, mitigates and neutralizes threats without disrupting legitimate users.',
-    icon: '⛊',
-  },
-  {
-    num: '05',
-    title: 'LEARN',
-    desc: 'Every interaction is turned into operational intelligence to improve detection and response.',
-    icon: '⚙',
-  },
-  {
-    num: '06',
-    title: 'STRENGTHEN',
-    desc: 'Intelligence drives policy updates, defense hardening and continuous posture improvement.',
-    icon: '◇',
+    icon: Radar,
   },
 ];
 
-const sources = [
-  { icon: '🌐', label: 'WEB TRAFFIC' },
-  { icon: '</>', label: 'API REQUESTS' },
-  { icon: '👤', label: 'USERS' },
-  { icon: '▢', label: 'DEVICES' },
-  { icon: '⬡', label: 'SYSTEMS' },
-  { icon: '📡', label: 'IOT / OT' },
+const steps2 = [
+  {
+    num: '04', title: 'RESPOND',
+    desc: 'Adaptive response engine contains, mitigates and neutralizes threats using progressive challenge without disrupting legitimate users.',
+    icon: Shield,
+  },
+  {
+    num: '05', title: 'LEARN',
+    desc: 'Every interaction is turned into operational intelligence to improve detection and response.',
+    icon: BrainCircuit,
+  },
+  {
+    num: '06', title: 'STRENGTHEN',
+    desc: 'Intelligence drives policy updates, defense hardening and continuous posture improvement.',
+    icon: Layers,
+  },
 ];
 
 const classifications = [
-  { label: 'LEGITIMATE', sub: 'LOW RISK', icon: '✓', color: 'border-emerald-500/40 text-emerald-400' },
-  { label: 'SUSPICIOUS', sub: 'MEDIUM RISK', icon: '⚠', color: 'border-amber-500/40 text-amber-400' },
-  { label: 'MALICIOUS', sub: 'HIGH RISK', icon: '✕', color: 'border-red-500/40 text-red-400' },
+  { label: 'LEGITIMATE', sub: 'LOW RISK', icon: CheckCircle2, color: 'text-emerald-400', border: 'border-emerald-500/30', bg: 'bg-emerald-500/5' },
+  { label: 'SUSPICIOUS', sub: 'MEDIUM RISK', icon: AlertTriangle, color: 'text-amber-400', border: 'border-amber-500/30', bg: 'bg-amber-500/5' },
+  { label: 'MALICIOUS', sub: 'HIGH RISK', icon: XCircle, color: 'text-red-400', border: 'border-red-500/30', bg: 'bg-red-500/5' },
 ];
 
-const intelItems = [
-  'THREAT INDICATORS',
-  'ATTACK PATTERNS',
-  'BEHAVIOURAL SIGNATURES',
-  'CAMPAIGN INTELLIGENCE',
-  'TACTICS & TECHNIQUES',
-  'ZERO-DAY INSIGHT',
+const sources = [
+  'WEB TRAFFIC', 'API REQUESTS', 'USERS', 'DEVICES', 'SYSTEMS', 'IOT / OT'
 ];
 
 const continuousItems = [
-  { icon: '◷', label: '24/7', sub: 'MONITORING' },
-  { icon: '⟳', label: 'ADAPTIVE', sub: 'RESPONSE' },
-  { icon: '◉', label: '100%', sub: 'VISIBILITY' },
-  { icon: '🔗', label: 'CONTINUOUS', sub: 'INTELLIGENCE' },
-  { icon: '🔒', label: 'ZERO TRUST', sub: 'ACCESS' },
-  { icon: '⚡', label: 'AUTONOMOUS', sub: 'DEFENSE' },
+  '24/7 MONITORING', 'ADAPTIVE RESPONSE', '100% VISIBILITY',
+  'CONTINUOUS INTELLIGENCE', 'ZERO TRUST ACCESS', 'AUTONOMOUS DEFENSE'
+];
+
+const intelItems = [
+  'Threat Indicators', 'Attack Patterns', 'Behavioural Signatures',
+  'Campaign Intelligence', 'Tactics & Techniques', 'Zero-Day Insight'
 ];
 
 const rightCards = [
@@ -101,51 +78,36 @@ const fadeUp = (delay: number) => ({
   transition: { duration: 0.5, delay, ease: 'easeOut' },
 });
 
-const fadeIn = (delay: number) => ({
-  initial: { opacity: 0 },
-  animate: { opacity: 1 },
-  transition: { duration: 0.6, delay, ease: 'easeOut' },
-});
-
 const scaleIn = (delay: number) => ({
-  initial: { opacity: 0, scale: 0.85 },
+  initial: { opacity: 0, scale: 0.9 },
   animate: { opacity: 1, scale: 1 },
   transition: { duration: 0.5, delay, ease: 'easeOut' },
 });
 
 const slideLeft = (delay: number) => ({
-  initial: { opacity: 0, x: -30 },
+  initial: { opacity: 0, x: -20 },
   animate: { opacity: 1, x: 0 },
   transition: { duration: 0.5, delay, ease: 'easeOut' },
 });
 
 const slideRight = (delay: number) => ({
-  initial: { opacity: 0, x: 30 },
+  initial: { opacity: 0, x: 20 },
   animate: { opacity: 1, x: 0 },
   transition: { duration: 0.5, delay, ease: 'easeOut' },
 });
 
-/* ── animated connector line (vertical) ───────────────────────────── */
-function ConnectorLine({ delay = 0 }: { delay?: number }) {
+/* ── animated connector lines ─────────────────────────────────────── */
+const FlowArrow = ({ delay = 0, height = 24 }: { delay?: number, height?: number }) => {
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: '-10% 0px' });
   return (
-    <motion.div
-      ref={ref}
-      className="flex justify-center py-1"
-      initial={{ opacity: 0 }}
-      animate={inView ? { opacity: 1 } : {}}
-      transition={{ duration: 0.3, delay }}
-    >
-      <motion.div
-        className="w-px bg-gradient-to-b from-white/30 to-white/10"
-        initial={{ height: 0 }}
-        animate={inView ? { height: 24 } : {}}
-        transition={{ duration: 0.4, delay: delay + 0.1 }}
-      />
+    <motion.div ref={ref} className="flex flex-col items-center py-1"
+      initial={{ opacity: 0 }} animate={inView ? { opacity: 1 } : {}} transition={{ duration: 0.3, delay }}>
+      <motion.div className="w-px bg-white/40" initial={{ height: 0 }} animate={inView ? { height } : {}} transition={{ duration: 0.4, delay: delay + 0.1 }} />
+      <ChevronDown className="w-4 h-4 text-white/40 -mt-1.5" />
     </motion.div>
   );
-}
+};
 
 /* ── main component ───────────────────────────────────────────────── */
 export default function BastionHowItWorks() {
@@ -153,240 +115,164 @@ export default function BastionHowItWorks() {
   const isInView = useInView(sectionRef, { once: true, margin: '-5% 0px' });
 
   return (
-    <section ref={sectionRef} className="bg-transparent text-white py-24 md:py-32 overflow-hidden">
+    <section ref={sectionRef} className="bg-black text-white py-24 md:py-32 overflow-hidden selection:bg-white/20">
       <div className="max-w-7xl mx-auto px-6 md:px-12">
 
         {/* ── Header ────────────────────────────────────────────── */}
-        <motion.div
-          className="mb-16 md:mb-20"
-          {...fadeUp(0)}
-          animate={isInView ? fadeUp(0).animate : fadeUp(0).initial}
-        >
-          {/* Grid markers */}
-          <div className="flex justify-between text-[10px] text-white/20 font-mono mb-6 tracking-widest">
-            {['01', '02', '03', '04', '05', '06'].map((n) => (
-              <span key={n}>{n}</span>
-            ))}
-          </div>
-          <h2 className="text-3xl md:text-5xl lg:text-6xl font-light leading-tight text-white mb-6 tracking-tight">
-            How Bastion Works.
+        <motion.div className="mb-16 md:mb-20" {...fadeUp(0)} animate={isInView ? fadeUp(0).animate : fadeUp(0).initial}>
+          <h2 className="text-3xl md:text-5xl lg:text-5xl font-medium leading-tight text-white mb-4 tracking-tight uppercase">
+            HOW BASTION WORKS
           </h2>
-          <p className="text-sm md:text-base text-white/40 font-mono uppercase tracking-[0.2em]">
-            Adaptive defense that evolves with every interaction.
+          <p className="text-sm md:text-sm text-white/50 font-mono tracking-widest uppercase">
+            ADAPTIVE DEFENSE THAT EVOLVES WITH EVERY INTERACTION.
           </p>
         </motion.div>
 
-        {/* ── Main 3-column layout ──────────────────────────────── */}
-        <div className="grid grid-cols-1 lg:grid-cols-[240px_1fr_280px] gap-8 lg:gap-6">
+        {/* ── Internet Top Center ───────────────────────────────── */}
+        <div className="flex justify-center mb-8">
+          <motion.div className="flex flex-col items-center" {...fadeUp(0.1)} animate={isInView ? fadeUp(0.1).animate : fadeUp(0.1).initial}>
+            <div className="flex items-center gap-2 text-white/50 mb-2">
+              <Globe className="w-5 h-5" />
+              <span className="text-xs font-mono tracking-widest">INTERNET</span>
+            </div>
+            <FlowArrow delay={0.2} height={16} />
+            <div className="border border-white/20 rounded px-6 py-2 mt-2">
+              <span className="text-xs font-mono text-white/80 tracking-widest">INCOMING TRAFFIC</span>
+            </div>
+            <FlowArrow delay={0.3} height={24} />
+          </motion.div>
+        </div>
 
-          {/* ─── LEFT COLUMN: Sources + Continuous ──────────────── */}
-          <div className="space-y-8 hidden lg:block">
-            {/* Sources panel */}
-            <motion.div
-              className="w-full"
-              {...slideLeft(0.2)}
-              animate={isInView ? slideLeft(0.2).animate : slideLeft(0.2).initial}
-            >
+        {/* ── Main 3-column layout ──────────────────────────────── */}
+        <div className="grid grid-cols-1 lg:grid-cols-[260px_1fr_260px] gap-8 lg:gap-12 relative">
+          
+          {/* Dashed connecting lines for desktop - visual only */}
+          <div className="hidden lg:block absolute inset-0 pointer-events-none opacity-20">
+             {/* We rely on proximity rather than drawing complex SVG lines to keep it clean */}
+          </div>
+
+          {/* ─── LEFT COLUMN ────────────────────────────────────── */}
+          <div className="space-y-8 flex flex-col justify-between">
+            <motion.div className="w-full" {...slideLeft(0.3)} animate={isInView ? slideLeft(0.3).animate : slideLeft(0.3).initial}>
               <MetallicBorder borderRadius="8px" className="w-full block">
-                <div className="border border-transparent bg-white/[0.01] rounded-lg p-4 w-full">
-                  <div className="flex items-center justify-between mb-4">
-                    <span className="text-xs font-mono text-white/60 tracking-wider">SOURCES</span>
-                    <span className="text-white/20 text-[10px]">⊘</span>
+                <div className="border border-transparent bg-[#080808] rounded-lg p-5 w-full h-full">
+                  <span className="text-[11px] font-mono text-white/40 tracking-widest block mb-4">1. SOURCES</span>
+                  <div className="space-y-2">
+                    {sources.map((s) => (
+                      <div key={s} className="border border-white/10 rounded px-3 py-2 text-[10px] font-mono tracking-wider text-white/70 text-center">
+                        {s}
+                      </div>
+                    ))}
                   </div>
-              <div className="space-y-2">
-                {sources.map((s, i) => (
-                  <motion.div
-                    key={s.label}
-                    className="flex items-center gap-3 py-2 px-3 border border-white/5 rounded-md hover:border-white/15 transition-colors"
-                    {...fadeIn(0.3 + i * 0.08)}
-                    animate={isInView ? fadeIn(0.3 + i * 0.08).animate : fadeIn(0.3 + i * 0.08).initial}
-                  >
-                    <span className="text-xs text-white/30 w-5 text-center">{s.icon}</span>
-                    <span className="text-[11px] font-mono text-white/70 tracking-wider">{s.label}</span>
-                  </motion.div>
-                ))}
-              </div>
                 </div>
               </MetallicBorder>
             </motion.div>
 
-            {/* Continuous By Design */}
-            <motion.div
-              className="w-full"
-              {...slideLeft(0.6)}
-              animate={isInView ? slideLeft(0.6).animate : slideLeft(0.6).initial}
-            >
+            <motion.div className="w-full" {...slideLeft(0.4)} animate={isInView ? slideLeft(0.4).animate : slideLeft(0.4).initial}>
               <MetallicBorder borderRadius="8px" className="w-full block">
-                <div className="border border-transparent bg-white/[0.01] rounded-lg p-4 w-full">
-                  <span className="text-xs font-mono text-white/60 tracking-wider block mb-4">CONTINUOUS BY DESIGN</span>
-              <div className="grid grid-cols-2 gap-2">
-                {continuousItems.map((c, i) => (
-                  <motion.div
-                    key={c.label}
-                    className="text-center py-2 px-1 border border-white/5 rounded-md"
-                    {...fadeIn(0.7 + i * 0.06)}
-                    animate={isInView ? fadeIn(0.7 + i * 0.06).animate : fadeIn(0.7 + i * 0.06).initial}
-                  >
-                    <span className="text-xs text-white/30 block">{c.icon}</span>
-                    <span className="text-[10px] font-mono text-white/70 font-semibold block">{c.label}</span>
-                    <span className="text-[9px] font-mono text-white/40 block">{c.sub}</span>
-                  </motion.div>
-                ))}
-              </div>
+                <div className="border border-transparent bg-[#080808] rounded-lg p-5 w-full h-full">
+                  <span className="text-[11px] font-mono text-white/40 tracking-widest block mb-4">2. CONTINUOUS BY DESIGN</span>
+                  <div className="grid grid-cols-2 gap-2">
+                    {continuousItems.map((c) => (
+                      <div key={c} className="border border-white/10 rounded px-2 py-3 text-center flex items-center justify-center min-h-[60px]">
+                        <span className="text-[9px] font-mono tracking-wider text-white/60 leading-tight">{c}</span>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               </MetallicBorder>
             </motion.div>
           </div>
 
-          {/* ─── CENTER COLUMN: Flow ────────────────────────────── */}
-          <div className="flex flex-col items-center">
-            {/* Internet → Incoming Traffic */}
-            <motion.div
-              className="flex flex-col items-center mb-2"
-              {...fadeUp(0.15)}
-              animate={isInView ? fadeUp(0.15).animate : fadeUp(0.15).initial}
-            >
-              <span className="text-[11px] font-mono text-white/40 tracking-wider mb-1">INTERNET</span>
-              <span className="text-white/30 text-lg">⊕</span>
-            </motion.div>
-
-            <ConnectorLine delay={0.2} />
-
-            <motion.div
-              className="border border-white/20 rounded-md px-6 py-2.5 mb-1"
-              {...scaleIn(0.25)}
-              animate={isInView ? scaleIn(0.25).animate : scaleIn(0.25).initial}
-            >
-              <span className="text-xs font-mono text-white/80 tracking-widest">INCOMING TRAFFIC</span>
-            </motion.div>
-
-            <ConnectorLine delay={0.3} />
-
-            {/* Steps 01 → 03 */}
-            {steps.slice(0, 3).map((step, i) => (
-              <div key={step.num} className="w-full max-w-md">
-                <motion.div
-                  {...scaleIn(0.35 + i * 0.15)}
-                  animate={isInView ? scaleIn(0.35 + i * 0.15).animate : scaleIn(0.35 + i * 0.15).initial}
-                  className="w-full"
-                >
-                  <MetallicBorder borderRadius="12px">
-                    <div className="w-full border border-white/15 rounded-xl p-5 md:p-6 bg-white/[0.02] backdrop-blur-sm hover:border-white/25 transition-all group">
-                      <div className="flex items-start justify-between mb-2">
-                        <div className="flex items-center gap-3">
-                          <span className="text-lg md:text-xl font-mono text-white/25 font-light">{step.num}</span>
-                          <span className="text-sm md:text-base font-mono text-white font-semibold tracking-wider">{step.title}</span>
+          {/* ─── CENTER COLUMN (Flow) ───────────────────────────── */}
+          <div className="flex flex-col items-center w-full">
+            
+            {/* Steps 1-3 */}
+            {steps1.map((step, i) => (
+              <div key={step.num} className="w-full">
+                <motion.div {...scaleIn(0.4 + i * 0.1)} animate={isInView ? scaleIn(0.4 + i * 0.1).animate : scaleIn(0.4 + i * 0.1).initial} className="w-full">
+                  <MetallicBorder borderRadius="8px" className="w-full block">
+                    <div className="w-full border border-transparent rounded-lg p-5 bg-[#0a0a0a] flex items-start gap-4">
+                      <step.icon className="w-6 h-6 text-white/50 shrink-0 mt-0.5" strokeWidth={1.5} />
+                      <div>
+                        <div className="flex items-center gap-2 mb-1">
+                          <span className="text-white/30 font-mono text-xs">{step.num}</span>
+                          <span className="text-white font-mono text-sm tracking-wider">{step.title}</span>
                         </div>
-                        <div className="flex gap-1 opacity-30">
-                          <Dot /><Dot /><Dot />
-                        </div>
+                        <p className="text-[11px] text-white/50 font-light leading-relaxed">{step.desc}</p>
                       </div>
-                      <p className="text-xs md:text-sm text-white/50 font-light leading-relaxed pl-9">{step.desc}</p>
                     </div>
                   </MetallicBorder>
                 </motion.div>
-                {i < 2 && <ConnectorLine delay={0.35 + (i + 1) * 0.15} />}
+                <FlowArrow delay={0.5 + i * 0.1} height={20} />
               </div>
             ))}
 
-            <ConnectorLine delay={0.7} />
-
-            {/* Classification cards */}
-            <motion.div
-              className="grid grid-cols-3 gap-2 md:gap-3 w-full max-w-md mb-1"
-              {...fadeUp(0.75)}
-              animate={isInView ? fadeUp(0.75).animate : fadeUp(0.75).initial}
-            >
-              {classifications.map((c, i) => (
-                <motion.div
-                  key={c.label}
-                  className={`border rounded-lg p-3 text-center ${c.color} bg-white/[0.02]`}
-                  {...scaleIn(0.8 + i * 0.1)}
-                  animate={isInView ? scaleIn(0.8 + i * 0.1).animate : scaleIn(0.8 + i * 0.1).initial}
-                >
-                  <span className="text-lg block mb-1">{c.icon}</span>
-                  <span className="text-[10px] font-mono font-semibold block tracking-wider">{c.label}</span>
-                  <span className="text-[9px] font-mono opacity-60 block">{c.sub}</span>
-                </motion.div>
+            {/* Risk Boxes */}
+            <motion.div className="grid grid-cols-3 gap-3 w-full" {...scaleIn(0.7)} animate={isInView ? scaleIn(0.7).animate : scaleIn(0.7).initial}>
+              {classifications.map((c) => (
+                <div key={c.label} className={`border ${c.border} ${c.bg} rounded-lg p-3 flex flex-col items-center justify-center text-center gap-2 relative`}>
+                  <c.icon className={`w-5 h-5 ${c.color}`} strokeWidth={2} />
+                  <div>
+                    <span className={`text-[9px] font-mono font-bold tracking-wider block ${c.color}`}>{c.label}</span>
+                    <span className={`text-[8px] font-mono opacity-80 block ${c.color}`}>{c.sub}</span>
+                  </div>
+                </div>
               ))}
             </motion.div>
+            
+            <div className="grid grid-cols-3 w-full gap-3">
+              <div className="flex justify-center"><FlowArrow delay={0.8} height={20} /></div>
+              <div className="flex justify-center"><FlowArrow delay={0.8} height={20} /></div>
+              <div className="flex justify-center"><FlowArrow delay={0.8} height={20} /></div>
+            </div>
 
-            <ConnectorLine delay={0.95} />
-
-            {/* Steps 04 → 06 */}
-            {steps.slice(3).map((step, i) => (
-              <div key={step.num} className="w-full max-w-md">
-                <motion.div
-                  {...scaleIn(1.0 + i * 0.15)}
-                  animate={isInView ? scaleIn(1.0 + i * 0.15).animate : scaleIn(1.0 + i * 0.15).initial}
-                  className="w-full"
-                >
-                  <MetallicBorder borderRadius="12px">
-                    <div className="w-full border border-white/15 rounded-xl p-5 md:p-6 bg-white/[0.02] backdrop-blur-sm hover:border-white/25 transition-all group">
-                      <div className="flex items-start justify-between mb-2">
-                        <div className="flex items-center gap-3">
-                          <span className="text-lg md:text-xl font-mono text-white/25 font-light">{step.num}</span>
-                          <span className="text-sm md:text-base font-mono text-white font-semibold tracking-wider">{step.title}</span>
+            {/* Steps 4-6 */}
+            {steps2.map((step, i) => (
+              <div key={step.num} className="w-full">
+                <motion.div {...scaleIn(0.9 + i * 0.1)} animate={isInView ? scaleIn(0.9 + i * 0.1).animate : scaleIn(0.9 + i * 0.1).initial} className="w-full">
+                  <MetallicBorder borderRadius="8px" className="w-full block">
+                    <div className="w-full border border-transparent rounded-lg p-5 bg-[#0a0a0a] flex items-start gap-4">
+                      <step.icon className="w-6 h-6 text-white/50 shrink-0 mt-0.5" strokeWidth={1.5} />
+                      <div>
+                        <div className="flex items-center gap-2 mb-1">
+                          <span className="text-white/30 font-mono text-xs">{step.num}</span>
+                          <span className="text-white font-mono text-sm tracking-wider">{step.title}</span>
                         </div>
-                        <div className="flex gap-1 opacity-30">
-                          <Dot /><Dot /><Dot />
-                        </div>
+                        <p className="text-[11px] text-white/50 font-light leading-relaxed">{step.desc}</p>
                       </div>
-                      <p className="text-xs md:text-sm text-white/50 font-light leading-relaxed pl-9">{step.desc}</p>
                     </div>
                   </MetallicBorder>
                 </motion.div>
-                {i < 2 && <ConnectorLine delay={1.0 + (i + 1) * 0.15} />}
+                {i < 2 && <FlowArrow delay={1.0 + i * 0.1} height={20} />}
               </div>
             ))}
           </div>
 
-          {/* ─── RIGHT COLUMN: Intelligence + Outcomes ──────────── */}
-          <div className="space-y-6 hidden lg:block">
-            {/* Operational Intelligence */}
-            <motion.div
-              className="w-full"
-              {...slideRight(0.4)}
-              animate={isInView ? slideRight(0.4).animate : slideRight(0.4).initial}
-            >
+          {/* ─── RIGHT COLUMN ───────────────────────────────────── */}
+          <div className="space-y-6 flex flex-col justify-start mt-8 lg:mt-0">
+            <motion.div className="w-full" {...slideRight(0.3)} animate={isInView ? slideRight(0.3).animate : slideRight(0.3).initial}>
               <MetallicBorder borderRadius="8px" className="w-full block">
-                <div className="border border-transparent bg-white/[0.01] rounded-lg p-4 w-full">
-                  <div className="flex items-center justify-between mb-4">
-                    <span className="text-xs font-mono text-white/60 tracking-wider">OPERATIONAL INTELLIGENCE</span>
-                    <span className="text-white/20 text-[10px]">⊘</span>
+                <div className="border border-transparent bg-[#080808] rounded-lg p-5 w-full">
+                  <span className="text-[11px] font-mono text-white/40 tracking-widest block mb-4">1. OPERATIONAL INTELLIGENCE</span>
+                  <div className="space-y-1.5">
+                    {intelItems.map((item) => (
+                      <div key={item} className="flex items-center gap-2 py-1">
+                        <span className="w-1 h-1 rounded-full bg-white/20" />
+                        <span className="text-[10px] font-mono text-white/60 tracking-wide">{item}</span>
+                      </div>
+                    ))}
                   </div>
-              <div className="space-y-2">
-                {intelItems.map((item, i) => (
-                  <motion.div
-                    key={item}
-                    className="flex items-center gap-3 py-1.5"
-                    {...fadeIn(0.5 + i * 0.06)}
-                    animate={isInView ? fadeIn(0.5 + i * 0.06).animate : fadeIn(0.5 + i * 0.06).initial}
-                  >
-                    <span className="text-white/20 text-[10px]">◈</span>
-                    <span className="text-[11px] font-mono text-white/60 tracking-wider">{item}</span>
-                  </motion.div>
-                ))}
-              </div>
                 </div>
               </MetallicBorder>
             </motion.div>
 
-            {/* Right-side outcome cards */}
             {rightCards.map((card, i) => (
-              <motion.div
-                key={card.title}
-                className="w-full"
-                {...slideRight(0.8 + i * 0.15)}
-                animate={isInView ? slideRight(0.8 + i * 0.15).animate : slideRight(0.8 + i * 0.15).initial}
-              >
+              <motion.div key={card.title} className="w-full" {...slideRight(0.4 + i * 0.1)} animate={isInView ? slideRight(0.4 + i * 0.1).animate : slideRight(0.4 + i * 0.1).initial}>
                 <MetallicBorder borderRadius="8px" className="w-full block">
-                  <div className="border border-transparent bg-white/[0.01] rounded-lg p-4 w-full">
-                    <div className="flex items-center justify-between mb-2">
-                      <span className="text-xs font-mono text-white/80 tracking-wider font-semibold">{card.title}</span>
-                      <span className="text-white/20 text-[10px]">⊘</span>
-                    </div>
-                    <p className="text-[11px] text-white/40 font-light leading-relaxed">{card.desc}</p>
+                  <div className="border border-transparent bg-[#080808] rounded-lg p-4 w-full">
+                    <span className="text-[10px] font-mono text-white/80 tracking-widest block mb-2">{i+2}. {card.title}</span>
+                    <p className="text-[10px] text-white/40 leading-relaxed">{card.desc}</p>
                   </div>
                 </MetallicBorder>
               </motion.div>
@@ -394,119 +280,29 @@ export default function BastionHowItWorks() {
           </div>
         </div>
 
-        {/* ── Mobile: Sources + Continuous + Intelligence (stacked) ── */}
-        <div className="lg:hidden mt-12 space-y-6">
-          {/* Sources */}
-          <motion.div
-            className="w-full"
-            {...fadeUp(1.2)}
-            animate={isInView ? fadeUp(1.2).animate : fadeUp(1.2).initial}
-          >
-            <MetallicBorder borderRadius="8px" className="w-full block">
-              <div className="border border-transparent bg-white/[0.01] rounded-lg p-4 w-full">
-                <span className="text-xs font-mono text-white/60 tracking-wider block mb-3">SOURCES</span>
-            <div className="grid grid-cols-2 gap-2">
-              {sources.map((s) => (
-                <div key={s.label} className="flex items-center gap-2 py-1.5 px-2 border border-white/5 rounded-md">
-                  <span className="text-xs text-white/30">{s.icon}</span>
-                  <span className="text-[10px] font-mono text-white/60">{s.label}</span>
-                </div>
-              ))}
-            </div>
-              </div>
-            </MetallicBorder>
-          </motion.div>
-
-          {/* Continuous */}
-          <motion.div
-            className="w-full"
-            {...fadeUp(1.3)}
-            animate={isInView ? fadeUp(1.3).animate : fadeUp(1.3).initial}
-          >
-            <MetallicBorder borderRadius="8px" className="w-full block">
-              <div className="border border-transparent bg-white/[0.01] rounded-lg p-4 w-full">
-                <span className="text-xs font-mono text-white/60 tracking-wider block mb-3">CONTINUOUS BY DESIGN</span>
-            <div className="grid grid-cols-3 gap-2">
-              {continuousItems.map((c) => (
-                <div key={c.label} className="text-center py-2 border border-white/5 rounded-md">
-                  <span className="text-[10px] font-mono text-white/70 font-semibold block">{c.label}</span>
-                  <span className="text-[9px] font-mono text-white/40 block">{c.sub}</span>
-                </div>
-              ))}
-            </div>
-              </div>
-            </MetallicBorder>
-          </motion.div>
-
-          {/* Operational Intelligence */}
-          <motion.div
-            className="w-full"
-            {...fadeUp(1.4)}
-            animate={isInView ? fadeUp(1.4).animate : fadeUp(1.4).initial}
-          >
-            <MetallicBorder borderRadius="8px" className="w-full block">
-              <div className="border border-transparent bg-white/[0.01] rounded-lg p-4 w-full">
-                <span className="text-xs font-mono text-white/60 tracking-wider block mb-3">OPERATIONAL INTELLIGENCE</span>
-            <div className="grid grid-cols-2 gap-1">
-              {intelItems.map((item) => (
-                <div key={item} className="flex items-center gap-2 py-1">
-                  <span className="text-white/20 text-[8px]">◈</span>
-                  <span className="text-[10px] font-mono text-white/50">{item}</span>
-                </div>
-              ))}
-            </div>
-              </div>
-            </MetallicBorder>
-          </motion.div>
-
-          {/* Outcome cards */}
-          {rightCards.map((card, i) => (
-            <motion.div
-              key={card.title}
-              className="w-full"
-              {...fadeUp(1.5 + i * 0.1)}
-              animate={isInView ? fadeUp(1.5 + i * 0.1).animate : fadeUp(1.5 + i * 0.1).initial}
-            >
-              <MetallicBorder borderRadius="8px" className="w-full block">
-                <div className="border border-transparent bg-white/[0.01] rounded-lg p-4 w-full">
-                  <span className="text-xs font-mono text-white/80 tracking-wider font-semibold block mb-1">{card.title}</span>
-                  <p className="text-[11px] text-white/40 font-light leading-relaxed">{card.desc}</p>
-                </div>
-              </MetallicBorder>
-            </motion.div>
-          ))}
-        </div>
-
-        {/* ── Footer Status Bar ─────────────────────────────────── */}
+        {/* ── Bottom Status Bar ─────────────────────────────────── */}
         <motion.div
-          className="mt-16 md:mt-20 border-t border-white/5 pt-6 flex flex-wrap items-center justify-between gap-4"
-          {...fadeIn(1.5)}
-          animate={isInView ? fadeIn(1.5).animate : fadeIn(1.5).initial}
+          className="mt-20 border-t border-white/10 pt-6 flex flex-wrap items-center justify-between gap-4"
+          {...fadeIn(1.2)}
+          animate={isInView ? fadeIn(1.2).animate : fadeIn(1.2).initial}
         >
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-6">
             <div className="flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-              <span className="text-[10px] font-mono text-white/40">SYSTEM STATUS</span>
+              <span className="text-[10px] font-mono text-white/40">SYSTEM STATUS:</span>
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse ml-1" />
+              <span className="text-[10px] font-mono text-emerald-500">OPERATIONAL</span>
             </div>
-            <div className="flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-emerald-500" />
-              <span className="text-[10px] font-mono text-white/40">OPERATIONAL</span>
-            </div>
+            <span className="text-[10px] font-mono text-white/30 hidden md:block">BASTION ENGINE v2.0</span>
           </div>
-          <span className="text-[10px] font-mono text-white/30">BASTION ENGINE v2.0</span>
-          <div className="hidden md:flex items-center gap-6 text-[10px] font-mono text-white/25">
-            <div className="flex items-center gap-2">
-              <span className="w-8 h-px bg-white/30" />
-              <span>DATA FLOW</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <span className="w-8 h-px border-t border-dashed border-white/30" />
-              <span>INTELLIGENCE FLOW</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <span className="w-8 h-px border-t border-dotted border-white/30" />
-              <span>FEEDBACK LOOP</span>
-            </div>
+
+          <div className="flex items-center gap-2 text-white/50">
+            <ShieldAlert className="w-4 h-4" />
+            <span className="text-[10px] font-mono tracking-widest hidden md:block">BASTION ADAPTIVE ENTERPRISE DEFENSE</span>
+          </div>
+
+          <div className="flex items-center gap-6">
+            <span className="text-[10px] font-mono text-white/30">SCHEMATIC ID: BSTN-ARCH-001</span>
+            <span className="text-[10px] font-mono text-white/30 hidden md:block">DATE: 2024</span>
           </div>
         </motion.div>
 
