@@ -25,7 +25,7 @@ export function MetallicBorder({ children, borderRadius = '24px', className = "r
         className="relative z-10 w-full h-full flex flex-col"
         style={{ 
           borderRadius: `calc(${borderRadius} - 1px)`,
-          background: 'var(--metallic-inner-bg, #050505)'
+          background: 'var(--metallic-inner-bg, transparent)'
         }}
       >
         {children}

@@ -149,12 +149,12 @@ function TrustCard({ item }: { item: typeof trustItems[0] }) {
         <div 
           ref={cardRef}
           onMouseMove={handleMouseMove}
-          className="group relative bg-black rounded-[24px] border border-white/10 overflow-hidden aspect-[3/4] transition-colors hover:border-white/20 flex items-end p-6 md:p-8 spotlight-card auto-spotlight w-full"
+          className="group relative bg-transparent rounded-[24px] border border-white/10 overflow-hidden aspect-[3/4] transition-colors hover:border-white/20 flex items-end p-6 md:p-8 spotlight-card auto-spotlight w-full"
         >
           <div className="!absolute inset-0 z-0 pointer-events-none">
             <Bg />
           </div>
-          <div className="!absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent z-10 pointer-events-none" />
+          <div className="!absolute inset-0 bg-gradient-to-t from-transparent via-transparent to-transparent z-10 pointer-events-none" />
           <span className="relative z-20 text-sm md:text-base font-medium text-[#EAEAEA] group-hover:text-white transition-colors pointer-events-none">
             {item.name}
           </span>
