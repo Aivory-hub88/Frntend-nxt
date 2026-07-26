@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef } from 'react';
+import React, { useRef } from 'react';
 import { motion, useInView } from 'framer-motion';
 import { MetallicBorder } from './MetallicBorder';
 import { 
@@ -147,6 +147,29 @@ const HorizontalFlow = ({ direction = 'right', delay = 0, width = 48 }: { direct
   );
 };
 
+/* ── continuous pulse wrapper ─────────────────────────────────────── */
+const PulseSequence = ({ children, index }: { children: React.ReactNode, index: number }) => {
+  const ref = useRef(null);
+  const inView = useInView(ref, { once: true, margin: '-5% 0px' });
+  
+  return (
+    <motion.div
+      ref={ref}
+      animate={inView ? { scale: [1, 1.025, 1, 1] } : { scale: 1 }}
+      transition={{
+        duration: 4,
+        repeat: Infinity,
+        delay: index * 0.5 + 2, // wait for entry animations to finish
+        times: [0, 0.05, 0.15, 1], // quick pop up, ease down, then wait
+        ease: "easeInOut"
+      }}
+      className="w-full h-full"
+    >
+      {children}
+    </motion.div>
+  );
+};
+
 /* ── main component ───────────────────────────────────────────────── */
 export default function BastionHowItWorks() {
   const sectionRef = useRef(null);
@@ -188,34 +211,38 @@ export default function BastionHowItWorks() {
           <div className="space-y-8 flex flex-col justify-between">
             <motion.div className="w-full relative" {...slideLeft(0.3)} animate={isInView ? slideLeft(0.3).animate : slideLeft(0.3).initial}>
               <HorizontalFlow direction="right" delay={0.4} />
-              <MetallicBorder borderRadius="8px" className="w-full block">
-                <div className="border border-transparent bg-[#080808] rounded-lg p-5 w-full h-full">
-                  <span className="text-[11px] font-mono text-white/40 tracking-widest block mb-4">1. SOURCES</span>
-                  <div className="space-y-2">
-                    {sources.map((s) => (
-                      <div key={s} className="border border-white/10 rounded px-3 py-2 text-[10px] font-mono tracking-wider text-white/70 text-center">
-                        {s}
-                      </div>
-                    ))}
+              <PulseSequence index={0}>
+                <MetallicBorder borderRadius="8px" className="w-full block">
+                  <div className="border border-transparent bg-[#080808] rounded-lg p-5 w-full h-full">
+                    <span className="text-[11px] font-mono text-white/40 tracking-widest block mb-4">1. SOURCES</span>
+                    <div className="space-y-2">
+                      {sources.map((s) => (
+                        <div key={s} className="border border-white/10 rounded px-3 py-2 text-[10px] font-mono tracking-wider text-white/70 text-center">
+                          {s}
+                        </div>
+                      ))}
+                    </div>
                   </div>
-                </div>
-              </MetallicBorder>
+                </MetallicBorder>
+              </PulseSequence>
             </motion.div>
 
             <motion.div className="w-full relative" {...slideLeft(0.4)} animate={isInView ? slideLeft(0.4).animate : slideLeft(0.4).initial}>
               <HorizontalFlow direction="right" delay={0.5} />
-              <MetallicBorder borderRadius="8px" className="w-full block">
-                <div className="border border-transparent bg-[#080808] rounded-lg p-5 w-full h-full">
-                  <span className="text-[11px] font-mono text-white/40 tracking-widest block mb-4">2. CONTINUOUS BY DESIGN</span>
-                  <div className="grid grid-cols-2 gap-2">
-                    {continuousItems.map((c) => (
-                      <div key={c} className="border border-white/10 rounded px-2 py-3 text-center flex items-center justify-center min-h-[60px]">
-                        <span className="text-[9px] font-mono tracking-wider text-white/60 leading-tight">{c}</span>
-                      </div>
-                    ))}
+              <PulseSequence index={4}>
+                <MetallicBorder borderRadius="8px" className="w-full block">
+                  <div className="border border-transparent bg-[#080808] rounded-lg p-5 w-full h-full">
+                    <span className="text-[11px] font-mono text-white/40 tracking-widest block mb-4">2. CONTINUOUS BY DESIGN</span>
+                    <div className="grid grid-cols-2 gap-2">
+                      {continuousItems.map((c) => (
+                        <div key={c} className="border border-white/10 rounded px-2 py-3 text-center flex items-center justify-center min-h-[60px]">
+                          <span className="text-[9px] font-mono tracking-wider text-white/60 leading-tight">{c}</span>
+                        </div>
+                      ))}
+                    </div>
                   </div>
-                </div>
-              </MetallicBorder>
+                </MetallicBorder>
+              </PulseSequence>
             </motion.div>
           </div>
 
@@ -226,34 +253,40 @@ export default function BastionHowItWorks() {
             {steps1.map((step, i) => (
               <div key={step.num} className="w-full">
                 <motion.div {...scaleIn(0.4 + i * 0.1)} animate={isInView ? scaleIn(0.4 + i * 0.1).animate : scaleIn(0.4 + i * 0.1).initial} className="w-full">
-                  <MetallicBorder borderRadius="8px" className="w-full block">
-                    <div className="w-full border border-transparent rounded-lg p-5 bg-[#0a0a0a] flex items-start gap-4">
-                      <step.icon className="w-6 h-6 text-white/50 shrink-0 mt-0.5" strokeWidth={1.5} />
-                      <div>
-                        <div className="flex items-center gap-2 mb-1">
-                          <span className="text-white/30 font-mono text-xs">{step.num}</span>
-                          <span className="text-white font-mono text-sm tracking-wider">{step.title}</span>
+                  <PulseSequence index={i}>
+                    <MetallicBorder borderRadius="8px" className="w-full block">
+                      <div className="w-full border border-transparent rounded-lg p-5 bg-[#0a0a0a] flex items-start gap-4">
+                        <step.icon className="w-6 h-6 text-white/50 shrink-0 mt-0.5" strokeWidth={1.5} />
+                        <div>
+                          <div className="flex items-center gap-2 mb-1">
+                            <span className="text-white/30 font-mono text-xs">{step.num}</span>
+                            <span className="text-white font-mono text-sm tracking-wider">{step.title}</span>
+                          </div>
+                          <p className="text-[11px] text-white/50 font-light leading-relaxed">{step.desc}</p>
                         </div>
-                        <p className="text-[11px] text-white/50 font-light leading-relaxed">{step.desc}</p>
                       </div>
-                    </div>
-                  </MetallicBorder>
+                    </MetallicBorder>
+                  </PulseSequence>
                 </motion.div>
                 <FlowArrow delay={0.5 + i * 0.1} height={20} />
               </div>
             ))}
 
             {/* Risk Boxes */}
-            <motion.div className="grid grid-cols-3 gap-3 w-full" {...scaleIn(0.7)} animate={isInView ? scaleIn(0.7).animate : scaleIn(0.7).initial}>
-              {classifications.map((c) => (
-                <div key={c.label} className={`border ${c.border} ${c.bg} rounded-lg p-3 flex flex-col items-center justify-center text-center gap-2 relative`}>
-                  <c.icon className={`w-5 h-5 ${c.color}`} strokeWidth={2} />
-                  <div>
-                    <span className={`text-[9px] font-mono font-bold tracking-wider block ${c.color}`}>{c.label}</span>
-                    <span className={`text-[8px] font-mono opacity-80 block ${c.color}`}>{c.sub}</span>
-                  </div>
+            <motion.div className="w-full" {...scaleIn(0.7)} animate={isInView ? scaleIn(0.7).animate : scaleIn(0.7).initial}>
+              <PulseSequence index={3}>
+                <div className="grid grid-cols-3 gap-3 w-full">
+                  {classifications.map((c) => (
+                    <div key={c.label} className={`border ${c.border} ${c.bg} rounded-lg p-3 flex flex-col items-center justify-center text-center gap-2 relative`}>
+                      <c.icon className={`w-5 h-5 ${c.color}`} strokeWidth={2} />
+                      <div>
+                        <span className={`text-[9px] font-mono font-bold tracking-wider block ${c.color}`}>{c.label}</span>
+                        <span className={`text-[8px] font-mono opacity-80 block ${c.color}`}>{c.sub}</span>
+                      </div>
+                    </div>
+                  ))}
                 </div>
-              ))}
+              </PulseSequence>
             </motion.div>
             
             <div className="grid grid-cols-3 w-full gap-3">
@@ -266,18 +299,20 @@ export default function BastionHowItWorks() {
             {steps2.map((step, i) => (
               <div key={step.num} className="w-full">
                 <motion.div {...scaleIn(0.9 + i * 0.1)} animate={isInView ? scaleIn(0.9 + i * 0.1).animate : scaleIn(0.9 + i * 0.1).initial} className="w-full">
-                  <MetallicBorder borderRadius="8px" className="w-full block">
-                    <div className="w-full border border-transparent rounded-lg p-5 bg-[#0a0a0a] flex items-start gap-4">
-                      <step.icon className="w-6 h-6 text-white/50 shrink-0 mt-0.5" strokeWidth={1.5} />
-                      <div>
-                        <div className="flex items-center gap-2 mb-1">
-                          <span className="text-white/30 font-mono text-xs">{step.num}</span>
-                          <span className="text-white font-mono text-sm tracking-wider">{step.title}</span>
+                  <PulseSequence index={i + 4}>
+                    <MetallicBorder borderRadius="8px" className="w-full block">
+                      <div className="w-full border border-transparent rounded-lg p-5 bg-[#0a0a0a] flex items-start gap-4">
+                        <step.icon className="w-6 h-6 text-white/50 shrink-0 mt-0.5" strokeWidth={1.5} />
+                        <div>
+                          <div className="flex items-center gap-2 mb-1">
+                            <span className="text-white/30 font-mono text-xs">{step.num}</span>
+                            <span className="text-white font-mono text-sm tracking-wider">{step.title}</span>
+                          </div>
+                          <p className="text-[11px] text-white/50 font-light leading-relaxed">{step.desc}</p>
                         </div>
-                        <p className="text-[11px] text-white/50 font-light leading-relaxed">{step.desc}</p>
                       </div>
-                    </div>
-                  </MetallicBorder>
+                    </MetallicBorder>
+                  </PulseSequence>
                 </motion.div>
                 {i < 2 && <FlowArrow delay={1.0 + i * 0.1} height={20} />}
               </div>
@@ -288,30 +323,34 @@ export default function BastionHowItWorks() {
           <div className="space-y-6 flex flex-col justify-start mt-8 lg:mt-0">
             <motion.div className="w-full relative" {...slideRight(0.3)} animate={isInView ? slideRight(0.3).animate : slideRight(0.3).initial}>
               <HorizontalFlow direction="left" delay={0.4} />
-              <MetallicBorder borderRadius="8px" className="w-full block">
-                <div className="border border-transparent bg-[#080808] rounded-lg p-5 w-full">
-                  <span className="text-[11px] font-mono text-white/40 tracking-widest block mb-4">1. OPERATIONAL INTELLIGENCE</span>
-                  <div className="space-y-1.5">
-                    {intelItems.map((item) => (
-                      <div key={item} className="flex items-center gap-2 py-1">
-                        <span className="w-1 h-1 rounded-full bg-white/20" />
-                        <span className="text-[10px] font-mono text-white/60 tracking-wide">{item}</span>
-                      </div>
-                    ))}
+              <PulseSequence index={0}>
+                <MetallicBorder borderRadius="8px" className="w-full block">
+                  <div className="border border-transparent bg-[#080808] rounded-lg p-5 w-full">
+                    <span className="text-[11px] font-mono text-white/40 tracking-widest block mb-4">1. OPERATIONAL INTELLIGENCE</span>
+                    <div className="space-y-1.5">
+                      {intelItems.map((item) => (
+                        <div key={item} className="flex items-center gap-2 py-1">
+                          <span className="w-1 h-1 rounded-full bg-white/20" />
+                          <span className="text-[10px] font-mono text-white/60 tracking-wide">{item}</span>
+                        </div>
+                      ))}
+                    </div>
                   </div>
-                </div>
-              </MetallicBorder>
+                </MetallicBorder>
+              </PulseSequence>
             </motion.div>
 
             {rightCards.map((card, i) => (
               <motion.div key={card.title} className="w-full relative" {...slideRight(0.4 + i * 0.1)} animate={isInView ? slideRight(0.4 + i * 0.1).animate : slideRight(0.4 + i * 0.1).initial}>
                 <HorizontalFlow direction="left" delay={0.5 + i * 0.1} />
-                <MetallicBorder borderRadius="8px" className="w-full block">
-                  <div className="border border-transparent bg-[#080808] rounded-lg p-4 w-full">
-                    <span className="text-[10px] font-mono text-white/80 tracking-widest block mb-2">{i+2}. {card.title}</span>
-                    <p className="text-[10px] text-white/40 leading-relaxed">{card.desc}</p>
-                  </div>
-                </MetallicBorder>
+                <PulseSequence index={i + 4}>
+                  <MetallicBorder borderRadius="8px" className="w-full block">
+                    <div className="border border-transparent bg-[#080808] rounded-lg p-4 w-full">
+                      <span className="text-[10px] font-mono text-white/80 tracking-widest block mb-2">{i+2}. {card.title}</span>
+                      <p className="text-[10px] text-white/40 leading-relaxed">{card.desc}</p>
+                    </div>
+                  </MetallicBorder>
+                </PulseSequence>
               </motion.div>
             ))}
           </div>
