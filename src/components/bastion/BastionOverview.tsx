@@ -3,6 +3,8 @@
 import { FadeUp, FadeUpChild } from './FadeUp';
 import { ThinkingOrb } from 'thinking-orbs';
 
+import { AnimatedHeadline } from '../ui/AnimatedHeadline';
+
 export default function BastionOverview() {
   return (
     <section className="bg-transparent text-white py-32">
@@ -12,9 +14,11 @@ export default function BastionOverview() {
             
             {/* Heading and Scaled Orb Header */}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6 mb-8">
-              <div role="heading" aria-level={2} className="text-3xl md:text-5xl font-light leading-[1.2] text-[#FFFFFF] tracking-tight max-w-lg">
-                Adaptive defense for modern enterprises.
-              </div>
+              <AnimatedHeadline
+                text="Adaptive defense for modern enterprises."
+                as="div"
+                className="text-3xl md:text-5xl font-light leading-[1.2] text-[#FFFFFF] tracking-tight max-w-lg"
+              />
               <div className="shrink-0 flex items-center justify-center p-6">
                 <div style={{ transform: 'scale(2.2)', transformOrigin: 'center' }}>
                   <ThinkingOrb state="solving" size={64} theme="dark" />

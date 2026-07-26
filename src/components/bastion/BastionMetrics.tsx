@@ -4,6 +4,8 @@ import { FadeUp, FadeUpChild } from './FadeUp';
 import { ThinkingOrb, OrbState } from 'thinking-orbs';
 import { MetallicBorder } from './MetallicBorder';
 
+import { AnimatedHeadline } from '../ui/AnimatedHeadline';
+
 const metrics: { value: string; label: string; state: OrbState }[] = [
   { value: '24/7', label: 'Continuous Monitoring', state: 'listening' },
   { value: 'Adaptive', label: 'Threat Response', state: 'solving' },
@@ -25,9 +27,11 @@ export default function BastionMetrics() {
               <span className="w-2 h-2 rounded-full bg-white animate-pulse" />
               Autonomous Resilience
             </div>
-            <h2 className="text-3xl md:text-5xl lg:text-6xl font-light leading-tight text-white mb-6 tracking-tight">
-              Built for enterprise resilience.
-            </h2>
+            <AnimatedHeadline
+              text="Built for enterprise resilience."
+              as="h2"
+              className="text-3xl md:text-5xl lg:text-6xl font-light leading-tight text-white mb-6 tracking-tight"
+            />
             <div className="space-y-4 max-w-3xl text-lg text-[#B3B3B3] font-light leading-relaxed">
               <p>Modern security is measured by resilience. Not only by prevention.</p>
               <p>Bastion continuously monitors, analyses, and strengthens your defensive posture while maintaining operational continuity.</p>

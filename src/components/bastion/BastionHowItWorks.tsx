@@ -171,6 +171,8 @@ const PulseSequence = ({ children, index }: { children: React.ReactNode, index: 
 };
 
 /* ── main component ───────────────────────────────────────────────── */
+import { AnimatedHeadline } from '../ui/AnimatedHeadline';
+
 export default function BastionHowItWorks() {
   const sectionRef = useRef(null);
   const isInView = useInView(sectionRef, { once: true, margin: '-5% 0px' });
@@ -181,9 +183,11 @@ export default function BastionHowItWorks() {
 
         {/* ── Header ────────────────────────────────────────────── */}
         <motion.div className="mb-16 md:mb-20 text-center" {...fadeUp(0)} animate={isInView ? fadeUp(0).animate : fadeUp(0).initial}>
-          <h2 className="text-3xl md:text-5xl lg:text-5xl font-manrope font-light leading-tight text-white mb-4 tracking-tight uppercase">
-            HOW BASTION WORKS
-          </h2>
+          <AnimatedHeadline
+            text="HOW BASTION WORKS"
+            as="h2"
+            className="text-3xl md:text-5xl lg:text-5xl font-manrope font-light leading-tight text-white mb-4 tracking-tight uppercase"
+          />
           <p className="text-sm md:text-sm text-white/50 font-manrope font-light tracking-widest uppercase">
             ADAPTIVE DEFENSE THAT EVOLVES WITH EVERY INTERACTION.
           </p>

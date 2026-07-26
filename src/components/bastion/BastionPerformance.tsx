@@ -52,15 +52,19 @@ const categoryMetrics = [
   },
 ];
 
+import { AnimatedHeadline } from '../ui/AnimatedHeadline';
+
 export default function BastionPerformance() {
   return (
     <section className="bg-transparent text-white py-32 overflow-hidden relative z-10">
       <div className="max-w-7xl mx-auto px-6 md:px-12">
         {/* Header */}
         <FadeUp className="mb-16 md:mb-24">
-          <h2 className="text-3xl md:text-5xl lg:text-6xl font-light leading-tight text-white mb-6 tracking-tight">
-            Performance Metrics.
-          </h2>
+          <AnimatedHeadline
+            text="Performance Metrics."
+            as="h2"
+            className="text-3xl md:text-5xl lg:text-6xl font-light leading-tight text-white mb-6 tracking-tight"
+          />
           <div className="max-w-3xl text-lg md:text-xl text-[#B3B3B3] font-light leading-relaxed">
             <p>Proven performance at enterprise scale.</p>
           </div>
