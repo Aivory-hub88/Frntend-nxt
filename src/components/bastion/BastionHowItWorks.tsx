@@ -153,7 +153,7 @@ export default function BastionHowItWorks() {
   const isInView = useInView(sectionRef, { once: true, margin: '-5% 0px' });
 
   return (
-    <section ref={sectionRef} className="bg-black text-white py-24 md:py-32 overflow-hidden selection:bg-white/20">
+    <section ref={sectionRef} className="bg-transparent text-white py-24 md:py-32 overflow-hidden selection:bg-white/20">
       <div className="max-w-7xl mx-auto px-6 md:px-12">
 
         {/* ── Header ────────────────────────────────────────────── */}
