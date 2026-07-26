@@ -9,8 +9,8 @@ interface MetallicBorderProps {
 export function MetallicBorder({ children, borderRadius = '24px', className = "relative w-full h-full flex group" }: MetallicBorderProps) {
   return (
     <div 
-      className={`relative ${className}`} 
-      style={{ borderRadius, background: 'transparent' }}
+      className={`relative flex ${className}`} 
+      style={{ borderRadius, padding: '1px', background: 'transparent' }}
     >
       {/* Animated Border Container with Mask */}
       <div
