@@ -49,7 +49,9 @@ export default function BastionMetrics() {
                   </div>
                   
                   <div className="flex-1 flex items-center justify-center py-4">
-                    <ThinkingOrb state={metric.state} size={140} theme="dark" />
+                    <div style={{ transform: 'scale(2.2)', transformOrigin: 'center' }}>
+                      <ThinkingOrb state={metric.state} size={64} theme="dark" />
+                    </div>
                   </div>
                   
                   <div className="mt-auto flex flex-col w-full">
