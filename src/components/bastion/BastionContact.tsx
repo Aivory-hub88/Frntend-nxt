@@ -39,13 +39,12 @@ export default function BastionContact() {
           {/* Left Column - Large Text */}
           <div className="flex flex-col justify-start">
             <AnimatedHeadline
-              text="Request a Private Architecture Review"
+              text="Private Architecture Review"
               as="h2"
               className="text-4xl md:text-6xl lg:text-[4.5rem] font-light leading-[1.05] tracking-tight text-[#FFFFFF] mb-6"
             />
             <div className="space-y-4 text-lg md:text-xl text-[#B3B3B3] font-light leading-relaxed">
-              <p>Share your current challenges around detection, response, or infrastructure resilience.</p>
-              <p>We’ll explore how Bastion can help you stay ahead of evolving threats.</p>
+              <p>Share your current challenges. We’ll assess how Bastion can strengthen your defensive posture.</p>
             </div>
           </div>
 
