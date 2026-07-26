@@ -81,8 +81,8 @@ const SvgPolicy = () => (
 );
 
 const trustItems = [
-  { name: 'ISO 27001*', bg: SvgIso },
-  { name: 'SOC 2*', bg: SvgSoc },
+  { name: 'ISO 27001 ready', bg: SvgIso },
+  { name: 'SOC 2 Ready', bg: SvgSoc },
   { name: 'Zero Trust Architecture', bg: SvgZeroTrust },
   { name: 'Audit Logging', bg: SvgAudit },
   { name: 'Encrypted Communications', bg: SvgCrypto },
