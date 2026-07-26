@@ -10,7 +10,7 @@
       }
 
       .st1 {
-        font-family: Sk-Modernist-Regular, Sk-Modernist;
+        font-family: Sk-Modernist-Regular, Sk-Modernist, system-ui, -apple-system, sans-serif;
         font-size: 367.4px;
       }
 
