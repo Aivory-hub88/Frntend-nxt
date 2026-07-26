@@ -56,13 +56,25 @@ const SvgAudit = () => (
 
 const SvgEye = () => (
   <svg viewBox="0 0 100 120" className="w-full h-full absolute inset-0 z-0">
-    {/* Outer Eye Shape */}
-    <path d="M 5 60 Q 50 15 95 60 Q 50 105 5 60 Z" className={s} />
-    <path d="M 15 60 Q 50 25 85 60 Q 50 95 15 60 Z" className={s} strokeDasharray="4 6" />
-    {/* Iris */}
-    <circle cx="50" cy="60" r="14" className={s} />
-    {/* Pupil */}
-    <circle cx="50" cy="60" r="4" className={s} fill="currentColor" />
+    <style dangerouslySetInnerHTML={{ __html: `
+      @keyframes blink {
+        0%, 93%, 97%, 100% { transform: scaleY(1); }
+        95% { transform: scaleY(0.1); }
+      }
+      .eye-group {
+        transform-origin: 50px 60px;
+        animation: blink 5s ease-in-out infinite;
+      }
+    `}} />
+    <g className="eye-group">
+      {/* Outer Eye Shape */}
+      <path d="M 5 60 Q 50 15 95 60 Q 50 105 5 60 Z" className={s} />
+      <path d="M 15 60 Q 50 25 85 60 Q 50 95 15 60 Z" className={s} strokeDasharray="4 6" />
+      {/* Iris */}
+      <circle cx="50" cy="60" r="14" className={s} />
+      {/* Pupil */}
+      <circle cx="50" cy="60" r="4" className={s} fill="currentColor" />
+    </g>
     {/* Decorative Lines */}
     <line x1="50" y1="-20" x2="50" y2="140" className={s} strokeDasharray="2 4" />
     <line x1="-20" y1="60" x2="120" y2="60" className={s} strokeDasharray="2 4" />
