@@ -157,11 +157,11 @@ export default function BastionHowItWorks() {
       <div className="max-w-7xl mx-auto px-6 md:px-12">
 
         {/* ── Header ────────────────────────────────────────────── */}
-        <motion.div className="mb-16 md:mb-20" {...fadeUp(0)} animate={isInView ? fadeUp(0).animate : fadeUp(0).initial}>
-          <h2 className="text-3xl md:text-5xl lg:text-5xl font-medium leading-tight text-white mb-4 tracking-tight uppercase">
+        <motion.div className="mb-16 md:mb-20 text-center" {...fadeUp(0)} animate={isInView ? fadeUp(0).animate : fadeUp(0).initial}>
+          <h2 className="text-3xl md:text-5xl lg:text-5xl font-manrope font-light leading-tight text-white mb-4 tracking-tight uppercase">
             HOW BASTION WORKS
           </h2>
-          <p className="text-sm md:text-sm text-white/50 font-mono tracking-widest uppercase">
+          <p className="text-sm md:text-sm text-white/50 font-manrope font-light tracking-widest uppercase">
             ADAPTIVE DEFENSE THAT EVOLVES WITH EVERY INTERACTION.
           </p>
         </motion.div>
