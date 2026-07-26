@@ -173,7 +173,7 @@ export default function BastionEnterpriseTrust() {
             Trust every deployment.
           </h2>
           <div className="max-w-3xl text-lg md:text-xl text-[#B3B3B3] font-light leading-relaxed">
-            <p>Security should accelerate innovation, not slow it down. Bastion enables organisations to deploy, operate, and scale digital infrastructure with confidence through continuous protection, adaptive defense, and enterprise-grade resilience.</p>
+            <p>Security should accelerate innovation, not slow it down. With Bastion, teams deploy, operate, and scale knowing protection, visibility, and control stay intact.</p>
           </div>
         </FadeUp>
 
