@@ -62,7 +62,7 @@ export default function BastionPerformance() {
             Performance Metrics.
           </h2>
           <div className="max-w-3xl text-lg md:text-xl text-[#B3B3B3] font-light leading-relaxed">
-            <p>Measured performance that matches enterprise expectations.</p>
+            <p>Proven performance at enterprise scale.</p>
           </div>
         </FadeUp>
 
