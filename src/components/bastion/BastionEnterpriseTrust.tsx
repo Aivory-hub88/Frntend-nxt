@@ -54,14 +54,18 @@ const SvgAudit = () => (
   </svg>
 );
 
-const SvgCrypto = () => (
+const SvgEye = () => (
   <svg viewBox="0 0 100 120" className="w-full h-full absolute inset-0 z-0">
-    <path d="M-20 60 Q 25 0 50 60 T 120 60" className={s} />
-    <path d="M-20 40 Q 25 -20 50 40 T 120 40" className={s} strokeDasharray="4 6" />
-    <path d="M-20 80 Q 25 20 50 80 T 120 80" className={s} strokeDasharray="4 6" />
-    <circle cx="50" cy="60" r="15" className={s} />
-    <circle cx="50" cy="60" r="5" className={s} />
-    <line x1="-20" y1="60" x2="120" y2="60" className={s} strokeDasharray="2 2" />
+    {/* Outer Eye Shape */}
+    <path d="M 5 60 Q 50 15 95 60 Q 50 105 5 60 Z" className={s} />
+    <path d="M 15 60 Q 50 25 85 60 Q 50 95 15 60 Z" className={s} strokeDasharray="4 6" />
+    {/* Iris */}
+    <circle cx="50" cy="60" r="14" className={s} />
+    {/* Pupil */}
+    <circle cx="50" cy="60" r="4" className={s} fill="currentColor" />
+    {/* Decorative Lines */}
+    <line x1="50" y1="-20" x2="50" y2="140" className={s} strokeDasharray="2 4" />
+    <line x1="-20" y1="60" x2="120" y2="60" className={s} strokeDasharray="2 4" />
   </svg>
 );
 
@@ -85,7 +89,7 @@ const trustItems = [
   { name: 'SOC 2 Ready', bg: SvgSoc },
   { name: 'Zero Trust Architecture', bg: SvgZeroTrust },
   { name: 'Audit Logging', bg: SvgAudit },
-  { name: 'Encrypted Communications', bg: SvgCrypto },
+  { name: 'Encrypted Communications', bg: SvgEye },
   { name: 'Policy Governance', bg: SvgPolicy }
 ];
 
