@@ -2,7 +2,13 @@
 
 import { useState, useEffect, useRef, MouseEvent } from 'react';
 import { SpotlightButton } from '@/components/ui/SpotlightButton';
-import { DiagnosticAnimation, BlueprintAnimation, RoadmapAnimation, ConsoleAnimation, WorkflowAnimation } from './InteractiveShowcase';
+import { WorkflowAnimation } from './InteractiveShowcase';
+import {
+  DiagnosticAnimation,
+  BlueprintAnimation,
+  RoadmapAnimation,
+  ConsoleAnimation,
+} from './OperationalFrameworkScenes';
 import dynamic from 'next/dynamic';
 
 const LabFlaskCanvas = dynamic(
