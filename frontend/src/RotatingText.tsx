@@ -3,14 +3,12 @@
 import { useEffect, useRef, useState } from 'react';
 
 const messages = [
-  'For your business operation.',
-  'Start with clarity.',
-  'Discover where AI creates measurable value.',
-  'Know what to build before you build anything.',
+  'Start with clarity.<br>End with a system that runs.',
+  'Know what to build.<br>Before you build anything.',
+  'Discover where AI creates value.',
   'Turn AI ambition into execution.',
-  'Transform operations with confidence.',
-  'Build intelligence that delivers business outcomes.',
-  'Transforming business complexity into operational clarity.',
+  'From opportunity to operation.',
+  'AI made practical.<br>Built for real business outcomes.',
 ];
 
 export default function RotatingText() {

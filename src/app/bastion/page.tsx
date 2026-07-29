@@ -1,3 +1,5 @@
+import type { Metadata } from 'next';
+import { headers } from 'next/headers';
 import Navbar from '@/components/home/Navbar';
 import BastionVisualHero from '@/components/bastion/BastionVisualHero';
 import BastionHero from '@/components/bastion/BastionHero';
@@ -11,17 +13,26 @@ import BastionClosing from '@/components/bastion/BastionClosing';
 import BastionContact from '@/components/bastion/BastionContact';
 import Footer from '@/components/Footer';
 import BastionBackground from '@/components/bastion/BastionBackground';
-import { Metadata } from 'next';
+import { JsonLd, buildBastionGraph, siteUrlFromHeaders } from '@/lib/seo';
 
 export const metadata: Metadata = {
   title: 'Bastion | Autonomous Infrastructure Defense | Aivory',
   description: 'Bastion is an AI-native security operating layer that continuously observes infrastructure behavior, understands evolving threats, and autonomously coordinates defensive actions.',
+  alternates: { canonical: '/bastion' },
+  openGraph: {
+    title: 'Bastion | Autonomous Infrastructure Defense | Aivory',
+    description: 'Adaptive defense for modern enterprises through AI-powered detection, continuous monitoring, and coordinated response.',
+    url: '/bastion',
+  },
 };
 
-export default function BastionPage() {
+export default async function BastionPage() {
+  const siteUrl = siteUrlFromHeaders(await headers());
+
   return (
     <main className="relative bg-black min-h-screen text-white font-manrope selection:bg-[#165444] selection:text-white">
-      
+      <JsonLd data={buildBastionGraph(siteUrl)} />
+
       {/* Global Ambient Background Gradient Wash (Fixed across ENTIRE page in #165444 emerald teal) */}
       <BastionBackground mode="gradient-only" className="fixed inset-0 z-0 pointer-events-none overflow-hidden" />
 
@@ -46,7 +57,6 @@ export default function BastionPage() {
         <BastionContact />
         <Footer />
       </div>
-
     </main>
   );
 }

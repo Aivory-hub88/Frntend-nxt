@@ -27,7 +27,7 @@ export default function ProductPage() {
         subtitle="From diagnostic to deployment — everything you need to integrate AI into your business operations."
       />
 
-      {/* Grid Showcase (Diagnostic, Blueprint, Roadmap, Console, Workflows) */}
+      {/* Sticky Operational Framework showcase */}
       <InteractiveGridShowcase />
 
       {/* Spotlight Hover Utility Grid (Agents, Templates, Connectors, Telemetry) */}

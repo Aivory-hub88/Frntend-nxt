@@ -1,5 +1,6 @@
 'use client';
 import { useRef, useEffect, ReactNode } from 'react';
+
 interface SpotlightButtonProps {
   href?: string;
   onClick?: () => void;
@@ -10,11 +11,9 @@ interface SpotlightButtonProps {
   iconClassName?: string;
   style?: React.CSSProperties;
   autoplay?: boolean;
-  type?: 'button' | 'submit';
-  disabled?: boolean;
 }
 
-export function SpotlightButton({ href, onClick, children, className = '', icon = true, roundedClass = 'rounded-[24px]', iconClassName = 'w-4 h-4 text-[#a3aa96] shrink-0', style, autoplay = true, type = 'button', disabled = false }: SpotlightButtonProps) {
+export function SpotlightButton({ href, onClick, children, className = '', icon = true, roundedClass = 'rounded-[24px]', iconClassName = 'w-4 h-4 text-[#a3aa96] shrink-0', style, autoplay = true }: SpotlightButtonProps) {
   const btnRef = useRef<HTMLAnchorElement & HTMLButtonElement>(null);
 
   useEffect(() => {
@@ -72,7 +71,7 @@ export function SpotlightButton({ href, onClick, children, className = '', icon 
     };
   }, []);
 
-  const baseClasses = `inline-flex items-center gap-3 text-white no-underline uppercase cursor-pointer transition-all duration-500 min-h-[44px] pointer-events-auto spotlight-card auto-spotlight ${roundedClass} border-none shadow-[0_8px_32px_rgba(0,0,0,0.4)] hover:-translate-y-1 hover:shadow-[0_0_30px_rgba(174,201,157,0.05)] justify-center`;
+  const baseClasses = `inline-flex items-center gap-3 text-white no-underline uppercase cursor-pointer transition-all duration-500 min-h-[44px] pointer-events-auto spotlight-card auto-spotlight ${roundedClass} border-t border-l border-white/10 border-b border-r border-black/20 shadow-[0_8px_32px_rgba(0,0,0,0.4)] hover:-translate-y-1 hover:border-white/10 hover:shadow-[0_0_30px_rgba(174,201,157,0.05)]`;
   const combinedClasses = `${baseClasses} ${className}`;
 
   const defaultStyle = {
@@ -102,24 +101,6 @@ export function SpotlightButton({ href, onClick, children, className = '', icon 
     </svg>
   ) : (icon !== false ? icon : null);
 
-  const getRadius = () => {
-    if (roundedClass.includes('rounded-full')) return '9999px';
-    const match = roundedClass.match(/rounded-\[([^\]]+)\]/);
-    if (match) return match[1];
-    return '24px';
-  };
-
-  const innerContent = (
-    <>
-      {IconEl}
-      <span className="relative z-10 w-auto text-left">{children}</span>
-    </>
-  );
-
-  const widthMatch = className?.match(/\bw-(full|fit|auto|[0-9a-zA-Z%\[\]\-]+)\b/);
-  const widthClass = widthMatch ? widthMatch[0] : '';
-  const wrapperClasses = `relative inline-flex group ${widthClass}`.trim();
-
   if (href) {
     return (
       <a
@@ -128,7 +109,8 @@ export function SpotlightButton({ href, onClick, children, className = '', icon 
         className={combinedClasses}
         style={{ ...defaultStyle, ...style }}
       >
-        {innerContent}
+        {IconEl}
+        <span className="relative z-10 w-auto text-left">{children}</span>
       </a>
     );
   }
@@ -136,13 +118,13 @@ export function SpotlightButton({ href, onClick, children, className = '', icon 
   return (
     <button
       ref={btnRef as any}
-      type={type}
+      type="button"
       onClick={onClick}
-      disabled={disabled}
-      className={`${combinedClasses} disabled:opacity-50 disabled:cursor-not-allowed`}
+      className={combinedClasses}
       style={{ ...defaultStyle, ...style }}
     >
-      {innerContent}
+      {IconEl}
+      <span className="relative z-10 w-auto text-left">{children}</span>
     </button>
   );
 }

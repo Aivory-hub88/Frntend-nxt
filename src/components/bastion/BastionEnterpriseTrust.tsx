@@ -185,14 +185,14 @@ import { AnimatedHeadline } from '../ui/AnimatedHeadline';
 export default function BastionEnterpriseTrust() {
   return (
     <section className="bg-transparent text-white py-32 overflow-hidden">
-      <div className="max-w-[1600px] mx-auto px-6 md:px-12">
+      <div className="max-w-6xl mx-auto px-6 md:px-12">
         <FadeUp className="mb-16 md:mb-24">
           <AnimatedHeadline
             text="Trust every deployment."
             as="h2"
-            className="text-4xl md:text-6xl lg:text-[72px] tracking-tight font-light leading-tight text-[#FFFFFF] max-w-4xl mb-6"
+            className="text-3xl md:text-4xl lg:text-5xl tracking-tight font-light leading-tight text-[#FFFFFF] max-w-4xl mb-6"
           />
-          <div className="max-w-3xl text-lg md:text-xl text-[#B3B3B3] font-light leading-relaxed">
+          <div className="max-w-3xl text-sm md:text-base text-[#B3B3B3] font-light leading-relaxed">
             <p>Security should accelerate innovation, not slow it down. With Bastion, teams deploy, operate, and scale knowing protection, visibility, and control stay intact.</p>
           </div>
         </FadeUp>

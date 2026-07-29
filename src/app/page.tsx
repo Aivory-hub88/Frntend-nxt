@@ -1,3 +1,4 @@
+import { headers } from 'next/headers';
 import Navbar from '@/components/home/Navbar';
 import HeroSection from '@/components/home/HeroSection';
 import AIReadySection from '@/components/home/AIReadySection';
@@ -10,10 +11,14 @@ import Footer from '@/components/Footer';
 import ScrollRevealProvider from '@/components/home/ScrollRevealProvider';
 import { HalftoneWaveWrapper } from '@/components/ui/HalftoneWaveWrapper';
 import { DarkSectionSpotlight } from '@/components/ui/DarkSectionSpotlight';
+import { JsonLd, buildHomePageGraph, siteUrlFromHeaders } from '@/lib/seo';
 
-export default function HomePage() {
+export default async function HomePage() {
+  const siteUrl = siteUrlFromHeaders(await headers());
+
   return (
     <main className="relative">
+      <JsonLd data={buildHomePageGraph(siteUrl)} />
       <ScrollRevealProvider />
       <section style={{ padding: 0 }} className="relative z-[1] bg-black">
         {/* Global seamless background for the ENTIRE page, down to the footer */}
@@ -25,14 +30,14 @@ export default function HomePage() {
 
         <Navbar />
         <HeroSection />
-        
+
         {/* Unscaled content (100% scale to match product page) */}
         <DarkSectionSpotlight className="relative bg-transparent">
           <div className="relative z-10">
             <AIReadySection />
-            
+
             <div className="w-full py-16 md:py-24 px-6 flex flex-col items-center justify-center text-center">
-              <h2 
+              <h2
                 className="text-2xl md:text-3xl lg:text-4xl font-light tracking-tight text-[#B3B3B3] leading-relaxed max-w-3xl"
                 style={{ fontFamily: "'Manrope', sans-serif" }}
               >
@@ -42,25 +47,22 @@ export default function HomePage() {
             </div>
 
             <FeatureCards />
-            
-            {/* Unscaled content */}
+
             <div>
               <StatsSection />
             </div>
 
-            {/* Pricing Section */}
             <div>
               <PricingClientWrapper />
             </div>
 
-            {/* Unscaled content */}
             <div>
               <PrivacySection />
               <PreFooterCTA />
             </div>
           </div>
         </DarkSectionSpotlight>
-        
+
         <Footer />
       </section>
     </main>

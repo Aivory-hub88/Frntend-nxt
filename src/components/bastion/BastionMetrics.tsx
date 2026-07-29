@@ -18,7 +18,7 @@ const metrics: { value: string; label: string; state: OrbState }[] = [
 export default function BastionMetrics() {
   return (
     <section className="bg-transparent text-white py-32 relative z-10">
-      <div className="max-w-7xl mx-auto px-6 md:px-12">
+      <div className="max-w-6xl mx-auto px-6 md:px-12">
         
         {/* Header Section */}
         <FadeUp className="mb-16">
@@ -30,9 +30,9 @@ export default function BastionMetrics() {
             <AnimatedHeadline
               text="Built for enterprise resilience."
               as="h2"
-              className="text-3xl md:text-5xl lg:text-6xl font-light leading-tight text-white mb-6 tracking-tight"
+              className="text-3xl md:text-4xl lg:text-5xl font-light leading-tight text-white mb-6 tracking-tight"
             />
-            <div className="space-y-4 max-w-3xl text-lg text-[#B3B3B3] font-light leading-relaxed">
+            <div className="space-y-4 max-w-3xl text-sm md:text-base text-[#B3B3B3] font-light leading-relaxed">
               <p>Modern security is measured by resilience. Not only by prevention.</p>
               <p>Bastion continuously monitors, analyses, and strengthens your defensive posture while maintaining operational continuity.</p>
             </div>
@@ -47,23 +47,26 @@ export default function BastionMetrics() {
               className="w-full"
             >
               <MetallicBorder borderRadius="16px">
-                <div className="w-full flex flex-col p-6 md:p-8 rounded-2xl bg-white/[0.03] border border-white/10 hover:border-white/25 hover:bg-white/[0.06] transition-all duration-300 backdrop-blur-md group shadow-lg min-h-[420px]">
-                  <div className="text-3xl md:text-4xl font-light text-white mb-6">
+                <div className="w-full flex flex-col p-6 md:p-8 rounded-2xl bg-white/[0.03] border border-white/10 hover:border-white/25 hover:bg-white/[0.06] transition-all duration-300 backdrop-blur-md group shadow-lg min-h-[300px]">
+                  <div className="text-xl md:text-2xl font-light text-white mb-4">
                     {String(index + 1).padStart(2, '0')}
                   </div>
                   
                   <div className="flex-1 flex items-center justify-center py-4">
-                    <div style={{ transform: 'scale(2.2)', transformOrigin: 'center' }}>
-                      <ThinkingOrb state={metric.state} size={64} theme="dark" />
-                    </div>
+                    <ThinkingOrb 
+                      state={metric.state} 
+                      size={64} 
+                      theme="dark" 
+                      style={{ transform: 'scale(1.5)' }} 
+                    />
                   </div>
                   
                   <div className="mt-auto flex flex-col w-full">
-                    <span className="text-2xl md:text-3xl font-light text-white mb-4 tracking-tight">
+                    <span className="text-lg md:text-xl font-light text-white mb-3 tracking-tight">
                       {metric.value}
                     </span>
-                    <div className="w-full h-px bg-white/20 mb-4" />
-                    <span className="text-xs text-[#B3B3B3] uppercase tracking-widest font-mono font-medium">
+                    <div className="w-full h-px bg-white/20 mb-3" />
+                    <span className="text-[10px] md:text-xs text-[#B3B3B3] uppercase tracking-widest font-mono font-medium">
                       {metric.label}
                     </span>
                   </div>

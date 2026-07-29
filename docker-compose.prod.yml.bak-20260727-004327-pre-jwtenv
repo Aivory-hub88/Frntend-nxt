@@ -128,9 +128,6 @@ services:
       - N8N_AS_CODE_URL=http://host.docker.internal:3500
       - N8N_BASE_URL=http://n8n:5678
       - N8N_PUBLIC_URL=https://n8n.aivory.id
-      - JWT_SECRET=${JWT_SECRET}
-      - DATABASE_URL=${DATABASE_URL}
-      - N8N_CREDENTIALS_ENCRYPTION_KEY=${N8N_CREDENTIALS_ENCRYPTION_KEY}
       - N8N_API_KEY=${N8N_API_KEY}
       - N8N_MCP_URL=http://n8n-mcp:3020
       - N8N_MCP_AUTH_TOKEN=${N8N_MCP_AUTH_TOKEN}

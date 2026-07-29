@@ -1,14 +1,12 @@
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
+import { useState } from 'react';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
-import { SpotlightButton } from '@/components/ui/SpotlightButton';
 
 const FORMSUBMIT_ENDPOINT = 'https://formsubmit.co/ajax/sales@aivory.uk';
 
 type SubmitState = 'idle' | 'submitting' | 'success' | 'error';
 
-/* ─── Glass Icons ─── */
 function ShieldIcon({ className = '' }: { className?: string }) {
   return (
     <svg className={className} viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -105,57 +103,31 @@ const services = [
     title: 'Operational Assessment',
     description:
       'Understand how your organisation operates today, identify operational bottlenecks, and uncover the highest-value transformation opportunities.',
-    icon: <ShieldIcon className="w-6 h-6 shrink-0" />,
+    icon: <ShieldIcon className="h-6 w-6 shrink-0" />,
   },
   {
     title: 'Transformation Design',
     description:
       'Design future operating models, intelligent workflows, governance frameworks, and AI deployment strategies tailored to your organisation.',
-    icon: <CpuIcon className="w-6 h-6 shrink-0" />,
+    icon: <CpuIcon className="h-6 w-6 shrink-0" />,
   },
   {
     title: 'Enterprise Implementation',
     description:
       'Deploy governed AI systems, operational workflows, and enterprise integrations with measurable business outcomes.',
-    icon: <LayersIcon className="w-6 h-6 shrink-0" />,
+    icon: <LayersIcon className="h-6 w-6 shrink-0" />,
   },
   {
     title: 'Executive Enablement',
     description:
       'Prepare leadership and operational teams with the knowledge, governance, and frameworks required to manage long-term transformation.',
-    icon: <BriefcaseIcon className="w-6 h-6 shrink-0" />,
+    icon: <BriefcaseIcon className="h-6 w-6 shrink-0" />,
   },
 ];
 
-const ServiceCard = ({ service }: { service: (typeof services)[0] }) => {
-  return (
-    <SpotlightButton
-      icon={false}
-      roundedClass="rounded-[10px]"
-      className="!items-start h-full w-full normal-case p-8 text-left group"
-      style={{
-        textTransform: 'none',
-        backgroundColor: 'rgba(20, 20, 26, 0.3)',
-        borderWidth: '0.5px',
-        borderStyle: 'solid',
-        borderColor: 'rgba(255, 255, 255, 0.035)',
-        boxShadow: 'none',
-      }}
-    >
-      <div className="flex flex-col gap-4 relative z-10 w-full text-left">
-        <div className="flex items-center gap-3">
-          {service.icon}
-          <h3 className="text-xl font-normal text-white group-hover:text-white transition-colors">
-            {service.title}
-          </h3>
-        </div>
-        <p className="text-[#dadada] font-light leading-relaxed text-base">
-          {service.description}
-        </p>
-      </div>
-    </SpotlightButton>
-  );
-};
+const fieldClassName =
+  'border-b border-white/25 bg-transparent py-3 text-white outline-none transition-colors focus:border-white';
+const labelClassName = 'font-mono text-[10px] uppercase tracking-[0.18em] text-white/55';
 
 export default function PreFooterCTA() {
   const { ref, isVisible } = useScrollAnimation();
@@ -181,48 +153,71 @@ export default function PreFooterCTA() {
   };
 
   return (
-    <section id="prefooter-cta" ref={ref} className={`animate-on-scroll ${isVisible ? 'is-visible' : ''} w-full text-white pt-12 pb-24 font-sans`}>
-      <div style={{ zoom: 0.78 }}>
-        <div className="max-w-7xl mx-auto px-6 md:px-12">
-          {/* Header */}
-          <SpotlightButton
-            className="mb-6 pointer-events-auto hover:-translate-y-0 w-fit"
-            style={{
-              borderWidth: '0.5px',
-              borderStyle: 'solid',
-              borderColor: 'rgba(255,255,255,0.1)',
-              width: 'fit-content',
-              cursor: 'default',
-            }}
-            icon={false}
-            roundedClass="rounded-[10px]"
-          >
-            STRATEGIC ENGAGEMENT
-          </SpotlightButton>
-          <h2 className="no-word-split text-3xl md:text-4xl lg:text-5xl font-light tracking-tight leading-[1.2] mb-6" style={{ fontFamily: "'Manrope', sans-serif", fontWeight: 300 }}>
-            Start your transformation.
-          </h2>
-          <div className="text-[#dadada] text-lg md:text-xl font-light mb-14 max-w-4xl space-y-3">
-            <p>Every transformation begins with understanding how your organisation operates.</p>
-            <p>Tell us about your business, your operational challenges, and where you want to go.</p>
-            <p>We'll help identify where AI can create measurable business value.</p>
+    <section
+      id="prefooter-cta"
+      ref={ref}
+      data-prefooter-layout="editorial"
+      className={`animate-on-scroll ${isVisible ? 'is-visible' : ''} relative isolate w-full overflow-hidden border-t border-white/10 py-20 font-sans text-white md:py-28`}
+    >
+      <div className="mx-auto max-w-[1400px] px-6 md:px-12 lg:px-24">
+        <div className="grid gap-10 pb-14 lg:grid-cols-12 lg:pb-20">
+          <div className="lg:col-span-4">
+            <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-white/45">
+              Strategic engagement / 01
+            </p>
           </div>
-
-          {/* Service Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-20">
-            {services.map((service) => (
-              <ServiceCard key={service.title} service={service} />
-            ))}
+          <div className="lg:col-span-7 lg:col-start-6">
+            <h2
+              className="no-word-split text-3xl font-light leading-[1.12] tracking-[-0.03em] md:text-[44px]"
+              style={{ fontFamily: "'Manrope', sans-serif", fontWeight: 300 }}
+            >
+              Start your transformation.
+            </h2>
+            <div className="mt-7 max-w-2xl space-y-3 text-[15px] font-light leading-7 text-white/62 md:text-base">
+              <p>Every transformation begins with understanding how your organisation operates.</p>
+              <p>Tell us about your business, your operational challenges, and where you want to go.</p>
+              <p>We&apos;ll help identify where AI can create measurable business value.</p>
+            </div>
           </div>
+        </div>
 
-          {/* Enterprise Contact Form */}
-          <div className="mt-16 pt-16 border-t border-white/10">
-            <h3 className="text-2xl md:text-3xl font-light text-white mb-8">
-              Strategic Transformation Intake
+        <ol
+          className="border-b border-white/10"
+          data-service-layout="numbered-rows"
+          data-service-icon-count="4"
+        >
+          {services.map((service, index) => (
+            <li
+              key={service.title}
+              className="group grid gap-5 border-t border-white/10 py-8 transition-colors hover:bg-white/[0.018] md:py-10 lg:grid-cols-12 lg:items-start"
+            >
+              <span className="font-mono text-[10px] text-white/35 lg:col-span-1">
+                {String(index + 1).padStart(2, '0')}
+              </span>
+              <div className="text-white/80 lg:col-span-1">{service.icon}</div>
+              <h3 className="text-xl font-light tracking-[-0.015em] text-white/92 md:text-2xl lg:col-span-3">
+                {service.title}
+              </h3>
+              <p className="max-w-2xl text-sm font-light leading-7 text-white/55 lg:col-span-6 lg:col-start-7">
+                {service.description}
+              </p>
+            </li>
+          ))}
+        </ol>
+
+        <div className="grid gap-12 border-b border-white/10 py-16 md:py-20 lg:grid-cols-12">
+          <div className="lg:col-span-4">
+            <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-white/45">
+              Transformation intake / 02
+            </p>
+            <h3 className="mt-5 max-w-sm text-3xl font-light leading-[1.15] tracking-[-0.025em] md:text-[40px]">
+              Tell us where the operation needs to move.
             </h3>
+          </div>
 
+          <div className="lg:col-span-7 lg:col-start-6">
             {status === 'success' ? (
-              <div className="p-8 rounded-xl border border-white/15 bg-white/5 text-lg text-white/90">
+              <div className="border-y border-white/15 py-8 text-lg font-light leading-8 text-white/88">
                 Thank you for reaching out — our strategic transformation team will be in touch shortly.
               </div>
             ) : (
@@ -232,269 +227,131 @@ export default function PreFooterCTA() {
                 <input type="hidden" name="_template" value="table" />
                 <input type="hidden" name="_cc" value="irfan.reichmann@aivory.uk,samuel@aivory.id" />
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-8">
-                  {/* First Name */}
+                <div className="grid grid-cols-1 gap-x-8 gap-y-8 md:grid-cols-2">
                   <div className="flex flex-col gap-2">
-                    <label className="text-[11px] tracking-widest text-white/70 uppercase font-mono">
+                    <label className={labelClassName}>
                       First Name <span className="text-red-500">*</span>
                     </label>
-                    <input
-                      type="text"
-                      name="first_name"
-                      className="bg-transparent border-b border-white/30 focus:border-white outline-none py-2.5 text-white transition-colors"
-                      required
-                    />
+                    <input type="text" name="first_name" className={fieldClassName} required />
                   </div>
 
-                  {/* Last Name */}
                   <div className="flex flex-col gap-2">
-                    <label className="text-[11px] tracking-widest text-white/70 uppercase font-mono">
+                    <label className={labelClassName}>
                       Last Name <span className="text-red-500">*</span>
                     </label>
-                    <input
-                      type="text"
-                      name="last_name"
-                      className="bg-transparent border-b border-white/30 focus:border-white outline-none py-2.5 text-white transition-colors"
-                      required
-                    />
+                    <input type="text" name="last_name" className={fieldClassName} required />
                   </div>
 
-                  {/* Job Title */}
                   <div className="flex flex-col gap-2">
-                    <label className="text-[11px] tracking-widest text-white/70 uppercase font-mono">
+                    <label className={labelClassName}>
                       Job Title <span className="text-red-500">*</span>
                     </label>
-                    <input
-                      type="text"
-                      name="job_title"
-                      className="bg-transparent border-b border-white/30 focus:border-white outline-none py-2.5 text-white transition-colors"
-                      required
-                    />
+                    <input type="text" name="job_title" className={fieldClassName} required />
                   </div>
 
-                  {/* Company / Organisation */}
                   <div className="flex flex-col gap-2">
-                    <label className="text-[11px] tracking-widest text-white/70 uppercase font-mono">
+                    <label className={labelClassName}>
                       Company / Organisation <span className="text-red-500">*</span>
                     </label>
-                    <input
-                      type="text"
-                      name="company_name"
-                      className="bg-transparent border-b border-white/30 focus:border-white outline-none py-2.5 text-white transition-colors"
-                      required
-                    />
+                    <input type="text" name="company_name" className={fieldClassName} required />
                   </div>
 
-                  {/* Business Email */}
                   <div className="flex flex-col gap-2">
-                    <label className="text-[11px] tracking-widest text-white/70 uppercase font-mono">
+                    <label className={labelClassName}>
                       Business Email <span className="text-red-500">*</span>
                     </label>
-                    <input
-                      type="email"
-                      name="business_email"
-                      className="bg-transparent border-b border-white/30 focus:border-white outline-none py-2.5 text-white transition-colors"
-                      required
-                    />
+                    <input type="email" name="business_email" className={fieldClassName} required />
                   </div>
 
-                  {/* Phone Number */}
                   <div className="flex flex-col gap-2">
-                    <label className="text-[11px] tracking-widest text-white/70 uppercase font-mono">
-                      Phone Number
-                    </label>
-                    <input
-                      type="tel"
-                      name="phone_number"
-                      className="bg-transparent border-b border-white/30 focus:border-white outline-none py-2.5 text-white transition-colors"
-                    />
+                    <label className={labelClassName}>Phone Number</label>
+                    <input type="tel" name="phone_number" className={fieldClassName} />
                   </div>
 
-                  {/* Country */}
                   <div className="flex flex-col gap-2">
-                    <label className="text-[11px] tracking-widest text-white/70 uppercase font-mono">
+                    <label className={labelClassName}>
                       Country <span className="text-red-500">*</span>
                     </label>
-                    <select
-                      name="country"
-                      className="bg-transparent border-b border-white/30 focus:border-white outline-none py-2.5 text-white appearance-none transition-colors"
-                      required
-                      defaultValue=""
-                    >
-                      <option value="" disabled className="text-black">
-                        Select...
-                      </option>
-                      <option value="ID" className="text-black">
-                        Indonesia
-                      </option>
-                      <option value="SG" className="text-black">
-                        Singapore
-                      </option>
-                      <option value="US" className="text-black">
-                        United States
-                      </option>
-                      <option value="UK" className="text-black">
-                        United Kingdom
-                      </option>
-                      <option value="OTHER" className="text-black">
-                        Other
-                      </option>
+                    <select name="country" className={`${fieldClassName} appearance-none`} required defaultValue="">
+                      <option value="" disabled className="text-black">Select...</option>
+                      <option value="ID" className="text-black">Indonesia</option>
+                      <option value="SG" className="text-black">Singapore</option>
+                      <option value="US" className="text-black">United States</option>
+                      <option value="UK" className="text-black">United Kingdom</option>
+                      <option value="OTHER" className="text-black">Other</option>
                     </select>
                   </div>
 
-                  {/* Company Size */}
                   <div className="flex flex-col gap-2">
-                    <label className="text-[11px] tracking-widest text-white/70 uppercase font-mono">
+                    <label className={labelClassName}>
                       Company Size <span className="text-red-500">*</span>
                     </label>
-                    <select
-                      name="company_size"
-                      className="bg-transparent border-b border-white/30 focus:border-white outline-none py-2.5 text-white appearance-none transition-colors"
-                      required
-                      defaultValue=""
-                    >
-                      <option value="" disabled className="text-black">
-                        Select...
-                      </option>
-                      <option value="1-10" className="text-black">
-                        1–10
-                      </option>
-                      <option value="11-50" className="text-black">
-                        11–50
-                      </option>
-                      <option value="51-250" className="text-black">
-                        51–250
-                      </option>
-                      <option value="251-1000" className="text-black">
-                        251–1000
-                      </option>
-                      <option value="1000+" className="text-black">
-                        1000+
-                      </option>
+                    <select name="company_size" className={`${fieldClassName} appearance-none`} required defaultValue="">
+                      <option value="" disabled className="text-black">Select...</option>
+                      <option value="1-10" className="text-black">1–10</option>
+                      <option value="11-50" className="text-black">11–50</option>
+                      <option value="51-250" className="text-black">51–250</option>
+                      <option value="251-1000" className="text-black">251–1000</option>
+                      <option value="1000+" className="text-black">1000+</option>
                     </select>
                   </div>
 
-                  {/* Industry */}
                   <div className="flex flex-col gap-2">
-                    <label className="text-[11px] tracking-widest text-white/70 uppercase font-mono">
+                    <label className={labelClassName}>
                       Industry <span className="text-red-500">*</span>
                     </label>
-                    <select
-                      name="industry"
-                      className="bg-transparent border-b border-white/30 focus:border-white outline-none py-2.5 text-white appearance-none transition-colors"
-                      required
-                      defaultValue=""
-                    >
-                      <option value="" disabled className="text-black">
-                        Select...
-                      </option>
-                      <option value="Government" className="text-black">
-                        Government
-                      </option>
-                      <option value="Financial Services" className="text-black">
-                        Financial Services
-                      </option>
-                      <option value="Healthcare" className="text-black">
-                        Healthcare
-                      </option>
-                      <option value="Manufacturing" className="text-black">
-                        Manufacturing
-                      </option>
-                      <option value="Retail" className="text-black">
-                        Retail
-                      </option>
-                      <option value="Logistics" className="text-black">
-                        Logistics
-                      </option>
-                      <option value="Technology" className="text-black">
-                        Technology
-                      </option>
-                      <option value="Education" className="text-black">
-                        Education
-                      </option>
-                      <option value="Other" className="text-black">
-                        Other
-                      </option>
+                    <select name="industry" className={`${fieldClassName} appearance-none`} required defaultValue="">
+                      <option value="" disabled className="text-black">Select...</option>
+                      <option value="Government" className="text-black">Government</option>
+                      <option value="Financial Services" className="text-black">Financial Services</option>
+                      <option value="Healthcare" className="text-black">Healthcare</option>
+                      <option value="Manufacturing" className="text-black">Manufacturing</option>
+                      <option value="Retail" className="text-black">Retail</option>
+                      <option value="Logistics" className="text-black">Logistics</option>
+                      <option value="Technology" className="text-black">Technology</option>
+                      <option value="Education" className="text-black">Education</option>
+                      <option value="Other" className="text-black">Other</option>
                     </select>
                   </div>
 
-                  {/* Primary Objective */}
                   <div className="flex flex-col gap-2">
-                    <label className="text-[11px] tracking-widest text-white/70 uppercase font-mono">
+                    <label className={labelClassName}>
                       Primary Objective <span className="text-red-500">*</span>
                     </label>
-                    <select
-                      name="primary_objective"
-                      className="bg-transparent border-b border-white/30 focus:border-white outline-none py-2.5 text-white appearance-none transition-colors"
-                      required
-                      defaultValue=""
-                    >
-                      <option value="" disabled className="text-black">
-                        Select...
-                      </option>
-                      <option value="Improve Business Operations" className="text-black">
-                        Improve Business Operations
-                      </option>
-                      <option value="Process Automation" className="text-black">
-                        Process Automation
-                      </option>
-                      <option value="AI Strategy" className="text-black">
-                        AI Strategy
-                      </option>
-                      <option value="Enterprise Transformation" className="text-black">
-                        Enterprise Transformation
-                      </option>
-                      <option value="Customer Experience" className="text-black">
-                        Customer Experience
-                      </option>
-                      <option value="Operational Efficiency" className="text-black">
-                        Operational Efficiency
-                      </option>
-                      <option value="Other" className="text-black">
-                        Other
-                      </option>
+                    <select name="primary_objective" className={`${fieldClassName} appearance-none`} required defaultValue="">
+                      <option value="" disabled className="text-black">Select...</option>
+                      <option value="Improve Business Operations" className="text-black">Improve Business Operations</option>
+                      <option value="Process Automation" className="text-black">Process Automation</option>
+                      <option value="AI Strategy" className="text-black">AI Strategy</option>
+                      <option value="Enterprise Transformation" className="text-black">Enterprise Transformation</option>
+                      <option value="Customer Experience" className="text-black">Customer Experience</option>
+                      <option value="Operational Efficiency" className="text-black">Operational Efficiency</option>
+                      <option value="Other" className="text-black">Other</option>
                     </select>
                   </div>
 
-                  {/* Current AI Adoption */}
                   <div className="flex flex-col gap-2 md:col-span-2">
-                    <label className="text-[11px] tracking-widest text-white/70 uppercase font-mono">
+                    <label className={labelClassName}>
                       Current AI Adoption <span className="text-red-500">*</span>
                     </label>
-                    <select
-                      name="current_ai_adoption"
-                      className="bg-transparent border-b border-white/30 focus:border-white outline-none py-2.5 text-white appearance-none transition-colors"
-                      required
-                      defaultValue=""
-                    >
-                      <option value="" disabled className="text-black">
-                        Select...
-                      </option>
-                      <option value="Exploring AI" className="text-black">
-                        Exploring AI
-                      </option>
-                      <option value="Early Adoption" className="text-black">
-                        Early Adoption
-                      </option>
-                      <option value="Scaling AI" className="text-black">
-                        Scaling AI
-                      </option>
-                      <option value="Mature AI Operations" className="text-black">
-                        Mature AI Operations
-                      </option>
+                    <select name="current_ai_adoption" className={`${fieldClassName} appearance-none`} required defaultValue="">
+                      <option value="" disabled className="text-black">Select...</option>
+                      <option value="Exploring AI" className="text-black">Exploring AI</option>
+                      <option value="Early Adoption" className="text-black">Early Adoption</option>
+                      <option value="Scaling AI" className="text-black">Scaling AI</option>
+                      <option value="Mature AI Operations" className="text-black">Mature AI Operations</option>
                     </select>
                   </div>
 
-                  {/* Message */}
                   <div className="flex flex-col gap-2 md:col-span-2">
-                    <label className="text-[11px] tracking-widest text-white/70 uppercase font-mono">
-                      Message <span className="text-white/40">(Optional)</span>
+                    <label className={labelClassName}>
+                      Message <span className="text-white/35">(Optional)</span>
                     </label>
                     <textarea
                       name="message"
                       rows={3}
                       placeholder="Tell us about your organisation, your operational challenges, or what you're looking to achieve."
-                      className="bg-transparent border-b border-white/30 focus:border-white outline-none py-2.5 text-white placeholder:text-white/30 transition-colors"
+                      className={`${fieldClassName} placeholder:text-white/30`}
                     />
                   </div>
                 </div>
@@ -503,20 +360,18 @@ export default function PreFooterCTA() {
                   <p className="text-sm text-red-400">Something went wrong — please try again.</p>
                 )}
 
-                {/* Primary Button & Secondary CTA */}
-                <div className="pt-6 flex flex-col items-start gap-4">
-                  <SpotlightButton
+                <div className="flex flex-col items-start gap-5 pt-6">
+                  <button
                     type="submit"
                     disabled={status === 'submitting'}
-                    roundedClass="rounded-[10px]"
-                    className="text-xs md:text-sm px-8 py-4"
+                    className="inline-flex min-h-[46px] items-center bg-white px-7 text-[11px] font-medium uppercase tracking-[0.14em] text-black transition-colors hover:bg-white/85 disabled:cursor-not-allowed disabled:opacity-55"
                   >
                     {status === 'submitting' ? 'Sending...' : 'Start Conversation'}
-                  </SpotlightButton>
+                  </button>
 
-                  <p className="text-sm md:text-base text-[#dadada] font-light mt-2">
+                  <p className="text-sm font-light text-white/55 md:text-base">
                     Prefer speaking with our team?{' '}
-                    <a href="/contact" className="underline hover:text-white transition-colors font-medium">
+                    <a href="/contact" className="border-b border-white/35 pb-1 text-white/78 transition-colors hover:border-white hover:text-white">
                       Schedule a Discovery Call.
                     </a>
                   </p>

@@ -154,7 +154,7 @@ export default function FeatureCards() {
       <div ref={animRef} className={`animate-on-scroll ${isVisible ? 'is-visible' : ''} w-full pt-24 pb-12 relative overflow-hidden`} id="features" style={{ zIndex: 1 }}>
         <div className="max-w-[1400px] mx-auto px-6 md:px-12 lg:px-24 relative z-[1]">
           <div className="text-center flex flex-col justify-center items-center">
-            <h2 className="text-4xl md:text-5xl font-light tracking-tight mb-16 leading-tight text-white max-w-3xl" style={{ fontFamily: "'Manrope', sans-serif", fontWeight: 300, zoom: 0.8 }}>
+            <h2 className="text-4xl md:text-5xl font-light tracking-tight mb-16 leading-tight text-white max-w-3xl" style={{ fontFamily: "'Manrope', sans-serif", fontWeight: 300 }}>
               Operational clarity.<br />
               Executive <span className="italic" style={{ color: '#e4effd' }}>control.</span>
             </h2>
@@ -162,8 +162,11 @@ export default function FeatureCards() {
 
             {/* Diagnostic Stats Section */}
             <div className="w-full max-w-[850px] mx-auto flex flex-col items-center">
+              <div className="uppercase tracking-[0.2em] text-[#d0d0d4] text-[14px] md:text-[17px] font-semibold mb-3">
+                FROM INSIGHT TO EXECUTION.
+              </div>
               <h3 className="text-base md:text-2xl font-light text-white mb-12" style={{ zoom: 0.95, fontFamily: "'Manrope', sans-serif", fontWeight: 300 }}>
-                Business transformation starts with <br className="hidden md:block" />understanding how the organisation operates.
+                Business transformation starts with understanding how the organisation operates.
               </h3>
 
               <div ref={statsRef} className="flex flex-nowrap justify-center items-stretch relative flex-row w-full mt-4" style={{ zoom: 0.76 }}>

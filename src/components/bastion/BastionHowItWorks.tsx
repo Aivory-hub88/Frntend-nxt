@@ -1,394 +1,275 @@
 'use client';
 
-import React, { useRef } from 'react';
-import { motion, useInView } from 'framer-motion';
-import { MetallicBorder } from './MetallicBorder';
+import React, { useRef, useState, useEffect } from 'react';
+import { motion, useInView, AnimatePresence } from 'framer-motion';
 import { 
-  Globe, Target, Network, Radar, Shield, BrainCircuit, Layers,
-  CheckCircle2, AlertTriangle, XCircle, ChevronDown, ShieldAlert,
-  ChevronLeft, ChevronRight
+  Target, Network, Radar, Shield, BrainCircuit, Layers,
+  CheckCircle2, AlertTriangle, XCircle, Database, Cpu
 } from 'lucide-react';
 
-/* ── data ──────────────────────────────────────────────────────────── */
+/* ── Original Data ─────────────────────────────────────────────────── */
 const steps1 = [
-  {
-    num: '01', title: 'OBSERVE',
-    desc: 'AI-powered monitoring captures and normalizes all interactions in real time.',
-    icon: Target,
-  },
-  {
-    num: '02', title: 'ANALYZE',
-    desc: 'Behavioral analysis and correlation identify patterns, anomalies and emerging threats.',
-    icon: Network,
-  },
-  {
-    num: '03', title: 'CLASSIFY',
-    desc: 'Traffic is classified based on risk scores and threat confidence in real time.',
-    icon: Radar,
-  },
+  { id: 'observe', title: 'OBSERVE', icon: Target },
+  { id: 'analyze', title: 'ANALYZE', icon: Network },
+  { id: 'classify', title: 'CLASSIFY', icon: Radar },
 ];
 
 const steps2 = [
-  {
-    num: '04', title: 'RESPOND',
-    desc: 'Adaptive response engine contains, mitigates and neutralizes threats using progressive challenge without disrupting legitimate users.',
-    icon: Shield,
-  },
-  {
-    num: '05', title: 'LEARN',
-    desc: 'Every interaction is turned into operational intelligence to improve detection and response.',
-    icon: BrainCircuit,
-  },
-  {
-    num: '06', title: 'STRENGTHEN',
-    desc: 'Intelligence drives policy updates, defense hardening and continuous posture improvement.',
-    icon: Layers,
-  },
+  { num: '04', title: 'RESPOND', desc: 'Contains & neutralizes threats.' },
+  { num: '05', title: 'LEARN', desc: 'Operational intelligence.' },
+  { num: '06', title: 'STRENGTHEN', desc: 'Policy updates & posture.' },
 ];
 
 const classifications = [
-  { label: 'LEGITIMATE', sub: 'LOW RISK', icon: CheckCircle2, color: 'text-emerald-400', border: 'border-emerald-500/40', gradient: 'from-emerald-500/15 to-transparent' },
-  { label: 'SUSPICIOUS', sub: 'MEDIUM RISK', icon: AlertTriangle, color: 'text-amber-400', border: 'border-amber-500/40', gradient: 'from-amber-500/15 to-transparent' },
-  { label: 'MALICIOUS', sub: 'HIGH RISK', icon: XCircle, color: 'text-red-400', border: 'border-red-500/40', gradient: 'from-red-500/15 to-transparent' },
+  { label: 'LEGITIMATE', icon: CheckCircle2 },
+  { label: 'SUSPICIOUS', icon: AlertTriangle },
+  { label: 'MALICIOUS', icon: XCircle },
 ];
 
-const sources = [
-  'WEB TRAFFIC', 'API REQUESTS', 'USERS', 'DEVICES', 'SYSTEMS', 'IOT / OT'
+const sources = ['WEB TRAFFIC', 'API REQUESTS', 'USERS', 'DEVICES', 'SYSTEMS', 'IOT / OT'];
+
+/* ── HUD Typwriter Text Data ── */
+const hudData = [
+  { title: "Continuous Observation", desc: "AI-powered monitoring captures and normalizes all interactions across systems in real time." },
+  { title: "Adaptive Engine", desc: "Behavioral analysis and correlation classify traffic based on risk scores and threat confidence." },
+  { title: "Autonomous Defense", desc: "Adaptive response engine neutralizes threats while intelligence drives policy evolution." },
+  { title: "Full System Active", desc: "All layers operating synchronously to provide complete enterprise protection." }
 ];
 
-const continuousItems = [
-  '24/7 MONITORING', 'ADAPTIVE RESPONSE', '100% VISIBILITY',
-  'CONTINUOUS INTELLIGENCE', 'ZERO TRUST ACCESS', 'AUTONOMOUS DEFENSE'
-];
+/* ── Components ── */
+const PathLine = ({ path, active = false }: { path: string, active?: boolean }) => (
+  <>
+    {/* Base faint line */}
+    <path d={path} fill="none" stroke="rgba(255,255,255,0.05)" strokeWidth="1" />
+    {/* Animated dash line */}
+    <motion.path 
+      d={path} fill="none" stroke="rgba(255,255,255,0.8)" strokeWidth="1.5" strokeDasharray="4 8"
+      initial={false}
+      animate={{ opacity: active ? 1 : 0, strokeDashoffset: [24, 0] }}
+      transition={{ opacity: { duration: 0.5 }, strokeDashoffset: { duration: 1, repeat: Infinity, ease: 'linear' } }}
+    />
+  </>
+);
 
-const intelItems = [
-  'Threat Indicators', 'Attack Patterns', 'Behavioural Signatures',
-  'Campaign Intelligence', 'Tactics & Techniques', 'Zero-Day Insight'
-];
-
-const rightCards = [
-  { title: 'POLICY EVOLUTION', desc: 'Policies adapt based on the latest intelligence and risk landscape.' },
-  { title: 'DEFENSE HARDENING', desc: 'Security posture is strengthened across the entire environment continuously.' },
-  { title: 'ENTERPRISE INFRASTRUCTURE', desc: 'Applications, assets and data remain protected and available.' },
-];
-
-/* ── animation helpers ────────────────────────────────────────────── */
-const fadeUp = (delay: number) => ({
-  initial: { opacity: 0, y: 20 },
-  animate: { opacity: 1, y: 0 },
-  transition: { duration: 0.5, delay, ease: 'easeOut' },
-});
-
-const fadeIn = (delay: number) => ({
-  initial: { opacity: 0 },
-  animate: { opacity: 1 },
-  transition: { duration: 0.5, delay, ease: 'easeOut' },
-});
-
-const scaleIn = (delay: number) => ({
-  initial: { opacity: 0, scale: 0.9 },
-  animate: { opacity: 1, scale: 1 },
-  transition: { duration: 0.5, delay, ease: 'easeOut' },
-});
-
-const slideLeft = (delay: number) => ({
-  initial: { opacity: 0, x: -20 },
-  animate: { opacity: 1, x: 0 },
-  transition: { duration: 0.5, delay, ease: 'easeOut' },
-});
-
-const slideRight = (delay: number) => ({
-  initial: { opacity: 0, x: 20 },
-  animate: { opacity: 1, x: 0 },
-  transition: { duration: 0.5, delay, ease: 'easeOut' },
-});
-
-/* ── animated connector lines ─────────────────────────────────────── */
-const FlowArrow = ({ delay = 0, height = 24 }: { delay?: number, height?: number }) => {
-  const ref = useRef(null);
-  const inView = useInView(ref, { once: true, margin: '-10% 0px' });
-  return (
-    <motion.div ref={ref} className="flex flex-col items-center py-1 overflow-hidden"
-      initial={{ opacity: 0 }} animate={inView ? { opacity: 1 } : {}} transition={{ duration: 0.3, delay }}>
-      <svg width="2" height={height} className="overflow-visible">
-        <motion.line 
-          x1="1" y1="0" x2="1" y2={height} 
-          stroke="rgba(255,255,255,0.3)" strokeWidth="1" strokeDasharray="3 3"
-          initial={{ strokeDashoffset: 6 }}
-          animate={{ strokeDashoffset: 0 }}
-          transition={{ duration: 0.6, repeat: Infinity, ease: 'linear' }}
-        />
-      </svg>
-      <ChevronDown className="w-4 h-4 text-white/30 -mt-1.5" />
-    </motion.div>
-  );
-};
-
-const HorizontalFlow = ({ direction = 'right', delay = 0, width = 48 }: { direction?: 'left'|'right', delay?: number, width?: number }) => {
-  const ref = useRef(null);
-  const inView = useInView(ref, { once: true, margin: '-10% 0px' });
-  
-  return (
-    <motion.div ref={ref} className={`absolute top-1/2 -translate-y-1/2 flex items-center z-0 hidden lg:flex ${direction === 'right' ? '-right-12' : '-left-12'}`}
-      style={{ width: `${width}px` }}
-      initial={{ opacity: 0 }} animate={inView ? { opacity: 1 } : {}} transition={{ duration: 0.3, delay }}>
-      {direction === 'left' && <ChevronLeft className="w-4 h-4 text-white/30 -mr-1 z-10 shrink-0" />}
-      <svg width="100%" height="2" className="overflow-visible grow">
-        <motion.line 
-          x1="0" y1="1" x2="100%" y2="1" 
-          stroke="rgba(255,255,255,0.3)" strokeWidth="1" strokeDasharray="3 3"
-          initial={{ strokeDashoffset: direction === 'right' ? 6 : -6 }}
-          animate={{ strokeDashoffset: 0 }}
-          transition={{ duration: 0.6, repeat: Infinity, ease: 'linear' }}
-        />
-      </svg>
-      {direction === 'right' && <ChevronRight className="w-4 h-4 text-white/30 -ml-1 z-10 shrink-0" />}
-    </motion.div>
-  );
-};
-
-/* ── continuous pulse wrapper ─────────────────────────────────────── */
-const PulseSequence = ({ children, index }: { children: React.ReactNode, index: number }) => {
-  const ref = useRef(null);
-  const inView = useInView(ref, { once: true, margin: '-5% 0px' });
-  
-  return (
-    <motion.div
-      ref={ref}
-      animate={inView ? { scale: [1, 1.025, 1, 1] } : { scale: 1 }}
-      transition={{
-        duration: 4,
-        repeat: Infinity,
-        delay: index * 0.5 + 2, // wait for entry animations to finish
-        times: [0, 0.05, 0.15, 1], // quick pop up, ease down, then wait
-        ease: "easeInOut"
-      }}
-      className="w-full h-full"
-    >
-      {children}
-    </motion.div>
-  );
-};
-
-/* ── main component ───────────────────────────────────────────────── */
-import { AnimatedHeadline } from '../ui/AnimatedHeadline';
-
+/* ── Main Component ── */
 export default function BastionHowItWorks() {
-  const sectionRef = useRef(null);
-  const isInView = useInView(sectionRef, { once: true, margin: '-5% 0px' });
+  const [stage, setStage] = useState(0);
+  const containerRef = useRef(null);
+  const isInView = useInView(containerRef, { once: true, margin: '-20% 0px' });
+
+  useEffect(() => {
+    if (isInView) {
+      const interval = setInterval(() => {
+        setStage(s => (s + 1) % 4);
+      }, 5000);
+      return () => clearInterval(interval);
+    }
+  }, [isInView]);
+
+  // Stage Boolean Helpers
+  const s0 = stage === 0 || stage === 3;
+  const s1 = stage === 1 || stage === 3;
+  const s2 = stage === 2 || stage === 3;
 
   return (
-    <section ref={sectionRef} className="bg-transparent text-white py-24 md:py-32 overflow-hidden selection:bg-white/20">
-      <div className="max-w-7xl mx-auto px-6 md:px-12">
+    <section ref={containerRef} className="relative bg-transparent text-white py-32 overflow-hidden flex flex-col items-center">
+      
+      {/* ── Fixed Typography ── */}
+      <div className="z-50 text-center w-full px-6 mb-12">
+        <h2 className="text-3xl md:text-5xl font-manrope font-light uppercase tracking-widest mb-4">HOW BASTION WORKS</h2>
+        <p className="text-sm font-mono text-white/50 tracking-widest uppercase">Adaptive Defense That Evolves</p>
+      </div>
 
-        {/* ── Header ────────────────────────────────────────────── */}
-        <motion.div className="mb-16 md:mb-20 text-center" {...fadeUp(0)} animate={isInView ? fadeUp(0).animate : fadeUp(0).initial}>
-          <AnimatedHeadline
-            text="HOW BASTION WORKS"
-            as="h2"
-            className="text-3xl md:text-5xl lg:text-5xl font-manrope font-light leading-tight text-white mb-4 tracking-tight uppercase"
-          />
-          <p className="text-sm md:text-sm text-white/50 font-manrope font-light tracking-widest uppercase">
-            ADAPTIVE DEFENSE THAT EVOLVES WITH EVERY INTERACTION.
-          </p>
-        </motion.div>
+      <div className="w-full flex flex-col items-center md:scale-[0.8] md:origin-top md:-mb-[160px]">
+        {/* ── Fixed HUD (Screen Space) ── */}
+        <div className="z-50 w-full max-w-2xl px-6 mb-8 pointer-events-none">
+          <div className="relative border border-white/20 bg-white/5 backdrop-blur-md p-4 flex flex-col items-center text-center">
+            {/* Decorative HUD corners */}
+            <div className="absolute top-0 left-0 w-2 h-2 border-t border-l border-white/60" />
+            <div className="absolute top-0 right-0 w-2 h-2 border-t border-r border-white/60" />
+            <div className="absolute bottom-0 left-0 w-2 h-2 border-b border-l border-white/60" />
+            <div className="absolute bottom-0 right-0 w-2 h-2 border-b border-r border-white/60" />
+            
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={stage}
+                initial={{ opacity: 0, y: 5 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -5 }}
+                transition={{ duration: 0.3 }}
+              >
+                <div className="flex items-center justify-center gap-3 mb-2">
+                  <span className="px-2 py-0.5 border border-white/30 text-white/80 font-mono text-[10px] uppercase">
+                    STAGE 0{stage === 3 ? '1-03' : stage + 1}
+                  </span>
+                  <h3 className="text-lg font-manrope font-medium text-white tracking-wider uppercase">{hudData[stage].title}</h3>
+                </div>
+                <p className="text-xs font-mono text-white/60 leading-relaxed max-w-lg mx-auto">{hudData[stage].desc}</p>
+              </motion.div>
+            </AnimatePresence>
+          </div>
+        </div>
 
-        {/* ── Internet Top Center ───────────────────────────────── */}
-        <div className="flex justify-center mb-8">
-          <motion.div className="flex flex-col items-center" {...fadeUp(0.1)} animate={isInView ? fadeUp(0.1).animate : fadeUp(0.1).initial}>
-            <div className="flex items-center gap-2 text-white/50 mb-2">
-              <Globe className="w-5 h-5" />
-              <span className="text-xs font-mono tracking-widest">INTERNET</span>
+        {/* ── 2D Schematic Viewport (Desktop) ── */}
+        <div className="relative w-full max-w-[1000px] h-[700px] hidden md:block mt-8 font-mono">
+          
+          {/* SVG Connections */}
+          <svg className="absolute inset-0 w-full h-full pointer-events-none z-0">
+             {/* Source -> Engine */}
+             <PathLine path="M 150 500 C 150 440, 300 440, 300 380" active={s0} />
+             <PathLine path="M 200 500 C 200 440, 350 440, 350 380" active={s0} />
+             <PathLine path="M 250 500 C 250 440, 400 440, 400 380" active={s0} />
+             
+             {/* Engine -> Classifications */}
+             <PathLine path="M 600 380 C 600 440, 720 440, 720 500" active={s1} />
+             <PathLine path="M 650 380 C 650 440, 770 440, 770 500" active={s1} />
+             <PathLine path="M 700 380 C 700 440, 820 440, 820 500" active={s1} />
+
+             {/* Engine -> Outcomes */}
+             <PathLine path="M 450 260 L 450 160" active={s2} />
+             <PathLine path="M 500 260 L 500 160" active={s2} />
+             <PathLine path="M 550 260 L 550 160" active={s2} />
+          </svg>
+
+          {/* 1. SOURCES (Bottom Left) */}
+          <motion.div 
+            className={`absolute left-[50px] top-[500px] w-[300px] border p-5 transition-all duration-500 z-10 ${s0 ? 'border-white/60 bg-white/5 backdrop-blur-md shadow-[0_0_20px_rgba(255,255,255,0.05)]' : 'border-white/10 bg-transparent'}`}
+            initial={{ opacity: 0 }} animate={{ opacity: 1 }}
+          >
+            <div className="flex items-center gap-2 border-b border-white/20 pb-2 mb-4">
+              <Database className={`w-4 h-4 ${s0 ? 'text-white' : 'text-white/40'}`} />
+              <h4 className={`text-[11px] tracking-widest ${s0 ? 'text-white' : 'text-white/40'}`}>DATA SOURCES</h4>
             </div>
-            <FlowArrow delay={0.2} height={16} />
-            <div className="border border-white/20 rounded px-6 py-2 mt-2">
-              <span className="text-xs font-mono text-white/80 tracking-widest">INCOMING TRAFFIC</span>
+            <div className="grid grid-cols-2 gap-3">
+              {sources.map((src, i) => (
+                <div key={i} className={`border p-2 text-[10px] text-center transition-colors ${s0 ? 'border-white/40 text-white/90' : 'border-white/10 text-white/30'}`}>
+                  {src}
+                </div>
+              ))}
             </div>
-            <FlowArrow delay={0.3} height={24} />
+          </motion.div>
+
+          {/* 2. BASTION ENGINE (Middle Center) */}
+          <motion.div 
+            className={`absolute left-[250px] top-[260px] w-[500px] h-[120px] border transition-all duration-500 z-10 flex flex-col justify-center ${s1||s0 ? 'border-white/60 bg-white/5 backdrop-blur-md shadow-[0_0_30px_rgba(255,255,255,0.05)]' : 'border-white/10 bg-transparent'}`}
+            initial={{ opacity: 0 }} animate={{ opacity: 1 }}
+          >
+            <div className={`absolute -top-3 left-4 px-2 text-[10px] border bg-[#050505] ${s1||s0 ? 'border-white/40 text-white/90' : 'border-white/20 text-white/40'}`}>
+              BASTION ENGINE
+            </div>
+            
+            <div className="flex w-full justify-center items-center gap-6 px-4 relative">
+               {steps1.map((step, i) => {
+                 const active = (s0 && step.id === 'observe') || (s1 && step.id !== 'observe') || stage === 3;
+                 return (
+                   <React.Fragment key={i}>
+                     <div className={`relative z-10 flex flex-col items-center bg-[#050505] border p-4 transition-colors ${active ? 'border-white/60' : 'border-white/10'}`}>
+                       <div className={`p-3 mb-2 transition-colors ${active ? 'text-white' : 'text-white/30'}`}>
+                         <step.icon className="w-6 h-6" />
+                       </div>
+                       <span className={`text-[10px] tracking-widest transition-colors ${active ? 'text-white' : 'text-white/40'}`}>{step.title}</span>
+                     </div>
+                     {i < steps1.length - 1 && (
+                       <div className="flex gap-1 overflow-hidden">
+                         {[0, 1, 2].map((arrowIndex) => (
+                           <motion.div
+                             key={arrowIndex}
+                             initial={{ opacity: 0.1, x: -5 }}
+                             animate={{ 
+                               opacity: active ? [0.1, 1, 0.1] : 0.1,
+                               x: active ? [0, 5, 0] : 0
+                             }}
+                             transition={{
+                               duration: 1.5,
+                               repeat: Infinity,
+                               delay: arrowIndex * 0.2,
+                               ease: "linear"
+                             }}
+                           >
+                             <svg className={`w-5 h-5 ${active ? 'text-white/80' : 'text-white/20'}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                               <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+                             </svg>
+                           </motion.div>
+                         ))}
+                       </div>
+                     )}
+                   </React.Fragment>
+                 );
+               })}
+            </div>
+          </motion.div>
+
+          {/* 3. CLASSIFICATIONS (Bottom Right) */}
+          <motion.div 
+            className={`absolute right-[50px] top-[500px] w-[280px] border p-5 transition-all duration-500 z-10 ${s1 ? 'border-white/60 bg-white/5 backdrop-blur-md shadow-[0_0_20px_rgba(255,255,255,0.05)]' : 'border-white/10 bg-transparent'}`}
+            initial={{ opacity: 0 }} animate={{ opacity: 1 }}
+          >
+            <div className="flex items-center gap-2 border-b border-white/20 pb-2 mb-4">
+              <Cpu className={`w-4 h-4 ${s1 ? 'text-white' : 'text-white/40'}`} />
+              <h4 className={`text-[11px] tracking-widest ${s1 ? 'text-white' : 'text-white/40'}`}>RISK CLASSIFICATION</h4>
+            </div>
+            <div className="flex flex-col gap-3">
+              {classifications.map((c, i) => (
+                <div key={i} className={`flex items-center gap-4 border p-2 transition-colors ${s1 ? 'border-white/40 bg-white/10' : 'border-white/10'}`}>
+                  <c.icon className={`w-4 h-4 ${s1 ? 'text-white' : 'text-white/30'}`} />
+                  <span className={`text-[10px] ${s1 ? 'text-white/90' : 'text-white/40'}`}>{c.label}</span>
+                </div>
+              ))}
+            </div>
+          </motion.div>
+
+          {/* 4. OUTCOMES (Top Center) */}
+          <motion.div 
+            className={`absolute left-[200px] top-[40px] w-[600px] h-[120px] border transition-all duration-500 z-10 flex flex-col justify-center ${s2 ? 'border-white/60 bg-white/5 backdrop-blur-md shadow-[0_0_30px_rgba(255,255,255,0.05)]' : 'border-white/10 bg-transparent'}`}
+            initial={{ opacity: 0 }} animate={{ opacity: 1 }}
+          >
+            <div className={`absolute -top-3 right-4 px-2 text-[10px] border bg-[#050505] ${s2 ? 'border-white/40 text-white/90' : 'border-white/20 text-white/40'}`}>
+              OUTCOMES & ACTIONS
+            </div>
+            <div className="flex w-full justify-around items-center px-4">
+               {steps2.map((s, i) => (
+                 <div key={i} className={`flex flex-col border p-4 w-[30%] transition-colors ${s2 ? 'border-white/40 bg-white/5' : 'border-white/10'}`}>
+                    <span className={`text-[10px] mb-1 ${s2 ? 'text-white/90' : 'text-white/40'}`}>{s.num}. {s.title}</span>
+                    <p className={`text-[9px] leading-relaxed ${s2 ? 'text-white/60' : 'text-white/30'}`}>{s.desc}</p>
+                 </div>
+               ))}
+            </div>
           </motion.div>
         </div>
+      </div>
 
-        {/* ── Main 3-column layout ──────────────────────────────── */}
-        <div className="grid grid-cols-1 lg:grid-cols-[260px_1fr_260px] gap-8 lg:gap-12 relative">
-          
-          {/* ─── LEFT COLUMN ────────────────────────────────────── */}
-          <div className="space-y-8 flex flex-col justify-between">
-            <motion.div className="w-full relative" {...slideLeft(0.3)} animate={isInView ? slideLeft(0.3).animate : slideLeft(0.3).initial}>
-              <HorizontalFlow direction="right" delay={0.4} />
-              <PulseSequence index={0}>
-                <MetallicBorder borderRadius="8px" className="w-full block">
-                  <div className="border border-transparent bg-transparent rounded-lg p-5 w-full h-full">
-                    <span className="text-[11px] font-mono text-white/40 tracking-widest block mb-4">1. SOURCES</span>
-                    <div className="space-y-2">
-                      {sources.map((s) => (
-                        <div key={s} className="border border-white/10 rounded px-3 py-2 text-[10px] font-mono tracking-wider text-white/70 text-center">
-                          {s}
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </MetallicBorder>
-              </PulseSequence>
-            </motion.div>
-
-            <motion.div className="w-full relative" {...slideLeft(0.4)} animate={isInView ? slideLeft(0.4).animate : slideLeft(0.4).initial}>
-              <HorizontalFlow direction="right" delay={0.5} />
-              <PulseSequence index={4}>
-                <MetallicBorder borderRadius="8px" className="w-full block">
-                  <div className="border border-transparent bg-transparent rounded-lg p-5 w-full h-full">
-                    <span className="text-[11px] font-mono text-white/40 tracking-widest block mb-4">2. CONTINUOUS BY DESIGN</span>
-                    <div className="grid grid-cols-2 gap-2">
-                      {continuousItems.map((c) => (
-                        <div key={c} className="border border-white/10 rounded px-2 py-3 text-center flex items-center justify-center min-h-[60px]">
-                          <span className="text-[9px] font-mono tracking-wider text-white/60 leading-tight">{c}</span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </MetallicBorder>
-              </PulseSequence>
-            </motion.div>
-          </div>
-
-          {/* ─── CENTER COLUMN (Flow) ───────────────────────────── */}
-          <div className="flex flex-col items-center w-full">
-            
-            {/* Steps 1-3 */}
-            {steps1.map((step, i) => (
-              <div key={step.num} className="w-full">
-                <motion.div {...scaleIn(0.4 + i * 0.1)} animate={isInView ? scaleIn(0.4 + i * 0.1).animate : scaleIn(0.4 + i * 0.1).initial} className="w-full">
-                  <PulseSequence index={i}>
-                    <MetallicBorder borderRadius="8px" className="w-full block">
-                      <div className="w-full border border-transparent rounded-lg p-5 bg-transparent flex items-start gap-4">
-                        <step.icon className="w-6 h-6 text-white/50 shrink-0 mt-0.5" strokeWidth={1.5} />
-                        <div>
-                          <div className="flex items-center gap-2 mb-1">
-                            <span className="text-white/30 font-mono text-xs">{step.num}</span>
-                            <span className="text-white font-mono text-sm tracking-wider">{step.title}</span>
-                          </div>
-                          <p className="text-[11px] text-white/50 font-light leading-relaxed">{step.desc}</p>
-                        </div>
-                      </div>
-                    </MetallicBorder>
-                  </PulseSequence>
-                </motion.div>
-                <FlowArrow delay={0.5 + i * 0.1} height={20} />
-              </div>
-            ))}
-
-            {/* Risk Boxes */}
-            <motion.div className="w-full" {...scaleIn(0.7)} animate={isInView ? scaleIn(0.7).animate : scaleIn(0.7).initial}>
-              <PulseSequence index={3}>
-                <div className="grid grid-cols-3 gap-3 w-full">
-                  {classifications.map((c) => (
-                    <MetallicBorder key={c.label} borderRadius="8px" className="w-full">
-                      <div className={`w-full bg-transparent rounded-lg p-4 flex flex-col items-center justify-center text-center gap-3 relative bg-gradient-to-b ${c.gradient} border-t ${c.border}`}>
-                        <c.icon className={`w-6 h-6 ${c.color} drop-shadow-[0_0_8px_currentColor]`} strokeWidth={1.5} />
-                        <div>
-                          <span className={`text-[10px] font-mono font-medium tracking-widest block ${c.color} mb-1 drop-shadow-sm`}>{c.label}</span>
-                          <span className={`text-[8px] font-mono opacity-50 block text-white tracking-widest`}>{c.sub}</span>
-                        </div>
-                      </div>
-                    </MetallicBorder>
-                  ))}
-                </div>
-              </PulseSequence>
-            </motion.div>
-            
-            <div className="grid grid-cols-3 w-full gap-3">
-              <div className="flex justify-center"><FlowArrow delay={0.8} height={20} /></div>
-              <div className="flex justify-center"><FlowArrow delay={0.8} height={20} /></div>
-              <div className="flex justify-center"><FlowArrow delay={0.8} height={20} /></div>
-            </div>
-
-            {/* Steps 4-6 */}
-            {steps2.map((step, i) => (
-              <div key={step.num} className="w-full">
-                <motion.div {...scaleIn(0.9 + i * 0.1)} animate={isInView ? scaleIn(0.9 + i * 0.1).animate : scaleIn(0.9 + i * 0.1).initial} className="w-full">
-                  <PulseSequence index={i + 4}>
-                    <MetallicBorder borderRadius="8px" className="w-full block">
-                      <div className="w-full border border-transparent rounded-lg p-5 bg-transparent flex items-start gap-4">
-                        <step.icon className="w-6 h-6 text-white/50 shrink-0 mt-0.5" strokeWidth={1.5} />
-                        <div>
-                          <div className="flex items-center gap-2 mb-1">
-                            <span className="text-white/30 font-mono text-xs">{step.num}</span>
-                            <span className="text-white font-mono text-sm tracking-wider">{step.title}</span>
-                          </div>
-                          <p className="text-[11px] text-white/50 font-light leading-relaxed">{step.desc}</p>
-                        </div>
-                      </div>
-                    </MetallicBorder>
-                  </PulseSequence>
-                </motion.div>
-                {i < 2 && <FlowArrow delay={1.0 + i * 0.1} height={20} />}
-              </div>
-            ))}
-          </div>
-
-          {/* ─── RIGHT COLUMN ───────────────────────────────────── */}
-          <div className="space-y-6 flex flex-col justify-start mt-8 lg:mt-0">
-            <motion.div className="w-full relative" {...slideRight(0.3)} animate={isInView ? slideRight(0.3).animate : slideRight(0.3).initial}>
-              <HorizontalFlow direction="left" delay={0.4} />
-              <PulseSequence index={0}>
-                <MetallicBorder borderRadius="8px" className="w-full block">
-                  <div className="border border-transparent bg-transparent rounded-lg p-5 w-full">
-                    <span className="text-[11px] font-mono text-white/40 tracking-widest block mb-4">1. OPERATIONAL INTELLIGENCE</span>
-                    <div className="space-y-1.5">
-                      {intelItems.map((item) => (
-                        <div key={item} className="flex items-center gap-2 py-1">
-                          <span className="w-1 h-1 rounded-full bg-white/20" />
-                          <span className="text-[10px] font-mono text-white/60 tracking-wide">{item}</span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </MetallicBorder>
-              </PulseSequence>
-            </motion.div>
-
-            {rightCards.map((card, i) => (
-              <motion.div key={card.title} className="w-full relative" {...slideRight(0.4 + i * 0.1)} animate={isInView ? slideRight(0.4 + i * 0.1).animate : slideRight(0.4 + i * 0.1).initial}>
-                <HorizontalFlow direction="left" delay={0.5 + i * 0.1} />
-                <PulseSequence index={i + 4}>
-                  <MetallicBorder borderRadius="8px" className="w-full block">
-                    <div className="border border-transparent bg-transparent rounded-lg p-4 w-full">
-                      <span className="text-[10px] font-mono text-white/80 tracking-widest block mb-2">{i+2}. {card.title}</span>
-                      <p className="text-[10px] text-white/40 leading-relaxed">{card.desc}</p>
-                    </div>
-                  </MetallicBorder>
-                </PulseSequence>
-              </motion.div>
-            ))}
+      {/* ── Mobile Fallback (Flat Layout) ── */}
+      <div className="md:hidden w-full max-w-sm mx-auto space-y-6 px-6 mt-8 relative z-10 font-mono">
+        
+        {/* Simplified mobile blocks matching schematic style */}
+        <div className={`p-5 border transition-colors ${s2 ? 'border-white/60 bg-white/5' : 'border-white/20'}`}>
+          <span className={`text-[10px] tracking-widest mb-3 block ${s2 ? 'text-white' : 'text-white/40'}`}>OUTCOMES & ACTIONS</span>
+          <div className="space-y-3">
+             {steps2.map((s,i) => (
+               <div key={i} className="text-xs">
+                 <span className={s2 ? 'text-white' : 'text-white/40'}>{s.num}. {s.title}</span>
+               </div>
+             ))}
           </div>
         </div>
-
-        {/* ── Bottom Status Bar ─────────────────────────────────── */}
-        <motion.div
-          className="mt-20 border-t border-white/10 pt-6 flex flex-wrap items-center justify-between gap-4"
-          {...fadeIn(1.2)}
-          animate={isInView ? fadeIn(1.2).animate : fadeIn(1.2).initial}
-        >
-          <div className="flex items-center gap-6">
-            <div className="flex items-center gap-2">
-              <span className="text-[10px] font-mono text-white/40">SYSTEM STATUS:</span>
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse ml-1" />
-              <span className="text-[10px] font-mono text-emerald-500">OPERATIONAL</span>
-            </div>
-            <span className="text-[10px] font-mono text-white/30 hidden md:block">BASTION ENGINE v2.0</span>
+        
+        <div className={`p-5 border transition-colors ${s1||s0 ? 'border-white/60 bg-white/5' : 'border-white/20'}`}>
+          <span className={`text-[10px] tracking-widest mb-3 block ${s1||s0 ? 'text-white' : 'text-white/40'}`}>BASTION ENGINE</span>
+          <div className="flex gap-4">
+             {steps1.map((s,i) => (
+               <div key={i} className="flex flex-col items-center gap-1">
+                 <span className={`text-[9px] ${((s0 && s.id==='observe')||(s1 && s.id!=='observe')||stage===3) ? 'text-white' : 'text-white/40'}`}>{s.title}</span>
+               </div>
+             ))}
           </div>
-
-          <div className="flex items-center gap-2 text-white/50">
-            <ShieldAlert className="w-4 h-4" />
-            <span className="text-[10px] font-mono tracking-widest hidden md:block">BASTION ADAPTIVE ENTERPRISE DEFENSE</span>
-          </div>
-
-          <div className="flex items-center gap-6">
-            <span className="text-[10px] font-mono text-white/30">SCHEMATIC ID: BSTN-ARCH-001</span>
-            <span className="text-[10px] font-mono text-white/30 hidden md:block">DATE: 2024</span>
-          </div>
-        </motion.div>
-
+        </div>
+        
+        <div className={`p-5 border transition-colors ${s0 ? 'border-white/60 bg-white/5' : 'border-white/20'}`}>
+          <span className={`text-[10px] tracking-widest mb-3 block ${s0 ? 'text-white' : 'text-white/40'}`}>DATA SOURCES</span>
+          <p className={`text-[10px] leading-relaxed ${s0 ? 'text-white/70' : 'text-white/40'}`}>{sources.join(', ')}</p>
+        </div>
       </div>
+
     </section>
   );
 }

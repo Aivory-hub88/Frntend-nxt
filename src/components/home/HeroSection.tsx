@@ -48,17 +48,7 @@ export default function HeroSection() {
             className="silver-swipe-text text-[36px] md:text-[56px] font-light tracking-tight text-center leading-[1.1] pointer-events-none select-none"
             style={{ fontFamily: "'Manrope', sans-serif" }}
           >
-            Make AI make sense
-            <span
-              style={{
-                fontSize: '0.7em',
-                verticalAlign: '0.2em',
-              }}
-            >
-              ®
-            </span>
-            <br />
-            for your business
+            Make AI Make Sense®
           </h1>
         </div>
 
