@@ -43,3 +43,7 @@ next-env.d.ts
 # Adobe After Effects files
 *.aep
 **/Adobe After Effects Auto-Save/
+
+# Ignore all environment files
+.env*
+*.env
