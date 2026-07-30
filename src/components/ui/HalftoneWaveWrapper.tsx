@@ -24,16 +24,14 @@ function CssGradientFallback() {
       <div
         className="absolute inset-0"
         style={{
-          background:
-            'radial-gradient(60% 55% at 50% 42%, rgba(60,52,140,0.35) 0%, rgba(24,22,64,0.22) 38%, rgba(6,6,16,0.05) 62%, rgba(0,0,0,0) 80%)',
+          background: 'transparent',
         }}
       />
       {/* soft indigo/blue accents echoing the flower petals */}
       <div
         className="absolute inset-0"
         style={{
-          background:
-            'radial-gradient(40% 40% at 30% 55%, rgba(38,30,110,0.28) 0%, rgba(0,0,0,0) 70%), radial-gradient(45% 45% at 72% 48%, rgba(30,42,120,0.26) 0%, rgba(0,0,0,0) 70%)',
+          background: 'transparent',
         }}
       />
     </div>
@@ -117,33 +115,12 @@ export function HalftoneWaveWrapper({ purpleColor }: { purpleColor?: string } = 
           stretch where the stronger crossfaded wash below is at 0. Single
           deep-indigo tone (#130e30), full-bleed so it never falls off to
           black at the edges. */}
-      <div
-        className="absolute inset-0 pointer-events-none"
-        aria-hidden="true"
-        style={{
-          background: purpleColor 
-            ? 'radial-gradient(55% 50% at 50% 40%, rgba(22,84,68,0.30) 0%, rgba(10,35,28,0.12) 60%, transparent 100%)'
-            : 'radial-gradient(55% 50% at 50% 40%, rgba(90,124,184,0.16) 0%, rgba(90,124,184,0.06) 60%, transparent 100%)',
-        }}
-      />
+      {/* Gradient removed per user request */}
       {/* Deep-indigo ambient wash, fixed to the viewport so it scrolls
           seamlessly through #features -> Stats -> Pricing -> Privacy with no
           visible section seam -- it's just the flower's opacity, inverted,
           so the two crossfade into each other at the same scroll points. */}
-      <div
-        className="absolute inset-0 pointer-events-none"
-        style={{ opacity: 1 - opacity, transition: 'opacity 500ms ease' }}
-        aria-hidden="true"
-      >
-        <div
-          className="absolute inset-0"
-          style={{
-            background: purpleColor
-              ? 'radial-gradient(52% 46% at 50% 40%, rgba(22,84,68,0.35) 0%, rgba(10,35,28,0.15) 60%, transparent 100%)'
-              : 'radial-gradient(52% 46% at 50% 40%, rgba(90,124,184,0.20) 0%, rgba(90,124,184,0.08) 60%, transparent 100%)',
-          }}
-        />
-      </div>
+      {/* Gradient removed per user request */}
       <div style={{ opacity, transition: 'opacity 500ms ease' }}>
         {useWebgl ? (
           <HalftoneWave active={opacity > 0.02} purpleColor={purpleColor} />

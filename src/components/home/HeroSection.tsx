@@ -1,17 +1,14 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
-import { useScrollAnimation } from '@/hooks/useScrollAnimation';
 import RotatingText from './RotatingText';
 import { SpotlightButton } from '@/components/ui/SpotlightButton';
 
 export default function HeroSection() {
   const contentRef = useRef<HTMLDivElement>(null);
-  const btnRef = useRef<HTMLAnchorElement>(null);
 
   useEffect(() => {
     let ticking = false;
-
     const handleScroll = () => {
       if (!ticking) {
         requestAnimationFrame(() => {
@@ -26,12 +23,8 @@ export default function HeroSection() {
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-    };
+    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
-
-  // Mouse tracking logic removed since SpotlightButton handles it internally
 
   return (
     <div
@@ -48,29 +41,25 @@ export default function HeroSection() {
             className="silver-swipe-text text-[36px] md:text-[56px] font-light tracking-tight text-center leading-[1.1] pointer-events-none select-none"
             style={{ fontFamily: "'Manrope', sans-serif" }}
           >
-            Make AI Make Sense®
+            AI-Powered Business Transformation
+            <span className="block mt-3 text-[0.58em] font-normal tracking-normal text-white/80">
+              with Governed AI Agents
+            </span>
           </h1>
         </div>
-
-        {/* Rotating subtitle with initial slide up */}
         <div className="w-full animate-slide-up-2 pointer-events-none select-none" style={{ animationDelay: '0.4s' }}>
           <RotatingText />
         </div>
-
         <div className="animate-slide-up-3 pointer-events-none" style={{ animationDelay: '0.6s' }}>
           <SpotlightButton
             href="/free-diagnostic"
             className="pointer-events-auto w-fit animate-gentle-bounce"
-            style={{
-              backgroundColor: 'var(--card-bg, rgba(20, 20, 26, 0.78))'
-            }}
+            style={{ backgroundColor: 'var(--card-bg, rgba(20, 20, 26, 0.78))' }}
           >
             START WITH FREE ASSESSMENT
           </SpotlightButton>
         </div>
       </div>
-
-      {/* Scroll to Explore Indicator */}
       <div className="absolute bottom-0 left-1/2 -translate-x-1/2 flex flex-col items-center z-20 pointer-events-none opacity-0 animate-fade-in" style={{ animationDelay: '3.5s', animationFillMode: 'forwards' }}>
         <div className="flex flex-col items-center animate-pulse" style={{ animationDuration: '1.5s' }}>
           <div className="w-[1px] h-10 md:h-16 bg-gradient-to-b from-transparent to-white" />

@@ -6,14 +6,12 @@ import {
   type Product,
 } from '@/lib/pricing';
 
-export const AIVORY_ID_URL = 'https://aivory.id' as const;
+/** The sole public origin for canonical URLs, metadata, and structured data. */
 export const AIVORY_UK_URL = 'https://aivory.uk' as const;
-export type PublicSiteUrl = typeof AIVORY_ID_URL | typeof AIVORY_UK_URL;
+export type PublicSiteUrl = typeof AIVORY_UK_URL;
 
-/** Build-time origin for sitemap/robots and non-request code. */
-export const SITE_URL = (
-  process.env.NEXT_PUBLIC_SITE_URL || AIVORY_ID_URL
-).replace(/\/$/, '');
+/** Build-time origin for sitemap, robots, and every non-request URL. */
+export const SITE_URL = AIVORY_UK_URL;
 
 export const SITE_NAME = 'Aivory';
 export const DEFAULT_OG_IMAGE = '/hero-video-poster.jpg';
@@ -25,7 +23,7 @@ const ORGANIZATION_DISAMBIGUATION =
 const WEBSITE_DESCRIPTION =
   'AI-powered business transformation platform — from operational assessment to autonomous AI agents.';
 const HOMEPAGE_DESCRIPTION =
-  'Make AI Make Sense® for your business. Assess operations, design transformation blueprints, and deploy governed AI agents — without false starts.';
+  'AI-powered business transformation for operational intelligence, governed AI agents, and workflow automation. Assess operations, design your blueprint, and deploy with confidence.';
 const PLATFORM_DESCRIPTION =
   'AI operations platform that guides organisations from business operations assessment to governed AI agent deployment, workflow automation, and operational intelligence.';
 const BASTION_DESCRIPTION =
@@ -37,38 +35,21 @@ interface HeaderReader {
   get(name: string): string | null;
 }
 
-function hostnameFromHeader(value: string | null | undefined): string {
-  if (!value) return '';
-  return value
-    .split(',')[0]
-    .trim()
-    .toLowerCase()
-    .replace(/^https?:\/\//, '')
-    .split('/')[0]
-    .split(':')[0];
-}
-
+/**
+ * Canonical metadata must never depend on the incoming hostname. The legacy
+ * domain is redirected before rendering; this fallback protects crawlers that
+ * reach the application directly while that redirect is being propagated.
+ */
 export function resolvePublicSiteUrl(
-  proxyHost?: string | null,
-  forwardedHost?: string | null,
-  host?: string | null,
+  _proxyHost?: string | null,
+  _forwardedHost?: string | null,
+  _host?: string | null,
 ): PublicSiteUrl {
-  const hostname = [proxyHost, forwardedHost, host]
-    .map(hostnameFromHeader)
-    .find(Boolean) ?? '';
-
-  return hostname === 'aivory.uk' || hostname.endsWith('.aivory.uk')
-    ? AIVORY_UK_URL
-    : AIVORY_ID_URL;
+  return AIVORY_UK_URL;
 }
 
-/** Cloudflare forwards the original .uk host through this custom header. */
-export function siteUrlFromHeaders(headersList: HeaderReader): PublicSiteUrl {
-  return resolvePublicSiteUrl(
-    headersList.get('x-aivory-proxy-host'),
-    headersList.get('x-forwarded-host'),
-    headersList.get('host'),
-  );
+export function siteUrlFromHeaders(_headersList: HeaderReader): PublicSiteUrl {
+  return AIVORY_UK_URL;
 }
 
 export function absoluteUrlForSite(siteUrl: string, path = '/'): string {
@@ -485,9 +466,7 @@ export function buildAboutPageGraph(siteUrl: PublicSiteUrl): Record<string, unkn
 }
 
 /** Build-time publisher retained for Article/JobPosting schemas. */
-export const ORGANIZATION = createOrganization(
-  SITE_URL.includes('aivory.uk') ? AIVORY_UK_URL : AIVORY_ID_URL,
-);
+export const ORGANIZATION = createOrganization(AIVORY_UK_URL);
 
 export function richContentToPlainText(content: unknown): string {
   const parts: string[] = [];

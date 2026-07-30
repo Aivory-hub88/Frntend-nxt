@@ -1,12 +1,11 @@
 import type { Metadata } from 'next';
-import { headers } from 'next/headers';
 import { Manrope, Doto } from 'next/font/google';
 import './globals.css';
 import {
+  AIVORY_UK_URL,
   DEFAULT_OG_IMAGE,
   JsonLd,
   buildSiteGraph,
-  siteUrlFromHeaders,
 } from '@/lib/seo';
 import { LanguageProvider } from '@/components/context/LanguageContext';
 import AiTrap from '@/components/security/AiTrap';
@@ -28,64 +27,65 @@ const doto = Doto({
 const SITE_NAME = 'Aivory';
 const SITE_TITLE = 'Aivory — AI-Powered Business Transformation';
 const SITE_DESCRIPTION =
-  'From diagnostic to deployment — everything you need to integrate AI into your business operations.';
+  'Aivory helps businesses assess operations, design AI transformation blueprints, and deploy governed AI agents, workflow automation and operational intelligence.';
 
-export async function generateMetadata(): Promise<Metadata> {
-  const headersList = await headers();
-  const siteUrl = siteUrlFromHeaders(headersList);
-
-  return {
-    icons: {
-      icon: '/icon.svg',
-      apple: '/icon.svg',
+export const metadata: Metadata = {
+  metadataBase: new URL(AIVORY_UK_URL),
+  icons: {
+    icon: '/icon.svg',
+    apple: '/icon.svg',
+  },
+  title: {
+    default: SITE_TITLE,
+    template: '%s | Aivory',
+  },
+  description: SITE_DESCRIPTION,
+  applicationName: SITE_NAME,
+  verification: {
+    google: '-X46S5bMyCLH8iqPOeCooGlLGvfl2X7soGY9MuaQqt4',
+  },
+  alternates: {
+    canonical: AIVORY_UK_URL,
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+      'max-video-preview': -1,
     },
-    metadataBase: new URL(siteUrl),
-    title: {
-      default: SITE_TITLE,
-      template: '%s | Aivory',
-    },
+  },
+  openGraph: {
+    type: 'website',
+    siteName: SITE_NAME,
+    title: SITE_TITLE,
     description: SITE_DESCRIPTION,
-    applicationName: SITE_NAME,
-    verification: {
-      google: '-X46S5bMyCLH8iqPOeCooGlLGvfl2X7soGY9MuaQqt4',
-    },
-    alternates: {
-      canonical: '/',
-    },
-    openGraph: {
-      type: 'website',
-      siteName: SITE_NAME,
-      title: SITE_TITLE,
-      description: SITE_DESCRIPTION,
-      url: `${siteUrl}/`,
-      images: [{ url: DEFAULT_OG_IMAGE, width: 1200, height: 630, alt: SITE_TITLE }],
-    },
-    twitter: {
-      card: 'summary_large_image',
-      title: SITE_TITLE,
-      description: SITE_DESCRIPTION,
-      images: [DEFAULT_OG_IMAGE],
-    },
-  };
-}
+    url: AIVORY_UK_URL,
+    images: [{ url: DEFAULT_OG_IMAGE, width: 1200, height: 630, alt: SITE_TITLE }],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: SITE_TITLE,
+    description: SITE_DESCRIPTION,
+    images: [DEFAULT_OG_IMAGE],
+  },
+};
 
-export default async function RootLayout({
+export default function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const headersList = await headers();
-  const siteUrl = siteUrlFromHeaders(headersList);
-  const initialLanguage = siteUrl === 'https://aivory.uk' ? 'en' : 'id';
-
   return (
-    <html lang={initialLanguage} className={`${manrope.variable} ${doto.variable} antialiased scroll-smooth`}>
+    <html lang="en" className={`${manrope.variable} ${doto.variable} antialiased scroll-smooth`}>
       <head>
         <link
           href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700;800&family=Doto:wght@400;700;900&display=swap"
           rel="stylesheet"
         />
-        {/* Google tag (gtag.js) */}
         <script async src="https://www.googletagmanager.com/gtag/js?id=G-XYJ0EDEYS8" />
         <script
           dangerouslySetInnerHTML={{
@@ -99,8 +99,8 @@ export default async function RootLayout({
         />
       </head>
       <body className="bg-background text-white font-manrope antialiased overflow-x-hidden w-full" style={{ fontFamily: 'var(--font-manrope), Manrope, sans-serif' }}>
-        <JsonLd data={buildSiteGraph(siteUrl)} />
-        <LanguageProvider initialLanguage={initialLanguage}>
+        <JsonLd data={buildSiteGraph(AIVORY_UK_URL)} />
+        <LanguageProvider initialLanguage="en">
           <AiTrap />
           <CanaryLink />
           {children}
