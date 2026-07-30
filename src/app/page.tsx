@@ -9,7 +9,7 @@ import PrivacySection from '@/components/home/PrivacySection';
 import PreFooterCTA from '@/components/home/PreFooterCTA';
 import Footer from '@/components/Footer';
 import ScrollRevealProvider from '@/components/home/ScrollRevealProvider';
-import BastionBackground from '@/components/bastion/BastionBackground';
+import { HalftoneWaveWrapper } from '@/components/ui/HalftoneWaveWrapper';
 import { DarkSectionSpotlight } from '@/components/ui/DarkSectionSpotlight';
 import { JsonLd, buildHomePageGraph, siteUrlFromHeaders } from '@/lib/seo';
 
@@ -21,8 +21,12 @@ export default async function HomePage() {
       <JsonLd data={buildHomePageGraph(siteUrl)} />
       <ScrollRevealProvider />
       <section style={{ padding: 0 }} className="relative z-[1] bg-black">
-        {/* Global Ambient Background Gradient Wash (Fixed across ENTIRE page in #165444 emerald teal) */}
-        <BastionBackground mode="gradient-only" className="fixed inset-0 z-0 pointer-events-none overflow-hidden" />
+        {/* Global seamless background for the ENTIRE page, down to the footer */}
+        <div className="fixed inset-0 z-0 pointer-events-none">
+          <div className="w-full h-full">
+            <HalftoneWaveWrapper />
+          </div>
+        </div>
 
         <Navbar />
         <HeroSection />
