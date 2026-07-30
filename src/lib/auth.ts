@@ -24,7 +24,7 @@ const STORAGE_KEY = "aivory_auth";
 export interface User {
   user_id: string;
   email: string;
-  account_type: "free" | "superadmin" | "admin";
+  account_type: "free" | "demo" | "superadmin" | "admin";
   company_name?: string;
   created_at: string;
   tier: "free" | "snapshot" | "blueprint" | "enterprise";
@@ -35,6 +35,8 @@ export interface User {
   credits: number;
   credits_max: number;
   token?: string;
+  /** Per-account module allowlist for restricted (demo) accounts. */
+  allowed_modules?: string[];
 }
 
 /** Shape of the Supabase session blob persisted in localStorage. */
@@ -91,6 +93,7 @@ function mapUser(
     credits: Number(meta.credits ?? 0),
     credits_max: Number(meta.credits_max ?? 0),
     token,
+    allowed_modules: (meta.allowed_modules as string[]) ?? undefined,
   };
 }
 
@@ -164,6 +167,7 @@ export async function signup(
         account_type: data.user?.account_type || "free",
         tier: data.user?.tier || "free",
         company_name: data.user?.company_name || company_name,
+        allowed_modules: data.user?.allowed_modules,
       },
     },
   };
@@ -192,6 +196,7 @@ function setAuthCookies(data: any): void {
     email: data?.user?.email || "",
     account_type: acct,
     role: acct,
+    allowed_modules: data?.user?.allowed_modules,
   };
   // Expire any legacy domain-wide variants first (older builds stamped
   // domain=.aivory.id copies; duplicates with different scopes poisoned the
@@ -239,6 +244,7 @@ export async function login(email: string, password: string): Promise<User> {
         account_type: data.user?.account_type || "free",
         tier: data.user?.tier || "free",
         company_name: data.user?.company_name,
+        allowed_modules: data.user?.allowed_modules,
       },
     },
   };
