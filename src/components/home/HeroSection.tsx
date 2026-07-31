@@ -42,9 +42,6 @@ export default function HeroSection() {
             style={{ fontFamily: "'Manrope', sans-serif" }}
           >
             AI-Powered Business Transformation
-            <span className="block mt-3 text-[0.58em] font-normal tracking-normal text-white/80">
-              with Governed AI Agents
-            </span>
           </h1>
         </div>
         <div className="w-full animate-slide-up-2 pointer-events-none select-none" style={{ animationDelay: '0.4s' }}>
