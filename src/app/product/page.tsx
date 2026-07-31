@@ -9,7 +9,7 @@ import { CTAFooter } from '@/components/product/CTAFooter';
 import { DarkSectionSpotlight } from '@/components/ui/DarkSectionSpotlight';
 
 export const metadata: Metadata = {
-  title: 'Products — Aivory',
+  title: 'Products',
   description:
     'Discover AI-powered tools for business transformation: diagnostics, blueprints, workflow automation, and intelligent agents.',
 };

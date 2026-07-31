@@ -4,7 +4,7 @@ import Navbar from '@/components/home/Navbar';
 import Footer from '@/components/Footer';
 
 export const metadata: Metadata = {
-  title: 'Investor Relations — Aivory',
+  title: 'Investor Relations',
   description: 'Investor relations and investment information for Aivory.',
 };
 

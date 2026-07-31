@@ -82,8 +82,8 @@ export function createOrganization(siteUrl: PublicSiteUrl) {
   return {
     '@type': 'Organization',
     '@id': `${siteUrl}/#organization`,
-    name: 'Aivory',
-    alternateName: ['Aivory AI', 'Aivory Platform', 'Aivory UK'],
+    name: 'Aivory AI',
+    alternateName: ['Aivory', 'Aivory Platform', 'Aivory UK'],
     legalName: 'Aivory',
     url: `${siteUrl}/`,
     logo: {
@@ -133,7 +133,7 @@ export function createWebsite(siteUrl: PublicSiteUrl) {
     '@type': 'WebSite',
     '@id': `${siteUrl}/#website`,
     url: `${siteUrl}/`,
-    name: 'Aivory',
+    name: 'Aivory AI',
     description: WEBSITE_DESCRIPTION,
     publisher: { '@id': `${siteUrl}/#organization` },
     inLanguage: siteUrl === AIVORY_UK_URL ? ['en', 'id'] : ['id', 'en'],

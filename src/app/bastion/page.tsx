@@ -15,11 +15,11 @@ import BastionBackground from '@/components/bastion/BastionBackground';
 import { JsonLd, buildBastionGraph, siteUrlFromHeaders } from '@/lib/seo';
 
 export const metadata: Metadata = {
-  title: 'Bastion | Autonomous Infrastructure Defense | Aivory',
+  title: 'Bastion | Autonomous Infrastructure Defense',
   description: 'Bastion is an AI-native security operating layer that continuously observes infrastructure behavior, understands evolving threats, and autonomously coordinates defensive actions.',
   alternates: { canonical: '/bastion' },
   openGraph: {
-    title: 'Bastion | Autonomous Infrastructure Defense | Aivory',
+    title: 'Bastion | Autonomous Infrastructure Defense',
     description: 'Adaptive defense for modern enterprises through AI-powered detection, continuous monitoring, and coordinated response.',
     url: '/bastion',
   },

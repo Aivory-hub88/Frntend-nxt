@@ -4,7 +4,7 @@ import Navbar from '@/components/home/Navbar';
 import Footer from '@/components/Footer';
 
 export const metadata: Metadata = {
-  title: 'Terms of Service — Aivory',
+  title: 'Terms of Service',
   description: 'Terms of Service and usage guidelines for Aivory platform.',
 };
 

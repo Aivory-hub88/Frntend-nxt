@@ -24,8 +24,8 @@ const doto = Doto({
   display: 'swap',
 });
 
-const SITE_NAME = 'Aivory';
-const SITE_TITLE = 'Aivory — AI-Powered Business Transformation';
+const SITE_NAME = 'Aivory AI';
+const SITE_TITLE = 'Aivory AI — AI-Powered Business Transformation';
 const SITE_DESCRIPTION =
   'Aivory helps businesses assess operations, design AI transformation blueprints, and deploy governed AI agents, workflow automation and operational intelligence.';
 
@@ -37,7 +37,7 @@ export const metadata: Metadata = {
   },
   title: {
     default: SITE_TITLE,
-    template: '%s | Aivory',
+    template: '%s | Aivory AI',
   },
   description: SITE_DESCRIPTION,
   applicationName: SITE_NAME,

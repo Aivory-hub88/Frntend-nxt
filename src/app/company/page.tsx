@@ -6,7 +6,7 @@ import { CompanyContent } from '@/components/company/CompanyContent';
 import { CTAFooter } from '@/components/product/CTAFooter';
 
 export const metadata: Metadata = {
-  title: 'Company — Aivory',
+  title: 'Company',
   description: 'To make AI adoption practical, structured, and accessible for every organization, regardless of size, industry, or technical background.',
 };
 
