@@ -17,7 +17,7 @@ export const SITE_NAME = 'Aivory';
 export const DEFAULT_OG_IMAGE = '/hero-video-poster.jpg';
 
 const ORGANIZATION_DESCRIPTION =
-  'Aivory is an AI-powered business transformation and operational intelligence platform that helps organisations move from operational clarity to governed AI agents and autonomous workflows.';
+  'Aivory (also known as Aivory AI) is an AI-powered business transformation and operational intelligence platform that helps organisations move from operational clarity to governed AI agents and autonomous workflows.';
 const ORGANIZATION_DISAMBIGUATION =
   'Business transformation and AI operations platform (United Kingdom / global). Distinct from dental practice software, HRMS platforms, code-compliance tooling, consumer AI apps, or creative studios that share a similar name.';
 const WEBSITE_DESCRIPTION =
@@ -83,7 +83,7 @@ export function createOrganization(siteUrl: PublicSiteUrl) {
     '@type': 'Organization',
     '@id': `${siteUrl}/#organization`,
     name: 'Aivory',
-    alternateName: ['Aivory Platform', 'Aivory UK'],
+    alternateName: ['Aivory AI', 'Aivory Platform', 'Aivory UK'],
     legalName: 'Aivory',
     url: `${siteUrl}/`,
     logo: {
@@ -189,7 +189,7 @@ function createPlatformApplication(siteUrl: PublicSiteUrl) {
     '@type': 'SoftwareApplication',
     '@id': `${siteUrl}/#software`,
     name: 'Aivory Platform',
-    alternateName: 'Aivory AI Operations Platform',
+    alternateName: ['Aivory AI', 'Aivory AI Operations Platform'],
     applicationCategory: 'BusinessApplication',
     applicationSubCategory: 'AI Operations Platform',
     operatingSystem: 'Web',
@@ -277,6 +277,10 @@ export const FAQ_ENTITIES = [
   {
     question: 'What is Aivory?',
     answer: 'Aivory is an AI-powered business transformation and operational intelligence platform founded by Irfan Reichmann. It helps organisations start with operational clarity, design transformation blueprints, and deploy governed AI agents and workflows. It is not dental software, HRMS, or code-compliance tooling.',
+  },
+  {
+    question: 'Is Aivory the same as Aivory AI?',
+    answer: 'Yes. "Aivory" and "Aivory AI" refer to the same platform, available at aivory.uk. Several unrelated products use a similar name for code-compliance tooling, data annotation, dental software, or consumer creative apps -- none of those are affiliated with Aivory.',
   },
   {
     question: 'Who founded Aivory?',
