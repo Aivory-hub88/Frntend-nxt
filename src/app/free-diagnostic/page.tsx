@@ -72,6 +72,9 @@ const INDUSTRIES = [
   { value: 'property', label: 'Property & construction' },
   { value: 'technology', label: 'Technology' },
   { value: 'education', label: 'Education' },
+  { value: 'marketing', label: 'Marketing' },
+  { value: 'advertising', label: 'Advertising' },
+  { value: 'food_beverage', label: 'Food & Beverages' },
   { value: 'other', label: 'Other' },
 ];
 
@@ -221,7 +224,7 @@ function getQuickNote(score: number, maturity: string, strengths: DimensionInfo[
   if (!improvementAreas.length) {
     return {
       title: `Quick note: ${score}/100 — ${maturity}`,
-      body: `All tracked dimensions are scoring strongly. ${strongest ? `${strongest.label} is the clearest current strength.` : 'The current answers show a balanced AI readiness base.'}`
+      body: `All tracked dimensions are scoring strongly. ${strongest ? `${strongest.label} is the clearest current strength.` : 'The current answers show a balanced operational maturity base.'}`
     };
   }
 
@@ -233,7 +236,7 @@ function getQuickNote(score: number, maturity: string, strengths: DimensionInfo[
 
 function getNarrative(companyName: string, score: number, maturity: string): string {
   const templates: Record<string, string> = {
-    Initial: `For ${companyName}, the current score of ${score}/100 indicates an early stage of AI readiness. This is a valid starting point — many successful organizations began here. The recommendation is to start with one small, well-scoped pilot, measure results, then scale gradually.`,
+    Initial: `For ${companyName}, the current score of ${score}/100 indicates an early stage of operational maturity. This is a valid starting point — many successful organizations began here. The recommendation is to start with one small, well-scoped pilot, measure results, then scale gradually.`,
     Developing: `For ${companyName}, a score of ${score}/100 shows the foundation is beginning to take shape, but critical gaps remain. Organizations at this stage benefit most from quick wins — choose an AI use case where ROI can be demonstrated within 30–90 days.`,
     Defined: `For ${companyName}, a score of ${score}/100 indicates solid readiness — processes are defined and several foundations are in place. This is the right moment to move from experimentation to structured implementation with measurable business targets.`,
     Managed: `For ${companyName}, a score of ${score}/100 reflects advanced maturity — AI is managed and delivering real value. The next step is expanding into more complex use cases and building tighter ROI monitoring systems.`,
@@ -348,7 +351,7 @@ export default function FreeDiagnosticPage() {
         });
 
         const link = document.createElement('a');
-        link.download = `${companyName.trim() || 'Company'}_AI_Diagnostic_${slide.suffix}.png`;
+        link.download = `${companyName.trim() || 'Company'}_Business_Operations_Assessment_${slide.suffix}.png`;
         link.href = dataUrl;
         link.click();
 
@@ -391,7 +394,7 @@ export default function FreeDiagnosticPage() {
       title: blocker.label,
       desc: INSIGHT_DESCRIPTIONS[blocker.id]?.blocker || (index === 0
         ? "Critical gap in this area creates operational friction that must be addressed to ensure AI success."
-        : "Addressing this constraint will unlock significant efficiency gains and improve overall AI readiness."),
+        : "Addressing this constraint will unlock significant efficiency gains and improve overall operational maturity."),
       type: 'blocker'
     });
   });
@@ -508,7 +511,7 @@ export default function FreeDiagnosticPage() {
           <>
             {/* Action Header */}
             <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
-              <h1 style={{ fontSize: '2rem', fontWeight: 700, marginBottom: '1.5rem' }}>Your AI Readiness Assessment Report</h1>
+              <h1 style={{ fontSize: '2rem', fontWeight: 700, marginBottom: '1.5rem' }}>Your Business Operations Assessment Report</h1>
               <button
                 className="btn-primary"
                 onClick={downloadDiagnosticCards}
@@ -532,7 +535,7 @@ export default function FreeDiagnosticPage() {
                       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 28 }}>
                         {/* eslint-disable-next-line @next/next/no-img-element */}
                         <img src="/Aivory_Signature_Grey.svg" alt="Aivory" style={{ height: '46px', width: 'auto', display: 'block', flexShrink: 0 }} />
-                        <div style={{ fontSize: 28, fontWeight: 400, lineHeight: 1.35, color: '#111', textAlign: 'right', textTransform: 'uppercase' }}>Quick Assessment<br />of AI Readiness</div>
+                        <div style={{ fontSize: 28, fontWeight: 400, lineHeight: 1.35, color: '#111', textAlign: 'right', textTransform: 'uppercase' }}>Quick Assessment<br />of Business Operations</div>
                       </div>
                       <div style={{ borderBottom: '1px solid #111', marginBottom: 32 }} />
 
@@ -682,10 +685,10 @@ export default function FreeDiagnosticPage() {
               <div className="upgrade-grid">
                 <div className="upgrade-card">
                   <div className="upgrade-eyebrow">Upgrade path 01</div>
-                  <h3>AI Readiness Deep Assessment</h3>
-                  <div className="upgrade-price">$29 <span>one time</span></div>
-                  <p className="upgrade-summary">Move from a quick score to a complete readiness analysis built around your specific use case and not generic.</p>
-                  <div className="comparison-note"><strong>Why it beats the free diagnostic:</strong> the free report gives a snapshot. Deep Assessment maps 30 data points across workflow maturity, data infrastructure, automation exposure, and organizational readiness.</div>
+                  <h3>Business Operations Assessment</h3>
+                  <div className="upgrade-price">$79 <span>one time</span></div>
+                  <p className="upgrade-summary">Move from a quick score to a complete operational analysis built around your specific use case and not generic.</p>
+                  <div className="comparison-note"><strong>Why it beats the free diagnostic:</strong> the free report gives a snapshot. The Business Operations Assessment maps 30 data points across workflow maturity, data infrastructure, automation exposure, and organizational readiness.</div>
                   <ul className="cta-features">
                     <li>Detailed gap and constraint analysis</li>
                     <li>Business objective and AI opportunity mapping</li>
@@ -694,25 +697,25 @@ export default function FreeDiagnosticPage() {
                   </ul>
                   <a href="/#pricing-section" className="btn-cta">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ display: 'inline-block', marginRight: 4 }}><path d="M7 7l10 10M17 7v10H7" /></svg>
-                    Upgrade to Deep Assessment
+                    Upgrade to Business Operations Assessment
                   </a>
                 </div>
 
                 <div className="upgrade-card">
                   <div className="upgrade-eyebrow">Best next step</div>
-                  <h3>Full Stack Bundle</h3>
-                  <div className="upgrade-price">$99 <span>one time</span></div>
-                  <p className="upgrade-summary">Get the complete planning stack: Deep Assessment + Blueprint + Roadmap in one bundled path.</p>
+                  <h3>Complete Transformation Package</h3>
+                  <div className="upgrade-price">$299 <span>one time</span></div>
+                  <p className="upgrade-summary">Get the complete planning stack: Business Operations Assessment + Transformation Blueprint + Transformation Roadmap in one bundled path.</p>
                   <div className="comparison-note"><strong>Why bundle:</strong> it connects diagnosis to execution, so you do not stop at insights. You get the system design and a phased plan to act on it.</div>
                   <ul className="cta-features">
-                    <li>Everything in Deep Assessment</li>
+                    <li>Everything in Business Operations Assessment</li>
                     <li>AI system blueprint and workflow architecture</li>
                     <li>Phased implementation roadmap</li>
                     <li>KPI targets and deployment priorities</li>
                   </ul>
                   <a href="/#pricing-section" className="btn-cta">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ display: 'inline-block', marginRight: 4 }}><path d="M7 7l10 10M17 7v10H7" /></svg>
-                    Get Full Stack Bundle
+                    Start Transformation
                   </a>
                 </div>
               </div>
@@ -720,7 +723,7 @@ export default function FreeDiagnosticPage() {
               <div className="strategy-card">
                 <div className="upgrade-eyebrow">Prefer to talk it through?</div>
                 <h3>Schedule a debrief with an AI strategist</h3>
-                <p>Review your score, clarify what is blocking adoption, and decide whether Deep Assessment or the Full Stack Bundle is the right next move.</p>
+                <p>Review your score, clarify what is blocking adoption, and decide whether the Business Operations Assessment or the Complete Transformation Package is the right next move.</p>
                 <a href="https://calendly.com" target="_blank" rel="noopener noreferrer" className="btn-cta">
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ display: 'inline-block', marginRight: 4 }}><path d="M7 7l10 10M17 7v10H7" /></svg>
                   Book strategist debrief
