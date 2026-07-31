@@ -2,246 +2,77 @@
 
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
 
-function ShieldIcon({ className = '' }: { className?: string }) {
-  return (
-    <svg className={className} style={{ width: 56, height: 56 }} viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <defs>
-        <linearGradient id="privacyShieldBase" x1="0" y1="0" x2="0" y2="100" gradientUnits="userSpaceOnUse">
-          <stop offset="0%" stopColor="#FFFFFF" stopOpacity="0.9" />
-          <stop offset="45%" stopColor="#FFFFFF" stopOpacity="0.4" />
-          <stop offset="45.1%" stopColor="#FFFFFF" stopOpacity="0.05" />
-          <stop offset="100%" stopColor="#FFFFFF" stopOpacity="0.2" />
-        </linearGradient>
-        <linearGradient id="privacyShieldEdge" x1="0" y1="0" x2="0" y2="100" gradientUnits="userSpaceOnUse">
-          <stop offset="0%" stopColor="#FFFFFF" stopOpacity="1" />
-          <stop offset="100%" stopColor="#FFFFFF" stopOpacity="0.3" />
-        </linearGradient>
-      </defs>
-      <path
-        d="M50 10 C50 10 15 20 15 20 C15 55 15 75 50 95 C85 75 85 55 85 20 C85 20 50 10 50 10 Z"
-        fill="url(#privacyShieldBase)"
-        stroke="url(#privacyShieldEdge)"
-        strokeWidth="3"
-        strokeLinejoin="round"
-      />
-      <path d="M35 50 L45 62 L65 38" stroke="#FFFFFF" strokeWidth="6" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
-  );
-}
+/**
+ * Each card is a woven tapestry panel — hand-generated art living in
+ * public/images/privacy. Masters are kept out of the bundle in art-masters/privacy.
+ * Prompts and the regeneration brief: docs/privacy-card-art-prompts.json
+ */
+type Item = {
+  text: string;
+  tag: string;
+  image: string;
+  /** Describes the tapestry itself, for anyone who can't see it. */
+  alt: string;
+  /** Warm base behind the panel while the image decodes. */
+  tint: string;
+};
 
-function CpuIcon({ className = '' }: { className?: string }) {
-  return (
-    <svg className={className} style={{ width: 56, height: 56 }} viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <defs>
-        <linearGradient id="privacyCpuBase" x1="0" y1="0" x2="0" y2="100" gradientUnits="userSpaceOnUse">
-          <stop offset="0%" stopColor="#FFFFFF" stopOpacity="0.9" />
-          <stop offset="45%" stopColor="#FFFFFF" stopOpacity="0.4" />
-          <stop offset="45.1%" stopColor="#FFFFFF" stopOpacity="0.05" />
-          <stop offset="100%" stopColor="#FFFFFF" stopOpacity="0.2" />
-        </linearGradient>
-        <linearGradient id="privacyCpuEdge" x1="0" y1="0" x2="0" y2="100" gradientUnits="userSpaceOnUse">
-          <stop offset="0%" stopColor="#FFFFFF" stopOpacity="1" />
-          <stop offset="100%" stopColor="#FFFFFF" stopOpacity="0.3" />
-        </linearGradient>
-      </defs>
-      <rect x="20" y="20" width="60" height="60" rx="12" fill="url(#privacyCpuBase)" stroke="url(#privacyCpuEdge)" strokeWidth="3" />
-      <rect x="35" y="35" width="30" height="30" rx="6" fill="url(#privacyCpuBase)" stroke="url(#privacyCpuEdge)" strokeWidth="2" />
-      <path
-        d="M30 10 V20 M50 10 V20 M70 10 V20 M30 80 V90 M50 80 V90 M70 80 V90 M10 30 H20 M10 50 H20 M10 70 H20 M80 30 H90 M80 50 H90 M80 70 H90"
-        stroke="url(#privacyCpuBase)"
-        strokeWidth="4"
-        strokeLinecap="round"
-      />
-    </svg>
-  );
-}
-
-function GdprIcon({ className = '' }: { className?: string }) {
-  return (
-    <svg className={className} style={{ width: 56, height: 56 }} viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <defs>
-        <linearGradient id="privacyGdprBase" x1="0" y1="0" x2="0" y2="100" gradientUnits="userSpaceOnUse">
-          <stop offset="0%" stopColor="#FFFFFF" stopOpacity="0.9" />
-          <stop offset="45%" stopColor="#FFFFFF" stopOpacity="0.4" />
-          <stop offset="45.1%" stopColor="#FFFFFF" stopOpacity="0.05" />
-          <stop offset="100%" stopColor="#FFFFFF" stopOpacity="0.2" />
-        </linearGradient>
-        <linearGradient id="privacyGdprEdge" x1="0" y1="0" x2="0" y2="100" gradientUnits="userSpaceOnUse">
-          <stop offset="0%" stopColor="#FFFFFF" stopOpacity="1" />
-          <stop offset="100%" stopColor="#FFFFFF" stopOpacity="0.3" />
-        </linearGradient>
-      </defs>
-      <circle cx="50" cy="50" r="42" fill="url(#privacyGdprBase)" stroke="url(#privacyGdprEdge)" strokeWidth="3" />
-      <text x="50" y="58" fill="#FFFFFF" fontFamily="-apple-system, sans-serif" fontWeight="800" fontSize="26" textAnchor="middle">
-        GDPR
-      </text>
-    </svg>
-  );
-}
-
-function ServerOffIcon({ className = '' }: { className?: string }) {
-  return (
-    <svg className={className} style={{ width: 56, height: 56 }} viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <defs>
-        <linearGradient id="privacyServerBase" x1="0" y1="0" x2="0" y2="100" gradientUnits="userSpaceOnUse">
-          <stop offset="0%" stopColor="#FFFFFF" stopOpacity="0.9" />
-          <stop offset="45%" stopColor="#FFFFFF" stopOpacity="0.4" />
-          <stop offset="45.1%" stopColor="#FFFFFF" stopOpacity="0.05" />
-          <stop offset="100%" stopColor="#FFFFFF" stopOpacity="0.2" />
-        </linearGradient>
-        <linearGradient id="privacyServerEdge" x1="0" y1="0" x2="0" y2="100" gradientUnits="userSpaceOnUse">
-          <stop offset="0%" stopColor="#FFFFFF" stopOpacity="1" />
-          <stop offset="100%" stopColor="#FFFFFF" stopOpacity="0.3" />
-        </linearGradient>
-      </defs>
-      {[15, 40, 65].map((y) => (
-        <g key={y}>
-          <rect x="25" y={y} width="50" height="20" rx="4" fill="url(#privacyServerBase)" stroke="url(#privacyServerEdge)" strokeWidth="2" />
-          <circle cx="35" cy={y + 10} r="3" fill="#FFFFFF" />
-          <circle cx="45" cy={y + 10} r="3" fill="#FFFFFF" />
-        </g>
-      ))}
-      <path d="M20 80 L80 20" stroke="url(#privacyServerBase)" strokeWidth="8" strokeLinecap="round" />
-      <path d="M20 80 L80 20" stroke="#FFFFFF" strokeWidth="2" strokeLinecap="round" />
-    </svg>
-  );
-}
-
-function LockIcon({ className = '' }: { className?: string }) {
-  return (
-    <svg className={className} style={{ width: 56, height: 56 }} viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <defs>
-        <linearGradient id="privacyLockBase" x1="0" y1="0" x2="0" y2="100" gradientUnits="userSpaceOnUse">
-          <stop offset="0%" stopColor="#FFFFFF" stopOpacity="0.9" />
-          <stop offset="45%" stopColor="#FFFFFF" stopOpacity="0.4" />
-          <stop offset="45.1%" stopColor="#FFFFFF" stopOpacity="0.05" />
-          <stop offset="100%" stopColor="#FFFFFF" stopOpacity="0.2" />
-        </linearGradient>
-        <linearGradient id="privacyLockEdge" x1="0" y1="0" x2="0" y2="100" gradientUnits="userSpaceOnUse">
-          <stop offset="0%" stopColor="#FFFFFF" stopOpacity="1" />
-          <stop offset="100%" stopColor="#FFFFFF" stopOpacity="0.3" />
-        </linearGradient>
-      </defs>
-      <path d="M30 45 V30 C30 18 70 18 70 30 V45" stroke="url(#privacyLockBase)" strokeWidth="12" strokeLinecap="round" />
-      <path d="M30 45 V30 C30 18 70 18 70 30 V45" stroke="#FFFFFF" strokeWidth="4" strokeLinecap="round" />
-      <rect x="20" y="45" width="60" height="45" rx="8" fill="url(#privacyLockBase)" stroke="url(#privacyLockEdge)" strokeWidth="3" />
-      <circle cx="50" cy="62" r="6" fill="#FFFFFF" />
-      <path d="M48 62 L46 75 H54 L52 62 Z" fill="#FFFFFF" />
-    </svg>
-  );
-}
-
-function ShieldLockIcon({ className = '' }: { className?: string }) {
-  return (
-    <svg className={className} style={{ width: 56, height: 56 }} viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <defs>
-        <linearGradient id="privacyShieldLockBase" x1="0" y1="0" x2="0" y2="100" gradientUnits="userSpaceOnUse">
-          <stop offset="0%" stopColor="#FFFFFF" stopOpacity="0.9" />
-          <stop offset="45%" stopColor="#FFFFFF" stopOpacity="0.4" />
-          <stop offset="45.1%" stopColor="#FFFFFF" stopOpacity="0.05" />
-          <stop offset="100%" stopColor="#FFFFFF" stopOpacity="0.2" />
-        </linearGradient>
-        <linearGradient id="privacyShieldLockEdge" x1="0" y1="0" x2="0" y2="100" gradientUnits="userSpaceOnUse">
-          <stop offset="0%" stopColor="#FFFFFF" stopOpacity="1" />
-          <stop offset="100%" stopColor="#FFFFFF" stopOpacity="0.3" />
-        </linearGradient>
-      </defs>
-      <path
-        d="M50 10 C50 10 15 20 15 20 C15 55 15 75 50 95 C85 75 85 55 85 20 C85 20 50 10 50 10 Z"
-        fill="url(#privacyShieldLockBase)"
-        stroke="url(#privacyShieldLockEdge)"
-        strokeWidth="3"
-        strokeLinejoin="round"
-      />
-      <path d="M40 45 V35 C40 28 60 28 60 35 V45" stroke="#FFFFFF" strokeWidth="6" strokeLinecap="round" />
-      <rect x="34" y="45" width="32" height="26" rx="4" fill="url(#privacyShieldLockBase)" stroke="url(#privacyShieldLockEdge)" strokeWidth="2" />
-      <circle cx="50" cy="55" r="4" fill="#FFFFFF" />
-      <path d="M49 55 L48 62 H52 L51 55 Z" fill="#FFFFFF" />
-    </svg>
-  );
-}
-
-function ShareOffIcon({ className = '' }: { className?: string }) {
-  return (
-    <svg className={className} style={{ width: 56, height: 56 }} viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <defs>
-        <linearGradient id="privacyShareBase" x1="0" y1="0" x2="0" y2="100" gradientUnits="userSpaceOnUse">
-          <stop offset="0%" stopColor="#FFFFFF" stopOpacity="0.9" />
-          <stop offset="45%" stopColor="#FFFFFF" stopOpacity="0.4" />
-          <stop offset="45.1%" stopColor="#FFFFFF" stopOpacity="0.05" />
-          <stop offset="100%" stopColor="#FFFFFF" stopOpacity="0.2" />
-        </linearGradient>
-        <linearGradient id="privacyShareEdge" x1="0" y1="0" x2="0" y2="100" gradientUnits="userSpaceOnUse">
-          <stop offset="0%" stopColor="#FFFFFF" stopOpacity="1" />
-          <stop offset="100%" stopColor="#FFFFFF" stopOpacity="0.3" />
-        </linearGradient>
-      </defs>
-      <path d="M30 50 L70 25 M30 50 L70 75" stroke="url(#privacyShareBase)" strokeWidth="8" strokeLinecap="round" />
-      <circle cx="30" cy="50" r="12" fill="url(#privacyShareBase)" stroke="url(#privacyShareEdge)" strokeWidth="2" />
-      <circle cx="70" cy="25" r="12" fill="url(#privacyShareBase)" stroke="url(#privacyShareEdge)" strokeWidth="2" />
-      <circle cx="70" cy="75" r="12" fill="url(#privacyShareBase)" stroke="url(#privacyShareEdge)" strokeWidth="2" />
-      <path d="M20 80 L80 20" stroke="url(#privacyShareBase)" strokeWidth="8" strokeLinecap="round" />
-      <path d="M20 80 L80 20" stroke="#FFFFFF" strokeWidth="2" strokeLinecap="round" />
-    </svg>
-  );
-}
-
-function BriefcaseIcon({ className = '' }: { className?: string }) {
-  return (
-    <svg className={className} style={{ width: 56, height: 56 }} viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <defs>
-        <linearGradient id="privacyBriefcaseBase" x1="0" y1="0" x2="0" y2="100" gradientUnits="userSpaceOnUse">
-          <stop offset="0%" stopColor="#FFFFFF" stopOpacity="0.9" />
-          <stop offset="45%" stopColor="#FFFFFF" stopOpacity="0.4" />
-          <stop offset="45.1%" stopColor="#FFFFFF" stopOpacity="0.05" />
-          <stop offset="100%" stopColor="#FFFFFF" stopOpacity="0.2" />
-        </linearGradient>
-        <linearGradient id="privacyBriefcaseEdge" x1="0" y1="0" x2="0" y2="100" gradientUnits="userSpaceOnUse">
-          <stop offset="0%" stopColor="#FFFFFF" stopOpacity="1" />
-          <stop offset="100%" stopColor="#FFFFFF" stopOpacity="0.3" />
-        </linearGradient>
-      </defs>
-      <path d="M38 30 V18 C38 12 62 12 62 18 V30" stroke="url(#privacyBriefcaseBase)" strokeWidth="8" strokeLinecap="round" />
-      <path d="M38 30 V18 C38 12 62 12 62 18 V30" stroke="#FFFFFF" strokeWidth="2" strokeLinecap="round" />
-      <rect x="15" y="30" width="70" height="55" rx="8" fill="url(#privacyBriefcaseBase)" stroke="url(#privacyBriefcaseEdge)" strokeWidth="3" />
-      <path d="M15 45 Q 50 60 85 45" fill="none" stroke="url(#privacyBriefcaseEdge)" strokeWidth="3" />
-      <rect x="42" y="42" width="16" height="12" rx="3" fill="url(#privacyBriefcaseBase)" stroke="#FFFFFF" strokeWidth="2" />
-    </svg>
-  );
-}
-
-const privacyItems = [
+const privacyItems: Item[] = [
   {
     text: "We don't train on your data.",
-    icon: <ShieldIcon className="h-12 w-12 shrink-0" />,
+    tag: 'no training',
+    image: '/images/privacy/01-no-training.webp',
+    alt: 'An embroidered coat of arms: a padlock and globe on a shield held by a lion and a griffin, over a banner reading Privacy.',
+    tint: '#2E2A1C',
   },
   {
     text: 'Processed & Stored Locally',
-    icon: <CpuIcon className="h-12 w-12 shrink-0" />,
+    tag: 'on-premise',
+    image: '/images/privacy/02-on-premise.webp',
+    alt: 'An embroidered shield bearing a fortified castle with a golden padlock and key, flanked by stitched dragons.',
+    tint: '#1D2A33',
   },
   {
     text: 'GDPR compliant by design.',
-    icon: <GdprIcon className="h-12 w-12 shrink-0" />,
+    tag: 'compliance',
+    image: '/images/privacy/03-compliance.webp',
+    alt: 'An embroidered shield lettered GDPR ringed by twelve stars, encircled by stitched figures holding hands.',
+    tint: '#3A2418',
   },
   {
     text: 'Zero server logging',
-    icon: <ServerOffIcon className="h-12 w-12 shrink-0" />,
+    tag: 'no logs',
+    image: '/images/privacy/04-no-logs.webp',
+    alt: 'Embroidered server racks bound by a knotted cord reading Zero Logs, closed with a padlock marked Private.',
+    tint: '#33291B',
   },
   {
     text: 'End to end private',
-    icon: <LockIcon className="h-12 w-12 shrink-0" />,
+    tag: 'end-to-end',
+    image: '/images/privacy/05-end-to-end.webp',
+    alt: 'Two stitched Renaissance figures holding a woven banner that reads End To End Private, cherubs in each corner.',
+    tint: '#3A2A1E',
   },
   {
     text: 'Encrypted at rest',
-    icon: <ShieldLockIcon className="h-12 w-12 shrink-0" />,
+    tag: 'at rest',
+    image: '/images/privacy/06-at-rest.webp',
+    alt: 'Two embroidered figures holding sealed scrolls, a padlock and key stitched between them inside a braided cord.',
+    tint: '#2B3140',
   },
   {
     text: 'No third-party sharing',
-    icon: <ShareOffIcon className="h-12 w-12 shrink-0" />,
+    tag: 'no sharing',
+    image: '/images/privacy/07-no-sharing.webp',
+    alt: 'An embroidered guard with a padlock shield standing over a data chest, turning two cloaked figures away.',
+    tint: '#3A1F18',
   },
   {
     text: 'Enterprise grade',
-    icon: <BriefcaseIcon className="h-12 w-12 shrink-0" />,
+    tag: 'enterprise',
+    image: '/images/privacy/08-enterprise.webp',
+    alt: 'A quartered embroidered coat of arms with a lion, a building, a tree and a wheat sheaf, held by two cherubs.',
+    tint: '#22293A',
   },
 ];
 
@@ -270,31 +101,59 @@ export default function PrivacySection() {
           </div>
 
           <div className="lg:col-span-6 lg:col-start-7 lg:self-end">
-            <p className="max-w-2xl text-xl font-light leading-[1.55] tracking-[-0.015em] text-white/82 md:text-2xl">
+            <p
+              className="max-w-2xl text-xl font-light leading-[1.55] tracking-[-0.015em] text-white/82 md:text-2xl"
+              style={{ fontFamily: "'Manrope', sans-serif", fontWeight: 300 }}
+            >
               Your operational intelligence should remain under your control—at every layer of the system.
             </p>
-            <p className="mt-7 max-w-xl text-[15px] font-light leading-7 text-white/55">
+            <p
+              className="mt-7 max-w-xl text-[15px] font-light leading-7 text-white/55"
+              style={{ fontFamily: "'Manrope', sans-serif", fontWeight: 300 }}
+            >
               Zero model training. Zero third-party logging. Your operational data remains entirely within your control.
             </p>
           </div>
         </div>
 
-        <div className="grid border-l border-t border-white/10 md:grid-cols-2 xl:grid-cols-4">
+        <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-4">
           {privacyItems.map((item, index) => (
-            <div
+            <article
               key={item.text}
-              className="group flex min-h-[210px] flex-col justify-between border-b border-r border-white/10 p-7 transition-colors hover:bg-white/[0.018] md:min-h-[230px] md:p-8"
+              className="group rounded-[26px] border border-white/[0.09] bg-[#0C0C0F] p-2.5 shadow-[0_28px_64px_-34px_rgba(0,0,0,0.95)] transition duration-500 hover:-translate-y-1 hover:border-white/20"
             >
-              <div className="flex items-start justify-between gap-6">
-                <span className="text-white/80">{item.icon}</span>
-                <span className="font-mono text-[9px] text-white/28">
+              <div
+                className="relative aspect-[4/3] overflow-hidden rounded-[18px] ring-1 ring-inset ring-white/[0.07]"
+                style={{ backgroundColor: item.tint }}
+              >
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={item.image}
+                  alt={item.alt}
+                  width={900}
+                  height={672}
+                  loading={index < 4 ? 'eager' : 'lazy'}
+                  decoding="async"
+                  className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
+                />
+                <span className="absolute right-3 top-3 rounded-full bg-black/45 px-2 py-0.5 font-mono text-[9px] tracking-[0.16em] text-white/85 backdrop-blur-sm">
                   {String(index + 1).padStart(2, '0')}
                 </span>
               </div>
-              <p className="max-w-[220px] text-base font-light leading-7 text-white/78 md:text-lg">
-                {item.text}
-              </p>
-            </div>
+
+              <div className="px-3 pb-3 pt-5">
+                <p
+                  className="text-[17px] leading-snug tracking-[-0.012em] text-white/88 md:text-lg"
+                  style={{ fontFamily: "'Manrope', sans-serif", fontWeight: 300 }}
+                >
+                  {item.text}
+                </p>
+                <div className="mt-5 flex items-center justify-between border-t border-white/[0.07] pt-3 font-mono text-[9px] uppercase tracking-[0.2em] text-white/32">
+                  <span>{item.tag}</span>
+                  <span className="transition-colors group-hover:text-white/55">✦</span>
+                </div>
+              </div>
+            </article>
           ))}
         </div>
       </div>
