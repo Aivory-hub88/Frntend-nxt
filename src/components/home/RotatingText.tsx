@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 
 const messages = [
+  'Make AI Make Sense&reg;',
   'For your business operation.',
   'Start with clarity.',
   'Discover where AI creates measurable value.',
