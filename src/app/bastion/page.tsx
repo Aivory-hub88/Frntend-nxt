@@ -1,5 +1,4 @@
 import type { Metadata } from 'next';
-import { headers } from 'next/headers';
 import Navbar from '@/components/home/Navbar';
 import BastionVisualHero from '@/components/bastion/BastionVisualHero';
 import BastionHero from '@/components/bastion/BastionHero';
@@ -26,8 +25,8 @@ export const metadata: Metadata = {
   },
 };
 
-export default async function BastionPage() {
-  const siteUrl = siteUrlFromHeaders(await headers());
+export default function BastionPage() {
+  const siteUrl = siteUrlFromHeaders();
 
   return (
     <main className="relative bg-black min-h-screen text-white font-manrope selection:bg-[#165444] selection:text-white">

@@ -1,4 +1,3 @@
-import { headers } from 'next/headers';
 import Navbar from '@/components/home/Navbar';
 import HeroSection from '@/components/home/HeroSection';
 import AIReadySection from '@/components/home/AIReadySection';
@@ -14,8 +13,8 @@ import BastionBackground from '@/components/bastion/BastionBackground';
 import { DarkSectionSpotlight } from '@/components/ui/DarkSectionSpotlight';
 import { JsonLd, buildHomePageGraph, siteUrlFromHeaders } from '@/lib/seo';
 
-export default async function HomePage() {
-  const siteUrl = siteUrlFromHeaders(await headers());
+export default function HomePage() {
+  const siteUrl = siteUrlFromHeaders();
 
   return (
     <main className="relative">

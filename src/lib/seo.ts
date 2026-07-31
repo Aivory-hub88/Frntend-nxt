@@ -31,14 +31,17 @@ const BASTION_DESCRIPTION =
 const FOUNDER_DESCRIPTION =
   'Founder of Aivory. Focused on practical AI adoption through operational clarity, governed systems, and business transformation that starts with how organisations actually work.';
 
-interface HeaderReader {
-  get(name: string): string | null;
-}
-
 /**
  * Canonical metadata must never depend on the incoming hostname. The legacy
  * domain is redirected before rendering; this fallback protects crawlers that
  * reach the application directly while that redirect is being propagated.
+ *
+ * Both of these used to inspect the request (proxy/forwarded host, or a
+ * next/headers() ReadonlyHeaders) before the domain consolidated to
+ * aivory.uk-only. They're pure now, so callers should NOT pass headers() /
+ * host values anymore -- doing so only forces the calling route into
+ * per-request dynamic rendering (no static generation, no CDN caching) for
+ * zero behavioural benefit.
  */
 export function resolvePublicSiteUrl(
   _proxyHost?: string | null,
@@ -48,7 +51,7 @@ export function resolvePublicSiteUrl(
   return AIVORY_UK_URL;
 }
 
-export function siteUrlFromHeaders(_headersList: HeaderReader): PublicSiteUrl {
+export function siteUrlFromHeaders(): PublicSiteUrl {
   return AIVORY_UK_URL;
 }
 

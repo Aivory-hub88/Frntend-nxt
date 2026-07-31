@@ -1,5 +1,4 @@
 import type { Metadata } from 'next';
-import { headers } from 'next/headers';
 import Link from 'next/link';
 import Navbar from '@/components/home/Navbar';
 import Footer from '@/components/Footer';
@@ -457,8 +456,8 @@ function ArchitecturalSignal() {
   );
 }
 
-export default async function AboutPage() {
-  const siteUrl = siteUrlFromHeaders(await headers());
+export default function AboutPage() {
+  const siteUrl = siteUrlFromHeaders();
 
   return (
     <main
