@@ -514,14 +514,14 @@ export function HalftoneWave({ active = true, purpleColor }: { active?: boolean;
     }, { threshold: 0.0 });
     observer.observe(renderer.domElement);
 
-    // Cap the ambient background's frame rate. Uncapped, this full-viewport
-    // fragment shader redraws at the display's native refresh -- 120Hz on a
-    // recent laptop, i.e. four times the work for motion that is a 0.15 rad/s
-    // drift and a slow shimmer. Nothing here reads as smoother above 30fps,
-    // and the saved budget belongs to the foreground UI.
-    const fpsInterval = 1000 / (isMobile ? 20 : 30);
-    let lastRenderTime = 0;
-    const renderLoop = (timestamp: number) => {
+    // Deliberately uncapped: the loop renders on every animation frame, so it
+    // runs at the display's native refresh (60Hz, 120Hz). Gating this to a
+    // fixed interval is what causes the stutter it looks like it should fix --
+    // 30fps means a 33.3ms budget against 8.33ms frame boundaries on a 120Hz
+    // panel, so frames land in a 4-5-4 pattern and the drift visibly judders.
+    // GPU headroom is bought elsewhere (halved tessellation, one live context,
+    // and the visibility gate below), not by dropping frames.
+    const renderLoop = () => {
       animationFrameId = requestAnimationFrame(renderLoop);
       // Skip the render (and all the per-frame math above it) while the
       // caller has faded this out (e.g. scrolled into a section that hides
@@ -529,8 +529,6 @@ export function HalftoneWave({ active = true, purpleColor }: { active?: boolean;
       // alone can't catch this since the canvas is a fixed full-viewport
       // background that's always "intersecting".
       if (isVisible && activeRef.current) {
-        if (timestamp - lastRenderTime < fpsInterval) return;
-        lastRenderTime = timestamp;
         const time = clock.getElapsedTime();
         uniforms.uTime.value = time;
         
@@ -577,7 +575,7 @@ export function HalftoneWave({ active = true, purpleColor }: { active?: boolean;
         renderer.render(scene, camera);
       }
     };
-    renderLoop(0);
+    renderLoop();
 
     const handleResize = () => {
       if (!mountRef.current) return;
