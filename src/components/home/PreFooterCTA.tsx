@@ -2,126 +2,45 @@
 
 import { useState } from 'react';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
+import { SpotlightButton } from '@/components/ui/SpotlightButton';
 
 const FORMSUBMIT_ENDPOINT = 'https://formsubmit.co/ajax/sales@aivory.uk';
 
 type SubmitState = 'idle' | 'submitting' | 'success' | 'error';
 
-function ShieldIcon({ className = '' }: { className?: string }) {
-  return (
-    <svg className={className} viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <defs>
-        <linearGradient id="glassBase1" x1="0" y1="0" x2="0" y2="100" gradientUnits="userSpaceOnUse">
-          <stop offset="0%" stopColor="#FFFFFF" stopOpacity="0.9" />
-          <stop offset="45%" stopColor="#FFFFFF" stopOpacity="0.4" />
-          <stop offset="45.1%" stopColor="#FFFFFF" stopOpacity="0.05" />
-          <stop offset="100%" stopColor="#FFFFFF" stopOpacity="0.2" />
-        </linearGradient>
-        <linearGradient id="glassEdge1" x1="0" y1="0" x2="0" y2="100" gradientUnits="userSpaceOnUse">
-          <stop offset="0%" stopColor="#FFFFFF" stopOpacity="1" />
-          <stop offset="100%" stopColor="#FFFFFF" stopOpacity="0.3" />
-        </linearGradient>
-      </defs>
-      <path
-        d="M50 10 C50 10 15 20 15 20 C15 55 15 75 50 95 C85 75 85 55 85 20 C85 20 50 10 50 10 Z"
-        fill="url(#glassBase1)"
-        stroke="url(#glassEdge1)"
-        strokeWidth="3"
-        strokeLinejoin="round"
-      />
-      <path d="M35 50 L45 62 L65 38" stroke="#FFFFFF" strokeWidth="6" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
-  );
-}
-
-function CpuIcon({ className = '' }: { className?: string }) {
-  return (
-    <svg className={className} viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <defs>
-        <linearGradient id="glassBase2" x1="0" y1="0" x2="0" y2="100" gradientUnits="userSpaceOnUse">
-          <stop offset="0%" stopColor="#FFFFFF" stopOpacity="0.9" />
-          <stop offset="45%" stopColor="#FFFFFF" stopOpacity="0.4" />
-          <stop offset="45.1%" stopColor="#FFFFFF" stopOpacity="0.05" />
-          <stop offset="100%" stopColor="#FFFFFF" stopOpacity="0.2" />
-        </linearGradient>
-        <linearGradient id="glassEdge2" x1="0" y1="0" x2="0" y2="100" gradientUnits="userSpaceOnUse">
-          <stop offset="0%" stopColor="#FFFFFF" stopOpacity="1" />
-          <stop offset="100%" stopColor="#FFFFFF" stopOpacity="0.3" />
-        </linearGradient>
-      </defs>
-      <rect x="20" y="20" width="60" height="60" rx="12" fill="url(#glassBase2)" stroke="url(#glassEdge2)" strokeWidth="3" />
-      <rect x="35" y="35" width="30" height="30" rx="6" fill="url(#glassBase2)" stroke="url(#glassEdge2)" strokeWidth="2" />
-    </svg>
-  );
-}
-
-function LayersIcon({ className = '' }: { className?: string }) {
-  return (
-    <svg className={className} viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <defs>
-        <linearGradient id="glassBase3" x1="0" y1="0" x2="0" y2="100" gradientUnits="userSpaceOnUse">
-          <stop offset="0%" stopColor="#FFFFFF" stopOpacity="0.9" />
-          <stop offset="45%" stopColor="#FFFFFF" stopOpacity="0.4" />
-          <stop offset="45.1%" stopColor="#FFFFFF" stopOpacity="0.05" />
-          <stop offset="100%" stopColor="#FFFFFF" stopOpacity="0.2" />
-        </linearGradient>
-        <linearGradient id="glassEdge3" x1="0" y1="0" x2="0" y2="100" gradientUnits="userSpaceOnUse">
-          <stop offset="0%" stopColor="#FFFFFF" stopOpacity="1" />
-          <stop offset="100%" stopColor="#FFFFFF" stopOpacity="0.3" />
-        </linearGradient>
-      </defs>
-      <path d="M50 20 L85 38 L50 56 L15 38 Z" fill="url(#glassBase3)" stroke="url(#glassEdge3)" strokeWidth="3" />
-      <path d="M15 52 L50 70 L85 52" stroke="url(#glassEdge3)" strokeWidth="3" strokeLinecap="round" />
-      <path d="M15 66 L50 84 L85 66" stroke="url(#glassEdge3)" strokeWidth="3" strokeLinecap="round" />
-    </svg>
-  );
-}
-
-function BriefcaseIcon({ className = '' }: { className?: string }) {
-  return (
-    <svg className={className} viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <defs>
-        <linearGradient id="glassBase4" x1="0" y1="0" x2="0" y2="100" gradientUnits="userSpaceOnUse">
-          <stop offset="0%" stopColor="#FFFFFF" stopOpacity="0.9" />
-          <stop offset="45%" stopColor="#FFFFFF" stopOpacity="0.4" />
-          <stop offset="45.1%" stopColor="#FFFFFF" stopOpacity="0.05" />
-          <stop offset="100%" stopColor="#FFFFFF" stopOpacity="0.2" />
-        </linearGradient>
-        <linearGradient id="glassEdge4" x1="0" y1="0" x2="0" y2="100" gradientUnits="userSpaceOnUse">
-          <stop offset="0%" stopColor="#FFFFFF" stopOpacity="1" />
-          <stop offset="100%" stopColor="#FFFFFF" stopOpacity="0.3" />
-        </linearGradient>
-      </defs>
-      <path d="M38 30 V18 C38 12 62 12 62 18 V30" stroke="url(#glassBase4)" strokeWidth="8" strokeLinecap="round" />
-      <rect x="15" y="30" width="70" height="55" rx="8" fill="url(#glassBase4)" stroke="url(#glassEdge4)" strokeWidth="3" />
-    </svg>
-  );
-}
-
+/**
+ * Knitted-wool isometric scenes, one per engagement stage. Art sits on black,
+ * so the thumbnails run borderless against the section background.
+ * Masters: art-masters/transformation (gitignored).
+ */
 const services = [
   {
     title: 'Operational Assessment',
     description:
       'Understand how your organisation operates today, identify operational bottlenecks, and uncover the highest-value transformation opportunities.',
-    icon: <ShieldIcon className="h-6 w-6 shrink-0" />,
+    image: '/images/transformation/01-operational-assessment.webp',
+    alt: 'A knitted isometric scene: three figures inspecting a gear and a blueprint on a woven platform.',
   },
   {
     title: 'Transformation Design',
     description:
       'Design future operating models, intelligent workflows, governance frameworks, and AI deployment strategies tailored to your organisation.',
-    icon: <CpuIcon className="h-6 w-6 shrink-0" />,
+    image: '/images/transformation/02-transformation-design.webp',
+    alt: 'A knitted isometric network of buildings, data stores and a rocket linked by woven pipelines.',
   },
   {
     title: 'Enterprise Implementation',
     description:
       'Deploy governed AI systems, operational workflows, and enterprise integrations with measurable business outcomes.',
-    icon: <LayersIcon className="h-6 w-6 shrink-0" />,
+    image: '/images/transformation/03-enterprise-implementation.webp',
+    alt: 'A knitted isometric factory town with gears, conveyor pipes, delivery trucks and workers at desks.',
   },
   {
     title: 'Executive Enablement',
     description:
       'Prepare leadership and operational teams with the knowledge, governance, and frameworks required to manage long-term transformation.',
-    icon: <BriefcaseIcon className="h-6 w-6 shrink-0" />,
+    image: '/images/transformation/04-executive-enablement.webp',
+    alt: 'A knitted isometric scene: a figure presenting from a lectern to colleagues holding a gear and a lightbulb.',
   },
 ];
 
@@ -194,7 +113,18 @@ export default function PreFooterCTA() {
               <span className="font-mono text-[10px] text-white/35 lg:col-span-1">
                 {String(index + 1).padStart(2, '0')}
               </span>
-              <div className="text-white/80 lg:col-span-1">{service.icon}</div>
+              <div className="lg:col-span-2">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={service.image}
+                  alt={service.alt}
+                  width={520}
+                  height={388}
+                  loading="lazy"
+                  decoding="async"
+                  className="w-28 rounded-lg transition-transform duration-500 group-hover:scale-[1.04] md:w-36 lg:w-full lg:max-w-[164px]"
+                />
+              </div>
               <h3 className="text-xl font-light tracking-[-0.015em] text-white/92 md:text-2xl lg:col-span-3">
                 {service.title}
               </h3>
@@ -361,13 +291,14 @@ export default function PreFooterCTA() {
                 )}
 
                 <div className="flex flex-col items-start gap-5 pt-6">
-                  <button
+                  <SpotlightButton
                     type="submit"
                     disabled={status === 'submitting'}
-                    className="inline-flex min-h-[46px] items-center bg-white px-7 text-[11px] font-medium uppercase tracking-[0.14em] text-black transition-colors hover:bg-white/85 disabled:cursor-not-allowed disabled:opacity-55"
+                    roundedClass="rounded-[10px]"
+                    className="text-xs md:text-sm"
                   >
                     {status === 'submitting' ? 'Sending...' : 'Start Conversation'}
-                  </button>
+                  </SpotlightButton>
 
                   <p className="text-sm font-light text-white/55 md:text-base">
                     Prefer speaking with our team?{' '}
