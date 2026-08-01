@@ -50,7 +50,11 @@ export function HalftoneWave({ active = true, purpleColor }: { active?: boolean;
     const uniforms = {
       uTime: { value: 0.0 },
       uResolution: { value: new THREE.Vector2(width * baseDPR, height * baseDPR) },
-      uPixelSize: { value: 4.5 }, // Reduced by 10% from 5.0
+      // Glyph cell edge, in device pixels. Each cell draws its dot from a 5x5
+      // sub-grid, so the lit feature is a fifth of this — at 3.0 that feature
+      // falls under one physical pixel and the whole bloom visibly thins out.
+      // 3.6 is as tight as the grid goes while the dots keep their weight.
+      uPixelSize: { value: 3.6 },
       uScroll: { value: 0.0 }, // Used to trigger the spreading petals effect
       uMouse: { value: new THREE.Vector2(0, 0) },
       uCustomPurple: { value: customPurpleVec },
