@@ -57,11 +57,11 @@ export function HalftoneWave({ active = true, purpleColor }: { active?: boolean;
     const uniforms = {
       uTime: { value: 0.0 },
       uResolution: { value: new THREE.Vector2(width * baseDPR, height * baseDPR) },
-      // Glyph cell edge, in device pixels. Each cell draws its dot from a 5x5
-      // sub-grid, so the lit feature is a fifth of this — at 3.0 that feature
-      // falls under one physical pixel and the whole bloom visibly thins out.
-      // 3.6 is as tight as the grid goes while the dots keep their weight.
-      uPixelSize: { value: 3.6 },
+      // Glyph cell edge, in device pixels, against a 3x3 sub-grid — so the lit
+      // feature is exactly a third of this. At 3.0 that is a clean 1px dot on a
+      // 3px pitch, the finest the mesh goes before features fall under a
+      // physical pixel and the GPU starts rounding them back up.
+      uPixelSize: { value: 3.0 },
       uScroll: { value: 0.0 }, // Used to trigger the spreading petals effect
       uMouse: { value: new THREE.Vector2(0, 0) },
       uCustomPurple: { value: customPurpleVec },
@@ -115,7 +115,11 @@ export function HalftoneWave({ active = true, purpleColor }: { active?: boolean;
           // Reduced spotlight influence on density to avoid solid bright blocks
           float density = 1.0 - normalizedDepth + (rim * 0.5) + (spotlight * 0.2);
           // + 0.1 boost to density as requested by user (10% increase)
-          density = clamp(density, 0.0, 0.9); // Clamp below 1.0 to prevent full solid blocks
+          // Ceiling trimmed from 0.9 to 0.82. A 3x3 glyph packs more coverage
+          // per level than the 5x5 it replaced (5/9 at the top where the old
+          // grid peaked at 9/25), so the same density would read brighter and
+          // heavier than the hero had before; this holds the bloom's weight.
+          density = clamp(density, 0.0, 0.82);
           
           // 2. ASCII SCREEN-SPACE GRID
           // LIGHT ordered (4x4 Bayer) dither on the character selection, keyed to
@@ -124,27 +128,44 @@ export function HalftoneWave({ active = true, purpleColor }: { active?: boolean;
           // earlier heavy 0.167 that dulled the color); on the current rich
           // palette this smooths banding without flattening. Color + silhouette
           // still use the raw, undithered density.
+          // The glyph is drawn on a 3x3 sub-grid, not 5x5. A 5x5 glyph spends a
+          // fifth of the cell edge on its lit feature, so shrinking the cell to
+          // tighten the mesh pushed that feature under one physical pixel — the
+          // GPU rounded it back up to a full pixel and the dots read as fatter
+          // inside a smaller cell, coarsening the pattern instead of refining
+          // it. At 3x3 the feature is exactly a third of the edge, so a 3px cell
+          // puts a crisp 1px dot on a 3px pitch: smaller cell, tighter gap, and
+          // nothing left to round.
           vec2 cell = floor(gl_FragCoord.xy / uPixelSize);
           vec2 local = fract(gl_FragCoord.xy / uPixelSize);
-          vec2 p5 = floor(local * 5.0); 
-          
+          vec2 p3 = floor(local * 3.0);
+
           int charIndex = int(floor(density * 5.99));
           if (charIndex == 0) discard; // empty cell: skip glyph branches
           float shape = 0.0;
-          
+
+          // Coverage has to climb one sub-cell per level, or the top levels
+          // collapse onto the same brightness and the shading goes flat: 1/9,
+          // 2/9, 3/9, 4/9, 5/9. The ceiling is the X — filling the cell outright
+          // would read as a lit square and destroy the halftone.
           if (charIndex == 1) {
-              if (p5.x == 2.0 && p5.y == 2.0) shape = 1.0;
+              // centre
+              if (p3.x == 1.0 && p3.y == 1.0) shape = 1.0;
           } else if (charIndex == 2) {
-              if (p5.x == 2.0 && p5.y > 0.0 && p5.y < 4.0) shape = 1.0;
-              if (p5.y == 2.0 && p5.x > 0.0 && p5.x < 4.0) shape = 1.0;
+              // centre + one corner
+              if (p3.x == 1.0 && p3.y == 1.0) shape = 1.0;
+              if (p3.x == 0.0 && p3.y == 0.0) shape = 1.0;
           } else if (charIndex == 3) {
-              if (p5.x == p5.y && p5.x > 0.0 && p5.x < 4.0) shape = 1.0;
-              if (p5.x == (4.0 - p5.y) && p5.x > 0.0 && p5.x < 4.0) shape = 1.0;
+              // one diagonal
+              if (p3.x == p3.y) shape = 1.0;
           } else if (charIndex == 4) {
-              if ((p5.x == 1.0 || p5.x == 3.0) && p5.y >= 1.0 && p5.y <= 3.0) shape = 1.0;
-              if ((p5.y == 1.0 || p5.y == 3.0) && p5.x >= 1.0 && p5.x <= 3.0) shape = 1.0;
+              // diagonal + opposite corner
+              if (p3.x == p3.y) shape = 1.0;
+              if (p3.x == 0.0 && p3.y == 2.0) shape = 1.0;
           } else if (charIndex >= 5) {
-              if (p5.x >= 1.0 && p5.x <= 3.0 && p5.y >= 1.0 && p5.y <= 3.0) shape = 1.0;
+              // full X
+              if (p3.x == p3.y) shape = 1.0;
+              if (p3.x == (2.0 - p3.y)) shape = 1.0;
           }
           
           if (shape == 0.0) discard;
