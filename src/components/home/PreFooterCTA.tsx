@@ -13,36 +13,34 @@ type SubmitState = 'idle' | 'submitting' | 'success' | 'error';
  * so the thumbnails run borderless against the section background.
  * Masters: art-masters/transformation (gitignored).
  */
-const MASK = 'radial-gradient(ellipse 74% 74% at 50% 50%, #000 55%, transparent 100%)';
-
 const services = [
   {
     title: 'Operational Assessment',
     description:
       'Understand how your organisation operates today, identify operational bottlenecks, and uncover the highest-value transformation opportunities.',
     image: '/images/transformation/01-operational-assessment.webp',
-    alt: 'A knitted isometric scene: three figures inspecting a gear and a blueprint on a woven platform.',
+    alt: 'An embroidered tapestry: figures reviewing charts at a table before a heraldic wall panel.',
   },
   {
     title: 'Transformation Design',
     description:
       'Design future operating models, intelligent workflows, governance frameworks, and AI deployment strategies tailored to your organisation.',
     image: '/images/transformation/02-transformation-design.webp',
-    alt: 'A knitted isometric network of buildings, data stores and a rocket linked by woven pipelines.',
+    alt: 'An embroidered tapestry: a figure setting a great cogwheel beside a woven road leading to a castle.',
   },
   {
     title: 'Enterprise Implementation',
     description:
       'Deploy governed AI systems, operational workflows, and enterprise integrations with measurable business outcomes.',
     image: '/images/transformation/03-enterprise-implementation.webp',
-    alt: 'A knitted isometric factory town with gears, conveyor pipes, delivery trucks and workers at desks.',
+    alt: 'An embroidered tapestry: workers tending an interlocking machine of gears, pipes and dashboards.',
   },
   {
     title: 'Executive Enablement',
     description:
       'Prepare leadership and operational teams with the knowledge, governance, and frameworks required to manage long-term transformation.',
     image: '/images/transformation/04-executive-enablement.webp',
-    alt: 'A knitted isometric scene: a figure presenting from a lectern to colleagues holding a gear and a lightbulb.',
+    alt: 'An embroidered tapestry: three colleagues assembling a compass rose on a table beneath a crested banner.',
   },
 ];
 
@@ -116,23 +114,20 @@ export default function PreFooterCTA() {
                 {String(index + 1).padStart(2, '0')}
               </span>
               <div className="lg:col-span-2">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={service.image}
-                  alt={service.alt}
-                  width={520}
-                  height={388}
-                  loading="lazy"
-                  decoding="async"
-                  /* The art is matted on black; the mask dissolves that square so the
-                     scene floats over the animated backdrop instead of sitting in a box.
-                     Inline so the CSS minifier can't drop the unprefixed property. */
-                  style={{
-                    WebkitMaskImage: MASK,
-                    maskImage: MASK,
-                  }}
-                  className="w-28 transition-transform duration-500 group-hover:scale-[1.04] md:w-36 lg:w-full lg:max-w-[164px]"
-                />
+                {/* Full-bleed tapestries, so they read as framed thumbnails rather
+                    than floating icons — no matte to dissolve into the backdrop. */}
+                <div className="w-32 overflow-hidden rounded-[10px] ring-1 ring-inset ring-white/12 md:w-40 lg:w-full lg:max-w-[188px]">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={service.image}
+                    alt={service.alt}
+                    width={620}
+                    height={463}
+                    loading="lazy"
+                    decoding="async"
+                    className="block h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.05]"
+                  />
+                </div>
               </div>
               <h3 className="text-xl font-light tracking-[-0.015em] text-white/92 md:text-2xl lg:col-span-3">
                 {service.title}
