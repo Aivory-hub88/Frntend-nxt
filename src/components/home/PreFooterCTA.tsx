@@ -4,42 +4,51 @@ import { useState } from 'react';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
 import { SpotlightButton } from '@/components/ui/SpotlightButton';
 
+/**
+ * Imported rather than referenced by public path so the emitted URL carries a
+ * content hash. Swapping the art then changes the URL, which is the only thing
+ * that reliably evicts an already-cached image from browsers and the CDN edge.
+ */
+import opsAssessment from '../../../public/images/transformation/01-operational-assessment.webp';
+import transformationDesign from '../../../public/images/transformation/02-transformation-design.webp';
+import enterpriseImplementation from '../../../public/images/transformation/03-enterprise-implementation.webp';
+import executiveEnablement from '../../../public/images/transformation/04-executive-enablement.webp';
+
 const FORMSUBMIT_ENDPOINT = 'https://formsubmit.co/ajax/sales@aivory.uk';
 
 type SubmitState = 'idle' | 'submitting' | 'success' | 'error';
 
 /**
- * Knitted-wool isometric scenes, one per engagement stage. Art sits on black,
- * so the thumbnails run borderless against the section background.
- * Masters: art-masters/transformation (gitignored).
+ * One woven tapestry per engagement stage. Full-bleed art, so it is framed
+ * rather than floated. Masters: art-masters/transformation (gitignored).
  */
 const services = [
   {
     title: 'Operational Assessment',
     description:
       'Understand how your organisation operates today, identify operational bottlenecks, and uncover the highest-value transformation opportunities.',
-    image: '/images/transformation/01-operational-assessment.webp',
+    image: opsAssessment,
     alt: 'An embroidered tapestry: figures reviewing charts at a table before a heraldic wall panel.',
   },
   {
     title: 'Transformation Design',
     description:
       'Design future operating models, intelligent workflows, governance frameworks, and AI deployment strategies tailored to your organisation.',
-    image: '/images/transformation/02-transformation-design.webp',
+    image: transformationDesign,
     alt: 'An embroidered tapestry: a figure setting a great cogwheel beside a woven road leading to a castle.',
   },
   {
     title: 'Enterprise Implementation',
     description:
       'Deploy governed AI systems, operational workflows, and enterprise integrations with measurable business outcomes.',
-    image: '/images/transformation/03-enterprise-implementation.webp',
+    image: enterpriseImplementation,
     alt: 'An embroidered tapestry: workers tending an interlocking machine of gears, pipes and dashboards.',
   },
   {
     title: 'Executive Enablement',
     description:
       'Prepare leadership and operational teams with the knowledge, governance, and frameworks required to manage long-term transformation.',
-    image: '/images/transformation/04-executive-enablement.webp',
+    image: executiveEnablement,
     alt: 'An embroidered tapestry: three colleagues assembling a compass rose on a table beneath a crested banner.',
   },
 ];
@@ -119,10 +128,10 @@ export default function PreFooterCTA() {
                 <div className="w-32 overflow-hidden rounded-[10px] ring-1 ring-inset ring-white/12 md:w-40 lg:w-full lg:max-w-[188px]">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
-                    src={service.image}
+                    src={service.image.src}
                     alt={service.alt}
-                    width={620}
-                    height={463}
+                    width={service.image.width}
+                    height={service.image.height}
                     loading="lazy"
                     decoding="async"
                     className="block h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.05]"
