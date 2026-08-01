@@ -36,6 +36,13 @@ export function HalftoneWave({ active = true, purpleColor }: { active?: boolean;
     const baseDPR = isMobile ? 1 : Math.min(window.devicePixelRatio, 2);
     renderer.setPixelRatio(baseDPR);
     
+    // React runs this effect twice in development (StrictMode), and a canvas
+    // left behind by the discarded pass keeps a live WebGL context on the GPU
+    // while sitting on top of the running one -- which reads as a flower that
+    // renders but never moves. Claim the mount point before attaching.
+    while (mountRef.current.firstChild) {
+      mountRef.current.removeChild(mountRef.current.firstChild);
+    }
     mountRef.current.appendChild(renderer.domElement);
 
     const hexToRgb = (hex: string) => {
@@ -216,7 +223,12 @@ export function HalftoneWave({ active = true, purpleColor }: { active?: boolean;
     // ==========================================
     // 1. MAIN 6-LOBE FLOWER (Base)
     // ==========================================
-    const geometry = new THREE.SphereGeometry(1, 256, 256);
+    // 128 segments, not 256. The vertex shader runs the procedural orchid
+    // displacement per vertex, so tessellation is the dominant vertex cost:
+    // 256 spends ~66k vertices on it, 128 spends ~17k. The output is quantised
+    // to a 3.6px halftone cell downstream, which discards far more detail than
+    // the extra subdivisions ever resolved.
+    const geometry = new THREE.SphereGeometry(1, 128, 128);
     const material = new THREE.ShaderMaterial({
       uniforms,
       side: THREE.FrontSide, 
@@ -481,6 +493,12 @@ export function HalftoneWave({ active = true, purpleColor }: { active?: boolean;
     }, { threshold: 0.0 });
     observer.observe(renderer.domElement);
 
+    // Cap the ambient background's frame rate. Uncapped, this full-viewport
+    // fragment shader redraws at the display's native refresh -- 120Hz on a
+    // recent laptop, i.e. four times the work for motion that is a 0.15 rad/s
+    // drift and a slow shimmer. Nothing here reads as smoother above 30fps,
+    // and the saved budget belongs to the foreground UI.
+    const fpsInterval = 1000 / (isMobile ? 20 : 30);
     let lastRenderTime = 0;
     const renderLoop = (timestamp: number) => {
       animationFrameId = requestAnimationFrame(renderLoop);
@@ -490,8 +508,8 @@ export function HalftoneWave({ active = true, purpleColor }: { active?: boolean;
       // alone can't catch this since the canvas is a fixed full-viewport
       // background that's always "intersecting".
       if (isVisible && activeRef.current) {
-        // Remove artificial fps limit to let requestAnimationFrame run at native display refresh rate (60Hz/120Hz)
-        // This fixes the "turun frame rate" and stuttering issues.
+        if (timestamp - lastRenderTime < fpsInterval) return;
+        lastRenderTime = timestamp;
         const time = clock.getElapsedTime();
         uniforms.uTime.value = time;
         
@@ -561,12 +579,16 @@ export function HalftoneWave({ active = true, purpleColor }: { active?: boolean;
       window.removeEventListener('pointermove', onPointerMove);
       window.removeEventListener('pointerup', onPointerUp);
       window.removeEventListener('mousemove', handleMouseMove);
-      if (mountRef.current) {
-        mountRef.current.removeChild(renderer.domElement);
+      if (renderer.domElement.parentNode) {
+        renderer.domElement.parentNode.removeChild(renderer.domElement);
       }
       geometry.dispose();
       material.dispose();
       renderer.dispose();
+      // dispose() releases three's own objects but leaves the GL context alive
+      // until GC gets to it; browsers cap concurrent contexts, so hand it back
+      // explicitly.
+      renderer.forceContextLoss();
     };
   }, []);
 
