@@ -13,6 +13,8 @@ type SubmitState = 'idle' | 'submitting' | 'success' | 'error';
  * so the thumbnails run borderless against the section background.
  * Masters: art-masters/transformation (gitignored).
  */
+const MASK = 'radial-gradient(ellipse 74% 74% at 50% 50%, #000 55%, transparent 100%)';
+
 const services = [
   {
     title: 'Operational Assessment',
@@ -122,7 +124,14 @@ export default function PreFooterCTA() {
                   height={388}
                   loading="lazy"
                   decoding="async"
-                  className="w-28 rounded-lg transition-transform duration-500 group-hover:scale-[1.04] md:w-36 lg:w-full lg:max-w-[164px]"
+                  /* The art is matted on black; the mask dissolves that square so the
+                     scene floats over the animated backdrop instead of sitting in a box.
+                     Inline so the CSS minifier can't drop the unprefixed property. */
+                  style={{
+                    WebkitMaskImage: MASK,
+                    maskImage: MASK,
+                  }}
+                  className="w-28 transition-transform duration-500 group-hover:scale-[1.04] md:w-36 lg:w-full lg:max-w-[164px]"
                 />
               </div>
               <h3 className="text-xl font-light tracking-[-0.015em] text-white/92 md:text-2xl lg:col-span-3">
