@@ -49,7 +49,7 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
               Contact Our Team for Full Consultation
             </h1>
             <p className="text-[#555555] text-base mb-6">
-              Let&apos;s discuss how Aivory™ can help transform your organization.
+              Let&apos;s discuss how Aivory™ can help transform your organisation.
             </p>
 
             <form onSubmit={handleSubmit} className="space-y-4">

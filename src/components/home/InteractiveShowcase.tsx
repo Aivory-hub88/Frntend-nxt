@@ -171,10 +171,10 @@ const DIAGNOSTIC_STEPS = [
   },
   {
     phase: "2/3 Data Readiness",
-    q: "How centralized is your data?",
+    q: "How centralised is your data?",
     options: [
-      "Fully centralized",
-      "Partially centralized",
+      "Fully centralised",
+      "Partially centralised",
       "Siloed across departments",
     ],
   },
@@ -543,7 +543,7 @@ export function DiagnosticAnimation() {
                 ))}
               </div>
               <span className="text-sm sm:text-base text-[#bbe2ef] font-medium tracking-wide">
-                Aivory is analyzing responses{dots}
+                Aivory is analysing responses{dots}
               </span>
             </motion.div>
           )}
@@ -789,7 +789,7 @@ export function ConsoleAnimation() {
   const [dots, setDots] = useState("");
   const timerRefs = useRef<ReturnType<typeof setTimeout>[]>([]);
 
-  const fullText = "Can you analyze my current lead generation process?";
+  const fullText = "Can you analyse my current lead generation process?";
   const yesText = "Run a full end-to-end audit please.";
 
   const clearAll = () => {
@@ -983,7 +983,7 @@ export function ConsoleAnimation() {
                 ))}
               </div>
               <div className="text-white/70 text-[11px] sm:text-[12px] font-medium">
-                Analyzing systems{dots}
+                Analysing systems{dots}
               </div>
             </div>
           )}
@@ -996,7 +996,7 @@ export function ConsoleAnimation() {
               {[
                 {
                   title: "CRM Sync",
-                  desc: "520 leads analyzed. 45 entries delayed by >2hrs.",
+                  desc: "520 leads analysed. 45 entries delayed by >2hrs.",
                   delay: "0s",
                 },
                 {
@@ -1560,7 +1560,7 @@ export function RoadmapAnimation() {
       title: "Wave 1 Milestone Action List",
       tasks: [
         "Finalize Diagnostic Baseline Parameters",
-        "Map Centralized Data Storage Schema",
+        "Map Centralised Data Storage Schema",
         "Establish Slack / Email Communication Links",
       ],
     },
@@ -1576,7 +1576,7 @@ export function RoadmapAnimation() {
       title: "Wave 3 Milestone Action List",
       tasks: [
         "Rollout to Production",
-        "Monitor and Optimize Workflows",
+        "Monitor and Optimise Workflows",
         "Expand to Additional Departments",
       ],
     },
@@ -2312,7 +2312,7 @@ export function BlueprintAnimation() {
                       className="bg-white/5 border border-white/10 rounded-md px-3 py-1.5 sm:px-4 sm:py-2 text-[10px] sm:text-sm text-white/80 whitespace-nowrap opacity-0 animate-[pop-in-pill_0.6s_ease-out_forwards]"
                       style={{ animationDelay: "3.75s" }}
                     >
-                      Data: Partially Centralized
+                      Data: Partially Centralised
                     </div>
                     <div
                       className="bg-[#bbe2ef]/10 border border-[#bbe2ef]/30 rounded-md px-3 py-1.5 sm:px-4 sm:py-2 text-[10px] sm:text-sm text-[#bbe2ef] shadow-[0_0_15px_rgba(187, 226, 239,0.15)] font-medium whitespace-nowrap opacity-0 animate-[pop-in-pill_0.6s_ease-out_forwards]"
@@ -2401,7 +2401,7 @@ export function BlueprintAnimation() {
                     Constraint Detected
                   </span>
                   <span className="text-[9px] sm:text-sm text-white/90 font-medium leading-tight sm:leading-snug truncate">
-                    Partially Centralized Data
+                    Partially Centralised Data
                   </span>
                 </div>
               </div>
@@ -2711,7 +2711,7 @@ export function InteractiveShowcase() {
               </h3>
               <p className="text-white/75 max-w-lg font-light leading-relaxed">
                 We take you step-by-step from auditing bottlenecks to running
-                customized, automated system workflows. Explore the core product
+                customised, automated system workflows. Explore the core product
                 layers.
               </p>
             </div>

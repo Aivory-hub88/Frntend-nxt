@@ -36,7 +36,7 @@ export default function BastionCapabilities() {
             Adaptive by design.
           </h2>
           <div className="space-y-4 max-w-4xl text-lg text-[#B3B3B3] font-light leading-relaxed">
-            <p>Attackers constantly evolve. Your defense should too.</p>
+            <p>Attackers constantly evolve. Your defence should too.</p>
             <p>Bastion continuously adapts to changing attack behaviours through intelligent observation, behavioural analysis, and autonomous defensive strategies without disrupting legitimate operations.</p>
           </div>
         </FadeUp>

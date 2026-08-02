@@ -142,7 +142,7 @@ export function TechLabSection() {
                   <span className="text-[#888] text-[10px]">AI opportunity mapping</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="text-[#444] text-[10px]">Prioritization & roadmap</span>
+                  <span className="text-[#444] text-[10px]">Prioritisation & roadmap</span>
                 </div>
               </div>
             </div>
@@ -189,7 +189,7 @@ export function TechLabSection() {
               <span className="text-[#555] font-mono text-sm mb-6 block">04.</span>
               <h3 className="text-white font-medium text-lg mb-3">Corporate Training</h3>
               <p className="text-white/70 text-[13px] font-light leading-relaxed mb-10">
-                Structured programs for organizations embedding AI across teams — from executive alignment to hands-on implementation.
+                Structured programs for organisations embedding AI across teams — from executive alignment to hands-on implementation.
               </p>
             </div>
 
@@ -221,7 +221,7 @@ export function TechLabSection() {
               <span className="text-[#555] font-mono text-sm mb-6 block">05.</span>
               <h3 className="text-white font-medium text-lg mb-3">Enterprise Advisory</h3>
               <p className="text-white/70 text-[13px] font-light leading-relaxed mb-10">
-                Long-form partnership for organizations navigating AI transformation at scale — governance, architecture, and continuity.
+                Long-form partnership for organisations navigating AI transformation at scale — governance, architecture, and continuity.
               </p>
             </div>
 

@@ -54,7 +54,7 @@ export default function TermsPage() {
           <section className="space-y-6">
             <h3 className="text-2xl font-medium text-white">1. Who we are</h3>
             <p>
-              Aivory is an AI adoption platform built to help organizations assess, plan, and deploy AI. When you use Aivory, you&apos;re agreeing to these terms. If you&apos;re using Aivory on behalf of an organization, you&apos;re agreeing on their behalf too.
+              Aivory is an AI adoption platform built to help organisations assess, plan, and deploy AI. When you use Aivory, you&apos;re agreeing to these terms. If you&apos;re using Aivory on behalf of an organisation, you&apos;re agreeing on their behalf too.
             </p>
           </section>
 

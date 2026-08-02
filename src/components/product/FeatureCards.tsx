@@ -160,7 +160,7 @@ export default function FeatureCards() {
               into business <span className="italic" style={{ color: '#e4effd' }}>clarity.</span>
             </h2>
             <p className="text-[10px] md:text-xs text-white/75 max-w-2xl font-light leading-relaxed mb-16">
-              Aivory™ helps organizations discover where AI creates value,
+              Aivory™ helps organisations discover where AI creates value,
               design the right systems, and deploy AI with confidence
             </p>
 

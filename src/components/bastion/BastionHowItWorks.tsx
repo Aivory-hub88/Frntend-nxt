@@ -10,7 +10,7 @@ import {
 /* ── Original Data ─────────────────────────────────────────────────── */
 const steps1 = [
   { id: 'observe', title: 'OBSERVE', icon: Target },
-  { id: 'analyze', title: 'ANALYZE', icon: Network },
+  { id: 'analyze', title: 'ANALYSE', icon: Network },
   { id: 'classify', title: 'CLASSIFY', icon: Radar },
 ];
 
@@ -31,8 +31,8 @@ const sources = ['WEB TRAFFIC', 'API REQUESTS', 'USERS', 'DEVICES', 'SYSTEMS', '
 /* ── HUD Typwriter Text Data ── */
 const hudData = [
   { title: "Continuous Observation", desc: "AI-powered monitoring captures and normalizes all interactions across systems in real time." },
-  { title: "Adaptive Engine", desc: "Behavioral analysis and correlation classify traffic based on risk scores and threat confidence." },
-  { title: "Autonomous Defense", desc: "Adaptive response engine neutralizes threats while intelligence drives policy evolution." },
+  { title: "Adaptive Engine", desc: "Behavioural analysis and correlation classify traffic based on risk scores and threat confidence." },
+  { title: "Autonomous Defence", desc: "Adaptive response engine neutralizes threats while intelligence drives policy evolution." },
   { title: "Full System Active", desc: "All layers operating synchronously to provide complete enterprise protection." }
 ];
 
@@ -77,7 +77,7 @@ export default function BastionHowItWorks() {
       {/* ── Fixed Typography ── */}
       <div className="z-50 text-center w-full px-6 mb-12">
         <h2 className="text-3xl md:text-5xl font-manrope font-light uppercase tracking-widest mb-4">HOW BASTION WORKS</h2>
-        <p className="text-sm font-mono text-white/50 tracking-widest uppercase">Adaptive Defense That Evolves</p>
+        <p className="text-sm font-mono text-white/50 tracking-widest uppercase">Adaptive Defence That Evolves</p>
       </div>
 
       <div className="w-full flex flex-col items-center md:scale-[0.8] md:origin-top md:-mb-[160px]">

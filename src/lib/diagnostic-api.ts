@@ -190,10 +190,10 @@ export function generateShareText(
 
   switch (platform) {
     case "linkedin":
-      return `${baseText}\n\nCheck out your organization's AI readiness:\n#AI #Readiness #Aivory`;
+      return `${baseText}\n\nCheck out your organisation's AI readiness:\n#AI #Readiness #Aivory`;
 
     case "twitter":
-      return `${baseText} 🚀\n\nReady to assess your organization's AI maturity? #AI #Readiness`;
+      return `${baseText} 🚀\n\nReady to assess your organisation's AI maturity? #AI #Readiness`;
 
     case "email":
       return baseText;

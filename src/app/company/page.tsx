@@ -7,7 +7,7 @@ import { CTAFooter } from '@/components/product/CTAFooter';
 
 export const metadata: Metadata = {
   title: 'Company',
-  description: 'To make AI adoption practical, structured, and accessible for every organization, regardless of size, industry, or technical background.',
+  description: 'To make AI adoption practical, structured, and accessible for every organisation, regardless of size, industry, or technical background.',
 };
 
 export default function CompanyPage() {

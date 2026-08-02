@@ -27,7 +27,7 @@ const HOMEPAGE_DESCRIPTION =
 const PLATFORM_DESCRIPTION =
   'AI operations platform that guides organisations from business operations assessment to governed AI agent deployment, workflow automation, and operational intelligence.';
 const BASTION_DESCRIPTION =
-  'AI-powered autonomous infrastructure defense platform combining continuous monitoring, adaptive threat response, zero-trust posture, and operational resilience.';
+  'AI-powered autonomous infrastructure defence platform combining continuous monitoring, adaptive threat response, zero-trust posture, and operational resilience.';
 const FOUNDER_DESCRIPTION =
   'Founder of Aivory. Focused on practical AI adoption through operational clarity, governed systems, and business transformation that starts with how organisations actually work.';
 
@@ -71,7 +71,7 @@ export function createFounder(siteUrl: PublicSiteUrl) {
     '@id': `${siteUrl}/#founder`,
     name: 'Irfan Reichmann',
     jobTitle: 'Founder & CEO',
-    worksFor: { '@id': `${siteUrl}/#organization` },
+    worksFor: { '@id': `${siteUrl}/#organisation` },
     url: absoluteUrlForSite(siteUrl, '/about'),
     sameAs: ['https://www.linkedin.com/in/irfan-reichmann/'],
     description: FOUNDER_DESCRIPTION,
@@ -81,7 +81,7 @@ export function createFounder(siteUrl: PublicSiteUrl) {
 export function createOrganization(siteUrl: PublicSiteUrl) {
   return {
     '@type': 'Organization',
-    '@id': `${siteUrl}/#organization`,
+    '@id': `${siteUrl}/#organisation`,
     name: 'Aivory AI',
     alternateName: ['Aivory', 'Aivory Platform', 'Aivory UK'],
     legalName: 'Aivory',
@@ -111,7 +111,7 @@ export function createOrganization(siteUrl: PublicSiteUrl) {
       'Business Operations Assessment',
       'AI Readiness Diagnostic',
       'Workflow Automation',
-      'Autonomous Infrastructure Defense',
+      'Autonomous Infrastructure Defence',
       'Governed AI Systems',
     ],
     sameAs: ['https://www.linkedin.com/company/aivory/'],
@@ -135,7 +135,7 @@ export function createWebsite(siteUrl: PublicSiteUrl) {
     url: `${siteUrl}/`,
     name: 'Aivory AI',
     description: WEBSITE_DESCRIPTION,
-    publisher: { '@id': `${siteUrl}/#organization` },
+    publisher: { '@id': `${siteUrl}/#organisation` },
     inLanguage: siteUrl === AIVORY_UK_URL ? ['en', 'id'] : ['id', 'en'],
   };
 }
@@ -207,7 +207,7 @@ function createPlatformApplication(siteUrl: PublicSiteUrl) {
     offers: [...ONE_TIME_PRODUCTS, ...SUBSCRIPTION_PRODUCTS].map((product) =>
       createOffer(siteUrl, product),
     ),
-    publisher: { '@id': `${siteUrl}/#organization` },
+    publisher: { '@id': `${siteUrl}/#organisation` },
   };
 }
 
@@ -218,7 +218,7 @@ function createBastionApplication(siteUrl: PublicSiteUrl) {
     '@id': `${bastionUrl}#software`,
     name: 'Bastion',
     applicationCategory: 'SecurityApplication',
-    applicationSubCategory: 'Autonomous Infrastructure Defense',
+    applicationSubCategory: 'Autonomous Infrastructure Defence',
     operatingSystem: 'Cloud, Hybrid, On-Premises, Edge, Container',
     url: bastionUrl,
     description: BASTION_DESCRIPTION,
@@ -230,7 +230,7 @@ function createBastionApplication(siteUrl: PublicSiteUrl) {
       'Multi-environment protection',
       'Continuous learning and policy strengthening',
     ],
-    publisher: { '@id': `${siteUrl}/#organization` },
+    publisher: { '@id': `${siteUrl}/#organisation` },
     isRelatedTo: { '@id': `${siteUrl}/#software` },
   };
 }
@@ -241,7 +241,7 @@ function createAssessmentService(siteUrl: PublicSiteUrl) {
     '@id': `${siteUrl}/#service-assessment`,
     name: 'Business Operations Assessment',
     serviceType: 'AI Readiness & Operations Diagnostic',
-    provider: { '@id': `${siteUrl}/#organization` },
+    provider: { '@id': `${siteUrl}/#organisation` },
     description: 'One-time diagnostic that assesses operational maturity, data readiness, process bottlenecks, and AI opportunity areas before any technology deployment.',
     url: absoluteUrlForSite(siteUrl, '/free-diagnostic'),
     offers: {
@@ -260,7 +260,7 @@ function createTransformationService(siteUrl: PublicSiteUrl) {
     '@id': `${siteUrl}/#service-transformation`,
     name: 'AI Transformation Blueprint & Roadmap',
     serviceType: 'Business Transformation Consulting',
-    provider: { '@id': `${siteUrl}/#organization` },
+    provider: { '@id': `${siteUrl}/#organisation` },
     description: 'Structured blueprint and phased roadmap that turns operational assessment insights into governed AI deployment plans.',
     url: `${siteUrl}/`,
     offers: {
@@ -300,7 +300,7 @@ export const FAQ_ENTITIES = [
   },
   {
     question: 'What is Bastion?',
-    answer: 'Bastion is Aivory’s autonomous infrastructure defense product. It combines AI-powered detection, continuous monitoring, zero-trust posture, and adaptive response across cloud, hybrid, on-premises, edge, and container environments.',
+    answer: 'Bastion is Aivory’s autonomous infrastructure defence product. It combines AI-powered detection, continuous monitoring, zero-trust posture, and adaptive response across cloud, hybrid, on-premises, edge, and container environments.',
   },
   {
     question: 'Is Aivory the same as other companies named Aivory?',
@@ -366,8 +366,8 @@ const BASTION_STEPS = [
     text: 'AI-powered monitoring captures and normalizes interactions across web traffic, APIs, users, devices, systems, and IoT/OT.',
   },
   {
-    name: 'Analyze & Classify',
-    text: 'Signals are analyzed and classified as legitimate, suspicious, or malicious in real time.',
+    name: 'Analyse & Classify',
+    text: 'Signals are analysed and classified as legitimate, suspicious, or malicious in real time.',
   },
   {
     name: 'Respond',
@@ -383,8 +383,8 @@ function createBastionHowTo(siteUrl: PublicSiteUrl) {
   return {
     '@type': 'HowTo',
     '@id': `${siteUrl}/bastion#howto-works`,
-    name: 'How Bastion autonomous defense works',
-    description: 'The continuous defense loop used by Bastion to protect enterprise infrastructure.',
+    name: 'How Bastion autonomous defence works',
+    description: 'The continuous defence loop used by Bastion to protect enterprise infrastructure.',
     url: absoluteUrlForSite(siteUrl, '/bastion#how-it-works'),
     step: BASTION_STEPS.map((entry, index) => ({
       '@type': 'HowToStep',
@@ -395,7 +395,7 @@ function createBastionHowTo(siteUrl: PublicSiteUrl) {
   };
 }
 
-/** Homepage knowledge graph linked to root Organization/Person/WebSite IDs. */
+/** Homepage knowledge graph linked to root Organisation/Person/WebSite IDs. */
 export function buildHomePageGraph(siteUrl: PublicSiteUrl): Record<string, unknown> {
   return {
     '@context': 'https://schema.org',
@@ -407,9 +407,9 @@ export function buildHomePageGraph(siteUrl: PublicSiteUrl): Record<string, unkno
         name: 'Aivory — AI-Powered Business Transformation | Make AI Make Sense®',
         description: HOMEPAGE_DESCRIPTION,
         isPartOf: { '@id': `${siteUrl}/#website` },
-        about: { '@id': `${siteUrl}/#organization` },
+        about: { '@id': `${siteUrl}/#organisation` },
         mainEntity: { '@id': `${siteUrl}/#software` },
-        publisher: { '@id': `${siteUrl}/#organization` },
+        publisher: { '@id': `${siteUrl}/#organisation` },
         inLanguage: siteUrl === AIVORY_UK_URL ? 'en' : 'id',
       },
       createPlatformApplication(siteUrl),
@@ -433,12 +433,12 @@ export function buildBastionGraph(siteUrl: PublicSiteUrl): Record<string, unknow
         '@type': 'WebPage',
         '@id': `${bastionUrl}#webpage`,
         url: bastionUrl,
-        name: 'Bastion | Autonomous Infrastructure Defense | Aivory',
-        description: 'Adaptive defense for modern enterprises. Bastion combines AI-powered detection, adaptive defense, and continuous monitoring to protect digital assets.',
+        name: 'Bastion | Autonomous Infrastructure Defence | Aivory',
+        description: 'Adaptive defence for modern enterprises. Bastion combines AI-powered detection, adaptive defence, and continuous monitoring to protect digital assets.',
         isPartOf: { '@id': `${siteUrl}/#website` },
         about: { '@id': `${bastionUrl}#software` },
         mainEntity: { '@id': `${bastionUrl}#software` },
-        publisher: { '@id': `${siteUrl}/#organization` },
+        publisher: { '@id': `${siteUrl}/#organisation` },
         inLanguage: siteUrl === AIVORY_UK_URL ? 'en' : 'id',
       },
       createBastionHowTo(siteUrl),
@@ -459,11 +459,11 @@ export function buildAboutPageGraph(siteUrl: PublicSiteUrl): Record<string, unkn
         description: 'Learn about Aivory, founder Irfan Reichmann, and the operationally grounded approach behind governed AI transformation.',
         isPartOf: { '@id': `${siteUrl}/#website` },
         about: [
-          { '@id': `${siteUrl}/#organization` },
+          { '@id': `${siteUrl}/#organisation` },
           { '@id': `${siteUrl}/#founder` },
         ],
         mainEntity: { '@id': `${siteUrl}/#founder` },
-        publisher: { '@id': `${siteUrl}/#organization` },
+        publisher: { '@id': `${siteUrl}/#organisation` },
         inLanguage: siteUrl === AIVORY_UK_URL ? 'en' : 'id',
       },
       createFaqPage(siteUrl),

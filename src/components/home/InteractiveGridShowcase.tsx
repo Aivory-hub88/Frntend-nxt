@@ -14,7 +14,7 @@ const LabFlaskCanvas = dynamic(
 const showcaseProducts = [
   {
     step: '01. DISCOVER', title: 'Deep Assessment',
-    description: 'We audit your current operations, constraints, and data accessibility. We map out a customized assessment to establish a realistic readiness baseline.',
+    description: 'We audit your current operations, constraints, and data accessibility. We map out a customised assessment to establish a realistic readiness baseline.',
   },
   {
     step: '02. DESIGN', title: 'AI System Blueprint',
@@ -97,7 +97,7 @@ export function InteractiveGridShowcase() {
             From Assessment <br className="hidden md:block" />to Staged <span className="italic" style={{ color: '#e4effd' }}>Autonomy</span>
           </h3>
           <p className="text-white/75 font-light leading-relaxed">
-            We take you step-by-step from auditing bottlenecks to running customized, automated system workflows. Explore the core product layers.
+            We take you step-by-step from auditing bottlenecks to running customised, automated system workflows. Explore the core product layers.
           </p>
         </div>
 

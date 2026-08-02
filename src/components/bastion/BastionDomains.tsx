@@ -10,7 +10,7 @@ const domains = [
     description: 'Continuously identify emerging threats before they escalate.',
   },
   {
-    title: 'Adaptive Defense',
+    title: 'Adaptive Defence',
     description: 'Continuously strengthen protection as attack behaviours evolve.',
   },
   {
@@ -25,11 +25,11 @@ export default function BastionDomains() {
       <div className="max-w-7xl mx-auto px-6 md:px-12">
         <FadeUp className="mb-16">
           <h2 className="text-3xl md:text-5xl font-light leading-tight text-[#FFFFFF] mb-6">
-            Enterprise Operational Defense.
+            Enterprise Operational Defence.
           </h2>
           <div className="space-y-4 max-w-4xl text-lg text-[#B3B3B3] font-light leading-relaxed">
             <p>Modern organisations rely on complex digital infrastructure.</p>
-            <p>Bastion protects cloud environments, enterprise applications, identities, AI systems, APIs, and mission-critical services through intelligent monitoring, adaptive protection, and continuous operational defense.</p>
+            <p>Bastion protects cloud environments, enterprise applications, identities, AI systems, APIs, and mission-critical services through intelligent monitoring, adaptive protection, and continuous operational defence.</p>
           </div>
         </FadeUp>
         <FadeUp staggerChildren={0.1} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-12 gap-y-16">

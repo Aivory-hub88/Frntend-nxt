@@ -110,7 +110,7 @@ const products: Product[] = [
     features: [
       'One-click deployment',
       'Industry-specific templates',
-      'Customizable workflows',
+      'Customisable workflows',
       'Community-contributed',
     ],
     category: 'grid',

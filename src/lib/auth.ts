@@ -1,5 +1,5 @@
 /**
- * Centralized authentication (Postgres-backed).
+ * Centralised authentication (Postgres-backed).
  *
  * Auth runs on the backend auth service (Postgres). login/signup call the
  * backend and persist the returned session (access token + user) to
@@ -182,7 +182,7 @@ export async function signup(
 
 /**
  * Set shared cookies so the user & admin dashboards (path-based, same host as
- * the landing) recognize the session without a second sign-in.
+ * the landing) recognise the session without a second sign-in.
  * - admin middleware reads `aivory_access_token` (raw JWT, decoded for account_type)
  * - user dashboard authManager reads `aivory_session_token` + `aivory_user` (JSON)
  * Host-only, path=/ so they are sent to /dashboard and /admin on the same host.

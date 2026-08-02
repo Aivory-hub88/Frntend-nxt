@@ -146,7 +146,7 @@ const SvgBastionHeroSection = (props: SVGProps<SVGSVGElement>) => {
           {"Infrastructure "}
         </tspan>
         <tspan x={0} y={30.8}>
-          {"Defense Platform"}
+          {"Defence Platform"}
         </tspan>
       </text>
       <text

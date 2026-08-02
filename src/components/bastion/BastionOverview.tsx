@@ -15,7 +15,7 @@ export default function BastionOverview() {
             {/* Heading and Scaled Orb Header (No FadeUp wrapper to avoid conflict with SplitType RevealText) */}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6 mb-12">
               <AnimatedHeadline
-                text="Adaptive defense for modern enterprises."
+                text="Adaptive defence for modern enterprises."
                 as="h2"
                 className="text-4xl lg:text-5xl font-light leading-tight text-white tracking-tight max-w-xl"
               />
@@ -31,7 +31,7 @@ export default function BastionOverview() {
                 Enterprise threats evolve continuously. Traditional security reacts after compromise.
               </p>
               <p className="text-sm md:text-base text-[#B3B3B3] font-light leading-relaxed">
-                Bastion combines AI-powered detection, adaptive defense, and continuous monitoring to protect digital assets before threats become incidents.
+                Bastion combines AI-powered detection, adaptive defence, and continuous monitoring to protect digital assets before threats become incidents.
               </p>
             </FadeUp>
           </div>
@@ -40,7 +40,7 @@ export default function BastionOverview() {
             <FadeUpChild className="border-l-2 border-white/20 pl-6 py-2">
               <h3 className="text-lg font-light text-white mb-2">Autonomous Operations</h3>
               <p className="text-sm text-[#B3B3B3] font-light leading-relaxed">
-                Security logic executes continuously without human intervention, analyzing millions of telemetry signals per second.
+                Security logic executes continuously without human intervention, analysing millions of telemetry signals per second.
               </p>
             </FadeUpChild>
 
