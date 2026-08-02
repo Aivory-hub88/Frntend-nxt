@@ -66,8 +66,24 @@ export async function POST(request: NextRequest) {
     })
     .filter((card): card is { fileName: string; dataBase64: string } => card !== null);
 
-  if (cards.length === 0) {
-    return NextResponse.json({ ok: false, error: 'no_cards' }, { status: 400 });
+  // The PDF is the primary artefact — it is what gets forwarded to a budget
+  // holder and printed, and unlike a PNG it can carry a clickable CTA. The
+  // `cards` path stays accepted so a browser that failed to build a PDF can
+  // still get something delivered.
+  const rawPdf = body.pdf as { fileName?: unknown; dataBase64?: unknown } | undefined;
+  const pdfBase64 = typeof rawPdf?.dataBase64 === 'string'
+    && /^[A-Za-z0-9+/=]+$/.test(rawPdf.dataBase64)
+    ? rawPdf.dataBase64
+    : null;
+  const pdf = pdfBase64
+    ? {
+        fileName: typeof rawPdf?.fileName === 'string' ? rawPdf.fileName.slice(0, 120) : 'assessment-report.pdf',
+        dataBase64: pdfBase64,
+      }
+    : null;
+
+  if (!pdf && cards.length === 0) {
+    return NextResponse.json({ ok: false, error: 'no_report' }, { status: 400 });
   }
 
   const str = (value: unknown, max: number) =>
@@ -94,6 +110,7 @@ export async function POST(request: NextRequest) {
     questionSetVersion: typeof body.questionSetVersion === 'number' && Number.isInteger(body.questionSetVersion)
       ? Math.max(1, Math.min(99, body.questionSetVersion))
       : undefined,
+    pdf,
     cards,
   };
 
