@@ -100,24 +100,24 @@ export function creditPackId(credits: number): string {
 export const ONE_TIME_PRODUCTS: OneTimeProduct[] = [
   {
     id: PRODUCT_IDS.DEEP_DIAGNOSTIC,
-    name: 'Business Operations Assessment',
-    price: 79,
+    name: 'AI Readiness Deep Diagnostic',
+    price: 29,
     currency: PRICING_CURRENCY,
     kind: 'one-time',
     interval: 'one-time',
   },
   {
     id: PRODUCT_IDS.BLUEPRINT,
-    name: 'Transformation Blueprint',
-    price: 249,
+    name: 'AI System Blueprint + Roadmap',
+    price: 85,
     currency: PRICING_CURRENCY,
     kind: 'one-time',
     interval: 'one-time',
   },
   {
     id: PRODUCT_IDS.FULL_STACK,
-    name: 'Complete Transformation Package',
-    price: 299,
+    name: 'Deep Diagnostic + Blueprint + Roadmap',
+    price: 99,
     currency: PRICING_CURRENCY,
     kind: 'one-time',
     interval: 'one-time',
@@ -131,23 +131,23 @@ export const ONE_TIME_PRODUCTS: OneTimeProduct[] = [
 export const SUBSCRIPTION_PRODUCTS: SubscriptionProduct[] = [
   {
     id: PRODUCT_IDS.FOUNDATION,
-    name: 'Operational Licence',
-    price: 39,
+    name: 'Foundation',
+    price: 20,
     currency: PRICING_CURRENCY,
     kind: 'subscription',
     interval: 'month',
   },
   {
     id: PRODUCT_IDS.PRO,
-    name: 'Business Licence',
-    price: 99,
+    name: 'Pro',
+    price: 44,
     currency: PRICING_CURRENCY,
     kind: 'subscription',
     interval: 'month',
   },
   {
     id: PRODUCT_IDS.ENTERPRISE,
-    name: 'Enterprise Licence',
+    name: 'Enterprise',
     price: 499,
     currency: PRICING_CURRENCY,
     kind: 'subscription',
@@ -159,16 +159,25 @@ export const SUBSCRIPTION_PRODUCTS: SubscriptionProduct[] = [
 // INTELLIGENCE CREDIT PACKS (one-time)
 // ============================================================================
 
-/** Credit-pack definitions as `[credits, price]` pairs, in published order. */
+/**
+ * Credit-pack definitions as `[credits, price]` pairs, in published order.
+ *
+ * These must equal `CREDIT_PACKS_USD` in avry-payments' `app/services/pricing.py`,
+ * which is what the gateway actually charges: the checkout call sends only a
+ * product id, so a price authored here that differs from the server's is a price
+ * we advertise and never collect. The anchors are the dashboard's published
+ * points (100/$10, 500/$45, 1000/$85, 5000/$400) with the rest on the same
+ * declining per-credit curve.
+ */
 const CREDIT_PACK_DEFINITIONS: ReadonlyArray<readonly [credits: number, price: number]> = [
-  [50, 5],
-  [100, 9],
-  [250, 20],
-  [500, 38],
-  [1000, 70],
-  [2500, 165],
-  [5000, 300],
-  [10000, 550],
+  [50, 6],
+  [100, 10],
+  [250, 24],
+  [500, 45],
+  [1000, 85],
+  [2500, 205],
+  [5000, 400],
+  [10000, 750],
 ];
 
 export const CREDIT_PACKS: CreditPackProduct[] = CREDIT_PACK_DEFINITIONS.map(

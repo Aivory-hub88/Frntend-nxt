@@ -3,7 +3,7 @@
  * Provides functions to interact with the Midtrans payment gateway
  */
 
-import { getUser, isAuthenticated, login } from './auth';
+import { getToken, getUser, isAuthenticated, login } from './auth';
 import type { PaymentConfig, PaymentResult, PaymentTransactionResult, PaymentMethod } from '@/types/payment';
 import {
   ALL_PRODUCTS,
@@ -282,6 +282,22 @@ import { getServiceUrl } from "./services";
 
 const API_BASE_URL = getServiceUrl("payments");
 
+/**
+ * Headers for an authenticated payments call.
+ *
+ * Every money-moving route on avry-payments depends on `require_auth`, which
+ * reads the bearer token from the Authorization header only — there is no cookie
+ * fallback across domains. Omitting this is not a soft failure: checkout 401s
+ * before Snap ever opens.
+ */
+function authHeaders(): Record<string, string> {
+  const token = getToken();
+  return {
+    'Content-Type': 'application/json',
+    ...(token ? { Authorization: `Bearer ${token}` } : {}),
+  };
+}
+
 // ============================================================================
 // MIDTRANS SDK LOADING
 // ============================================================================
@@ -432,15 +448,19 @@ export async function createPaymentTransaction(product: string | number) {
     throw new Error('Invalid product selected');
   }
 
+  // Credit packs are addressed by count in this module (`openPaymentModal(500)`)
+  // but the API's `product` is a string, and pydantic v2 does not coerce a number
+  // into one — sending the raw count 422s before checkout can open.
+  const productId = typeof product === 'number' ? `credits_${product}` : product;
+
+  // No amount is sent: the payments service prices the product from its own
+  // catalogue, so a browser cannot name its own price.
   const response = await fetch(`${API_BASE_URL}/api/v1/payments/midtrans/create`, {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
+    headers: authHeaders(),
     body: JSON.stringify({
       user_id: user.user_id,
-      amount: amount,
-      product: product,
+      product: productId,
       customer_email: user.email,
       customer_first_name: user.email.split('@')[0],
     }),
@@ -461,11 +481,20 @@ export async function createPaymentTransaction(product: string | number) {
 }
 
 /**
- * Record manual payment with backend
+ * File an out-of-band ("manual") payment for admin verification.
+ *
+ * This does NOT record a completed payment. The customer is declaring that they
+ * transferred the money; the order is created as `awaiting_verification` and an
+ * admin approves it against the bank statement, at which point the same
+ * entitlement grant the Midtrans path uses is applied.
+ *
+ * It previously posted to `/payments/record`, an admin-only endpoint that also
+ * takes query parameters — so from a customer's browser it could only ever fail.
+ *
  * @param product - Product ID or name
  * @param paymentMethod - Payment method (bank_transfer, cash, ewallet)
- * @param transactionId - Transaction ID from user
- * @returns Payment record data
+ * @param transactionId - The customer's bank/e-wallet reference
+ * @returns The created order (order_id, status, priced amount)
  */
 export async function recordManualPayment(
   product: string | number,
@@ -481,31 +510,61 @@ export async function recordManualPayment(
     throw new Error('User account not properly configured');
   }
 
-  const amount = getPaymentAmount(product);
-  if (amount === null) {
-    throw new Error('Invalid product selected');
-  }
+  const productId = typeof product === 'number' ? `credits_${product}` : product;
 
-  const response = await fetch(`${API_BASE_URL}/api/v1/payments/record`, {
+  const response = await fetch(`${API_BASE_URL}/api/v1/payments/manual/submit`, {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
+    headers: authHeaders(),
     body: JSON.stringify({
-      user_id: user.user_id,
-      amount: amount,
+      product: productId,
       payment_method: paymentMethod,
-      product: product,
-      transaction_id: transactionId,
+      transaction_reference: transactionId,
+      customer_email: user.email,
     }),
   });
 
   if (!response.ok) {
-    const error = await response.json();
-    throw new Error(error.detail || 'Failed to record payment');
+    const error = await response.json().catch(() => ({}));
+    throw new Error(error.detail || 'Failed to submit payment for verification');
   }
 
   return response.json();
+}
+
+/**
+ * Ask the payments service to settle an order the customer just paid.
+ *
+ * Only the order id is sent; the service re-verifies the payment with Midtrans
+ * and applies the entitlement at most once, so calling this while the webhook is
+ * in flight is harmless. Without it, access appears only once the webhook lands.
+ */
+export async function confirmPayment(
+  orderId: string
+): Promise<{ success: boolean; granted: boolean; message?: string }> {
+  try {
+    const response = await fetch(`${API_BASE_URL}/api/v1/payments/confirm`, {
+      method: 'POST',
+      headers: authHeaders(),
+      body: JSON.stringify({ order_id: orderId }),
+    });
+    const data = await response.json().catch(() => ({}));
+    if (!response.ok) {
+      return { success: false, granted: false, message: data?.detail };
+    }
+    return {
+      success: Boolean(data.success),
+      granted: Boolean(data.granted),
+      message: data.message,
+    };
+  } catch (error) {
+    // The webhook is the backstop, so a failed confirm delays access rather
+    // than losing it.
+    return {
+      success: false,
+      granted: false,
+      message: error instanceof Error ? error.message : 'Confirmation failed',
+    };
+  }
 }
 
 // ============================================================================
@@ -561,7 +620,21 @@ function handlePaymentSuccess(result: any): void {
     console.error('Payment product or amount is null');
     return;
   }
-  
+
+  // Settle immediately so access appears now rather than whenever Midtrans'
+  // webhook arrives. Fire-and-forget: the webhook still settles the order if
+  // this call fails, and the grant is idempotent on the order id.
+  if (result?.order_id) {
+    void confirmPayment(result.order_id).then((confirmed) => {
+      if (!confirmed.granted) {
+        console.warn(
+          'Payment not yet applied; awaiting gateway notification:',
+          confirmed.message
+        );
+      }
+    });
+  }
+
   notifyPaymentSuccess({
     product: currentPaymentProduct,
     amount: currentPaymentAmount,

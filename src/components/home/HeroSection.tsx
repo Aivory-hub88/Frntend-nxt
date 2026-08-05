@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from 'react';
 import RotatingText from './RotatingText';
-import { SpotlightButton } from '@/components/ui/SpotlightButton';
+import { TechnicalFrameButton } from '@/components/ui/TechnicalFrameButton';
 
 export default function HeroSection() {
   const contentRef = useRef<HTMLDivElement>(null);
@@ -48,13 +48,12 @@ export default function HeroSection() {
           <RotatingText />
         </div>
         <div className="animate-slide-up-3 pointer-events-none" style={{ animationDelay: '0.6s' }}>
-          <SpotlightButton
+          <TechnicalFrameButton
             href="/free-diagnostic"
             className="pointer-events-auto w-fit animate-gentle-bounce"
-            style={{ backgroundColor: 'var(--card-bg, rgba(20, 20, 26, 0.78))' }}
           >
             START WITH FREE ASSESSMENT
-          </SpotlightButton>
+          </TechnicalFrameButton>
         </div>
       </div>
       <div className="absolute bottom-0 left-1/2 -translate-x-1/2 flex flex-col items-center z-20 pointer-events-none opacity-0 animate-fade-in" style={{ animationDelay: '3.5s', animationFillMode: 'forwards' }}>

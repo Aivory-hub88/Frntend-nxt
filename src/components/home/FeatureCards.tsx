@@ -73,38 +73,40 @@ function DiagnosticStatItem({
   return (
     <div
       ref={cardRef}
-      className="group relative spotlight-card auto-spotlight flex-1 min-w-0 md:min-w-[200px] text-center py-8 px-4 lg:px-6 rounded-2xl transition-all duration-[800ms] ease-out flex flex-col items-center justify-start border-transparent bg-transparent hover:bg-white/[0.03]"
+      className="group relative spotlight-card auto-spotlight flex min-w-0 flex-col items-center justify-center overflow-hidden rounded-[20px] border border-white/[0.09] bg-white/[0.035] px-4 py-6 text-center backdrop-blur-md transition-[background-color,border-color,box-shadow,opacity,transform] duration-[800ms] ease-out md:min-h-[190px] md:px-5 md:py-7 hover:border-white/[0.16] hover:bg-white/[0.055]"
       style={{
         opacity: active ? 1 : 0,
-        transform: active ? 'translateY(0)' : 'translateY(30px)',
+        transform: active ? 'translateY(0)' : 'translateY(24px)',
         transitionDelay: `${delay}ms`,
+        boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.07), 0 18px 50px rgba(0,0,0,0.2)',
       }}
     >
-      {/* Small accent mark above the number, grows in with the count-up */}
       <div
-        className="h-px w-8 mb-5 rounded-full transition-all duration-[900ms] ease-out"
-        style={{
-          background: 'linear-gradient(90deg, transparent, #7c3aed, transparent)',
-          transform: active ? 'scaleX(1)' : 'scaleX(0)',
-          opacity: active ? 1 : 0,
-          transitionDelay: `${delay + 150}ms`,
-        }}
-      />
-      <div
-        className="font-light text-white leading-none mb-4 flex items-baseline justify-center [font-variant-numeric:tabular-nums]"
+        className="mb-3 flex items-baseline justify-center font-light leading-none text-[#f5f5f3] [font-variant-numeric:tabular-nums]"
         style={{
           fontFamily: "'Manrope', sans-serif",
-          fontSize: 'clamp(3rem, 5vw, 4.5rem)',
-          textShadow: '0 0 40px rgba(124, 58, 237, 0.35)',
+          fontSize: 'clamp(2.7rem, 4.5vw, 3.85rem)',
+          letterSpacing: '-0.055em',
         }}
       >
         {prefix}{value}
-        {suffix && <span style={{ fontSize: 'clamp(1.5rem, 2.5vw, 2.5rem)', marginLeft: '2px' }}>{suffix}</span>}
+        {suffix && (
+          <span
+            className="font-normal text-white/55"
+            style={{
+              fontSize: 'clamp(1.05rem, 1.8vw, 1.45rem)',
+              letterSpacing: '-0.025em',
+              marginLeft: '0.3em',
+            }}
+          >
+            {suffix}
+          </span>
+        )}
       </div>
-      <div className="text-[#e4e4e7] text-[13px] md:text-[15px] font-medium tracking-wide mb-1.5">
+      <div className="flex min-h-[2.5rem] max-w-[220px] items-center justify-center text-[12px] font-medium leading-snug tracking-[0.01em] text-[#e7e7e5] md:text-[13px]">
         {title}
       </div>
-      <div className="text-[#8a8a92] text-[11px] md:text-[13px] font-normal">
+      <div className="mt-1.5 text-[10px] font-medium uppercase tracking-[0.13em] text-white/40 md:text-[11px]">
         {subtitle}
       </div>
     </div>
@@ -166,17 +168,9 @@ export default function FeatureCards() {
                 Business transformation starts with <br className="hidden md:block" />understanding how the organisation operates.
               </h3>
 
-              <div ref={statsRef} className="flex flex-nowrap justify-center items-stretch relative flex-row w-full mt-4" style={{ zoom: 0.76 }}>
+              <div ref={statsRef} className="relative mt-4 grid w-full max-w-[720px] grid-cols-1 items-stretch gap-3 sm:grid-cols-3 md:gap-4">
                 <DiagnosticStatItem target={10} prefix="" suffix="min" title="Business Operations Assessment" subtitle="not days of sessions" active={statsActive} delay={0} />
-                <div
-                  className="w-px self-stretch relative min-h-[100px] hidden md:block"
-                  style={{ background: 'linear-gradient(180deg, transparent, rgba(255,255,255,0.14) 20%, rgba(255,255,255,0.14) 80%, transparent)' }}
-                />
                 <DiagnosticStatItem target={5} prefix="<" suffix="min" title="Transformation Blueprint" subtitle="not weeks of decks" active={statsActive} delay={100} />
-                <div
-                  className="w-px self-stretch relative min-h-[100px] hidden md:block"
-                  style={{ background: 'linear-gradient(180deg, transparent, rgba(255,255,255,0.14) 20%, rgba(255,255,255,0.14) 80%, transparent)' }}
-                />
                 <DiagnosticStatItem target={0} prefix="" suffix="" title="False Starts" subtitle="one clear starting point" active={statsActive} delay={200} />
               </div>
             </div>
@@ -187,7 +181,7 @@ export default function FeatureCards() {
       {/* Replaced GSAP Cards with Product Page Components */}
       <div className="relative w-full">
         <div className="hidden lg:block">
-          {(isLg === null || isLg) && <InteractiveShowcase />}
+          {(isLg === null || isLg) && <InteractiveShowcase containedDashboard />}
         </div>
         <div className="block lg:hidden">
           {(isLg === null || !isLg) && <InteractiveGridShowcase />}

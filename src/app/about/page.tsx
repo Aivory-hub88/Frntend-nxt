@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import { TechnicalFrameButton } from '@/components/ui/TechnicalFrameButton';
 import Navbar from '@/components/home/Navbar';
 import Footer from '@/components/Footer';
 import {
@@ -7,6 +8,8 @@ import {
   FAQ_ENTITIES,
   JsonLd,
   buildAboutPageGraph,
+  createBreadcrumbList,
+  absoluteUrl,
   siteUrlFromHeaders,
 } from '@/lib/seo';
 
@@ -14,7 +17,10 @@ export const metadata: Metadata = {
   title: 'About Aivory and Founder Irfan Reichmann',
   description:
     'Learn about Aivory, founder Irfan Reichmann, and the operationally grounded approach behind governed AI business transformation.',
-  alternates: { canonical: '/about' },
+  alternates: {
+    canonical: '/about',
+    languages: { en: '/about', id: '/about' },
+  },
   openGraph: {
     title: 'About Aivory and Founder Irfan Reichmann',
     description:
@@ -47,6 +53,14 @@ const OPERATING_PRINCIPLES = [
     text: 'Every transformation should connect to an operational outcome: less friction, better decisions, stronger resilience, or measurable capacity.',
   },
 ] as const;
+
+/**
+ * Keeps the first 64px dark so the transparent, white-text Navbar stays
+ * legible, then hands over to the ivory editorial canvas shared with Careers,
+ * Company and Product.
+ */
+const ABOUT_HERO_BACKGROUND =
+  'linear-gradient(to bottom, #050505 0, #050505 64px, #efeee8 64px, #efeee8 100%)';
 
 function ArrowIcon() {
   return (
@@ -465,41 +479,56 @@ export default function AboutPage() {
       data-about-layout="editorial"
     >
       <JsonLd data={buildAboutPageGraph(siteUrl)} />
+      <JsonLd
+        data={createBreadcrumbList([
+          { name: 'Home', item: absoluteUrl('/') },
+          { name: 'About', item: absoluteUrl('/about') },
+        ])}
+      />
       <Navbar />
 
-      <section className="px-6 pb-20 pt-36 md:px-12 md:pb-24 md:pt-40 lg:px-24">
-        <div className="mx-auto max-w-[1400px]">
-          <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-white/45">About Aivory / 01</p>
+      <section
+        className="text-[#11110f]"
+        style={{ fontWeight: 300, background: ABOUT_HERO_BACKGROUND }}
+      >
+        <div className="mx-auto max-w-[1480px] px-6 pb-16 pt-40 md:px-12 md:pb-24 md:pt-52">
+          <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-black/60">About Aivory / 01</p>
+          <h1 className="mt-5 max-w-[1180px] text-[52px] font-light leading-[0.95] tracking-[-0.055em] text-[#11110f] md:text-[82px] lg:text-[104px]">
+            Clarity first.<br />Intelligence follows.
+          </h1>
+        </div>
 
-          <div className="mt-8 grid gap-10 pb-16 lg:grid-cols-12 lg:items-end lg:pb-20">
-            <h1 className="max-w-4xl text-[36px] font-light leading-[1.08] tracking-[-0.035em] text-white md:text-[56px] lg:col-span-7">
-              Clarity first.<br />Intelligence follows.
-            </h1>
-
-            <div className="lg:col-span-5 lg:pl-8">
-              <p className="max-w-xl text-[15px] font-light leading-7 text-white/68 md:text-base md:leading-8">
+        <div className="mx-auto max-w-[1480px] px-6 pb-20 md:px-12 md:pb-28">
+          <div className="grid border-t border-black/25 pt-8 lg:grid-cols-12 lg:gap-12">
+            <div className="pb-8 lg:col-span-4 lg:pb-0">
+              <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-black/60">What we do</p>
+            </div>
+            <div className="lg:col-span-8">
+              <p className="max-w-2xl text-[16px] font-light leading-[1.7] text-black/70 md:text-[17px]">
                 Aivory helps organisations understand how work actually moves, design the right transformation architecture, and deploy governed AI systems without false starts.
               </p>
-              <div className="mt-8 flex flex-wrap gap-3">
+              <div className="mt-10 flex flex-wrap gap-x-10 gap-y-5">
                 <Link
                   href="/free-diagnostic"
-                  className="inline-flex min-h-[44px] items-center gap-3 bg-white px-5 text-[11px] font-medium uppercase tracking-[0.12em] text-black transition-colors hover:bg-white/85"
+                  className="inline-flex items-center gap-3 border-b border-black pb-1 text-[13px] font-light text-black transition-opacity hover:opacity-55"
                 >
-                  <ArrowIcon /> Start assessment
+                  Start assessment
+                  <ArrowIcon />
                 </Link>
                 <Link
                   href="/company"
-                  className="inline-flex min-h-[44px] items-center gap-3 border border-white/25 px-5 text-[11px] font-medium uppercase tracking-[0.12em] text-white transition-colors hover:border-white/50 hover:bg-white/[0.04]"
+                  className="inline-flex items-center gap-3 border-b border-black pb-1 text-[13px] font-light text-black transition-opacity hover:opacity-55"
                 >
                   Company overview
+                  <ArrowIcon />
                 </Link>
               </div>
             </div>
           </div>
-
-          <ArchitecturalSignal />
         </div>
       </section>
+
+      <ArchitecturalSignal />
 
       <section className="border-b border-white/10 px-6 py-20 md:px-12 md:py-28 lg:px-24">
         <div className="mx-auto grid max-w-[1400px] gap-12 lg:grid-cols-12">
@@ -666,18 +695,12 @@ export default function AboutPage() {
             </h2>
           </div>
           <div className="flex flex-wrap gap-3 lg:col-span-5 lg:justify-end">
-            <Link
-              href="/free-diagnostic"
-              className="inline-flex min-h-[44px] items-center gap-3 bg-white px-5 text-[11px] font-medium uppercase tracking-[0.12em] text-black transition-colors hover:bg-white/85"
-            >
+            <TechnicalFrameButton href="/free-diagnostic">
               <ArrowIcon /> Start assessment
-            </Link>
-            <Link
-              href="/contact"
-              className="inline-flex min-h-[44px] items-center border border-white/25 px-5 text-[11px] font-medium uppercase tracking-[0.12em] text-white transition-colors hover:border-white/50 hover:bg-white/[0.04]"
-            >
+            </TechnicalFrameButton>
+            <TechnicalFrameButton href="/contact">
               Talk to us
-            </Link>
+            </TechnicalFrameButton>
           </div>
         </div>
       </section>

@@ -212,7 +212,8 @@ export function PaymentModal({ isOpen, onClose, product: initialProduct }: Payme
       );
 
       setStatus({
-        message: 'Payment recorded successfully!',
+        message: `Payment submitted for verification (order ${result.order_id}). ` +
+          `Access is granted once our team confirms the transfer.`,
         type: 'success',
       });
       setPaymentMethod('manual');
@@ -238,9 +239,9 @@ export function PaymentModal({ isOpen, onClose, product: initialProduct }: Payme
 
   // Get user email for display
   const getUserEmail = (): string => {
-    if (!isAuthenticated()) return 'user@aivory.uk';
+    if (!isAuthenticated()) return 'user@aivory.id';
     const user = getUser();
-    return user?.email || 'user@aivory.uk';
+    return user?.email || 'user@aivory.id';
   };
 
   // Render payment options
@@ -444,13 +445,6 @@ export function PaymentModal({ isOpen, onClose, product: initialProduct }: Payme
       case 'loading':
         return renderLoading();
       case 'info':
-        // Not-logged-in also sets type 'info' (see the auth-check effect above),
-        // which otherwise fell through to renderPending()'s "payment being
-        // processed" hourglass — confusing for a visitor who hasn't paid
-        // anything yet. Route it to the actual auth-required view instead.
-        if (!isAuthenticated()) {
-          return renderPaymentOptions();
-        }
         if (redirectUrl) {
           return renderRedirect();
         }

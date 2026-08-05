@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { FadeUp } from './FadeUp';
-import { SpotlightButton } from '@/components/ui/SpotlightButton';
+import { TechnicalFrameButton } from '@/components/ui/TechnicalFrameButton';
 import { AnimatedHeadline } from '../ui/AnimatedHeadline';
 
 const FORMSUBMIT_ENDPOINT = 'https://formsubmit.co/ajax/sales@aivory.uk';
@@ -102,14 +102,13 @@ export default function BastionContact() {
                 )}
 
                 <div className="pt-8">
-                  <SpotlightButton
+                  <TechnicalFrameButton
                     type="submit"
                     disabled={status === 'submitting'}
-                    roundedClass="rounded-[10px]"
                     className="text-xs md:text-sm"
                   >
                     {status === 'submitting' ? 'Sending...' : 'Start Conversation'}
-                  </SpotlightButton>
+                  </TechnicalFrameButton>
                 </div>
               </form>
             )}

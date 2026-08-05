@@ -10,6 +10,8 @@ import {
   RoadmapAnimation as DashboardRoadmapAnimation,
   ConsoleAnimation as DashboardConsoleAnimation,
 } from "./OperationalFrameworkScenes";
+import { WorkflowAnimation } from "./WorkflowCanvasAnimation";
+export { WorkflowAnimation };
 
 const LabFlaskCanvas = dynamic(
   () => import("./LabFlask3D").then((mod) => mod.LabFlaskCanvas),
@@ -1073,7 +1075,7 @@ export function ConsoleAnimation() {
 }
 
 // ── 05. Workflow ──
-export function WorkflowAnimation() {
+export function LegacyWorkflowAnimation() {
   const [phase, setPhase] = useState<
     | "typing"
     | "sent"
@@ -2573,7 +2575,11 @@ export function BlueprintAnimation() {
   );
 }
 
-export function InteractiveShowcase() {
+export function InteractiveShowcase({
+  containedDashboard = true,
+}: {
+  containedDashboard?: boolean;
+}) {
   const [activeIndex, setActiveIndex] = useState(-1);
   const [connectedIndex, setConnectedIndex] = useState(-1);
 
@@ -2766,9 +2772,13 @@ export function InteractiveShowcase() {
                 {/* Mobile Inline Visualizer */}
                 <SpotlightCard
                   className="flex lg:hidden w-full mt-10 p-0"
-                  style={{ minHeight: "380px" }}
+                  style={{ minHeight: idx === 4 ? "460px" : "380px" }}
                 >
-                  <div className="absolute inset-0 flex flex-col overflow-hidden">
+                  <div
+                    className={`absolute flex flex-col overflow-hidden rounded-[18px] border border-white/[0.16] bg-[#353531] shadow-[0_18px_48px_rgba(0,0,0,0.48)] ${
+                      idx === 4 ? "inset-[4%]" : "inset-[7%]"
+                    }`}
+                  >
                     {idx === 0 && (
                       <div className="flex-1 relative w-full h-full">
                         <DashboardDiagnosticAnimation />
@@ -2801,9 +2811,44 @@ export function InteractiveShowcase() {
             <SpotlightCard
               autoplay={true}
               className="w-full h-full transition-all duration-500 p-0 flex flex-col shadow-2xl relative overflow-hidden"
+              style={
+                containedDashboard
+                  ? {
+                      backgroundColor: "rgba(11, 12, 18, 0.7)",
+                      backdropFilter: "blur(18px)",
+                      WebkitBackdropFilter: "blur(18px)",
+                      boxShadow:
+                        "0 28px 80px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.1)",
+                    }
+                  : undefined
+              }
             >
-              {/* Showcase Screen Layers */}
-              <div className="flex-1 relative w-full h-full">
+              {containedDashboard && (
+                <>
+                  <div
+                    aria-hidden="true"
+                    className="pointer-events-none absolute inset-0"
+                    style={{
+                      background:
+                        "radial-gradient(75% 80% at 50% 100%, rgba(84, 64, 170, 0.16), transparent 60%), radial-gradient(55% 60% at 8% 12%, rgba(255,255,255,0.07), transparent 62%)",
+                    }}
+                  />
+                  <div
+                    aria-hidden="true"
+                    className="pointer-events-none absolute inset-0 border border-white/[0.06]"
+                  />
+                </>
+              )}
+              {/* Showcase screen layers. Every product scene stays inset while retaining a substantial, readable UI scale. */}
+              <div
+                className={`relative z-10 shrink-0 transition-[width,height,border-radius,box-shadow] duration-500 ${
+                  containedDashboard && activeIndex === 4
+                    ? "m-auto h-[88%] w-[90%] max-w-[760px] overflow-hidden rounded-[22px] border border-white/[0.18] bg-[#353531] shadow-[0_24px_64px_rgba(0,0,0,0.5),inset_0_1px_0_rgba(255,255,255,0.1)]"
+                    : containedDashboard && activeIndex >= 0 && activeIndex <= 3
+                      ? "m-auto h-[74%] w-[82%] max-w-[680px] overflow-hidden rounded-[22px] border border-white/[0.18] bg-[#353531] shadow-[0_24px_64px_rgba(0,0,0,0.5),inset_0_1px_0_rgba(255,255,255,0.1)]"
+                      : "h-full w-full"
+                }`}
+              >
                 {/* Intro Screen */}
                 <div
                   className={`absolute inset-0 flex flex-col justify-center transition-all duration-700 ease-in-out ${

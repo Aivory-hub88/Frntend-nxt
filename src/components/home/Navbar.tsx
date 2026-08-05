@@ -6,6 +6,7 @@ import { useState, useEffect } from 'react';
 import { useLanguage } from '@/components/context/LanguageContext';
 import SignInModal from '@/components/auth/SignInModal';
 import { isAuthenticated, getUser, logout } from '@/lib/auth';
+import { TechnicalFrameButton } from '@/components/ui/TechnicalFrameButton';
 
 /* ─── Arrow Icon ─── */
 function ArrowIcon({ className = '' }: { className?: string }) {
@@ -62,7 +63,7 @@ export default function Navbar() {
 
   return (
     <nav className="absolute top-0 left-0 right-0 z-[1000]" style={{ background: 'transparent' }}>
-      <div className="max-w-[1400px] mx-auto flex justify-between items-center" style={{ padding: '1.5rem clamp(1rem, 4vw, 2rem)' }}>
+      <div className="h-16 max-w-[1400px] mx-auto flex justify-between items-center" style={{ padding: '0 clamp(1rem, 4vw, 2rem)' }}>
         {/* Left: Aivory logo */}
         <Link href="/" className="flex items-center">
           <img
@@ -154,33 +155,21 @@ export default function Navbar() {
               SIGN IN
             </button>
           )}
-          <button
+          <TechnicalFrameButton
             onClick={() => handleDashboard('user')}
-            className="h-[29px] px-[18px] flex items-center justify-center gap-2 border border-white/20 hover:border-[#a3aa96] hover:bg-white/5 transition-all cursor-pointer text-white bg-transparent"
-            style={{
-              fontFamily: "'Manrope', sans-serif",
-              fontSize: '10px',
-              letterSpacing: '-0.01em',
-              textTransform: 'uppercase',
-            }}
+            size="compact"
           >
             <ArrowIcon className="w-3 h-3 text-[#a3aa96]" />
             DASHBOARD
-          </button>
+          </TechnicalFrameButton>
           {authed && (accountType === 'superadmin' || accountType === 'admin') && (
-            <button
+            <TechnicalFrameButton
               onClick={() => handleDashboard('admin')}
-              className="h-[29px] px-[18px] flex items-center justify-center gap-2 border border-white/20 hover:border-[#a3aa96] hover:bg-white/5 transition-all cursor-pointer text-white bg-transparent"
-              style={{
-                fontFamily: "'Manrope', sans-serif",
-                fontSize: '10px',
-                letterSpacing: '-0.01em',
-                textTransform: 'uppercase',
-              }}
+              size="compact"
             >
               <ArrowIcon className="w-3 h-3 text-[#a3aa96]" />
               ADMIN
-            </button>
+            </TechnicalFrameButton>
           )}
         </div>
 
@@ -202,7 +191,7 @@ export default function Navbar() {
         }`}
       >
         {/* Top bar: Logo + Close */}
-        <div className="flex justify-between items-center px-4 py-6">
+        <div className="h-16 flex justify-between items-center px-4">
           <Link href="/" onClick={() => setIsMobileMenuOpen(false)}>
             <img
               src="/Aivory_logo_2_2026.svg"
@@ -281,21 +270,19 @@ export default function Navbar() {
               Sign In
             </button>
           )}
-          <button
+          <TechnicalFrameButton
             onClick={() => { setIsMobileMenuOpen(false); handleDashboard('user'); }}
-            className="text-white text-3xl font-light tracking-tight no-underline hover:text-white/70 transition-colors bg-transparent border-none cursor-pointer text-left"
-            style={{ fontFamily: "'Manrope', sans-serif" }}
+            size="compact"
           >
             Dashboard
-          </button>
+          </TechnicalFrameButton>
           {authed && (accountType === 'superadmin' || accountType === 'admin') && (
-            <button
+            <TechnicalFrameButton
               onClick={() => { setIsMobileMenuOpen(false); handleDashboard('admin'); }}
-              className="text-white text-3xl font-light tracking-tight no-underline hover:text-white/70 transition-colors bg-transparent border-none cursor-pointer text-left"
-              style={{ fontFamily: "'Manrope', sans-serif" }}
+              size="compact"
             >
               Admin
-            </button>
+            </TechnicalFrameButton>
           )}
         </div>
 

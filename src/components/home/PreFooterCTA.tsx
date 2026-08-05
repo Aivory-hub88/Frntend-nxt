@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
-import { SpotlightButton } from '@/components/ui/SpotlightButton';
+import { TechnicalFrameButton } from '@/components/ui/TechnicalFrameButton';
 
 /**
  * Imported rather than referenced by public path so the emitted URL carries a
@@ -93,15 +93,16 @@ export default function PreFooterCTA() {
             <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-white/45">
               Strategic engagement / 01
             </p>
-          </div>
-          <div className="lg:col-span-7 lg:col-start-6">
             <h2
-              className="no-word-split text-3xl font-light leading-[1.12] tracking-[-0.03em] md:text-[44px]"
+              className="no-word-split mt-5 max-w-lg text-3xl font-light leading-[1.12] tracking-[-0.03em] md:text-[44px]"
               style={{ fontFamily: "'Manrope', sans-serif", fontWeight: 300 }}
             >
               Start your transformation.
             </h2>
-            <div className="mt-7 max-w-2xl space-y-3 text-[15px] font-light leading-7 text-white/62 md:text-base">
+          </div>
+
+          <div className="lg:col-span-6 lg:col-start-7 lg:self-end">
+            <div className="max-w-2xl space-y-3 text-[15px] font-light leading-7 text-white/62 md:text-base">
               <p>Every transformation begins with understanding how your organisation operates.</p>
               <p>Tell us about your business, your operational challenges, and where you want to go.</p>
               <p>We&apos;ll help identify where AI can create measurable business value.</p>
@@ -304,14 +305,12 @@ export default function PreFooterCTA() {
                 )}
 
                 <div className="flex flex-col items-start gap-5 pt-6">
-                  <SpotlightButton
+                  <TechnicalFrameButton
                     type="submit"
                     disabled={status === 'submitting'}
-                    roundedClass="rounded-[10px]"
-                    className="text-xs md:text-sm"
                   >
                     {status === 'submitting' ? 'Sending...' : 'Start Conversation'}
-                  </SpotlightButton>
+                  </TechnicalFrameButton>
 
                   <p className="text-sm font-light text-white/55 md:text-base">
                     Prefer speaking with our team?{' '}

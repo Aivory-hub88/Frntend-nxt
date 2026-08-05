@@ -1,10 +1,9 @@
 'use client';
 
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
-import Link from 'next/link';
 import { useState } from 'react';
 import ContactModal from '@/components/home/ContactModal';
-import { SpotlightButton } from '@/components/ui/SpotlightButton';
+import { TechnicalFrameButton } from '@/components/ui/TechnicalFrameButton';
 
 /* ─── Arrow Icon ─── */
 function ArrowIcon({ className = '' }: { className?: string }) {
@@ -32,16 +31,16 @@ export function CTAFooter({ title, subtitle, primaryCta, secondaryCta }: CTAFoot
 
     if (isContact) {
       return (
-        <SpotlightButton key={cta.label} onClick={() => setIsModalOpen(true)}>
+        <TechnicalFrameButton key={cta.label} onClick={() => setIsModalOpen(true)}>
           {cta.label}
-        </SpotlightButton>
+        </TechnicalFrameButton>
       );
     }
     
     return (
-      <SpotlightButton key={cta.label} href={cta.href}>
+      <TechnicalFrameButton key={cta.label} href={cta.href}>
         {cta.label}
-      </SpotlightButton>
+      </TechnicalFrameButton>
     );
   };
 
