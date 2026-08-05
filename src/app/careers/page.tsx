@@ -1,10 +1,48 @@
-"use client";
-
-import { useEffect, useState } from "react";
+import type { Metadata } from "next";
 import Link from "next/link";
 import Navbar from "@/components/home/Navbar";
 import Footer from "@/components/Footer";
 import { getVacancies, type Vacancy } from "@/lib/careers-api";
+import {
+  AIVORY_UK_URL,
+  SITE_NAME,
+  DEFAULT_OG_IMAGE,
+  absoluteUrl,
+  JsonLd,
+  buildCareersListGraph,
+} from "@/lib/seo";
+
+export const revalidate = 60; // SSG with ISR (1 min)
+
+const CAREERS_DESCRIPTION =
+  "Open roles at Aivory. We hire people who prefer clear thinking over noise. Browse current openings in engineering, product, and operations.";
+
+export async function generateMetadata(): Promise<Metadata> {
+  const url = absoluteUrl("/careers");
+  const title = "Careers — Aivory";
+
+  return {
+    title,
+    description: CAREERS_DESCRIPTION,
+    alternates: {
+      canonical: url,
+      languages: { en: url, id: url },
+    },
+    openGraph: {
+      type: "website",
+      title: `Careers — ${SITE_NAME}`,
+      description: CAREERS_DESCRIPTION,
+      url,
+      images: [DEFAULT_OG_IMAGE],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description: CAREERS_DESCRIPTION,
+      images: [DEFAULT_OG_IMAGE],
+    },
+  };
+}
 
 /**
  * Extract a brief plain-text description from the rich editor JSONB output.
@@ -183,54 +221,12 @@ function EmptyState() {
   );
 }
 
-function LoadingState() {
-  return (
-    <div aria-hidden="true">
-      {[0, 1, 2, 3].map((row) => (
-        <div
-          key={row}
-          className="grid animate-pulse gap-6 border-t border-black/25 py-8 md:grid-cols-[150px_minmax(0,1fr)_minmax(280px,0.8fr)] md:py-10"
-        >
-          <div className="h-3 w-8 bg-black/10" />
-          <div>
-            <div className="h-7 w-3/4 bg-black/10" />
-            <div className="mt-4 h-3 w-40 bg-black/[0.07]" />
-          </div>
-          <div className="space-y-3">
-            <div className="h-3 w-full bg-black/[0.07]" />
-            <div className="h-3 w-2/3 bg-black/[0.07]" />
-          </div>
-        </div>
-      ))}
-    </div>
-  );
-}
-
-export default function CareersPage() {
-  const [vacancies, setVacancies] = useState<Vacancy[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    async function fetchVacancies() {
-      try {
-        setLoading(true);
-        setError(null);
-        const data = await getVacancies();
-        setVacancies(data);
-      } catch (err) {
-        setError("Failed to load vacancies. Please try again later.");
-        console.error("[CareersPage] Error fetching vacancies:", err);
-      } finally {
-        setLoading(false);
-      }
-    }
-
-    fetchVacancies();
-  }, []);
+export default async function CareersPage() {
+  const vacancies = await getVacancies();
 
   return (
     <div className="flex min-h-screen flex-col bg-[#050505] font-manrope">
+      <JsonLd data={buildCareersListGraph(AIVORY_UK_URL, vacancies)} />
       <Navbar />
 
       <main
@@ -303,18 +299,7 @@ export default function CareersPage() {
           </div>
 
           <div className="mx-auto max-w-[1480px] px-6 pb-24 md:px-12 md:pb-36">
-            {error && (
-              <p
-                role="alert"
-                className="mb-8 border-y border-black/25 py-6 text-[15px] font-light leading-[1.7] text-black/70"
-              >
-                {error}
-              </p>
-            )}
-
-            {loading ? (
-              <LoadingState />
-            ) : vacancies.length === 0 ? (
+            {vacancies.length === 0 ? (
               <EmptyState />
             ) : (
               vacancies.map((vacancy, index) => (

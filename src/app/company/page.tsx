@@ -8,6 +8,25 @@ export const metadata: Metadata = {
   title: "Company — Aivory",
   description:
     "Aivory helps ambitious teams understand complex operations, make clearer decisions, and build systems that last.",
+  alternates: {
+    canonical: "/company",
+    languages: { en: "/company", id: "/company" },
+  },
+  openGraph: {
+    type: "website",
+    title: "Company — Aivory",
+    description:
+      "Aivory helps ambitious teams understand complex operations, make clearer decisions, and build systems that last.",
+    url: "/company",
+    images: ["/hero-video-poster.jpg"],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Company — Aivory",
+    description:
+      "Aivory helps ambitious teams understand complex operations, make clearer decisions, and build systems that last.",
+    images: ["/hero-video-poster.jpg"],
+  },
 };
 
 export default function CompanyPage() {
