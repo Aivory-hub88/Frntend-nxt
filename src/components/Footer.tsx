@@ -94,7 +94,7 @@ export default function Footer() {
 
             {/* Logo */}
             <div className="col-span-2 md:col-span-1 flex md:justify-end mt-8 md:mt-0">
-              <div className="flex flex-col items-start md:items-end gap-4">
+              <div className="flex flex-col items-end gap-4">
                 <img
                   src="/Aivory_logo_2_2026.svg"
                   alt="Aivory Logo"
