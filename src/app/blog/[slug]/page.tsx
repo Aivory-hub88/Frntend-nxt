@@ -1,8 +1,8 @@
 import type { Metadata } from "next"
 import Link from "next/link"
-import Navbar from "@/components/home/Navbar";
-import Footer from "@/components/Footer";
-import { getBlogPost, BlogPostDetail, BlogContentBlock } from "@/lib/blog-api"
+import Navbar from "@/components/home/Navbar"
+import Footer from "@/components/Footer"
+import { getBlogPost, type BlogPostDetail, type BlogContentBlock } from "@/lib/blog-api"
 import { notFound } from "next/navigation"
 import {
   SITE_URL,
@@ -14,7 +14,6 @@ import {
   JsonLd,
 } from "@/lib/seo"
 
-/** Best-effort description: explicit excerpt, else first words of the body. */
 function postDescription(post: BlogPostDetail): string {
   if (post.excerpt) return clampDescription(post.excerpt)
   return clampDescription(richContentToPlainText(post.body?.blocks))
@@ -42,7 +41,10 @@ export async function generateMetadata(
   return {
     title: post.title,
     description,
-    alternates: { canonical: url },
+    alternates: {
+      canonical: url,
+      languages: { en: url, id: url },
+    },
     openGraph: {
       type: "article",
       title: post.title,
@@ -58,31 +60,43 @@ export async function generateMetadata(
       description,
       images,
     },
+    other: {
+      ...(post.published_at
+        ? {
+            "article:published_time": post.published_at,
+            "article:modified_time": post.published_at,
+          }
+        : {}),
+    },
   }
 }
 
 function formatDate(dateString: string): string {
-  const date = new Date(dateString)
-  return date.toLocaleDateString("en-US", {
-    year: "numeric",
+  return new Date(dateString).toLocaleDateString("en-GB", {
+    day: "2-digit",
     month: "long",
-    day: "numeric",
+    year: "numeric",
   })
 }
 
-/**
- * Renders a single Rich Editor content block as HTML.
- */
+function ArticleArrow() {
+  return (
+    <svg aria-hidden="true" viewBox="0 0 16 16" className="h-4 w-4" fill="none">
+      <path d="M3 13 13 3M6 3h7v7" stroke="currentColor" strokeWidth="1.2" />
+    </svg>
+  )
+}
+
 function ContentBlock({ block, isRedacted }: { block: BlogContentBlock; isRedacted: boolean }) {
   if (isRedacted) {
     return (
       <div
-        className="my-4 rounded-lg bg-white/5 border border-white/10 px-5 py-4 flex items-center gap-3"
+        className="my-4 rounded-lg border border-black/10 bg-black/[0.03] px-5 py-4 flex items-center gap-3"
         role="note"
         aria-label="Content redacted"
       >
-        <div className="w-1 h-8 bg-gray-500 rounded-full" />
-        <span className="text-gray-300 text-sm italic">Content redacted</span>
+        <div className="w-1 h-8 bg-black/20 rounded-full" />
+        <span className="text-black/40 text-sm italic">Content redacted</span>
       </div>
     )
   }
@@ -91,14 +105,14 @@ function ContentBlock({ block, isRedacted }: { block: BlogContentBlock; isRedact
     case "heading": {
       const level = block.level || 2
       const sizeClasses: Record<number, string> = {
-        1: "text-3xl font-bold",
-        2: "text-2xl font-bold",
-        3: "text-xl font-semibold",
-        4: "text-lg font-semibold",
+        1: "text-3xl font-light tracking-[-0.02em]",
+        2: "text-2xl font-light tracking-[-0.015em]",
+        3: "text-xl font-normal",
+        4: "text-lg font-normal",
         5: "text-base font-medium",
         6: "text-sm font-medium",
       }
-      const className = `${sizeClasses[level] || sizeClasses[2]} text-white mt-8 mb-3`
+      const className = `${sizeClasses[level] || sizeClasses[2]} text-[#11110f] mt-8 mb-3`
       if (level === 1) return <h1 className={className}>{block.text}</h1>
       if (level === 3) return <h3 className={className}>{block.text}</h3>
       if (level === 4) return <h4 className={className}>{block.text}</h4>
@@ -110,15 +124,15 @@ function ContentBlock({ block, isRedacted }: { block: BlogContentBlock; isRedact
     case "paragraph":
       return (
         <p
-          className="text-gray-100 leading-relaxed mb-4"
+          className="text-black/70 leading-relaxed mb-4 text-[16px] font-light"
           dangerouslySetInnerHTML={{ __html: formatInlineMarkup(block.text || "") }}
         />
       )
 
     case "code": {
       return (
-        <pre className="my-4 rounded-lg bg-[#0a0a0a] border border-white/10 p-4 overflow-x-auto">
-          <code className="text-sm text-gray-100 font-mono whitespace-pre-wrap">
+        <pre className="my-4 rounded-lg bg-black/[0.04] border border-black/10 p-4 overflow-x-auto">
+          <code className="text-sm text-black/70 font-mono whitespace-pre-wrap">
             {block.text}
           </code>
         </pre>
@@ -133,7 +147,7 @@ function ContentBlock({ block, isRedacted }: { block: BlogContentBlock; isRedact
         ? "list-decimal list-inside mb-4 space-y-1"
         : "list-disc list-inside mb-4 space-y-1"
       return (
-        <ListTag className={`${listClass} text-gray-100`}>
+        <ListTag className={`${listClass} text-black/70 text-[16px] font-light`}>
           {items.map((item, idx) => (
             <li key={idx} dangerouslySetInnerHTML={{ __html: formatInlineMarkup(item) }} />
           ))}
@@ -147,10 +161,10 @@ function ContentBlock({ block, isRedacted }: { block: BlogContentBlock; isRedact
           <img
             src={block.url || ""}
             alt={block.alt || ""}
-            className="w-full rounded-lg border border-white/10"
+            className="w-full rounded-lg border border-black/10"
           />
           {block.alt && (
-            <figcaption className="text-center text-xs text-gray-300 mt-2">
+            <figcaption className="text-center text-xs text-black/40 mt-2">
               {block.alt}
             </figcaption>
           )}
@@ -164,7 +178,7 @@ function ContentBlock({ block, isRedacted }: { block: BlogContentBlock; isRedact
             href={block.href || "#"}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-[#dfe2d8] underline hover:text-[#d8dccd] transition-colors"
+            className="text-[#11110f] underline underline-offset-2 hover:opacity-60 transition-opacity"
           >
             {block.text || block.href}
           </a>
@@ -172,11 +186,10 @@ function ContentBlock({ block, isRedacted }: { block: BlogContentBlock; isRedact
       )
 
     default:
-      // Fallback: render text as paragraph if available
       if (block.text) {
         return (
           <p
-            className="text-gray-100 leading-relaxed mb-4"
+            className="text-black/70 leading-relaxed mb-4 text-[16px] font-light"
             dangerouslySetInnerHTML={{ __html: formatInlineMarkup(block.text) }}
           />
         )
@@ -185,73 +198,64 @@ function ContentBlock({ block, isRedacted }: { block: BlogContentBlock; isRedact
   }
 }
 
-/**
- * Converts basic inline markup (bold, italic) into HTML spans.
- * Supports **bold** and *italic* / _italic_ patterns.
- */
 function formatInlineMarkup(text: string): string {
   let html = text
-  // Escape potential XSS - minimal sanitization for display
   html = html.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
-  // Bold: **text**
-  html = html.replace(/\*\*(.+?)\*\*/g, '<strong class="text-white font-semibold">$1</strong>')
-  // Italic: *text* or _text_
+  html = html.replace(/\*\*(.+?)\*\*/g, '<strong class="text-[#11110f] font-medium">$1</strong>')
   html = html.replace(/\*(.+?)\*/g, "<em>$1</em>")
   html = html.replace(/_(.+?)_/g, "<em>$1</em>")
-  // Inline code: `text`
   html = html.replace(
     /`(.+?)`/g,
-    '<code class="px-1.5 py-0.5 bg-white/5 border border-white/10 rounded text-sm font-mono text-[#dfe2d8]">$1</code>'
+    '<code class="px-1.5 py-0.5 bg-black/[0.06] border border-black/10 rounded text-sm font-mono text-black/60">$1</code>'
   )
   return html
 }
 
-
-
-export const revalidate = 60; // SSG with ISR (1 min)
+export const revalidate = 60
 
 export default async function BlogPostPage(props: { params: Promise<{ slug: string }> }) {
-  const params = await props.params;
-  const slug = params.slug;
+  const params = await props.params
+  const slug = params.slug
 
-  let post: BlogPostDetail | null = null;
-  let error: string | null = null;
+  let post: BlogPostDetail | null = null
+  let error: string | null = null
 
   try {
-    const data = await getBlogPost(slug);
+    const data = await getBlogPost(slug)
     if (data === null) {
-      notFound();
+      notFound()
     } else {
-      post = data;
+      post = data
     }
   } catch (err) {
-    error = err instanceof Error ? err.message : "Failed to load blog post";
+    error = err instanceof Error ? err.message : "Failed to load blog post"
   }
 
   return (
-    <div className="flex min-h-screen flex-col font-manrope" style={{ background: "#050505" }}>
+    <div className="flex min-h-screen flex-col bg-[#050505] font-manrope">
       <Navbar />
 
-      <main className="flex-1 px-6 py-24">
+      <main
+        className="flex-1 bg-[#efeee8] text-[#11110f]"
+        style={{
+          fontFamily: "'Manrope', sans-serif",
+          fontWeight: 300,
+          background: "linear-gradient(to bottom, #050505 0, #050505 64px, #efeee8 64px, #efeee8 100%)",
+        }}
+      >
         {error ? (
-          <div className="flex flex-col items-center justify-center py-16 text-center">
-            <p className="text-red-400 mb-4">{error}</p>
+          <div className="flex flex-col items-center justify-center py-24 text-center">
+            <p className="text-black/50 mb-6 text-[17px] font-light">{error}</p>
             <Link
               href="/blog"
-              className="inline-flex items-center justify-center gap-3 text-white no-underline uppercase cursor-pointer transition-all duration-[250ms] border border-white/20 bg-black/60 hover:border-[#a3aa96] hover:bg-white/5 min-h-[44px]"
-              style={{
-                padding: '0.75rem 1.5rem',
-                fontFamily: "'Manrope', sans-serif",
-                fontWeight: 400,
-                fontSize: '0.75rem',
-                letterSpacing: '0.1em',
-              }}
+              className="inline-flex items-center gap-2 border-b border-black pb-1 text-[13px] font-light text-black transition-opacity hover:opacity-55"
             >
-              ← Back to Blog
+              Back to Blog
+              <ArticleArrow />
             </Link>
           </div>
         ) : post ? (
-          <article className="max-w-3xl mx-auto">
+          <article className="max-w-3xl mx-auto px-6 py-24 md:py-32">
             <JsonLd
               data={{
                 "@context": "https://schema.org",
@@ -261,14 +265,14 @@ export default async function BlogPostPage(props: { params: Promise<{ slug: stri
                 image: post.thumbnail_url || undefined,
                 datePublished: post.published_at,
                 dateModified: post.published_at,
-                author: { "@type": "Person", name: post.author_name },
+                author: { "@type": "Organization", name: post.author_name },
                 publisher: ORGANIZATION,
                 mainEntityOfPage: {
                   "@type": "WebPage",
                   "@id": absoluteUrl(`/blog/${post.slug}`),
                 },
                 url: absoluteUrl(`/blog/${post.slug}`),
-                isPartOf: { "@type": "Blog", name: "Aivory Blog", url: `${SITE_URL}/blog` },
+                isPartOf: { "@type": "Blog", name: "Aivory News & Insights", url: `${SITE_URL}/blog` },
               }}
             />
             <JsonLd
@@ -277,36 +281,43 @@ export default async function BlogPostPage(props: { params: Promise<{ slug: stri
                 "@type": "BreadcrumbList",
                 itemListElement: [
                   { "@type": "ListItem", position: 1, name: "Home", item: SITE_URL },
-                  { "@type": "ListItem", position: 2, name: "Blog", item: `${SITE_URL}/blog` },
+                  { "@type": "ListItem", position: 2, name: "News & Insights", item: `${SITE_URL}/blog` },
                   { "@type": "ListItem", position: 3, name: post.title, item: absoluteUrl(`/blog/${post.slug}`) },
                 ],
               }}
             />
-            {/* Back link */}
+
             <Link
               href="/blog"
-              className="inline-flex items-center text-sm text-gray-200 hover:text-[#dfe2d8] transition-colors mb-8"
+              className="inline-flex items-center gap-2 text-sm text-black/50 hover:text-black transition-colors mb-10 font-light"
             >
-              <svg className="w-4 h-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 19l-7-7 7-7" />
               </svg>
-              Back to Blog
+              News &amp; Insights
             </Link>
 
-            {/* Title */}
-            <h1 className="text-3xl md:text-4xl font-bold text-white mb-4">
+            <h1 className="text-[32px] md:text-[46px] font-light leading-[1.05] tracking-[-0.035em] text-[#11110f] mb-6">
               {post.title}
             </h1>
 
-            {/* Meta */}
-            <div className="flex items-center gap-4 text-sm text-gray-200 mb-8 pb-6 border-b border-white/10">
-              <span className="font-medium text-gray-100">{post.author_name}</span>
-              <span className="text-white/40">•</span>
+            <div className="flex items-center gap-3 text-sm text-black/50 mb-10 pb-8 border-b border-black/15 font-light">
+              <span className="text-black/70">{post.author_name}</span>
+              <span className="text-black/25">·</span>
               <time dateTime={post.published_at}>{formatDate(post.published_at)}</time>
             </div>
 
-            {/* Body content */}
-            <div className="prose-custom">
+            {post.thumbnail_url && (
+              <figure className="mb-10">
+                <img
+                  src={post.thumbnail_url}
+                  alt={post.title}
+                  className="w-full rounded-lg border border-black/10"
+                />
+              </figure>
+            )}
+
+            <div>
               {post.body?.blocks?.map((block, index) => (
                 <ContentBlock
                   key={index}
@@ -314,6 +325,18 @@ export default async function BlogPostPage(props: { params: Promise<{ slug: stri
                   isRedacted={post.redacted_sections?.includes(index) ?? false}
                 />
               ))}
+            </div>
+
+            <div className="mt-16 pt-8 border-t border-black/15">
+              <Link
+                href="/blog"
+                className="inline-flex items-center gap-2 text-sm text-black/50 hover:text-black transition-colors font-light"
+              >
+                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 19l-7-7 7-7" />
+                </svg>
+                Back to News &amp; Insights
+              </Link>
             </div>
           </article>
         ) : null}
