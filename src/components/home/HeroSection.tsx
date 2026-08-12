@@ -41,7 +41,7 @@ export default function HeroSection() {
             className="silver-swipe-text text-[36px] md:text-[56px] font-light tracking-tight text-center leading-[1.1] pointer-events-none select-none"
             style={{ fontFamily: "'Manrope', sans-serif" }}
           >
-            AI-Powered Business Transformation
+            AI Infrastructure for Business Transformation
           </h1>
         </div>
         <div className="w-full animate-slide-up-2 pointer-events-none select-none" style={{ animationDelay: '0.4s' }}>

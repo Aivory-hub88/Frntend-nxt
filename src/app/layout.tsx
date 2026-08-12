@@ -25,7 +25,7 @@ const doto = Doto({
 });
 
 const SITE_NAME = 'Aivory AI';
-const SITE_TITLE = 'Aivory AI: An AI-Powered Business Transformation Platform';
+const SITE_TITLE = 'Aivory AI: AI Infrastructure for Business Transformation';
 const SITE_DESCRIPTION =
   'Aivory helps businesses assess operations, design AI transformation blueprints, and deploy governed AI agents, workflow automation and operational intelligence.';
 
@@ -49,6 +49,7 @@ export const metadata: Metadata = {
   applicationName: SITE_NAME,
   verification: {
     google: '-X46S5bMyCLH8iqPOeCooGlLGvfl2X7soGY9MuaQqt4',
+    facebook: 'crlcggam8m22oh6vp9e3qp5hua9t4n',
   },
   alternates: {
     canonical: AIVORY_UK_URL,
@@ -99,6 +100,7 @@ export default function RootLayout({
           rel="stylesheet"
         />
         <link rel="alternate" hrefLang="x-default" href={AIVORY_UK_URL} />
+        <meta name="facebook-domain-verification" content="crlcggam8m22oh6vp9e3qp5hua9t4n" />
         <script async src="https://www.googletagmanager.com/gtag/js?id=G-XYJ0EDEYS8" />
         <script
           dangerouslySetInnerHTML={{
