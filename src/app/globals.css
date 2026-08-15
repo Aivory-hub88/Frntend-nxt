@@ -952,4 +952,11 @@ body,
   -webkit-background-clip: text;
   background-clip: text;
   animation: silver-swipe 5s linear infinite;
+  /* Own compositing layer, decoupled from the parent's opacity/transform
+     entrance animation (animate-slide-up-1/2) — without this, some
+     browsers fail to paint the animated gradient-clipped text on first
+     load (renders fully invisible until a later repaint, e.g. scroll or
+     reload), since both animations start compositing at the same time. */
+  will-change: background-position;
+  transform: translateZ(0);
 }
