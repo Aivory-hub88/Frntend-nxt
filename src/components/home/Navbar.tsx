@@ -69,6 +69,8 @@ export default function Navbar() {
           <img
             src="/Aivory_logo_2_2026.svg"
             alt="Aivory Logo"
+            width={383}
+            height={79}
             className="h-[26px] w-auto object-contain"
           />
         </Link>
@@ -196,6 +198,8 @@ export default function Navbar() {
             <img
               src="/Aivory_logo_2_2026.svg"
               alt="Aivory Logo"
+              width={383}
+              height={79}
               className="h-[26px] w-auto object-contain"
             />
           </Link>

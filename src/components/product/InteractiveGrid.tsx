@@ -619,7 +619,7 @@ function IntegrationsMarquee() {
           <div key={idx} className="flex flex-none shrink-0 items-center justify-center gap-3 grayscale transition-all duration-300 px-8">
             {!item.icon ? null : (
               <div style={{ filter: 'brightness(0) invert(1) drop-shadow(0 2px 6px rgba(0,0,0,0.7))', width: '28px', height: '28px', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                <img src={item.icon} alt={item.name} className="w-full h-full object-contain" />
+                <img src={item.icon} alt={item.name} width={32} height={32} className="w-full h-full object-contain" />
               </div>
             )}
             <span className="text-white/90 font-semibold text-xl tracking-tight whitespace-nowrap" style={{ textShadow: '0 2px 8px rgba(0,0,0,0.75)' }}>{item.name}</span>
@@ -790,14 +790,14 @@ function AgentFlowVisual({ title }: { title: string }) {
       {title === 'Customer Service Agent' && (
         <div className="flex items-center gap-1.5 w-full">
           <div className={`${boxClasses} ${csState.channel === 0 && csState.status === 'processing' && !reducedMotion ? activePulseClasses : ''}`}>
-            <img src="/integrations/icons/whatsapp.svg" alt="WhatsApp" className="w-4 h-4 opacity-80" />
+            <img src="/integrations/icons/whatsapp.svg" alt="WhatsApp" width={32} height={32} className="w-4 h-4 opacity-80" />
           </div>
           <div className={`${boxClasses} ${csState.channel === 1 && csState.status === 'processing' && !reducedMotion ? activePulseClasses : ''}`}>
-            <img src="/integrations/icons/telegram.svg" alt="Telegram" className="w-4 h-4 opacity-80" />
+            <img src="/integrations/icons/telegram.svg" alt="Telegram" width={32} height={32} className="w-4 h-4 opacity-80" />
           </div>
           <div className={`${boxClasses} ${csState.channel === 2 && csState.status === 'processing' && !reducedMotion ? activePulseClasses : ''}`}>
             <div className="w-4 h-4 opacity-90 flex items-center justify-center">
-              <img src="/integrations/icons/gmail.svg" alt="Email" className="w-full h-full" />
+              <img src="/integrations/icons/gmail.svg" alt="Email" width={32} height={32} className="w-full h-full" />
             </div>
           </div>
           <div className="ml-0.5">{arrowRight}</div>
@@ -854,7 +854,7 @@ function AgentFlowVisual({ title }: { title: string }) {
               {reducedMotion && <div className="absolute top-0 left-full -translate-x-full h-full w-full bg-[#bbe2ef]/50" />}
            </div>
            <div className="w-8 h-8 flex items-center justify-center bg-[#111111] border border-white/5 rounded-xl z-10 shrink-0">
-              <img src="/integrations/icons/slack.svg" alt="Slack" className="w-4 h-4 opacity-80" />
+              <img src="/integrations/icons/slack.svg" alt="Slack" width={16} height={16} className="w-4 h-4 opacity-80" />
            </div>
         </div>
       )}

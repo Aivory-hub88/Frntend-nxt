@@ -98,6 +98,8 @@ export default function Footer() {
                 <img
                   src="/Aivory_logo_2_2026.svg"
                   alt="Aivory Logo"
+                  width={383}
+                  height={79}
                   className="h-[28px] md:h-[36px] w-auto shrink-0 opacity-90"
                 />
                 <Link
@@ -109,6 +111,8 @@ export default function Footer() {
                   <img
                     src="/images/badges/nvidia-inception-badge-v2.svg"
                     alt="NVIDIA Inception Program — Aivory AI is a member (2026 cohort)"
+                    width={441}
+                    height={157}
                     className="h-[45px] w-auto shrink-0 md:h-[55px]"
                   />
                 </Link>

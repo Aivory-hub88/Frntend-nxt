@@ -99,6 +99,8 @@ function FeaturedStory({ post }: { post: BlogPost }) {
           <img
             src={post.thumbnail_url}
             alt={post.title}
+            width={1600}
+            height={1000}
             className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.025]"
           />
         ) : (
@@ -120,6 +122,8 @@ function FeaturedRow({ post, index }: { post: BlogPost; index: number }) {
           <img
             src={post.thumbnail_url}
             alt={post.title}
+            width={1600}
+            height={1000}
             className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.025]"
           />
         ) : (
@@ -181,6 +185,8 @@ function ArchiveRow({ post }: { post: BlogPost }) {
             <img
               src={post.thumbnail_url}
               alt=""
+              width={1200}
+              height={900}
               className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.035]"
             />
           ) : (

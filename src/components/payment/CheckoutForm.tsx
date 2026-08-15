@@ -420,6 +420,8 @@ export function CheckoutForm({
         <img
           src="/Aivory_logo_2_2026.svg"
           alt="Aivory"
+          width={383}
+          height={79}
           className="h-8 w-auto filter invert"
         />
         <div className="relative">

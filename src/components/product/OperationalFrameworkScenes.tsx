@@ -34,6 +34,8 @@ function AivoryMark({ className = 'h-5 w-5' }: { className?: string }) {
     <img
       src="/Aivory%20icon%202026.svg"
       alt="Aivory"
+      width={91}
+      height={79}
       className={`${className} object-contain brightness-0 invert`}
     />
   );
@@ -574,9 +576,9 @@ export function ConsoleAnimation() {
               <motion.button className="flex h-5 w-5 items-center justify-center rounded-full bg-[#f7f7f7] text-[10px] text-[#353531]" animate={phase === 'typing' && typedPrompt.length > 12 ? { scale: [1, 1.08, 1] } : { scale: 1 }} transition={{ duration: 0.8, repeat: Infinity, repeatDelay: 1.4 }}>↑</motion.button>
             </div>
             <div className="flex items-center justify-between border-t border-white/[0.06] px-3 py-1.5">
-              <div className="flex items-center gap-1.5 text-[6px] text-white/30"><span>connect your tools to</span><img src="/Aivory%20logo%202026.svg" alt="Aivory" className="h-2.5 w-auto brightness-0 invert opacity-60" /></div>
+              <div className="flex items-center gap-1.5 text-[6px] text-white/30"><span>connect your tools to</span><img src="/Aivory%20logo%202026.svg" alt="Aivory" width={383} height={79} className="h-2.5 w-auto brightness-0 invert opacity-60" /></div>
               <div className="flex items-center gap-1">
-                {connectedApps.map((app) => <span key={app.alt} className="flex h-5 w-5 items-center justify-center rounded-md border border-white/10 bg-white p-[3px]" title={app.alt}><img src={app.src} alt={app.alt} className="h-full w-full object-contain" /></span>)}
+                {connectedApps.map((app) => <span key={app.alt} className="flex h-5 w-5 items-center justify-center rounded-md border border-white/10 bg-white p-[3px]" title={app.alt}><img src={app.src} alt={app.alt} width={32} height={32} className="h-full w-full object-contain" /></span>)}
               </div>
             </div>
           </div>

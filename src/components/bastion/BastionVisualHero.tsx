@@ -82,6 +82,8 @@ export default function BastionVisualHero() {
             <img
               src="/Bastion_2_copy.svg"
               alt="Bastion"
+              width={1716}
+              height={363}
               className="w-full h-auto opacity-0 pointer-events-none"
             />
             <div 

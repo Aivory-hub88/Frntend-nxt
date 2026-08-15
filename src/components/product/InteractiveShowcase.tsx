@@ -1328,6 +1328,8 @@ export function LegacyWorkflowAnimation() {
                   <img
                     src="/integrations/icons/gmail.svg"
                     alt="Gmail"
+                    width={32}
+                    height={32}
                     className="w-5 h-5 sm:w-[22px] sm:h-[22px]"
                   />
                 </div>
@@ -1392,6 +1394,8 @@ export function LegacyWorkflowAnimation() {
                   <img
                     src="/integrations/icons/slack.svg"
                     alt="Slack"
+                    width={16}
+                    height={16}
                     className="w-5 h-5 sm:w-[22px] sm:h-[22px]"
                   />
                 </div>
@@ -1917,6 +1921,8 @@ function IntroAnimation() {
         <img
           src="/Aivory_logo_2_2026.svg"
           alt="Aivory Agent"
+          width={383}
+          height={79}
           className="h-6 w-auto opacity-80 mx-auto"
         />
       </div>

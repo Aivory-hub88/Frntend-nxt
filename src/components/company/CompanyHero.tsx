@@ -37,8 +37,8 @@ export function CompanyHero() {
               <img
                 src="/images/Company/five-people-renaissance-meeting.webp"
                 alt="Five Renaissance figures gathered around a table in a red and navy editorial illustration"
-                width={2752}
-                height={1536}
+                width={1400}
+                height={781}
                 className="h-full w-full object-cover"
                 loading="eager"
                 fetchPriority="high"

@@ -270,8 +270,8 @@ export default async function CareersPage() {
                 <img
                   src="/images/careers/five-people-renaissance-clothing.webp"
                   alt="Five people in Renaissance clothing gathered together in a red and navy editorial illustration"
-                  width={2752}
-                  height={1536}
+                  width={1600}
+                  height={893}
                   className="h-full w-full object-cover"
                   loading="eager"
                   fetchPriority="high"

@@ -936,7 +936,7 @@ export default function FreeDiagnosticClient() {
                       {/* Header — logo left, title right, matching the report spec */}
                       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 28 }}>
                         {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img src="/Aivory_Signature_Grey.svg" alt="Aivory" style={{ height: '46px', width: 'auto', display: 'block', flexShrink: 0 }} />
+                        <img src="/Aivory_Signature_Grey.svg" alt="Aivory" width={448} height={56} style={{ height: '46px', width: 'auto', display: 'block', flexShrink: 0 }} />
                         <div style={{ fontSize: 28, fontWeight: 400, lineHeight: 1.35, color: '#111', textAlign: 'right', textTransform: 'uppercase' }}>{copy.card.quickAssessment}<br />{copy.card.ofBusinessOperations}</div>
                       </div>
                       <div style={{ borderBottom: '1px solid #111', marginBottom: 32 }} />
@@ -1089,7 +1089,7 @@ export default function FreeDiagnosticClient() {
                     <div style={{ marginTop: 'auto', paddingTop: 20, borderTop: '1px solid #dcdcd7', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                       <div style={{ fontSize: 20, fontWeight: 500, color: '#111' }}>© 2026 Aivory. All rights reserved.</div>
                       {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img src="/Aivory_Signature_Grey.svg" alt="Aivory" style={{ height: '24px', width: 'auto', display: 'block' }} />
+                      <img src="/Aivory_Signature_Grey.svg" alt="Aivory" width={448} height={56} style={{ height: '24px', width: 'auto', display: 'block' }} />
                     </div>
                   </div>
                 </div>
