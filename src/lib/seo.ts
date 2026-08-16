@@ -25,7 +25,7 @@ const WEBSITE_DESCRIPTION =
 const HOMEPAGE_DESCRIPTION =
   'AI infrastructure for business transformation, operational intelligence, governed AI agents, and workflow automation. Assess operations, design your blueprint, and deploy with confidence.';
 const PLATFORM_DESCRIPTION =
-  'AI operations platform that guides organisations from business operations assessment to governed AI agent deployment, workflow automation, and operational intelligence.';
+  'Aivory is the agentic AI operations platform that guides organisations from business operations assessment to autonomous AI agent orchestration, no-code workflow automation, and operational intelligence.';
 const BASTION_DESCRIPTION =
   'AI-powered autonomous infrastructure defence platform combining continuous monitoring, adaptive threat response, zero-trust posture, and operational resilience.';
 const FOUNDER_DESCRIPTION =
@@ -113,11 +113,16 @@ export function createOrganization(siteUrl: PublicSiteUrl) {
     },
     knowsAbout: [
       'AI Business Transformation',
+      'AI Operations Platform',
+      'Agentic AI Platform',
       'Operational Intelligence',
       'Autonomous AI Agents',
+      'AI Agent Orchestration',
       'Business Operations Assessment',
       'AI Readiness Diagnostic',
+      'Operational Maturity Assessment',
       'Workflow Automation',
+      'No-Code AI Agent Deployment',
       'Autonomous Infrastructure Defence',
       'Governed AI Systems',
     ],
@@ -212,7 +217,7 @@ function createPlatformApplication(siteUrl: PublicSiteUrl) {
     '@type': 'SoftwareApplication',
     '@id': `${siteUrl}/#software`,
     name: 'Aivory Platform',
-    alternateName: ['Aivory AI', 'Aivory AI Operations Platform'],
+    alternateName: ['Aivory AI', 'Aivory AI Operations Platform', 'Aivory Agentic AI Platform'],
     applicationCategory: 'BusinessApplication',
     applicationSubCategory: 'AI Operations Platform',
     operatingSystem: 'Web',

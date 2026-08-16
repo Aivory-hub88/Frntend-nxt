@@ -9,25 +9,25 @@ import { CTAFooter } from '@/components/product/CTAFooter';
 import { DarkSectionSpotlight } from '@/components/ui/DarkSectionSpotlight';
 
 export const metadata: Metadata = {
-  title: 'Products',
+  title: 'AI Operations Platform — Autonomous AI Agents for Business',
   description:
-    'Discover AI-powered tools for business transformation: diagnostics, blueprints, workflow automation, and intelligent agents.',
+    'Aivory is the agentic AI operations platform for business transformation: diagnostics, blueprints, no-code workflow automation, and autonomous AI agents deployed to Slack, HubSpot, and your CRM.',
   alternates: {
     canonical: '/product',
   },
   openGraph: {
     type: 'website',
-    title: 'Products — Aivory',
+    title: 'AI Operations Platform — Autonomous AI Agents for Business | Aivory',
     description:
-      'Discover AI-powered tools for business transformation: diagnostics, blueprints, workflow automation, and intelligent agents.',
+      'Aivory is the agentic AI operations platform for business transformation: diagnostics, blueprints, no-code workflow automation, and autonomous AI agents deployed to Slack, HubSpot, and your CRM.',
     url: '/product',
     images: ['/hero-video-poster.jpg'],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Products — Aivory',
+    title: 'AI Operations Platform — Autonomous AI Agents for Business | Aivory',
     description:
-      'Discover AI-powered tools for business transformation: diagnostics, blueprints, workflow automation, and intelligent agents.',
+      'Aivory is the agentic AI operations platform for business transformation: diagnostics, blueprints, no-code workflow automation, and autonomous AI agents deployed to Slack, HubSpot, and your CRM.',
     images: ['/hero-video-poster.jpg'],
   },
 };
