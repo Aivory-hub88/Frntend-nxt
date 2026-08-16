@@ -2,6 +2,7 @@ import Link from "next/link";
 import Navbar from "@/components/home/Navbar";
 import Footer from "@/components/Footer";
 import { LocaleSuggestionBanner } from "@/components/locale/LocaleSuggestionBanner";
+import { LocaleSwitcher } from "@/components/locale/LocaleSwitcher";
 import type { SiteLocale } from "@/components/locale/LocaleSuggestionBanner";
 
 function ArrowIcon() {
@@ -45,6 +46,7 @@ export function CompanyPageTemplate({ content }: { content: CompanyContent }) {
   return (
     <div className="flex min-h-screen flex-col bg-[#050505]">
       <Navbar />
+      <LocaleSwitcher currentLocale={content.locale} path="company" />
       <LocaleSuggestionBanner currentLocale={content.locale} path="company" />
 
       <main

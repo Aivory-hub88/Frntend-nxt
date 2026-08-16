@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import type { LocalePath, SiteLocale, SuggestableLocale } from "./LocaleSuggestionBanner";
+import type { LocalePath, SuggestableLocale } from "./LocaleSuggestionBanner";
 
 const COPY: Record<SuggestableLocale, { message: string; cta: string }> = {
   ar: {
@@ -43,22 +43,11 @@ const COPY: Record<SuggestableLocale, { message: string; cta: string }> = {
   },
 };
 
-const BACK_TO_ENGLISH_COPY = {
-  message: "Prefer English?",
-  cta: "View in English",
-};
-
-function targetHref(target: SiteLocale, path: LocalePath): string {
-  return target === "en" ? `/${path}` : `/${target}/${path}`;
-}
-
 export function LocaleSuggestionBannerClient({
-  variant,
   target,
   path,
 }: {
-  variant: "suggest" | "back-to-english";
-  target: SiteLocale;
+  target: SuggestableLocale;
   path: LocalePath;
 }) {
   const storageKey = `aivory-locale-banner-dismissed:${path}:${target}`;
@@ -70,9 +59,7 @@ export function LocaleSuggestionBannerClient({
 
   if (dismissed) return null;
 
-  const copy = variant === "suggest" && target !== "en"
-    ? COPY[target]
-    : BACK_TO_ENGLISH_COPY;
+  const copy = COPY[target];
   const dir = target === "ar" ? "rtl" : "ltr";
 
   return (
@@ -82,7 +69,7 @@ export function LocaleSuggestionBannerClient({
     >
       <span>{copy.message}</span>
       <Link
-        href={targetHref(target, path)}
+        href={`/${target}/${path}`}
         className="whitespace-nowrap border-b border-white/50 pb-0.5 text-white transition-opacity hover:opacity-70"
       >
         {copy.cta}

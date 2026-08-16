@@ -43,15 +43,14 @@ export async function LocaleSuggestionBanner({
   currentLocale: SiteLocale;
   path: LocalePath;
 }) {
-  if (currentLocale === "en") {
-    const headerList = await headers();
-    const country = headerList.get("cf-ipcountry");
-    const suggested = suggestLocaleForCountry(country);
-    if (!suggested) return null;
-    return <LocaleSuggestionBannerClient variant="suggest" target={suggested} path={path} />;
-  }
+  // Only ever suggested on the English page -- the always-visible
+  // LocaleSwitcher already covers "get back to English" from a localized
+  // page, so there's no separate back-to-English variant here anymore.
+  if (currentLocale !== "en") return null;
 
-  // On a localized page, always offer a way back to English -- no geo
-  // detection needed for that direction.
-  return <LocaleSuggestionBannerClient variant="back-to-english" target="en" path={path} />;
+  const headerList = await headers();
+  const country = headerList.get("cf-ipcountry");
+  const suggested = suggestLocaleForCountry(country);
+  if (!suggested) return null;
+  return <LocaleSuggestionBannerClient target={suggested} path={path} />;
 }

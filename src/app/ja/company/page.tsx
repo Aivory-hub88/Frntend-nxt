@@ -4,6 +4,7 @@ import Footer from "@/components/Footer";
 import { CompanyHeroJa } from "@/components/company/ja/CompanyHero";
 import { CompanyContentJa } from "@/components/company/ja/CompanyContent";
 import { LocaleSuggestionBanner } from "@/components/locale/LocaleSuggestionBanner";
+import { LocaleSwitcher } from "@/components/locale/LocaleSwitcher";
 import { buildLanguageAlternates } from "@/lib/localeAlternates";
 
 export const metadata: Metadata = {
@@ -35,6 +36,7 @@ export default function CompanyPageJapanese() {
   return (
     <div className="flex min-h-screen flex-col bg-[#050505]">
       <Navbar />
+      <LocaleSwitcher currentLocale="ja" path="company" />
       <LocaleSuggestionBanner currentLocale="ja" path="company" />
 
       <main

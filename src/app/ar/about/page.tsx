@@ -5,6 +5,7 @@ import Navbar from '@/components/home/Navbar';
 import Footer from '@/components/Footer';
 import { AboutArchitecturalSignal } from '@/components/about/AboutArchitecturalSignal';
 import { LocaleSuggestionBanner } from '@/components/locale/LocaleSuggestionBanner';
+import { LocaleSwitcher } from '@/components/locale/LocaleSwitcher';
 import { buildLanguageAlternates } from '@/lib/localeAlternates';
 import { ASSESSMENT_STEPS_AR, FAQ_ENTITIES_AR } from '@/lib/seo';
 
@@ -68,6 +69,7 @@ export default function AboutPageArabic() {
       data-about-layout="editorial"
     >
       <Navbar />
+      <LocaleSwitcher currentLocale="ar" path="about" />
       <LocaleSuggestionBanner currentLocale="ar" path="about" />
 
       <section

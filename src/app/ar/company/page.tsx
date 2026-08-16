@@ -4,6 +4,7 @@ import Footer from "@/components/Footer";
 import { CompanyHeroAr } from "@/components/company/ar/CompanyHero";
 import { CompanyContentAr } from "@/components/company/ar/CompanyContent";
 import { LocaleSuggestionBanner } from "@/components/locale/LocaleSuggestionBanner";
+import { LocaleSwitcher } from "@/components/locale/LocaleSwitcher";
 import { buildLanguageAlternates } from "@/lib/localeAlternates";
 
 export const metadata: Metadata = {
@@ -35,6 +36,7 @@ export default function CompanyPageArabic() {
   return (
     <div className="flex min-h-screen flex-col bg-[#050505]">
       <Navbar />
+      <LocaleSwitcher currentLocale="ar" path="company" />
       <LocaleSuggestionBanner currentLocale="ar" path="company" />
 
       <main

@@ -5,6 +5,7 @@ import Navbar from '@/components/home/Navbar';
 import Footer from '@/components/Footer';
 import { AboutArchitecturalSignal } from '@/components/about/AboutArchitecturalSignal';
 import { LocaleSuggestionBanner } from '@/components/locale/LocaleSuggestionBanner';
+import { LocaleSwitcher } from '@/components/locale/LocaleSwitcher';
 import { buildLanguageAlternates } from '@/lib/localeAlternates';
 import {
   ASSESSMENT_STEPS,
@@ -90,6 +91,7 @@ export default function AboutPage() {
         ])}
       />
       <Navbar />
+      <LocaleSwitcher currentLocale="en" path="about" />
       <LocaleSuggestionBanner currentLocale="en" path="about" />
 
       <section

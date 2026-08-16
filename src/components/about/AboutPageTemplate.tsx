@@ -4,6 +4,7 @@ import Navbar from '@/components/home/Navbar';
 import Footer from '@/components/Footer';
 import { AboutArchitecturalSignal } from '@/components/about/AboutArchitecturalSignal';
 import { LocaleSuggestionBanner } from '@/components/locale/LocaleSuggestionBanner';
+import { LocaleSwitcher } from '@/components/locale/LocaleSwitcher';
 import type { SiteLocale } from '@/components/locale/LocaleSuggestionBanner';
 
 const ABOUT_HERO_BACKGROUND =
@@ -70,6 +71,7 @@ export function AboutPageTemplate({ content }: { content: AboutContent }) {
       data-about-layout="editorial"
     >
       <Navbar />
+      <LocaleSwitcher currentLocale={content.locale} path="about" />
       <LocaleSuggestionBanner currentLocale={content.locale} path="about" />
 
       <section

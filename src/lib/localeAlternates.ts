@@ -17,3 +17,25 @@ export function buildLanguageAlternates(path: "about" | "company"): Record<strin
   }
   return languages;
 }
+
+/** All languages a page has a real variant for, English first. */
+export const ALL_LOCALES = ["en", ...LOCALE_PREFIXES] as const;
+
+/** Native-language display names for the language switcher. */
+export const LOCALE_LABELS: Record<(typeof ALL_LOCALES)[number], string> = {
+  en: "English",
+  ar: "العربية",
+  ja: "日本語",
+  ko: "한국어",
+  zh: "中文",
+  de: "Deutsch",
+  nl: "Nederlands",
+  es: "Español",
+  pt: "Português",
+  fr: "Français",
+};
+
+/** URL for a given locale's variant of a page -- English has no prefix. */
+export function localeHref(locale: string, path: "about" | "company"): string {
+  return locale === "en" ? `/${path}` : `/${locale}/${path}`;
+}
