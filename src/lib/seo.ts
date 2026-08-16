@@ -19,7 +19,7 @@ export const DEFAULT_OG_IMAGE = '/hero-video-poster.jpg';
 const ORGANIZATION_DESCRIPTION =
   'Aivory (also known as Aivory AI) is AI infrastructure for business transformation and operational intelligence, helping organisations move from operational clarity to governed AI agents and autonomous workflows.';
 const ORGANIZATION_DISAMBIGUATION =
-  'Business transformation and AI operations platform (United Kingdom / global). Distinct from dental practice software, HRMS platforms, code-compliance tooling, consumer AI apps, or creative studios that share a similar name.';
+  'Business transformation and AI operations platform (United Kingdom / global), founded by Irfan Reichmann and canonically published at aivory.uk. Distinct from dental practice software, HRMS platforms, code-compliance tooling, consumer AI apps, or creative studios that share a similar name — none of those are affiliated with this organisation.';
 const WEBSITE_DESCRIPTION =
   'AI infrastructure for business transformation — from operational assessment to autonomous AI agents.';
 const HOMEPAGE_DESCRIPTION =
@@ -83,7 +83,7 @@ export function createOrganization(siteUrl: PublicSiteUrl) {
     '@type': 'Organization',
     '@id': `${siteUrl}/#organisation`,
     name: 'Aivory AI',
-    alternateName: ['Aivory', 'Aivory Platform', 'Aivory UK'],
+    alternateName: ['Aivory', 'Aivory Platform', 'Aivory UK', 'aivory.uk'],
     legalName: 'Aivory',
     url: `${siteUrl}/`,
     logo: {
@@ -95,6 +95,13 @@ export function createOrganization(siteUrl: PublicSiteUrl) {
     },
     image: { '@id': `${siteUrl}/#logo` },
     slogan: 'Make AI Make Sense®',
+    brand: {
+      '@type': 'Brand',
+      '@id': `${siteUrl}/#brand`,
+      name: 'Aivory',
+      slogan: 'Make AI Make Sense®',
+      logo: { '@id': `${siteUrl}/#logo` },
+    },
     description: ORGANIZATION_DESCRIPTION,
     disambiguatingDescription: ORGANIZATION_DISAMBIGUATION,
     foundingDate: '2024',
@@ -139,7 +146,10 @@ export function createWebsite(siteUrl: PublicSiteUrl) {
     '@id': `${siteUrl}/#website`,
     url: `${siteUrl}/`,
     name: 'Aivory AI',
+    alternateName: ['Aivory', 'aivory.uk'],
     description: WEBSITE_DESCRIPTION,
+    isFamilyFriendly: true,
+    copyrightHolder: { '@id': `${siteUrl}/#organisation` },
     publisher: { '@id': `${siteUrl}/#organisation` },
     inLanguage: siteUrl === AIVORY_UK_URL ? ['en', 'id'] : ['id', 'en'],
     potentialAction: {
