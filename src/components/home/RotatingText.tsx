@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 
 const messages = [
   'Make AI Make Sense&reg;',
+  'AI infrastructure that begins with operational clarity, not another pilot.',
   'From Data &rarr; Decisions &rarr; Action.',
   'For your business operation.',
   'Start with clarity.',
