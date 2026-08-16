@@ -62,13 +62,13 @@ function StatCounter({ stat, active, delay, index }: { stat: StatItem; active: b
       >
         {value}
         {stat.suffix && (
-          <span className="ml-1 self-start pt-1.5 text-[0.42em] font-normal tracking-[-0.02em] text-white/50">
+          <span className="ml-1 self-start pt-1.5 text-[0.42em] font-light tracking-[-0.02em] text-white/50">
             {stat.suffix}
           </span>
         )}
       </div>
       <div
-        className="mt-3 flex min-h-[20px] items-center justify-center text-[9px] font-medium uppercase leading-relaxed tracking-[0.1em] text-white/48 sm:whitespace-nowrap sm:text-[10px] sm:tracking-[0.11em]"
+        className="mt-3 flex min-h-[20px] items-center justify-center text-[9px] font-light uppercase leading-relaxed tracking-[0.1em] text-white/48 sm:whitespace-nowrap sm:text-[10px] sm:tracking-[0.11em]"
         style={{ fontFamily: "'Manrope', sans-serif" }}
       >
         {stat.label}

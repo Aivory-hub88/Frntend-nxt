@@ -92,7 +92,7 @@ function DiagnosticStatItem({
         {prefix}{value}
         {suffix && (
           <span
-            className="font-normal text-white/55"
+            className="font-light text-white/55"
             style={{
               fontSize: 'clamp(1.05rem, 1.8vw, 1.45rem)',
               letterSpacing: '-0.025em',
@@ -103,10 +103,10 @@ function DiagnosticStatItem({
           </span>
         )}
       </div>
-      <div className="flex min-h-[2.5rem] max-w-[220px] items-center justify-center text-[12px] font-medium leading-snug tracking-[0.01em] text-[#e7e7e5] md:text-[13px]">
+      <div className="flex min-h-[2.5rem] max-w-[220px] items-center justify-center text-[12px] font-light leading-snug tracking-[0.01em] text-[#e7e7e5] md:text-[13px]">
         {title}
       </div>
-      <div className="mt-1.5 text-[10px] font-medium uppercase tracking-[0.13em] text-white/40 md:text-[11px]">
+      <div className="mt-1.5 text-[10px] font-light uppercase tracking-[0.13em] text-white/40 md:text-[11px]">
         {subtitle}
       </div>
     </div>
@@ -158,7 +158,7 @@ export default function FeatureCards() {
           <div className="text-center flex flex-col justify-center items-center">
             <h2 className="text-4xl md:text-5xl font-light tracking-tight mb-16 leading-tight text-white max-w-3xl" style={{ fontFamily: "'Manrope', sans-serif", fontWeight: 300, zoom: 0.8 }}>
               Operational clarity.<br />
-              Executive <span className="italic" style={{ color: '#e4effd' }}>control.</span>
+              Executive <span style={{ color: '#e4effd' }}>control.</span>
             </h2>
             
 

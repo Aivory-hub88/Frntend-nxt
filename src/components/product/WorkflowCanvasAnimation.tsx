@@ -36,7 +36,7 @@ function CanvasNode({ className, delay, title, detail, tone, input, output }: No
           <path d="m4 12 15-7-4.5 14-3-5-5.5-2Z" strokeLinejoin="round" />
           <path d="m11.5 14 2.5-3" strokeLinecap="round" />
         </svg>
-        <span className="min-w-0 flex-1 truncate text-[8px] font-medium">{title}</span>
+        <span className="min-w-0 flex-1 truncate text-[8px] font-light">{title}</span>
         <span className="rounded bg-black/10 px-1 text-[9px] text-white/55">⌃</span>
       </div>
       {detail && <div className={`workflow-chat-node-detail ${tone === "yellow" ? "workflow-chat-yellow" : "workflow-chat-blue"}`}>{detail}</div>}
@@ -245,7 +245,7 @@ export function WorkflowAnimation() {
                 {phase === "generating" && <div className="flex items-start gap-1.5"><img src="/aivory-logo.svg" alt="" width={383} height={79} className="mt-1 h-2.5 w-7 object-contain" /><div className="rounded-[9px] rounded-bl-[2px] border border-white/[0.06] bg-white/[0.045] px-2.5 py-2 text-white/65">Creating and validating the workflow… <span className="animate-pulse">•••</span></div></div>}
                 {readyVisible && <div className="flex items-start gap-1.5"><img src="/aivory-logo.svg" alt="" width={383} height={79} className="mt-1 h-2.5 w-7 object-contain" /><div className="rounded-[9px] rounded-bl-[2px] border border-white/[0.06] bg-white/[0.045] px-2.5 py-2 text-white/84">Your workflow is ready. I’ve validated the structure and setup requirements.</div></div>}
               </div>
-              {readyVisible && <div className="mx-3 mb-2 flex shrink-0 items-center gap-2 rounded-lg border border-white/[0.08] bg-[#343432] px-2.5 py-2"><div className="min-w-0 flex-1"><div className="text-[8px] font-medium text-white">Workflow ready — 5 steps</div><div className="mt-0.5 text-[7px] text-white/42">Validated. Setup items: 4</div></div><button type="button" onClick={() => setPhase("applied")} className="rounded-md bg-[#6c5ce7] px-2.5 py-1.5 text-[8px] font-semibold text-white">Apply to canvas</button></div>}
+              {readyVisible && <div className="mx-3 mb-2 flex shrink-0 items-center gap-2 rounded-lg border border-white/[0.08] bg-[#343432] px-2.5 py-2"><div className="min-w-0 flex-1"><div className="text-[8px] font-light text-white">Workflow ready — 5 steps</div><div className="mt-0.5 text-[7px] text-white/42">Validated. Setup items: 4</div></div><button type="button" onClick={() => setPhase("applied")} className="rounded-md bg-[#6c5ce7] px-2.5 py-1.5 text-[8px] font-light text-white">Apply to canvas</button></div>}
               <div className="mx-3 mb-3 flex shrink-0 items-center gap-2 rounded-xl border border-white/[0.08] bg-[#292927] px-2.5 py-2 text-[8px] text-white/32"><span className="flex-1">Enter an idea or app name to get started</span><span className="text-white/45">♧</span><span className="flex h-5 w-5 items-center justify-center rounded-full bg-[#5a5a57] text-[10px] text-white">↑</span></div>
             </div>
           </div>
