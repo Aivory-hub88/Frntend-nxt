@@ -19,7 +19,6 @@ export const metadata: Metadata = {
     'Learn about Aivory, founder Irfan Reichmann, and the operationally grounded approach behind governed AI business transformation.',
   alternates: {
     canonical: '/about',
-    languages: { en: '/about', id: '/about' },
   },
   openGraph: {
     title: 'About Aivory and Founder Irfan Reichmann',

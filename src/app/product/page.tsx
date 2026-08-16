@@ -14,7 +14,6 @@ export const metadata: Metadata = {
     'Discover AI-powered tools for business transformation: diagnostics, blueprints, workflow automation, and intelligent agents.',
   alternates: {
     canonical: '/product',
-    languages: { en: '/product', id: '/product' },
   },
   openGraph: {
     type: 'website',

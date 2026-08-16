@@ -10,7 +10,6 @@ export const metadata: Metadata = {
     "Aivory helps ambitious teams understand complex operations, make clearer decisions, and build systems that last.",
   alternates: {
     canonical: "/company",
-    languages: { en: "/company", id: "/company" },
   },
   openGraph: {
     type: "website",

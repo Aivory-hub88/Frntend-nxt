@@ -1,15 +1,10 @@
 import type { MetadataRoute } from "next";
-import { absoluteUrl, AIVORY_UK_URL } from "@/lib/seo";
+import { absoluteUrl } from "@/lib/seo";
 import { getBlogPosts } from "@/lib/blog-api";
 import { getVacancies } from "@/lib/careers-api";
 
 export const revalidate = 3600;
 
-const hreflang = { en: AIVORY_UK_URL, id: AIVORY_UK_URL } as const;
-
-function hreflangAlternate(url: string) {
-  return { languages: { en: url, id: url } };
-}
 
 const STATIC_ROUTES: Array<{
   path: string;
@@ -69,7 +64,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         lastModified: now,
         changeFrequency: hasOpenings ? ("daily" as const) : ("weekly" as const),
         priority: hasOpenings ? 0.8 : 0.3,
-        alternates: hreflangAlternate(absoluteUrl(r.path)),
       };
     }
     return {
@@ -77,7 +71,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       lastModified: now,
       changeFrequency: r.changeFrequency,
       priority: r.priority,
-      alternates: hreflangAlternate(absoluteUrl(r.path)),
     };
   });
 
@@ -86,7 +79,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     lastModified: post.published_at ? new Date(post.published_at) : now,
     changeFrequency: "monthly",
     priority: 0.7,
-    alternates: hreflangAlternate(absoluteUrl(`/blog/${post.slug}`)),
   }));
 
   const careerEntries: MetadataRoute.Sitemap = vacancies.map((v) => ({
@@ -94,7 +86,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     lastModified: v.updated_at ? new Date(v.updated_at) : now,
     changeFrequency: "weekly",
     priority: 0.6,
-    alternates: hreflangAlternate(absoluteUrl(`/careers/${v.id}`)),
   }));
 
   return [...staticEntries, ...blogEntries, ...careerEntries];

@@ -8,7 +8,6 @@ export const metadata: Metadata = {
   description: "Cookie Policy for Aivory platform.",
   alternates: {
     canonical: "/cookie-policy",
-    languages: { en: "/cookie-policy", id: "/cookie-policy" },
   },
   openGraph: {
     title: "Cookie Policy | Aivory",

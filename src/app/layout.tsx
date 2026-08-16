@@ -53,10 +53,11 @@ export const metadata: Metadata = {
   },
   alternates: {
     canonical: AIVORY_UK_URL,
-    languages: {
-      en: AIVORY_UK_URL,
-      id: AIVORY_UK_URL,
-    },
+    // No `languages` map here on purpose: en/id share one URL (client-side
+    // toggle, not separate pages), so per Google's own hreflang guidance a
+    // self-referencing en/id pair adds no real signal. The manual
+    // `x-default` tag below (the correct annotation for "one URL serves
+    // every language/region") is the only alternate this site needs.
   },
   robots: {
     index: true,

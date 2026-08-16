@@ -26,7 +26,6 @@ export async function generateMetadata(): Promise<Metadata> {
     description: CAREERS_DESCRIPTION,
     alternates: {
       canonical: url,
-      languages: { en: url, id: url },
     },
     openGraph: {
       type: "website",
@@ -270,8 +269,8 @@ export default async function CareersPage() {
                 <img
                   src="/images/careers/five-people-renaissance-clothing.webp"
                   alt="Five people in Renaissance clothing gathered together in a red and navy editorial illustration"
-                  width={1600}
-                  height={893}
+                  width={2752}
+                  height={1536}
                   className="h-full w-full object-cover"
                   loading="eager"
                   fetchPriority="high"

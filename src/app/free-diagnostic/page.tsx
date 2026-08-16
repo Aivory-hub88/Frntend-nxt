@@ -7,7 +7,6 @@ export const metadata: Metadata = {
     "Take Aivory's free Business Operations Assessment. Twelve questions score your process, data, strategy, governance, and people maturity, and produce a downloadable report card.",
   alternates: {
     canonical: "/free-diagnostic",
-    languages: { en: "/free-diagnostic", id: "/free-diagnostic" },
   },
   openGraph: {
     type: "website",

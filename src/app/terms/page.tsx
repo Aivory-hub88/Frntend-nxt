@@ -8,7 +8,6 @@ export const metadata: Metadata = {
   description: "Terms of Service and usage guidelines for Aivory platform.",
   alternates: {
     canonical: "/terms",
-    languages: { en: "/terms", id: "/terms" },
   },
   openGraph: {
     title: "Terms of Service | Aivory",
