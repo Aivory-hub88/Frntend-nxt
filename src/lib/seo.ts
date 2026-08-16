@@ -702,6 +702,137 @@ export function clampDescription(text: string, max = 160): string {
   return `${(lastSpace > 40 ? slice.slice(0, lastSpace) : slice).trim()}…`;
 }
 
+export const GLOSSARY_ENTRIES = [
+  {
+    term: 'Agentic AI Platform',
+    definition:
+      'Software that lets AI agents decide their own sequence of steps toward a goal, rather than following a fixed script. A genuine agentic platform also orchestrates multiple agents, governs which actions run unattended, and lets non-developers configure new workflows.',
+    href: '/blog/what-is-an-agentic-ai-platform-a-practical-definition-for-business-leaders',
+  },
+  {
+    term: 'AI Operations Platform',
+    definition:
+      'A platform that takes an organisation from operational assessment through to deployed, governed AI agents and workflow automation, rather than offering any single one of those pieces in isolation.',
+    href: '/product',
+  },
+  {
+    term: 'AI Agent Orchestration',
+    definition:
+      'The coordination layer that lets several AI agents work on related parts of a task, handing off context between them, so a lead qualification workflow, for example, can involve one agent enriching data and another notifying a salesperson.',
+    href: '/blog/what-is-an-agentic-ai-platform-a-practical-definition-for-business-leaders',
+  },
+  {
+    term: 'Autonomous AI Agent',
+    definition:
+      'An AI system given a goal and a set of tools, which decides for itself which tools to use and in what order, adjusting its approach as new information arrives, rather than following a predetermined sequence of steps.',
+    href: '/product',
+  },
+  {
+    term: 'AI Readiness Assessment',
+    definition:
+      'A structured evaluation of an organisation’s data quality, process maturity, and governance before any AI system is deployed, used to identify where automation will create measurable value and where it will not.',
+    href: '/free-diagnostic',
+  },
+  {
+    term: 'Operational Maturity Assessment',
+    definition:
+      'An audit of how consistently an organisation’s processes actually run in practice, covering strategy, data, and people, used to find the root causes of operational bottlenecks before choosing what to automate.',
+    href: '/blog/business-operations-assessment-find-the-bottlenecks-before-you-automate',
+  },
+  {
+    term: 'No-Code AI Agent Deployment',
+    definition:
+      'Connecting an AI agent to business tools such as a CRM or messaging platform through an approval-based interface, rather than custom integration code, so operations teams can configure and launch agents without an engineering ticket.',
+    href: '/blog/deploying-ai-agents-to-slack-and-hubspot-a-no-code-walkthrough',
+  },
+  {
+    term: 'Multilingual AI Agents',
+    definition:
+      'Agents that reason natively in whatever language a request arrives in, rather than translating into English internally, and that reply in the same language without a separate workflow being configured per language.',
+    href: '/blog/multilingual-ai-agents-why-language-should-not-limit-your-automation',
+  },
+  {
+    term: 'Governed AI Operations',
+    definition:
+      'Running AI-enabled workflows with proportionate human oversight, a clear audit trail, and defined limits on what an agent can do unattended, so autonomy is deliberately bounded rather than open-ended.',
+    href: '/blog/governed-ai-operations-control-human-oversight-and-auditability',
+  },
+  {
+    term: 'AI Workforce',
+    definition:
+      'A set of AI agents deployed to handle defined operational tasks alongside human staff, distinct from traditional automation in that each agent can adapt its approach rather than replay a fixed script.',
+    href: '/blog/ai-workforce-vs-traditional-automation-what-should-your-business-deploy',
+  },
+  {
+    term: 'Robotic Process Automation (RPA)',
+    definition:
+      'Software that replays a fixed sequence of steps against a user interface or system, typically to move data between applications. RPA cannot adapt when an input looks different from what it was configured to expect.',
+    href: '/blog/ai-agent-vs-chatbot-vs-rpa-what-actually-differs',
+  },
+  {
+    term: 'Business Operations Assessment',
+    definition:
+      'A diagnostic that scores an organisation’s process, data, strategy, governance, and people maturity, producing a baseline that transformation and automation decisions can be measured against.',
+    href: '/free-diagnostic',
+  },
+  {
+    term: 'Workflow Automation',
+    definition:
+      'The practice of encoding a business process as a repeatable, monitored sequence of actions across systems, with or without AI decision-making involved at each step.',
+    href: '/product',
+  },
+  {
+    term: 'Human-in-the-Loop',
+    definition:
+      'A design principle where a person reviews or approves an AI system’s output before it takes effect, typically applied to actions with real external consequences rather than ones that are easy to reverse.',
+    href: '/about#how-it-works',
+  },
+  {
+    term: 'Large Language Model (LLM)',
+    definition:
+      'A machine learning model trained on large volumes of text to generate and reason about language. The model itself is a component; how a platform decides when to call it, what tools to give it, and who reviews its output is what determines whether the result is useful in production.',
+    href: '/blog/llm-selection-guide-for-business-operations-a-practical-framework',
+  },
+] as const;
+
+const GLOSSARY_DESCRIPTION =
+  'Plain-English definitions for the terms that matter in AI operations: agentic AI platforms, autonomous agents, AI readiness assessments, orchestration, and governed deployment.';
+
+export function buildGlossaryPageGraph(siteUrl: PublicSiteUrl): Record<string, unknown> {
+  const glossaryUrl = absoluteUrlForSite(siteUrl, '/glossary');
+  return {
+    '@context': 'https://schema.org',
+    '@graph': [
+      {
+        '@type': 'CollectionPage',
+        '@id': `${glossaryUrl}#webpage`,
+        url: glossaryUrl,
+        name: 'AI Operations Glossary — Aivory',
+        description: GLOSSARY_DESCRIPTION,
+        isPartOf: { '@id': `${siteUrl}/#website` },
+        about: { '@id': `${siteUrl}/#organisation` },
+        publisher: { '@id': `${siteUrl}/#organisation` },
+        inLanguage: siteUrl === AIVORY_UK_URL ? 'en' : 'id',
+        mainEntity: { '@id': `${glossaryUrl}#termset` },
+      },
+      {
+        '@type': 'DefinedTermSet',
+        '@id': `${glossaryUrl}#termset`,
+        name: 'AI Operations Glossary',
+        description: GLOSSARY_DESCRIPTION,
+        url: glossaryUrl,
+        hasDefinedTerm: GLOSSARY_ENTRIES.map((entry) => ({
+          '@type': 'DefinedTerm',
+          name: entry.term,
+          description: entry.definition,
+          url: absoluteUrlForSite(siteUrl, entry.href),
+          inDefinedTermSet: { '@id': `${glossaryUrl}#termset` },
+        })),
+      },
+    ],
+  };
+}
+
 export function JsonLd({ data }: { data: Record<string, unknown> }) {
   const serialized = JSON.stringify(data).replace(/</g, '\\u003c');
   return React.createElement('script', {

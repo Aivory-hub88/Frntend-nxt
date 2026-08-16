@@ -18,6 +18,7 @@ const companyLinks = [
   { label: 'About', href: '/about' },
   { label: 'Company', href: '/company' },
   { label: 'Blog', href: '/blog' },
+  { label: 'Glossary', href: '/glossary' },
   { label: 'Careers', href: '/careers' },
   { label: 'Investor Relations', href: '/investor-relations' },
   { label: 'Contact', href: '/contact' },
@@ -92,28 +93,24 @@ export default function Footer() {
               </ul>
             </div>
 
-            {/* Logo */}
-            <div className="col-span-2 md:col-span-1 flex md:justify-start items-start mt-8 md:mt-0">
-              <div className="flex flex-row flex-wrap items-center gap-3 md:gap-4">
+            {/* Logo + Badge */}
+            <div className="col-span-2 md:col-span-1 flex items-start mt-8 md:mt-0">
+              <div className="flex flex-row items-center gap-4">
                 <img
                   src="/Aivory_logo_2_2026.svg"
                   alt="Aivory Logo"
-                  width={383}
-                  height={79}
                   className="h-[28px] md:h-[36px] w-auto shrink-0 opacity-90"
                 />
                 <Link
                   href="/nvidia-inception"
-                  className="flex shrink-0 items-center justify-center transition-opacity hover:opacity-70"
+                  className="flex shrink-0 items-center transition-opacity hover:opacity-70"
                   aria-label="Aivory AI is a member of the NVIDIA Inception Program (2026 cohort)"
                   title="NVIDIA Inception Program — 2026 cohort"
                 >
                   <img
                     src="/images/badges/nvidia-inception-badge-v2.svg"
                     alt="NVIDIA Inception Program — Aivory AI is a member (2026 cohort)"
-                    width={441}
-                    height={157}
-                    className="h-[45px] w-auto shrink-0 md:h-[55px]"
+                    className="h-[44px] md:h-[52px] w-auto shrink-0"
                   />
                 </Link>
               </div>
