@@ -31,6 +31,10 @@ const config: Config = {
       fontFamily: {
         manrope: ['var(--font-manrope)', 'sans-serif'],
         sans: ['var(--font-manrope)', 'sans-serif'],
+        arabic: ['var(--font-arabic)', 'sans-serif'],
+        japanese: ['var(--font-japanese)', 'sans-serif'],
+        korean: ['var(--font-korean)', 'sans-serif'],
+        chinese: ['var(--font-chinese)', 'sans-serif'],
       },
       animation: {
         marquee: 'marquee 30s linear infinite',
