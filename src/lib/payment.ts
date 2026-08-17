@@ -451,7 +451,17 @@ export function canMakePayment(): boolean {
  * @param product - Product ID or name
  * @returns Payment transaction data
  */
-export async function createPaymentTransaction(product: string | number) {
+export async function createPaymentTransaction(
+  product: string | number,
+  /**
+   * Snap channel(s) to open on, e.g. `['qris']`. Whatever the customer already
+   * picked on our own page, so Snap does not ask them to choose a second time.
+   * The service validates these against its own allowlist and ignores anything
+   * it does not recognise, so a stale value degrades to "show every channel"
+   * rather than failing the transaction.
+   */
+  enabledPayments?: string[]
+) {
   if (!isAuthenticated()) {
     throw new Error('User not authenticated');
   }
@@ -481,6 +491,7 @@ export async function createPaymentTransaction(product: string | number) {
       product: productId,
       customer_email: user.email,
       customer_first_name: user.email.split('@')[0],
+      ...(enabledPayments?.length ? { enabled_payments: enabledPayments } : {}),
     }),
   });
 

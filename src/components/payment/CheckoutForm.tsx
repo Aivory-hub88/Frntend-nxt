@@ -386,8 +386,13 @@ export function CheckoutForm({
     setError(null);
     try {
       // The server prices the product from its own catalogue — no amount is
-      // sent from here.
-      const result = await createPaymentTransaction(productId);
+      // sent from here. The Channel ids in CHANNELS are deliberately the same
+      // strings Midtrans uses, so the picked one passes straight through and
+      // Snap opens on it rather than asking the customer to choose again.
+      const result = await createPaymentTransaction(
+        productId,
+        channel ? [channel] : undefined
+      );
       if (!result?.token) throw new Error('Failed to get payment token');
 
       // Snap is loaded on demand rather than on every page view: the SDK is
