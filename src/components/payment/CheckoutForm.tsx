@@ -28,10 +28,19 @@ import {
 } from '@/lib/payment';
 import { formatCheckoutPrice, type CheckoutCurrency } from '@/lib/checkout-format';
 import { SpotlightButton } from '@/components/ui/SpotlightButton';
+import TurnstileWidget from '@/components/payment/TurnstileWidget';
 
 // Flip to false once Card/GoPay/DANA/QRIS are activated on the Midtrans
 // merchant account — the real gateway path (runRealPayment) is ready.
 const MOCK_PAYMENT: boolean = true;
+
+// Baked in at build time from the compose build args. Empty in a local dev
+// checkout that has no key configured, which disables the gate rather than
+// locking the flow behind a widget that can never solve.
+const TURNSTILE_SITE_KEY = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY ?? '';
+
+// Must match EXPECTED_ACTION in src/app/api/turnstile/verify/route.ts.
+const TURNSTILE_ACTION = 'checkout';
 
 type Step =
   | 'auth'
@@ -311,6 +320,15 @@ export function CheckoutForm({
   const [pin, setPin] = useState('');
   const [otp, setOtp] = useState('');
 
+  // Turnstile. `humanVerified` is what actually gates payment: it is only set
+  // after the server round-trip succeeds, never straight from the widget
+  // callback, so a forged client-side token cannot open the flow.
+  const turnstileEnabled = TURNSTILE_SITE_KEY.length > 0;
+  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
+  const [humanVerified, setHumanVerified] = useState(!turnstileEnabled);
+  const [verifying, setVerifying] = useState(false);
+  const [turnstileResetSignal, setTurnstileResetSignal] = useState(0);
+
   useEffect(() => {
     setCurrentUser(getUser());
   }, []);
@@ -379,7 +397,52 @@ export function CheckoutForm({
     }
   };
 
-  const pay = () => (MOCK_PAYMENT ? runMockPayment() : runRealPayment());
+  const pay = () => {
+    // Belt and braces: the method step already gates on this, but pay() is
+    // also reachable from the OTP step, so it re-checks rather than trusting
+    // that the user could only have arrived here through the gate.
+    if (!humanVerified) {
+      setError('Please complete the verification challenge before paying.');
+      setStep('method');
+      return;
+    }
+    return MOCK_PAYMENT ? runMockPayment() : runRealPayment();
+  };
+
+  /**
+   * Exchange the widget token for a server-side verdict, then advance.
+   * Tokens are single-use, so a rejection resets the widget for a fresh one.
+   */
+  const handleMethodContinue = async () => {
+    if (!turnstileEnabled) {
+      setStep('details');
+      return;
+    }
+    if (!turnstileToken) {
+      setError('Please complete the verification challenge.');
+      return;
+    }
+
+    setVerifying(true);
+    setError(null);
+    try {
+      const response = await fetch('/api/turnstile/verify', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ token: turnstileToken }),
+      });
+      if (!response.ok) throw new Error('verification rejected');
+      setHumanVerified(true);
+      setStep('details');
+    } catch {
+      setHumanVerified(false);
+      setTurnstileToken(null);
+      setTurnstileResetSignal((n) => n + 1);
+      setError('Verification failed. Please try the challenge again.');
+    } finally {
+      setVerifying(false);
+    }
+  };
 
   const handleDetailsContinue = () => {
     // E-wallets verify with an in-app PIN then an SMS OTP; card + QRIS pay now.
@@ -623,15 +686,30 @@ export function CheckoutForm({
               ))}
             </div>
 
+            {turnstileEnabled && (
+              <div className="mt-6 flex justify-center">
+                <TurnstileWidget
+                  siteKey={TURNSTILE_SITE_KEY}
+                  action={TURNSTILE_ACTION}
+                  onToken={setTurnstileToken}
+                  onExpire={() => {
+                    setTurnstileToken(null);
+                    setHumanVerified(false);
+                  }}
+                  resetSignal={turnstileResetSignal}
+                />
+              </div>
+            )}
+
             <div className="mt-6 w-full">
               <SpotlightButton
                 type="button"
-                disabled={!channel}
-                onClick={() => setStep('details')}
+                disabled={!channel || verifying || (turnstileEnabled && !turnstileToken)}
+                onClick={handleMethodContinue}
                 className="w-full"
                 roundedClass="rounded-lg"
               >
-                Continue
+                {verifying ? 'Verifying…' : 'Continue'}
               </SpotlightButton>
             </div>
             <MidtransBadge />
