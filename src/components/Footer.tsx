@@ -93,26 +93,48 @@ export default function Footer() {
               </ul>
             </div>
 
-            {/* Logo + Badge */}
+            {/* Logo + Badges */}
             <div className="col-span-2 md:col-span-1 flex items-start mt-8 md:mt-0">
-              <div className="flex flex-row items-center gap-4">
-                <img
-                  src="/Aivory_logo_2_2026.svg"
-                  alt="Aivory Logo"
-                  className="h-[28px] md:h-[36px] w-auto shrink-0 opacity-90"
-                />
-                <Link
-                  href="/nvidia-inception"
+              <div className="flex flex-col items-start gap-5">
+                <div className="flex flex-row items-center gap-4">
+                  <img
+                    src="/Aivory_logo_2_2026.svg"
+                    alt="Aivory Logo"
+                    className="h-[28px] md:h-[36px] w-auto shrink-0 opacity-90"
+                  />
+                  <Link
+                    href="/nvidia-inception"
+                    className="flex shrink-0 items-center transition-opacity hover:opacity-70"
+                    aria-label="Aivory AI is a member of the NVIDIA Inception Program (2026 cohort)"
+                    title="NVIDIA Inception Program — 2026 cohort"
+                  >
+                    <img
+                      src="/images/badges/nvidia-inception-badge-v2.svg"
+                      alt="NVIDIA Inception Program — Aivory AI is a member (2026 cohort)"
+                      className="h-[44px] md:h-[52px] w-auto shrink-0"
+                    />
+                  </Link>
+                </div>
+                {/* Product Hunt badge. Sized to sit under the logo/NVIDIA row
+                    without overflowing the 5-column grid cell: the source SVG
+                    is 250x54, so h-[38px] renders ~176px wide. */}
+                <a
+                  href="https://www.producthunt.com/products/aivory-ai?embed=true&utm_source=badge-featured&utm_medium=badge&utm_campaign=badge-aivory-ai"
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="flex shrink-0 items-center transition-opacity hover:opacity-70"
-                  aria-label="Aivory AI is a member of the NVIDIA Inception Program (2026 cohort)"
-                  title="NVIDIA Inception Program — 2026 cohort"
+                  aria-label="Aivory AI on Product Hunt"
+                  title="Aivory AI — Make AI Make Sense® on Product Hunt"
                 >
                   <img
-                    src="/images/badges/nvidia-inception-badge-v2.svg"
-                    alt="NVIDIA Inception Program — Aivory AI is a member (2026 cohort)"
-                    className="h-[44px] md:h-[52px] w-auto shrink-0"
+                    src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=1224888&theme=dark&t=1786964875314"
+                    alt="Aivory AI — Make AI Make Sense® | Product Hunt"
+                    width={250}
+                    height={54}
+                    loading="lazy"
+                    className="h-[34px] md:h-[38px] w-auto shrink-0"
                   />
-                </Link>
+                </a>
               </div>
             </div>
           </div>
