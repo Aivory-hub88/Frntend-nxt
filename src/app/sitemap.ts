@@ -3,7 +3,14 @@ import { absoluteUrl } from "@/lib/seo";
 import { getBlogPosts } from "@/lib/blog-api";
 import { getVacancies } from "@/lib/careers-api";
 
-export const revalidate = 3600;
+// Rendered per request, never prerendered. The blog/careers data below comes
+// from sibling containers over the internal Docker network, which is NOT
+// reachable during `docker build` — a build-time prerender therefore bakes in
+// the empty `catch` fallback and ships a sitemap with zero articles until the
+// next rebuild. Fetching at request time is the only way this stays correct
+// across deploys; the sitemap is requested rarely enough for the cost to be
+// irrelevant.
+export const dynamic = "force-dynamic";
 
 
 const STATIC_ROUTES: Array<{
