@@ -635,7 +635,12 @@ export async function startMidtransSnap(token: string): Promise<any> {
         handlePaymentPending(result);
         resolve(result);
       },
-      onFailure: (result: any) => {
+      // Snap's callback is `onError`, not `onFailure`. The SDK validates the
+      // options object and throws "Unsupported option onFailure" outright, so
+      // the popup never opened at all — this was not a missed failure path, it
+      // broke every payment. Latent until now because the real gateway path had
+      // never actually run.
+      onError: (result: any) => {
         console.log('Payment failed:', result);
         handlePaymentFailure(result);
         reject(result);
