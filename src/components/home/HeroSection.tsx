@@ -50,6 +50,7 @@ export default function HeroSection() {
         <div className="animate-slide-up-3 pointer-events-none" style={{ animationDelay: '0.6s' }}>
           <TechnicalFrameButton
             href="/free-diagnostic"
+            size="heroCompact"
             className="pointer-events-auto w-fit animate-gentle-bounce"
           >
             START WITH FREE ASSESSMENT
