@@ -408,6 +408,17 @@ export function getPaymentAmount(product: string | number): number | null {
     return PAYMENT_CONFIG.creditPrices[product] || null;
   }
 
+  // The product catalogue is the authority and already knows every id,
+  // including the `credits_<n>` packs. Those only used to resolve when the
+  // caller passed a bare number, so the dashboard's credit handoff — which
+  // sends the string id, like every other product — fell through to the
+  // default branch and was rejected as an invalid product.
+  const catalogued = getProductPrice(product);
+  if (typeof catalogued === 'number') {
+    return catalogued;
+  }
+
+  // Kept for ids the catalogue does not carry under that exact key.
   switch (product) {
     case PAYMENT_CONFIG.products.SNAPSHOT:
       return PAYMENT_CONFIG.snapshotPrice;
