@@ -9,12 +9,18 @@
  * Sign-in/sign-up is REAL: it calls the live backend auth service via
  * `@/lib/auth` (login / signup), the same one the rest of the site uses.
  *
- * PAYMENT IS A MOCK. `MOCK_PAYMENT` is `true` because Card / GoPay / DANA /
- * QRIS are not yet enabled on the Midtrans merchant account. No card number,
- * PIN, OTP, or phone number entered here is transmitted or stored anywhere —
- * `runMockPayment` just simulates a gateway round-trip. When the channels go
- * live, flip `MOCK_PAYMENT` to `false`: `runRealPayment` is already wired to
- * `createPaymentTransaction` + `startMidtransSnap` from `@/lib/payment`.
+ * PAYMENT IS LIVE. `MOCK_PAYMENT` is `false`: the method step creates a real
+ * Midtrans transaction and hands off to the Snap popup, which owns card entry,
+ * 3-D Secure, and e-wallet authorisation.
+ *
+ * This page therefore never touches card data. The card / PIN / OTP steps
+ * below exist only for the mock path — the live path skips straight from the
+ * method step into Snap, so no PAN, CVV, or OTP is ever entered into, held by,
+ * or transmitted from this origin. Do not wire those fields into the live
+ * path; doing so would drag this origin into PCI-DSS scope.
+ *
+ * The server prices the order from its own catalogue (`createPaymentTransaction`
+ * sends no amount), so a browser cannot name its own price.
  */
 
 import React, { useEffect, useRef, useState } from 'react';
@@ -25,14 +31,16 @@ import {
   createPaymentTransaction,
   startMidtransSnap,
   isMidtransAvailable,
+  loadMidtransSnap,
+  fetchMidtransClientKey,
 } from '@/lib/payment';
 import { formatCheckoutPrice, type CheckoutCurrency } from '@/lib/checkout-format';
 import { SpotlightButton } from '@/components/ui/SpotlightButton';
 import TurnstileWidget from '@/components/payment/TurnstileWidget';
 
-// Flip to false once Card/GoPay/DANA/QRIS are activated on the Midtrans
-// merchant account — the real gateway path (runRealPayment) is ready.
-const MOCK_PAYMENT: boolean = true;
+// Live. Set to true only to demo the flow without touching the gateway; the
+// mock path collects card-shaped fields locally and transmits nothing.
+const MOCK_PAYMENT: boolean = false;
 
 // Baked in at build time from the compose build args. Empty in a local dev
 // checkout that has no key configured, which disables the gate rather than
@@ -377,23 +385,56 @@ export function CheckoutForm({
     setStep('processing');
     setError(null);
     try {
-      // Mirrors the real integration in payment-modal.tsx: create the
-      // transaction, then hand the token to Midtrans Snap. Channel targeting
-      // (enabled_payments) can be added here once the merchant account exposes
-      // per-channel Snap options.
+      // The server prices the product from its own catalogue — no amount is
+      // sent from here.
       const result = await createPaymentTransaction(productId);
       if (!result?.token) throw new Error('Failed to get payment token');
 
+      // Snap is loaded on demand rather than on every page view: the SDK is
+      // only needed once a customer actually commits to paying.
+      if (!isMidtransAvailable()) {
+        await fetchMidtransClientKey();
+        // fetchMidtransClientKey parks the key on window; read it through an
+        // explicit cast rather than relying on a global augmentation that this
+        // project does not actually declare anywhere.
+        const clientKey =
+          typeof window === 'undefined'
+            ? undefined
+            : (window as unknown as { MIDTRANS_CLIENT_KEY?: string }).MIDTRANS_CLIENT_KEY;
+        if (!clientKey) throw new Error('Payment gateway is unavailable. Please try again.');
+        await loadMidtransSnap(clientKey);
+      }
+
       if (isMidtransAvailable()) {
+        // Snap owns channel choice, card entry and 3-D Secure from here.
         await startMidtransSnap(result.token);
         setStep('success');
-      } else if (typeof window !== 'undefined') {
-        window.open(result.redirect_url || result.token, '_blank');
-        setStep('details');
+        return;
       }
+
+      // Snap could not load (blocked script, offline). Midtrans' hosted page
+      // is the same transaction, so send the customer there rather than
+      // failing a checkout that already has a valid token.
+      if (result.redirect_url && typeof window !== 'undefined') {
+        window.location.href = result.redirect_url;
+        return;
+      }
+      throw new Error('Payment gateway is unavailable. Please try again.');
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Payment initialization failed');
-      setStep('details');
+      // Closing the Snap popup rejects too; that is an abandoned payment, not
+      // a failure worth shouting about, so it returns to the method step
+      // without an error banner.
+      const closed =
+        err instanceof Error && /payment closed/i.test(err.message);
+      if (!closed) {
+        setError(err instanceof Error ? err.message : 'Payment initialisation failed');
+      }
+      setStep('method');
+      // The Turnstile token was spent on the attempt; mint a fresh one so a
+      // retry is not rejected as a replay.
+      setHumanVerified(!turnstileEnabled);
+      setTurnstileToken(null);
+      setTurnstileResetSignal((n) => n + 1);
     }
   };
 
@@ -433,7 +474,14 @@ export function CheckoutForm({
       });
       if (!response.ok) throw new Error('verification rejected');
       setHumanVerified(true);
-      setStep('details');
+      // Live checkout hands off to Snap immediately — the card / PIN / OTP
+      // steps are the mock path only, and must never sit in front of a real
+      // gateway that collects the same data itself.
+      if (MOCK_PAYMENT) {
+        setStep('details');
+      } else {
+        await runRealPayment();
+      }
     } catch {
       setHumanVerified(false);
       setTurnstileToken(null);

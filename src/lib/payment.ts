@@ -306,8 +306,26 @@ function authHeaders(): Record<string, string> {
  * Check if Midtrans Snap SDK is available
  * @returns boolean indicating if Snap is available
  */
+/**
+ * Resolve the Snap SDK global.
+ *
+ * snap.js publishes itself as `window.snap`, lower-case — verified against the
+ * live production bundle. This module was written against `window.Snap`, which
+ * never exists, so every real-gateway call failed the availability check and
+ * fell through to the redirect fallback. The capital form is still accepted in
+ * case a future bundle publishes both.
+ */
+function getSnap(): { pay: (token: string, options: Record<string, unknown>) => void } | undefined {
+  if (typeof window === 'undefined') return undefined;
+  const w = window as unknown as {
+    snap?: { pay: (token: string, options: Record<string, unknown>) => void };
+    Snap?: { pay: (token: string, options: Record<string, unknown>) => void };
+  };
+  return w.snap ?? w.Snap;
+}
+
 export function isMidtransAvailable(): boolean {
-  return typeof window !== 'undefined' && typeof window.Snap !== 'undefined';
+  return typeof getSnap()?.pay === 'function';
 }
 
 /**
@@ -318,7 +336,7 @@ export function isMidtransAvailable(): boolean {
 export async function loadMidtransSnap(clientKey: string): Promise<void> {
   return new Promise((resolve, reject) => {
     // Check if already loaded
-    if (typeof window.Snap !== 'undefined') {
+    if (isMidtransAvailable()) {
       console.log('Midtrans Snap SDK already loaded');
       resolve();
       return;
@@ -577,12 +595,13 @@ export async function confirmPayment(
  * @returns Promise that resolves with payment result
  */
 export async function startMidtransSnap(token: string): Promise<any> {
-  if (typeof window.Snap === 'undefined') {
+  const snap = getSnap();
+  if (!snap) {
     throw new Error('Midtrans Snap SDK not loaded');
   }
 
   return new Promise((resolve, reject) => {
-    window.Snap.pay(token, {
+    snap.pay(token, {
       // Optional: Callback functions
       onSuccess: (result: any) => {
         console.log('Payment successful:', result);
