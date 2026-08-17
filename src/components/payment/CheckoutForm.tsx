@@ -429,10 +429,23 @@ export function CheckoutForm({
       // Closing the Snap popup rejects too; that is an abandoned payment, not
       // a failure worth shouting about, so it returns to the method step
       // without an error banner.
-      const closed =
-        err instanceof Error && /payment closed/i.test(err.message);
+      const message = err instanceof Error ? err.message : '';
+      const closed = /payment closed/i.test(message);
+
+      // An expired session reaches here as the gateway's own wording, which
+      // tells a customer nothing actionable at the moment they are trying to
+      // pay. Send them to the sign-in step this page already has instead.
+      if (/token|unauthor|not authenticated|401/i.test(message)) {
+        setAuthError('Your session has expired. Please sign in again to continue.');
+        setStep('auth');
+        setHumanVerified(!turnstileEnabled);
+        setTurnstileToken(null);
+        setTurnstileResetSignal((n) => n + 1);
+        return;
+      }
+
       if (!closed) {
-        setError(err instanceof Error ? err.message : 'Payment initialisation failed');
+        setError(message || 'Payment initialisation failed');
       }
       setStep('method');
       // The Turnstile token was spent on the attempt; mint a fresh one so a

@@ -97,10 +97,43 @@ function mapUser(
   };
 }
 
-/** Check if a user session is present (synchronous). */
+/**
+ * Whether a JWT's `exp` has passed.
+ *
+ * Read without a library: a JWT payload is base64url JSON, and this only needs
+ * the expiry claim. Signature verification is the server's job — the point here
+ * is not to trust the token, it is to stop presenting an expired one as a live
+ * session. A token we cannot parse is treated as live so a malformed-but-
+ * accepted token is never silently discarded on the client.
+ *
+ * The 30-second grace absorbs clock skew between the browser and the issuer.
+ */
+function isTokenExpired(token: string | undefined | null): boolean {
+  if (!token) return true;
+  const segment = token.split('.')[1];
+  if (!segment) return false;
+  try {
+    const json = atob(segment.replace(/-/g, '+').replace(/_/g, '/'));
+    const exp = (JSON.parse(json) as { exp?: number }).exp;
+    if (typeof exp !== 'number') return false;
+    return Date.now() / 1000 > exp + 30;
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * Check if a live user session is present (synchronous).
+ *
+ * This used to return true whenever a token merely existed, so an expired
+ * session still looked signed in: the navbar showed the user's name while every
+ * authenticated call came back 401. Checkout was where that surfaced worst — a
+ * customer solved the bot challenge, pressed pay, and got "Invalid or expired
+ * token" from the gateway with no way to tell what had gone wrong.
+ */
 export function isAuthenticated(): boolean {
   const session = readPersistedSession();
-  return Boolean(session?.access_token);
+  return Boolean(session?.access_token) && !isTokenExpired(session?.access_token);
 }
 
 /** Get the current user from the persisted session (synchronous). */
