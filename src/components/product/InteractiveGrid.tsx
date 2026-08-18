@@ -598,7 +598,7 @@ function IntegrationsMarquee() {
       />
       <div className="text-center mb-10 md:mb-12 px-6 relative">
         <h3 className="relative text-[22px] md:text-[32px] font-light text-white mb-3 tracking-normal" style={{ fontFamily: "'Manrope', sans-serif", textShadow: '0 2px 12px rgba(0,0,0,0.6)' }}>
-          Every Aivory agent speaks your customer&apos;s language. Literally.
+          Every Aivory agent speaks multiple languages. Literally.
         </h3>
         <p className={`relative text-[20px] md:text-[22px] text-white font-light transition-opacity duration-500 ${isFading ? 'opacity-0' : 'opacity-100'}`} style={{ fontFamily: MULTILINGUAL_TEXTS[langIndex].font, textShadow: '0 2px 12px rgba(0,0,0,0.6)' }}>
           {MULTILINGUAL_TEXTS[langIndex].text}
