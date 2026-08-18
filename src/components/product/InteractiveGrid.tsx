@@ -634,16 +634,16 @@ function IntegrationsMarquee() {
 
 const NEW_AGENTS = [
   {
-    title: 'Customer Service Agent',
-    description: 'Resolve up to 80% of tier-1 support tickets instantly and escalate complex cases with full context.',
+    title: 'Ticket Ops Agent',
+    description: 'Triage inbound support tickets across WhatsApp, Telegram, and Email — then hand your team everything they need to resolve them fast.',
     status: 'ACTIVE · WHATSAPP · TELEGRAM · EMAIL',
     delay: 0,
     tasks: [
-      { source: 'WhatsApp · #3821', status: 'Resolved', message: '"Where is my order?"', result: 'Tracked. ETA: 2 days. Customer notified.' },
-      { source: 'Email · #3822', status: 'Escalating', message: '"Billing issue, third complaint."', result: 'Flagged. Routing to human agent.' },
-      { source: 'Telegram · #3823', status: 'Resolved', message: '"Password reset request."', result: 'Reset link sent. CRM updated.' },
+      { source: 'WhatsApp · #3821', status: 'Triaged', message: '"Where is my order?"', result: 'Order status pulled. Reply drafted for your team.' },
+      { source: 'Email · #3822', status: 'Escalating', message: '"Billing issue, third complaint."', result: 'Flagged. Routed to human agent with full context.' },
+      { source: 'Telegram · #3823', status: 'Triaged', message: '"Password reset request."', result: 'Reset steps drafted. Queued for agent approval.' },
       { source: 'WhatsApp · #3824', status: 'Processing', message: '"Refund request — order #9042."', result: 'Checking policy · Verifying order' },
-      { source: 'Email · #3825', status: 'Resolved', message: '"Product compatibility question."', result: 'Answered. FAQ link attached.' },
+      { source: 'Email · #3825', status: 'Triaged', message: '"Product compatibility question."', result: 'FAQ match found. Draft reply queued for review.' },
       { source: 'Telegram · #3826', status: 'Escalating', message: '"Delivery missed, customer angry."', result: 'Priority flag set. Manager alerted.' },
     ],
   },
@@ -679,7 +679,7 @@ const NEW_AGENTS = [
 
 function getBadgeColor(status: string) {
   const s = status.toLowerCase();
-  if (s.includes('resolved') || s.includes('qualified') || s.includes('synced')) {
+  if (s.includes('resolved') || s.includes('triaged') || s.includes('qualified') || s.includes('synced')) {
     return 'bg-[#bbe2ef]/10 text-[#bbe2ef] border-[#bbe2ef]/20';
   }
   if (s.includes('escalating') || s.includes('nurture') || s.includes('reviewing')) {
@@ -733,7 +733,7 @@ function AgentFlowVisual({ title }: { title: string }) {
     return () => observer.disconnect();
   }, []);
 
-  // Customer Service
+  // Ticket Ops
   const [csState, setCsState] = useState({ channel: 0, status: 'resolved' });
   useEffect(() => {
     if (!inView || reducedMotion) return;
@@ -787,7 +787,7 @@ function AgentFlowVisual({ title }: { title: string }) {
         }
       `}</style>
       
-      {title === 'Customer Service Agent' && (
+      {title === 'Ticket Ops Agent' && (
         <div className="flex items-center gap-1.5 w-full">
           <div className={`${boxClasses} ${csState.channel === 0 && csState.status === 'processing' && !reducedMotion ? activePulseClasses : ''}`}>
             <img src="/integrations/icons/whatsapp.svg" alt="WhatsApp" width={32} height={32} className="w-4 h-4 opacity-80" />
