@@ -435,10 +435,10 @@ export function InteractiveGrid() {
             THE PLATFORM
           </SpotlightButton>
           <h3 className="text-4xl md:text-5xl font-light tracking-normal mb-4" style={{ fontFamily: "'Manrope', sans-serif", fontWeight: 300 }}>
-            Your AI Operations <span style={{ color: '#e4effd' }}>Stack.</span>
+            Add Agentic Hands to Your <span style={{ color: '#e4effd' }}>Team.</span>
           </h3>
           <p className="text-white max-w-xl mx-auto font-light leading-relaxed">
-            Agents that act, easy to deploy, no code needed, integrations that connect, and templates that ship fast.
+            Agents that act, easy to deploy, no code needed — built to work alongside your team, not instead of it.
           </p>
         </div>
 
