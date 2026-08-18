@@ -1,7 +1,7 @@
 services:
   # ── PostgreSQL ─────────────────────────────────────────────────────────────
   postgres:
-    image: postgres:16
+    image: pgvector/pgvector:pg16
     container_name: avry-postgres
     restart: unless-stopped
     networks:
@@ -62,20 +62,25 @@ services:
       args:
         NEXT_PUBLIC_API_BASE_URL: https://api.aivory.id
         NEXT_PUBLIC_BACKEND_URL: https://api.aivory.id
-        NEXT_PUBLIC_BLOG_URL: https://aivory.id/api/blog
-        NEXT_PUBLIC_CAREERS_URL: https://aivory.id/api/careers
+        NEXT_PUBLIC_BLOG_URL: /api/blog
+        NEXT_PUBLIC_CAREERS_URL: /api/careers
         NEXT_PUBLIC_DIAGNOSTICS_URL: https://api.aivory.id/diagnostics
         NEXT_PUBLIC_BLUEPRINT_URL: https://api.aivory.id/blueprint
         NEXT_PUBLIC_ADMIN_DASHBOARD_URL: https://admin.aivory.id/admin
         NEXT_PUBLIC_WORKFLOWS_URL: https://api.aivory.id/workflows
         NEXT_PUBLIC_PAYMENTS_URL: https://api.aivory.id/payments
         NEXT_PUBLIC_ROADMAP_URL: https://api.aivory.id/roadmap
+        NEXT_PUBLIC_TURNSTILE_SITE_KEY: 0x4AAAAAAESmFOravtG7NiWO
     container_name: avry-website
     restart: unless-stopped
     networks:
       - aivory-network
     environment:
       - HONEYPOT_INGEST_TOKEN=${HONEYPOT_INGEST_TOKEN}
+      # Server-side only: /api/turnstile/verify exchanges the widget token
+      # with Cloudflare. The sitekey in the build args above is public; this is not.
+      - TURNSTILE_SECRET=${TURNSTILE_SECRET}
+      - TURNSTILE_HOSTNAMES=${TURNSTILE_HOSTNAMES}
       - BACKEND_SERVICE_URL=http://avry-backend:8081
     labels:
       - "traefik.enable=true"
@@ -84,7 +89,7 @@ services:
       - "traefik.http.routers.main-app.entrypoints=websecure,web"
       - "traefik.http.routers.main-app.tls.certresolver=letsencrypt"
       - "traefik.http.routers.main-app.priority=1"
-      - "traefik.http.routers.main-app-api.rule=(Host(`aivory.id`) || Host(`www.aivory.id`) || Host(`stag.aivory.id`) || Host(`x.aivory.uk`)) && PathPrefix(`/api/exchange-rate`)"
+      - "traefik.http.routers.main-app-api.rule=(Host(`aivory.id`) || Host(`www.aivory.id`) || Host(`stag.aivory.id`) || Host(`x.aivory.uk`)) && (PathPrefix(`/api/exchange-rate`) || PathPrefix(`/api/turnstile`))"
       - "traefik.http.routers.main-app-api.entrypoints=websecure,web"
       - "traefik.http.routers.main-app-api.tls.certresolver=letsencrypt"
       - "traefik.http.routers.main-app-api.priority=20"
@@ -109,6 +114,7 @@ services:
         NEXT_PUBLIC_WORKFLOWS_URL: https://api.aivory.id/workflows
         NEXT_PUBLIC_PAYMENTS_URL: https://api.aivory.id/payments
         NEXT_PUBLIC_ROADMAP_URL: https://api.aivory.id/roadmap
+        NEXT_PUBLIC_SLACK_APP_ID: A0BF382BKB9
     container_name: avry-user-dashboard
     restart: unless-stopped
     networks:
@@ -128,6 +134,7 @@ services:
       - N8N_AS_CODE_URL=http://host.docker.internal:3500
       - N8N_BASE_URL=http://n8n:5678
       - N8N_PUBLIC_URL=https://n8n.aivory.id
+      - APPROVAL_REGISTRATION_TOKEN=${APPROVAL_REGISTRATION_TOKEN}
       - JWT_SECRET=${JWT_SECRET}
       - DATABASE_URL=${DATABASE_URL}
       - N8N_CREDENTIALS_ENCRYPTION_KEY=${N8N_CREDENTIALS_ENCRYPTION_KEY}
@@ -163,9 +170,9 @@ services:
       dockerfile: Dockerfile
       args:
         NEXT_PUBLIC_API_URL: https://api.aivory.id
-        NEXT_PUBLIC_BLOG_SERVICE_URL: https://aivory.id/api/blog
-        NEXT_PUBLIC_CAREERS_SERVICE_URL: https://aivory.id/api/careers
-        NEXT_PUBLIC_CAREERS_URL: https://aivory.id/api/careers
+        NEXT_PUBLIC_BLOG_SERVICE_URL: /api/blog
+        NEXT_PUBLIC_CAREERS_SERVICE_URL: /api/careers
+        NEXT_PUBLIC_CAREERS_URL: /api/careers
         NEXT_PUBLIC_BACKEND_URL: https://api.aivory.id
     container_name: avry-admin-dashboards
     restart: unless-stopped
@@ -230,6 +237,9 @@ services:
       - SLACK_CLIENT_SECRET=${SLACK_CLIENT_SECRET:-}
       - SLACK_SIGNING_SECRET=${SLACK_SIGNING_SECRET:-}
       - HONEYPOT_INGEST_TOKEN=${HONEYPOT_INGEST_TOKEN}
+      - MCP_SERVER_AUTH_ENCRYPTION_KEY=${MCP_SERVER_AUTH_ENCRYPTION_KEY}
+      - REDIS_HOST=${REDIS_HOST:-redis}
+      - REDIS_PASSWORD=${REDIS_PASSWORD:-}
     extra_hosts:
       - "host.docker.internal:host-gateway"
     volumes:
@@ -471,6 +481,26 @@ services:
       - JWT_SECRET=${JWT_SECRET}
       - MIDTRANS_SERVER_KEY=${MIDTRANS_SERVER_KEY}
       - MIDTRANS_CLIENT_KEY=${MIDTRANS_CLIENT_KEY}
+      # Listed one by one rather than via `env_file: .env`: this service parses
+      # cors_origins as list[str], and the root .env carries a comma-separated
+      # CORS_ORIGINS that pydantic-settings cannot decode, so pulling the whole
+      # file in crashes it at startup.
+      - MIDTRANS_IS_PRODUCTION=${MIDTRANS_IS_PRODUCTION}
+      - FX_RATE_URL=${FX_RATE_URL}
+      - FX_MARGIN_PERCENT=${FX_MARGIN_PERCENT}
+      - FX_TTL_SECONDS=${FX_TTL_SECONDS}
+      - USD_IDR_RATE=${USD_IDR_RATE}
+      - INTERNAL_SERVICE_TOKEN=${INTERNAL_SERVICE_TOKEN}
+      # Receipt delivery goes through the n8n workflow; SMTP_* stays as the
+      # fallback path inside _send_receipt.
+      - N8N_RECEIPT_WEBHOOK_URL=${N8N_RECEIPT_WEBHOOK_URL}
+      - RECEIPT_EMAIL_TOKEN=${RECEIPT_EMAIL_TOKEN}
+      - SMTP_HOST=${SMTP_HOST}
+      - SMTP_PORT=${SMTP_PORT}
+      - SMTP_USER=${SMTP_USER}
+      - SMTP_PASSWORD=${SMTP_PASSWORD}
+      - SMTP_FROM_EMAIL=${SMTP_FROM_EMAIL}
+      - PAYMENTS_FROM_EMAIL=${PAYMENTS_FROM_EMAIL}
     healthcheck:
       test: ["CMD", "python3", "-c", "import urllib.request,sys; sys.exit(0 if urllib.request.urlopen('http://localhost:3030/health',timeout=5).status==200 else 1)"]
       interval: 30s
