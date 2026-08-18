@@ -82,6 +82,11 @@ services:
       - TURNSTILE_SECRET=${TURNSTILE_SECRET}
       - TURNSTILE_HOSTNAMES=${TURNSTILE_HOSTNAMES}
       - BACKEND_SERVICE_URL=http://avry-backend:8081
+      # Free-assessment lead capture + report email. Without these the
+      # routes fail closed with 503 and every lead is silently dropped.
+      - LEAD_INGEST_TOKEN=${LEAD_INGEST_TOKEN}
+      - N8N_REPORT_WEBHOOK_URL=${N8N_REPORT_WEBHOOK_URL}
+      - REPORT_EMAIL_TOKEN=${REPORT_EMAIL_TOKEN}
     labels:
       - "traefik.enable=true"
       - "traefik.docker.network=aivory-network"
@@ -89,7 +94,7 @@ services:
       - "traefik.http.routers.main-app.entrypoints=websecure,web"
       - "traefik.http.routers.main-app.tls.certresolver=letsencrypt"
       - "traefik.http.routers.main-app.priority=1"
-      - "traefik.http.routers.main-app-api.rule=(Host(`aivory.id`) || Host(`www.aivory.id`) || Host(`stag.aivory.id`) || Host(`x.aivory.uk`)) && (PathPrefix(`/api/exchange-rate`) || PathPrefix(`/api/turnstile`))"
+      - "traefik.http.routers.main-app-api.rule=(Host(`aivory.id`) || Host(`www.aivory.id`) || Host(`stag.aivory.id`) || Host(`x.aivory.uk`)) && (PathPrefix(`/api/exchange-rate`) || PathPrefix(`/api/turnstile`) || PathPrefix(`/api/assessment-lead`) || PathPrefix(`/api/assessment-report-email`))"
       - "traefik.http.routers.main-app-api.entrypoints=websecure,web"
       - "traefik.http.routers.main-app-api.tls.certresolver=letsencrypt"
       - "traefik.http.routers.main-app-api.priority=20"
@@ -217,6 +222,7 @@ services:
     environment:
       - PORT=8081
       - DATABASE_URL=${DATABASE_URL}
+      - LEAD_INGEST_TOKEN=${LEAD_INGEST_TOKEN}
       - JWT_SECRET=${JWT_SECRET}
       - OPENROUTER_API_KEY=${OPENROUTER_API_KEY}
       - ENVIRONMENT=production
