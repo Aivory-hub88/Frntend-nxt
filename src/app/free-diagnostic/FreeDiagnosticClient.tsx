@@ -3,6 +3,7 @@
 import { useState, useRef, useCallback, useEffect, type ReactNode } from 'react';
 
 import { trackEvent } from '@/lib/analytics';
+import { recordFunnelEvent } from '@/lib/assessmentFunnel';
 import { useLanguage } from '@/components/context/LanguageContext';
 import { getAssessmentCopy, type AssessmentStrings, type Locale } from '@/lib/assessmentCopy';
 
@@ -401,6 +402,12 @@ export default function FreeDiagnosticClient() {
   const handleProfileContinue = () => {
     if (!isProfileValid) return;
     trackEvent('assessment_start', { industry, company_size: companySize });
+    recordFunnelEvent('start', {
+      locale: language,
+      industry,
+      companySize,
+      questionSetVersion: QUESTION_SET_VERSION,
+    });
     setStep('question');
     setQuestionIndex(0);
   };
@@ -436,6 +443,14 @@ export default function FreeDiagnosticClient() {
       step_number: questionIndex + 1,
       question_id: QUESTION_SPEC[questionIndex].id,
     });
+    recordFunnelEvent('step', {
+      step: questionIndex + 1,
+      locale: language,
+      questionSetVersion: QUESTION_SET_VERSION,
+    });
+    // language is intentionally omitted: switching language mid-assessment
+    // should not re-fire the step, it is the same person on the same question.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [step, questionIndex]);
 
   /**
@@ -543,6 +558,12 @@ export default function FreeDiagnosticClient() {
   useEffect(() => {
     if (step !== 'results') return;
     trackEvent('assessment_complete', { score, maturity, industry, company_size: companySize });
+    recordFunnelEvent('complete', {
+      locale: language,
+      industry,
+      companySize,
+      questionSetVersion: QUESTION_SET_VERSION,
+    });
     // Fire once on arrival at the results screen, not on every score recompute.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [step]);
@@ -586,6 +607,12 @@ export default function FreeDiagnosticClient() {
       });
       if (!res.ok) throw new Error(`lead capture responded ${res.status}`);
       trackEvent('assessment_lead_submitted', { score, maturity, industry });
+      recordFunnelEvent('lead', {
+        locale: language,
+        industry,
+        companySize,
+        questionSetVersion: QUESTION_SET_VERSION,
+      });
     } catch (err) {
       console.error('Lead capture failed:', err);
       trackEvent('assessment_lead_error', { score, maturity, industry });

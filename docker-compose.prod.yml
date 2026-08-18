@@ -94,7 +94,7 @@ services:
       - "traefik.http.routers.main-app.entrypoints=websecure,web"
       - "traefik.http.routers.main-app.tls.certresolver=letsencrypt"
       - "traefik.http.routers.main-app.priority=1"
-      - "traefik.http.routers.main-app-api.rule=(Host(`aivory.id`) || Host(`www.aivory.id`) || Host(`stag.aivory.id`) || Host(`x.aivory.uk`)) && (PathPrefix(`/api/exchange-rate`) || PathPrefix(`/api/turnstile`) || PathPrefix(`/api/assessment-lead`) || PathPrefix(`/api/assessment-report-email`))"
+      - "traefik.http.routers.main-app-api.rule=(Host(`aivory.id`) || Host(`www.aivory.id`) || Host(`stag.aivory.id`) || Host(`x.aivory.uk`)) && (PathPrefix(`/api/exchange-rate`) || PathPrefix(`/api/turnstile`) || PathPrefix(`/api/assessment-lead`) || PathPrefix(`/api/assessment-report-email`) || PathPrefix(`/api/assessment-event`))"
       - "traefik.http.routers.main-app-api.entrypoints=websecure,web"
       - "traefik.http.routers.main-app-api.tls.certresolver=letsencrypt"
       - "traefik.http.routers.main-app-api.priority=20"
