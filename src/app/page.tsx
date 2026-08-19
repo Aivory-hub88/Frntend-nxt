@@ -43,10 +43,10 @@ export default function HomePage() {
             <div className="w-full py-16 md:py-24 px-6 flex flex-col items-center justify-center text-center">
               <h2
                 className="text-2xl md:text-3xl lg:text-4xl font-light tracking-tight text-[#B3B3B3] leading-relaxed max-w-3xl"
-                style={{ fontFamily: "'Manrope', sans-serif" }}
+                style={{ fontFamily: "'Manrope', sans-serif", fontWeight: 300 }}
               >
                 Beyond AI chat.<br />
-                <span className="text-white font-medium">Built for business operations.</span>
+                <span className="text-white font-light">Built to understand how your business actually operates.</span>
               </h2>
             </div>
 

@@ -158,11 +158,7 @@ export default function FeatureCards() {
           <div className="text-center flex flex-col justify-center items-center">
             {/* Diagnostic Stats Section */}
             <div className="w-full max-w-[850px] mx-auto flex flex-col items-center">
-              <h3 className="text-base md:text-2xl font-light text-white mb-12" style={{ zoom: 0.95, fontFamily: "'Manrope', sans-serif", fontWeight: 300 }}>
-                Business transformation starts with <br className="hidden md:block" />understanding how the organisation operates.
-              </h3>
-
-              <div ref={statsRef} className="relative mt-4 grid w-full max-w-[720px] grid-cols-1 items-stretch gap-3 sm:grid-cols-3 md:gap-4">
+              <div ref={statsRef} className="relative grid w-full max-w-[720px] grid-cols-1 items-stretch gap-3 sm:grid-cols-3 md:gap-4">
                 <DiagnosticStatItem target={10} prefix="" suffix="min" title="Business Operations Assessment" subtitle="not days of sessions" active={statsActive} delay={0} />
                 <DiagnosticStatItem target={5} prefix="<" suffix="min" title="Transformation Blueprint" subtitle="not weeks of decks" active={statsActive} delay={100} />
                 <DiagnosticStatItem target={0} prefix="" suffix="" title="False Starts" subtitle="one clear starting point" active={statsActive} delay={200} />
