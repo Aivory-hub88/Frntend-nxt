@@ -15,7 +15,7 @@ const labelClassName = 'font-mono text-[10px] uppercase tracking-[0.18em] text-w
 export default function PreFooterCTA() {
   const { ref, isVisible } = useScrollAnimation();
   const [status, setStatus] = useState<SubmitState>('idle');
-  const [showAssessmentModal, setShowAssessmentModal] = useState(false);
+  const [activeProductId, setActiveProductId] = useState<string | null>(null);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -60,14 +60,23 @@ export default function PreFooterCTA() {
           </div>
 
           <div className="lg:col-span-6 lg:col-start-7 lg:self-end">
-            <div className="max-w-2xl space-y-3 text-[15px] font-light leading-7 text-white/62 md:text-base">
-              <p>Every transformation begins with understanding how your organisation operates.</p>
-              <p>Tell us about your business, your operational challenges, and where you want to go.</p>
-              <p>We&apos;ll help identify where AI can create measurable business value.</p>
+            <div className="max-w-2xl text-[15px] font-light leading-7 text-white/62 md:text-base">
+              <p>
+                Every transformation begins with understanding how your organisation operates. Tell
+                us about your business, your operational challenges, and where you want to go
+                &mdash; we&apos;ll help identify where AI can create measurable business value.
+              </p>
             </div>
-            <div className="mt-8">
-              <TechnicalFrameButton type="button" onClick={() => setShowAssessmentModal(true)}>
+            <div className="mt-8 flex flex-wrap gap-4">
+              <TechnicalFrameButton type="button" onClick={() => setActiveProductId(PRODUCT_IDS.DEEP_DIAGNOSTIC)}>
                 Begin Assessment
+              </TechnicalFrameButton>
+              <TechnicalFrameButton
+                type="button"
+                className="bg-transparent text-white/70 hover:text-white"
+                onClick={() => setActiveProductId(PRODUCT_IDS.FULL_STACK)}
+              >
+                Complete Package
               </TechnicalFrameButton>
             </div>
           </div>
@@ -244,10 +253,10 @@ export default function PreFooterCTA() {
         </div>
       </div>
 
-      {showAssessmentModal && (
+      {activeProductId && (
         <PlanConfirmModal
-          productId={PRODUCT_IDS.DEEP_DIAGNOSTIC}
-          onClose={() => setShowAssessmentModal(false)}
+          productId={activeProductId}
+          onClose={() => setActiveProductId(null)}
         />
       )}
     </section>
