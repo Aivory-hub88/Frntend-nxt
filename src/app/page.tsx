@@ -3,6 +3,7 @@ import HeroSection from '@/components/home/HeroSection';
 import AIReadySection from '@/components/home/AIReadySection';
 import FeatureCards from '@/components/home/FeatureCards';
 import StatsSection from '@/components/home/StatsSection';
+import EnterpriseComparisonSection from '@/components/home/EnterpriseComparisonSection';
 import PricingClientWrapper from '@/app/pricing/PricingClientWrapper';
 import PrivacySection from '@/components/home/PrivacySection';
 import PreFooterCTA from '@/components/home/PreFooterCTA';
@@ -54,6 +55,8 @@ export default function HomePage() {
             <div>
               <StatsSection />
             </div>
+
+            <EnterpriseComparisonSection />
 
             <div>
               <PricingClientWrapper />
