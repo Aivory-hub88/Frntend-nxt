@@ -633,6 +633,26 @@ export function createBreadcrumbList(
   };
 }
 
+/** Builds a standalone FAQPage graph from arbitrary Q&A pairs (e.g. an FAQ section parsed out of blog post content). */
+export function createFaqPageFromEntries(
+  url: string,
+  entries: ReadonlyArray<{ question: string; answer: string }>,
+) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    url,
+    mainEntity: entries.map((entry) => ({
+      '@type': 'Question',
+      name: entry.question,
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: entry.answer,
+      },
+    })),
+  };
+}
+
 const PRICING_DESCRIPTION =
   'Simple, transparent pricing for AI infrastructure and business transformation. One-time assessments, transformation blueprints, monthly platform licences, and Intelligence Credit packs.';
 
