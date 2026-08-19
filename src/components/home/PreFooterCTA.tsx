@@ -6,8 +6,6 @@ import { TechnicalFrameButton } from '@/components/ui/TechnicalFrameButton';
 import { PlanConfirmModal } from '@/components/payment/PlanConfirmModal';
 import { PRODUCT_IDS } from '@/lib/pricing';
 
-const FORMSUBMIT_ENDPOINT = 'https://formsubmit.co/ajax/sales@aivory.uk';
-
 type SubmitState = 'idle' | 'submitting' | 'success' | 'error';
 
 const fieldClassName =
@@ -24,13 +22,15 @@ export default function PreFooterCTA() {
     setStatus('submitting');
 
     try {
-      const res = await fetch(FORMSUBMIT_ENDPOINT, {
+      const fields = Object.fromEntries(new FormData(e.currentTarget));
+      const res = await fetch('/api/contact-form', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-        body: JSON.stringify(Object.fromEntries(new FormData(e.currentTarget))),
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ formType: 'intake', ...fields }),
       });
 
-      if (!res.ok) throw new Error('Submission failed');
+      const data = await res.json().catch(() => ({ ok: false }));
+      if (!res.ok || !data.ok) throw new Error('Submission failed');
       setStatus('success');
       e.currentTarget.reset();
     } catch {
@@ -90,11 +90,6 @@ export default function PreFooterCTA() {
               </div>
             ) : (
               <form className="flex flex-col gap-8" onSubmit={handleSubmit}>
-                <input type="hidden" name="_subject" value="New Enterprise Transformation Inquiry" />
-                <input type="hidden" name="_captcha" value="false" />
-                <input type="hidden" name="_template" value="table" />
-                <input type="hidden" name="_cc" value="irfan.reichmann@aivory.uk,samuel@aivory.id" />
-
                 <div className="grid grid-cols-1 gap-x-8 gap-y-8 md:grid-cols-2">
                   <div className="flex flex-col gap-2">
                     <label className={labelClassName}>

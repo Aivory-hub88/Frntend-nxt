@@ -6,6 +6,8 @@ import Navbar from '@/components/home/Navbar';
 import Footer from '@/components/Footer';
 import { TechnicalFrameButton } from '@/components/ui/TechnicalFrameButton';
 
+type SubmitState = 'idle' | 'submitting' | 'success' | 'error';
+
 export default function ContactClient() {
   const [formData, setFormData] = useState({
     name: '',
@@ -13,19 +15,23 @@ export default function ContactClient() {
     email: '',
     message: '',
   });
-  const [isSubmitted, setIsSubmitted] = useState(false);
+  const [status, setStatus] = useState<SubmitState>('idle');
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Route the enquiry to hello@aivory.uk via the visitor's mail client
-    const subject = `Contact from ${formData.name}${formData.company ? ` — ${formData.company}` : ''}`;
-    const body =
-      `Name: ${formData.name}\n` +
-      `Company: ${formData.company}\n` +
-      `Email: ${formData.email}\n\n` +
-      `${formData.message}`;
-    window.location.href = `mailto:hello@aivory.uk?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-    setIsSubmitted(true);
+    setStatus('submitting');
+    try {
+      const res = await fetch('/api/contact-form', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ formType: 'contact', ...formData }),
+      });
+      const data = await res.json().catch(() => ({ ok: false }));
+      if (!res.ok || !data.ok) throw new Error('submit_failed');
+      setStatus('success');
+    } catch {
+      setStatus('error');
+    }
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -68,7 +74,7 @@ export default function ContactClient() {
       <div className="bg-black pt-12 pb-32 px-6 md:px-16 lg:px-24 font-manrope">
         <div className="max-w-3xl mx-auto">
           
-          {!isSubmitted ? (
+          {status !== 'success' ? (
             <div className="w-full bg-[#111111] rounded-xl border border-white/10 p-8 md:p-12 shadow-2xl">
               <h2 className="text-2xl font-bold tracking-tight mb-3 text-white">
                 Get in Touch
@@ -142,8 +148,13 @@ export default function ContactClient() {
                   />
                 </div>
 
+                {status === 'error' && (
+                  <p className="text-sm text-red-400">Something went wrong — please try again.</p>
+                )}
+
                 <TechnicalFrameButton
                   type="submit"
+                  disabled={status === 'submitting'}
                   className="mt-4"
                 >
                   <svg
@@ -159,7 +170,7 @@ export default function ContactClient() {
                   >
                     <path d="M7 7l10 10M17 7v10H7" />
                   </svg>
-                  Send Message
+                  {status === 'submitting' ? 'Sending...' : 'Send Message'}
                 </TechnicalFrameButton>
               </form>
             </div>
@@ -170,7 +181,7 @@ export default function ContactClient() {
                 We&apos;ll be in touch soon to discuss your needs.
               </p>
               <button
-                onClick={() => setIsSubmitted(false)}
+                onClick={() => setStatus('idle')}
                 className="flex items-center justify-center gap-2 mx-auto px-8 py-3.5 border border-white/20 text-white font-semibold hover:border-[#a3aa96] hover:bg-white/5 transition-all text-sm"
               >
                 <svg

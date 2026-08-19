@@ -87,6 +87,9 @@ services:
       - LEAD_INGEST_TOKEN=${LEAD_INGEST_TOKEN}
       - N8N_REPORT_WEBHOOK_URL=${N8N_REPORT_WEBHOOK_URL}
       - REPORT_EMAIL_TOKEN=${REPORT_EMAIL_TOKEN}
+      # Contact page + homepage transformation-intake form.
+      - N8N_CONTACT_WEBHOOK_URL=${N8N_CONTACT_WEBHOOK_URL}
+      - CONTACT_FORM_TOKEN=${CONTACT_FORM_TOKEN}
     labels:
       - "traefik.enable=true"
       - "traefik.docker.network=aivory-network"
@@ -94,7 +97,7 @@ services:
       - "traefik.http.routers.main-app.entrypoints=websecure,web"
       - "traefik.http.routers.main-app.tls.certresolver=letsencrypt"
       - "traefik.http.routers.main-app.priority=1"
-      - "traefik.http.routers.main-app-api.rule=(Host(`aivory.id`) || Host(`www.aivory.id`) || Host(`stag.aivory.id`) || Host(`x.aivory.uk`)) && (PathPrefix(`/api/exchange-rate`) || PathPrefix(`/api/turnstile`) || PathPrefix(`/api/assessment-lead`) || PathPrefix(`/api/assessment-report-email`) || PathPrefix(`/api/assessment-event`))"
+      - "traefik.http.routers.main-app-api.rule=(Host(`aivory.id`) || Host(`www.aivory.id`) || Host(`stag.aivory.id`) || Host(`x.aivory.uk`)) && (PathPrefix(`/api/exchange-rate`) || PathPrefix(`/api/turnstile`) || PathPrefix(`/api/assessment-lead`) || PathPrefix(`/api/assessment-report-email`) || PathPrefix(`/api/assessment-event`) || PathPrefix(`/api/contact-form`))"
       - "traefik.http.routers.main-app-api.entrypoints=websecure,web"
       - "traefik.http.routers.main-app-api.tls.certresolver=letsencrypt"
       - "traefik.http.routers.main-app-api.priority=20"
