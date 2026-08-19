@@ -9,7 +9,7 @@ const messages = [
   'Transform operations with confidence.',
   'Turn complexity into operational clarity.',
   'From operational clarity to governed AI,',
-  'Assess. Design. Deploy',
+  'Assess &rarr; Design &rarr; Deploy',
   'Turn data into decisions you can act on.',
 ];
 

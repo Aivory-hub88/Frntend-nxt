@@ -153,7 +153,7 @@ export default function FeatureCards() {
 
   return (
     <>
-      <div ref={animRef} className={`animate-on-scroll ${isVisible ? 'is-visible' : ''} w-full pt-24 pb-12 relative overflow-hidden`} id="features" style={{ zIndex: 1 }}>
+      <div ref={animRef} className={`animate-on-scroll ${isVisible ? 'is-visible' : ''} w-full pt-4 md:pt-6 pb-12 relative overflow-hidden`} id="features" style={{ zIndex: 1 }}>
         <div className="max-w-[1400px] mx-auto px-6 md:px-12 lg:px-24 relative z-[1]">
           <div className="text-center flex flex-col justify-center items-center">
             {/* Diagnostic Stats Section */}

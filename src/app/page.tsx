@@ -40,7 +40,7 @@ export default function HomePage() {
           <div className="relative z-10">
             <AIReadySection />
 
-            <div className="w-full py-16 md:py-24 px-6 flex flex-col items-center justify-center text-center">
+            <div className="w-full pt-16 md:pt-24 pb-2 md:pb-4 px-6 flex flex-col items-center justify-center text-center">
               <h2
                 className="text-2xl md:text-3xl lg:text-4xl font-light tracking-tight text-[#B3B3B3] leading-relaxed max-w-3xl"
                 style={{ fontFamily: "'Manrope', sans-serif", fontWeight: 300 }}
