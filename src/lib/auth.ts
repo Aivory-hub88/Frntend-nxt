@@ -289,6 +289,77 @@ export async function login(email: string, password: string): Promise<User> {
   return mapUser(session.user!, session.access_token);
 }
 
+/**
+ * Ask the backend to email a password reset link.
+ *
+ * Resolves for any address. The backend deliberately answers identically
+ * whether or not the email is registered — surfacing a difference here would
+ * hand anyone an account-enumeration oracle from an unauthenticated page — so
+ * the caller must show the same "check your inbox" message either way.
+ */
+export async function requestPasswordReset(email: string): Promise<void> {
+  const backendUrl = getServiceUrl("backend");
+  const res = await fetch(`${backendUrl}/api/v1/auth/forgot-password`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email, audience: "user" }),
+  });
+
+  // Only a transport/server failure is worth reporting; a 200 says nothing
+  // about whether the address exists, by design.
+  if (!res.ok) {
+    throw new Error("Could not start the reset. Please try again.");
+  }
+}
+
+/**
+ * Check whether a reset link is still usable, without consuming it, so the
+ * page can say "this link has expired" before the user types a new password.
+ */
+export async function checkResetToken(
+  token: string
+): Promise<{ valid: boolean; email?: string }> {
+  const backendUrl = getServiceUrl("backend");
+  try {
+    const res = await fetch(
+      `${backendUrl}/api/v1/auth/reset-password/check?token=${encodeURIComponent(token)}`
+    );
+    if (!res.ok) return { valid: false };
+    const data = await res.json();
+    return { valid: Boolean(data?.valid), email: data?.email };
+  } catch {
+    return { valid: false };
+  }
+}
+
+/**
+ * Redeem a reset link and set the new password.
+ *
+ * The backend drops every session for the account on success, so any persisted
+ * session in this browser is stale afterwards and is cleared here.
+ */
+export async function resetPassword(
+  token: string,
+  newPassword: string
+): Promise<void> {
+  const backendUrl = getServiceUrl("backend");
+  const res = await fetch(`${backendUrl}/api/v1/auth/reset-password`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ token, new_password: newPassword }),
+  });
+
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.detail || "Could not reset the password");
+  }
+
+  if (typeof window !== "undefined") {
+    localStorage.removeItem(STORAGE_KEY);
+    clearAuthCookies();
+  }
+}
+
 /** Logout — clears localStorage and optionally redirects home. */
 export async function logout(redirect: boolean = true): Promise<void> {
   try {

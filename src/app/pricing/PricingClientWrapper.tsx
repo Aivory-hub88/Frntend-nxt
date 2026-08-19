@@ -5,7 +5,7 @@ import { useLanguage } from '@/components/context/LanguageContext';
 import PricingStepOne from '@/components/home/PricingStepOne';
 import PricingStepTwo from '@/components/home/PricingStepTwo';
 
-export default function PricingClientWrapper() {
+export default function PricingClientWrapper({ withBackground = false }: { withBackground?: boolean }) {
   const { language } = useLanguage();
   const [currency, setCurrency] = useState<'IDR' | 'USD' | null>(null);
 
@@ -16,7 +16,7 @@ export default function PricingClientWrapper() {
   const activeCurrency = currency || 'USD';
 
   return (
-    <div id="pricing-section" className="w-full pt-16">
+    <div id="pricing-section" className={`w-full pt-16 ${withBackground ? 'bg-[#efeee8]' : ''}`}>
       <div className="max-w-7xl mx-auto px-6">
         <div className="text-center mb-12">
           <h2 className="text-[36px] md:text-[56px] font-normal tracking-tight text-[#1a1a1a]" style={{ fontFamily: "'Manrope', sans-serif" }}>

@@ -249,6 +249,22 @@ services:
       - MCP_SERVER_AUTH_ENCRYPTION_KEY=${MCP_SERVER_AUTH_ENCRYPTION_KEY}
       - REDIS_HOST=${REDIS_HOST:-redis}
       - REDIS_PASSWORD=${REDIS_PASSWORD:-}
+      # Password-reset mail. Same relay avry-careers/avry-payments already use;
+      # with SMTP_HOST unset the reset endpoints still work but no link is
+      # delivered, so this must be present for self-service reset to function.
+      - SMTP_HOST=${SMTP_HOST:-}
+      - SMTP_PORT=${SMTP_PORT:-587}
+      - SMTP_USER=${SMTP_USER:-}
+      - SMTP_PASSWORD=${SMTP_PASSWORD:-}
+      - SMTP_FROM_EMAIL=${SMTP_FROM_EMAIL:-}
+      # The shared SMTP identity is careers@ — wrong voice for a security
+      # email, so account mail gets its own sender when one is configured.
+      - AUTH_FROM_EMAIL=${AUTH_FROM_EMAIL:-}
+      # Where the emailed links point. The admin base needs the /admin segment:
+      # the dashboard runs under Next.js basePath "/admin".
+      - PASSWORD_RESET_URL_BASE=${PASSWORD_RESET_URL_BASE:-https://aivory.uk/reset-password}
+      - ADMIN_PASSWORD_RESET_URL_BASE=${ADMIN_PASSWORD_RESET_URL_BASE:-https://admin.aivory.id/admin/reset-password}
+      - PASSWORD_RESET_TTL_MINUTES=${PASSWORD_RESET_TTL_MINUTES:-60}
     extra_hosts:
       - "host.docker.internal:host-gateway"
     volumes:
@@ -519,7 +535,7 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.docker.network=aivory-network"
-      - "traefik.http.routers.payments.rule=Host(`api.aivory.id`) && PathPrefix(`/payments`)"
+      - "traefik.http.routers.payments.rule=(Host(`api.aivory.id`) || Host(`backend.aivory.id`)) && PathPrefix(`/payments`)"
       - "traefik.http.routers.payments.entrypoints=web,websecure"
       - "traefik.http.routers.payments.tls.certresolver=letsencrypt"
       - "traefik.http.routers.payments.priority=10"

@@ -59,7 +59,7 @@ export default function HomePage() {
             <EnterpriseComparisonSection />
 
             <div>
-              <PricingClientWrapper />
+              <PricingClientWrapper withBackground />
             </div>
 
             <div>
