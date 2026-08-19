@@ -2691,7 +2691,7 @@ export function InteractiveShowcase({
                 to <span style={{ color: "#e4effd" }}>Intelligent Operations</span>
               </h3>
               <p className="text-white/75 max-w-lg font-light leading-relaxed">
-                We guide organisations through every stage of transformation. From understanding how the business operates today to redesigning workflows and deploying governed AI that delivers measurable business outcomes.
+                A self-guided path through every stage of transformation. From understanding how the business operates today to redesigning workflows and deploying governed AI that delivers measurable business outcomes.
               </p>
             </div>
 
