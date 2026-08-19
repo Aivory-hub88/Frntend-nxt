@@ -11,6 +11,7 @@ import {
   absoluteUrl,
   richContentToPlainText,
   clampDescription,
+  createFaqPageFromEntries,
   JsonLd,
 } from "@/lib/seo"
 
@@ -43,7 +44,6 @@ export async function generateMetadata(
     description,
     alternates: {
       canonical: url,
-      languages: { en: url, id: url },
     },
     openGraph: {
       type: "article",
@@ -208,7 +208,53 @@ function formatInlineMarkup(text: string): string {
     /`(.+?)`/g,
     '<code class="px-1.5 py-0.5 bg-black/[0.06] border border-black/10 rounded text-sm font-mono text-black/60">$1</code>'
   )
+  html = html.replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+|\/[^\s)]*)\)/g, (_match, linkText, href) => {
+    const isExternal = /^https?:\/\//.test(href)
+    const relAttr = isExternal ? ' target="_blank" rel="noopener noreferrer"' : ""
+    return `<a href="${href}" class="text-[#11110f] underline underline-offset-2 hover:opacity-60 transition-opacity"${relAttr}>${linkText}</a>`
+  })
   return html
+}
+
+/** Strips markdown emphasis/link syntax down to plain text, for JSON-LD fields that must not contain markup. */
+function stripMarkdown(text: string): string {
+  return text
+    .replace(/\[([^\]]+)\]\([^)]+\)/g, "$1")
+    .replace(/\*\*(.+?)\*\*/g, "$1")
+    .replace(/[*_`]/g, "")
+    .trim()
+}
+
+/**
+ * Finds a "Frequently Asked Questions" heading and pairs each following
+ * higher-level heading with its paragraph(s) into Q&A entries, stopping at
+ * the next heading of equal or shallower depth (or the end of the post).
+ */
+function extractFaqEntries(blocks: BlogContentBlock[]): { question: string; answer: string }[] {
+  const faqIndex = blocks.findIndex(
+    (b) => b.type === "heading" && /frequently asked questions|\bfaq\b/i.test(b.text || "")
+  )
+  if (faqIndex === -1) return []
+
+  const faqLevel = blocks[faqIndex].level ?? 2
+  const entries: { question: string; answer: string }[] = []
+  let current: { question: string; answer: string[] } | null = null
+
+  for (let i = faqIndex + 1; i < blocks.length; i++) {
+    const block = blocks[i]
+    if (block.type === "heading") {
+      if ((block.level ?? 2) <= faqLevel) break
+      if (current) entries.push({ question: current.question, answer: stripMarkdown(current.answer.join(" ")) })
+      current = { question: stripMarkdown(block.text || ""), answer: [] }
+      continue
+    }
+    if (current && block.type === "paragraph" && block.text) {
+      current.answer.push(block.text)
+    }
+  }
+  if (current) entries.push({ question: current.question, answer: stripMarkdown(current.answer.join(" ")) })
+
+  return entries.filter((entry) => entry.question && entry.answer)
 }
 
 export const revalidate = 60
@@ -256,6 +302,12 @@ export default async function BlogPostPage(props: { params: Promise<{ slug: stri
           </div>
         ) : post ? (
           <article className="max-w-3xl mx-auto px-6 py-24 md:py-32">
+            {(() => {
+              const faqEntries = extractFaqEntries(post.body?.blocks || [])
+              return faqEntries.length > 0 ? (
+                <JsonLd data={createFaqPageFromEntries(absoluteUrl(`/blog/${post.slug}`), faqEntries)} />
+              ) : null
+            })()}
             <JsonLd
               data={{
                 "@context": "https://schema.org",

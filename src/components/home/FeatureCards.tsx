@@ -92,7 +92,7 @@ function DiagnosticStatItem({
         {prefix}{value}
         {suffix && (
           <span
-            className="font-normal text-white/55"
+            className="font-light text-white/55"
             style={{
               fontSize: 'clamp(1.05rem, 1.8vw, 1.45rem)',
               letterSpacing: '-0.025em',
@@ -103,10 +103,10 @@ function DiagnosticStatItem({
           </span>
         )}
       </div>
-      <div className="flex min-h-[2.5rem] max-w-[220px] items-center justify-center text-[12px] font-medium leading-snug tracking-[0.01em] text-[#e7e7e5] md:text-[13px]">
+      <div className="flex min-h-[2.5rem] max-w-[220px] items-center justify-center text-[12px] font-light leading-snug tracking-[0.01em] text-[#e7e7e5] md:text-[13px]">
         {title}
       </div>
-      <div className="mt-1.5 text-[10px] font-medium uppercase tracking-[0.13em] text-white/40 md:text-[11px]">
+      <div className="mt-1.5 text-[10px] font-light uppercase tracking-[0.13em] text-white/40 md:text-[11px]">
         {subtitle}
       </div>
     </div>
@@ -153,22 +153,12 @@ export default function FeatureCards() {
 
   return (
     <>
-      <div ref={animRef} className={`animate-on-scroll ${isVisible ? 'is-visible' : ''} w-full pt-24 pb-12 relative overflow-hidden`} id="features" style={{ zIndex: 1 }}>
+      <div ref={animRef} className={`animate-on-scroll ${isVisible ? 'is-visible' : ''} w-full pt-4 md:pt-6 pb-12 relative overflow-hidden`} id="features" style={{ zIndex: 1 }}>
         <div className="max-w-[1400px] mx-auto px-6 md:px-12 lg:px-24 relative z-[1]">
           <div className="text-center flex flex-col justify-center items-center">
-            <h2 className="text-4xl md:text-5xl font-light tracking-tight mb-16 leading-tight text-white max-w-3xl" style={{ fontFamily: "'Manrope', sans-serif", fontWeight: 300, zoom: 0.8 }}>
-              Operational clarity.<br />
-              Executive <span className="italic" style={{ color: '#e4effd' }}>control.</span>
-            </h2>
-            
-
             {/* Diagnostic Stats Section */}
             <div className="w-full max-w-[850px] mx-auto flex flex-col items-center">
-              <h3 className="text-base md:text-2xl font-light text-white mb-12" style={{ zoom: 0.95, fontFamily: "'Manrope', sans-serif", fontWeight: 300 }}>
-                Business transformation starts with <br className="hidden md:block" />understanding how the organisation operates.
-              </h3>
-
-              <div ref={statsRef} className="relative mt-4 grid w-full max-w-[720px] grid-cols-1 items-stretch gap-3 sm:grid-cols-3 md:gap-4">
+              <div ref={statsRef} className="relative grid w-full max-w-[720px] grid-cols-1 items-stretch gap-3 sm:grid-cols-3 md:gap-4">
                 <DiagnosticStatItem target={10} prefix="" suffix="min" title="Business Operations Assessment" subtitle="not days of sessions" active={statsActive} delay={0} />
                 <DiagnosticStatItem target={5} prefix="<" suffix="min" title="Transformation Blueprint" subtitle="not weeks of decks" active={statsActive} delay={100} />
                 <DiagnosticStatItem target={0} prefix="" suffix="" title="False Starts" subtitle="one clear starting point" active={statsActive} delay={200} />

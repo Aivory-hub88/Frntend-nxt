@@ -9,12 +9,18 @@
  * Sign-in/sign-up is REAL: it calls the live backend auth service via
  * `@/lib/auth` (login / signup), the same one the rest of the site uses.
  *
- * PAYMENT IS A MOCK. `MOCK_PAYMENT` is `true` because Card / GoPay / DANA /
- * QRIS are not yet enabled on the Midtrans merchant account. No card number,
- * PIN, OTP, or phone number entered here is transmitted or stored anywhere —
- * `runMockPayment` just simulates a gateway round-trip. When the channels go
- * live, flip `MOCK_PAYMENT` to `false`: `runRealPayment` is already wired to
- * `createPaymentTransaction` + `startMidtransSnap` from `@/lib/payment`.
+ * PAYMENT IS LIVE. `MOCK_PAYMENT` is `false`: the method step creates a real
+ * Midtrans transaction and hands off to the Snap popup, which owns card entry,
+ * 3-D Secure, and e-wallet authorisation.
+ *
+ * This page therefore never touches card data. The card / PIN / OTP steps
+ * below exist only for the mock path — the live path skips straight from the
+ * method step into Snap, so no PAN, CVV, or OTP is ever entered into, held by,
+ * or transmitted from this origin. Do not wire those fields into the live
+ * path; doing so would drag this origin into PCI-DSS scope.
+ *
+ * The server prices the order from its own catalogue (`createPaymentTransaction`
+ * sends no amount), so a browser cannot name its own price.
  */
 
 import React, { useEffect, useRef, useState } from 'react';
@@ -25,13 +31,24 @@ import {
   createPaymentTransaction,
   startMidtransSnap,
   isMidtransAvailable,
+  loadMidtransSnap,
+  fetchMidtransClientKey,
 } from '@/lib/payment';
 import { formatCheckoutPrice, type CheckoutCurrency } from '@/lib/checkout-format';
 import { SpotlightButton } from '@/components/ui/SpotlightButton';
+import TurnstileWidget from '@/components/payment/TurnstileWidget';
 
-// Flip to false once Card/GoPay/DANA/QRIS are activated on the Midtrans
-// merchant account — the real gateway path (runRealPayment) is ready.
-const MOCK_PAYMENT: boolean = true;
+// Live. Set to true only to demo the flow without touching the gateway; the
+// mock path collects card-shaped fields locally and transmits nothing.
+const MOCK_PAYMENT: boolean = false;
+
+// Baked in at build time from the compose build args. Empty in a local dev
+// checkout that has no key configured, which disables the gate rather than
+// locking the flow behind a widget that can never solve.
+const TURNSTILE_SITE_KEY = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY ?? '';
+
+// Must match EXPECTED_ACTION in src/app/api/turnstile/verify/route.ts.
+const TURNSTILE_ACTION = 'checkout';
 
 type Step =
   | 'auth'
@@ -311,6 +328,15 @@ export function CheckoutForm({
   const [pin, setPin] = useState('');
   const [otp, setOtp] = useState('');
 
+  // Turnstile. `humanVerified` is what actually gates payment: it is only set
+  // after the server round-trip succeeds, never straight from the widget
+  // callback, so a forged client-side token cannot open the flow.
+  const turnstileEnabled = TURNSTILE_SITE_KEY.length > 0;
+  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
+  const [humanVerified, setHumanVerified] = useState(!turnstileEnabled);
+  const [verifying, setVerifying] = useState(false);
+  const [turnstileResetSignal, setTurnstileResetSignal] = useState(0);
+
   useEffect(() => {
     setCurrentUser(getUser());
   }, []);
@@ -359,27 +385,130 @@ export function CheckoutForm({
     setStep('processing');
     setError(null);
     try {
-      // Mirrors the real integration in payment-modal.tsx: create the
-      // transaction, then hand the token to Midtrans Snap. Channel targeting
-      // (enabled_payments) can be added here once the merchant account exposes
-      // per-channel Snap options.
-      const result = await createPaymentTransaction(productId);
+      // The server prices the product from its own catalogue — no amount is
+      // sent from here. The Channel ids in CHANNELS are deliberately the same
+      // strings Midtrans uses, so the picked one passes straight through and
+      // Snap opens on it rather than asking the customer to choose again.
+      const result = await createPaymentTransaction(
+        productId,
+        channel ? [channel] : undefined
+      );
       if (!result?.token) throw new Error('Failed to get payment token');
 
+      // Snap is loaded on demand rather than on every page view: the SDK is
+      // only needed once a customer actually commits to paying.
+      if (!isMidtransAvailable()) {
+        await fetchMidtransClientKey();
+        // fetchMidtransClientKey parks the key on window; read it through an
+        // explicit cast rather than relying on a global augmentation that this
+        // project does not actually declare anywhere.
+        const clientKey =
+          typeof window === 'undefined'
+            ? undefined
+            : (window as unknown as { MIDTRANS_CLIENT_KEY?: string }).MIDTRANS_CLIENT_KEY;
+        if (!clientKey) throw new Error('Payment gateway is unavailable. Please try again.');
+        await loadMidtransSnap(clientKey);
+      }
+
       if (isMidtransAvailable()) {
+        // Snap owns channel choice, card entry and 3-D Secure from here.
         await startMidtransSnap(result.token);
         setStep('success');
-      } else if (typeof window !== 'undefined') {
-        window.open(result.redirect_url || result.token, '_blank');
-        setStep('details');
+        return;
       }
+
+      // Snap could not load (blocked script, offline). Midtrans' hosted page
+      // is the same transaction, so send the customer there rather than
+      // failing a checkout that already has a valid token.
+      if (result.redirect_url && typeof window !== 'undefined') {
+        window.location.href = result.redirect_url;
+        return;
+      }
+      throw new Error('Payment gateway is unavailable. Please try again.');
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Payment initialization failed');
-      setStep('details');
+      // Closing the Snap popup rejects too; that is an abandoned payment, not
+      // a failure worth shouting about, so it returns to the method step
+      // without an error banner.
+      const message = err instanceof Error ? err.message : '';
+      const closed = /payment closed/i.test(message);
+
+      // An expired session reaches here as the gateway's own wording, which
+      // tells a customer nothing actionable at the moment they are trying to
+      // pay. Send them to the sign-in step this page already has instead.
+      if (/token|unauthor|not authenticated|401/i.test(message)) {
+        setAuthError('Your session has expired. Please sign in again to continue.');
+        setStep('auth');
+        setHumanVerified(!turnstileEnabled);
+        setTurnstileToken(null);
+        setTurnstileResetSignal((n) => n + 1);
+        return;
+      }
+
+      if (!closed) {
+        setError(message || 'Payment initialisation failed');
+      }
+      setStep('method');
+      // The Turnstile token was spent on the attempt; mint a fresh one so a
+      // retry is not rejected as a replay.
+      setHumanVerified(!turnstileEnabled);
+      setTurnstileToken(null);
+      setTurnstileResetSignal((n) => n + 1);
     }
   };
 
-  const pay = () => (MOCK_PAYMENT ? runMockPayment() : runRealPayment());
+  const pay = () => {
+    // Belt and braces: the method step already gates on this, but pay() is
+    // also reachable from the OTP step, so it re-checks rather than trusting
+    // that the user could only have arrived here through the gate.
+    if (!humanVerified) {
+      setError('Please complete the verification challenge before paying.');
+      setStep('method');
+      return;
+    }
+    return MOCK_PAYMENT ? runMockPayment() : runRealPayment();
+  };
+
+  /**
+   * Exchange the widget token for a server-side verdict, then advance.
+   * Tokens are single-use, so a rejection resets the widget for a fresh one.
+   */
+  const handleMethodContinue = async () => {
+    if (!turnstileEnabled) {
+      setStep('details');
+      return;
+    }
+    if (!turnstileToken) {
+      setError('Please complete the verification challenge.');
+      return;
+    }
+
+    setVerifying(true);
+    setError(null);
+    try {
+      const response = await fetch('/api/turnstile/verify', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ token: turnstileToken }),
+      });
+      if (!response.ok) throw new Error('verification rejected');
+      setHumanVerified(true);
+      // Live checkout hands off to Snap immediately — the card / PIN / OTP
+      // steps are the mock path only, and must never sit in front of a real
+      // gateway that collects the same data itself.
+      if (MOCK_PAYMENT) {
+        setStep('details');
+      } else {
+        await runRealPayment();
+      }
+    } catch {
+      setHumanVerified(false);
+      setTurnstileToken(null);
+      setTurnstileResetSignal((n) => n + 1);
+      setError('Verification failed. Please try the challenge again.');
+    } finally {
+      setVerifying(false);
+    }
+  };
 
   const handleDetailsContinue = () => {
     // E-wallets verify with an in-app PIN then an SMS OTP; card + QRIS pay now.
@@ -420,6 +549,8 @@ export function CheckoutForm({
         <img
           src="/Aivory_logo_2_2026.svg"
           alt="Aivory"
+          width={383}
+          height={79}
           className="h-8 w-auto filter invert"
         />
         <div className="relative">
@@ -621,15 +752,30 @@ export function CheckoutForm({
               ))}
             </div>
 
+            {turnstileEnabled && (
+              <div className="mt-6 flex justify-center">
+                <TurnstileWidget
+                  siteKey={TURNSTILE_SITE_KEY}
+                  action={TURNSTILE_ACTION}
+                  onToken={setTurnstileToken}
+                  onExpire={() => {
+                    setTurnstileToken(null);
+                    setHumanVerified(false);
+                  }}
+                  resetSignal={turnstileResetSignal}
+                />
+              </div>
+            )}
+
             <div className="mt-6 w-full">
               <SpotlightButton
                 type="button"
-                disabled={!channel}
-                onClick={() => setStep('details')}
+                disabled={!channel || verifying || (turnstileEnabled && !turnstileToken)}
+                onClick={handleMethodContinue}
                 className="w-full"
                 roundedClass="rounded-lg"
               >
-                Continue
+                {verifying ? 'Verifying…' : 'Continue'}
               </SpotlightButton>
             </div>
             <MidtransBadge />

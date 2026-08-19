@@ -21,8 +21,8 @@ export default function AIReadySection() {
               Transformation requires
               <br />
               operational{" "}
-              <span 
-                className="italic inline-block" 
+              <span
+                className="inline-block"
                 style={{ 
                   color: "#e4effd", 
                   paddingRight: "0.25em", 
@@ -38,11 +38,11 @@ export default function AIReadySection() {
           <div className="w-full md:w-1/2 flex flex-col justify-start text-left">
             <p className="text-white/80 font-light leading-relaxed text-[14px] md:text-[16px] m-0 max-w-xl">
               Most organisations deploy AI before understanding their operations.{" "}
-              <span className="text-white font-medium">We reverse the model.</span>
+              <span className="text-white font-light">We reverse the model.</span>
               <br />
               <br />
               Assess operations. Identify bottlenecks.{" "}
-              <span className="text-white font-medium">
+              <span className="text-white font-light">
                 Deploy AI where it creates measurable impact.
               </span>
             </p>

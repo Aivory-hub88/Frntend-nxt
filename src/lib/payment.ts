@@ -306,8 +306,26 @@ function authHeaders(): Record<string, string> {
  * Check if Midtrans Snap SDK is available
  * @returns boolean indicating if Snap is available
  */
+/**
+ * Resolve the Snap SDK global.
+ *
+ * snap.js publishes itself as `window.snap`, lower-case — verified against the
+ * live production bundle. This module was written against `window.Snap`, which
+ * never exists, so every real-gateway call failed the availability check and
+ * fell through to the redirect fallback. The capital form is still accepted in
+ * case a future bundle publishes both.
+ */
+function getSnap(): { pay: (token: string, options: Record<string, unknown>) => void } | undefined {
+  if (typeof window === 'undefined') return undefined;
+  const w = window as unknown as {
+    snap?: { pay: (token: string, options: Record<string, unknown>) => void };
+    Snap?: { pay: (token: string, options: Record<string, unknown>) => void };
+  };
+  return w.snap ?? w.Snap;
+}
+
 export function isMidtransAvailable(): boolean {
-  return typeof window !== 'undefined' && typeof window.Snap !== 'undefined';
+  return typeof getSnap()?.pay === 'function';
 }
 
 /**
@@ -318,7 +336,7 @@ export function isMidtransAvailable(): boolean {
 export async function loadMidtransSnap(clientKey: string): Promise<void> {
   return new Promise((resolve, reject) => {
     // Check if already loaded
-    if (typeof window.Snap !== 'undefined') {
+    if (isMidtransAvailable()) {
       console.log('Midtrans Snap SDK already loaded');
       resolve();
       return;
@@ -390,6 +408,17 @@ export function getPaymentAmount(product: string | number): number | null {
     return PAYMENT_CONFIG.creditPrices[product] || null;
   }
 
+  // The product catalogue is the authority and already knows every id,
+  // including the `credits_<n>` packs. Those only used to resolve when the
+  // caller passed a bare number, so the dashboard's credit handoff — which
+  // sends the string id, like every other product — fell through to the
+  // default branch and was rejected as an invalid product.
+  const catalogued = getProductPrice(product);
+  if (typeof catalogued === 'number') {
+    return catalogued;
+  }
+
+  // Kept for ids the catalogue does not carry under that exact key.
   switch (product) {
     case PAYMENT_CONFIG.products.SNAPSHOT:
       return PAYMENT_CONFIG.snapshotPrice;
@@ -433,7 +462,17 @@ export function canMakePayment(): boolean {
  * @param product - Product ID or name
  * @returns Payment transaction data
  */
-export async function createPaymentTransaction(product: string | number) {
+export async function createPaymentTransaction(
+  product: string | number,
+  /**
+   * Snap channel(s) to open on, e.g. `['qris']`. Whatever the customer already
+   * picked on our own page, so Snap does not ask them to choose a second time.
+   * The service validates these against its own allowlist and ignores anything
+   * it does not recognise, so a stale value degrades to "show every channel"
+   * rather than failing the transaction.
+   */
+  enabledPayments?: string[]
+) {
   if (!isAuthenticated()) {
     throw new Error('User not authenticated');
   }
@@ -463,6 +502,7 @@ export async function createPaymentTransaction(product: string | number) {
       product: productId,
       customer_email: user.email,
       customer_first_name: user.email.split('@')[0],
+      ...(enabledPayments?.length ? { enabled_payments: enabledPayments } : {}),
     }),
   });
 
@@ -577,12 +617,13 @@ export async function confirmPayment(
  * @returns Promise that resolves with payment result
  */
 export async function startMidtransSnap(token: string): Promise<any> {
-  if (typeof window.Snap === 'undefined') {
+  const snap = getSnap();
+  if (!snap) {
     throw new Error('Midtrans Snap SDK not loaded');
   }
 
   return new Promise((resolve, reject) => {
-    window.Snap.pay(token, {
+    snap.pay(token, {
       // Optional: Callback functions
       onSuccess: (result: any) => {
         console.log('Payment successful:', result);
@@ -594,7 +635,12 @@ export async function startMidtransSnap(token: string): Promise<any> {
         handlePaymentPending(result);
         resolve(result);
       },
-      onFailure: (result: any) => {
+      // Snap's callback is `onError`, not `onFailure`. The SDK validates the
+      // options object and throws "Unsupported option onFailure" outright, so
+      // the popup never opened at all — this was not a missed failure path, it
+      // broke every payment. Latent until now because the real gateway path had
+      // never actually run.
+      onError: (result: any) => {
         console.log('Payment failed:', result);
         handlePaymentFailure(result);
         reject(result);

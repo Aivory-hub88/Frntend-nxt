@@ -17,7 +17,6 @@ export const metadata: Metadata = {
   description: 'Simple, transparent pricing. Buy once, own the output.',
   alternates: {
     canonical: '/pricing',
-    languages: { en: '/pricing', id: '/pricing' },
   },
   openGraph: {
     title: 'Pricing | Aivory',

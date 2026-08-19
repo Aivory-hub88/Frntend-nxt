@@ -1,15 +1,17 @@
 import type { MetadataRoute } from "next";
-import { absoluteUrl, AIVORY_UK_URL } from "@/lib/seo";
+import { absoluteUrl } from "@/lib/seo";
 import { getBlogPosts } from "@/lib/blog-api";
 import { getVacancies } from "@/lib/careers-api";
 
-export const revalidate = 3600;
+// Rendered per request, never prerendered. The blog/careers data below comes
+// from sibling containers over the internal Docker network, which is NOT
+// reachable during `docker build` — a build-time prerender therefore bakes in
+// the empty `catch` fallback and ships a sitemap with zero articles until the
+// next rebuild. Fetching at request time is the only way this stays correct
+// across deploys; the sitemap is requested rarely enough for the cost to be
+// irrelevant.
+export const dynamic = "force-dynamic";
 
-const hreflang = { en: AIVORY_UK_URL, id: AIVORY_UK_URL } as const;
-
-function hreflangAlternate(url: string) {
-  return { languages: { en: url, id: url } };
-}
 
 const STATIC_ROUTES: Array<{
   path: string;
@@ -26,6 +28,7 @@ const STATIC_ROUTES: Array<{
   { path: "/company", changeFrequency: "monthly", priority: 0.6 },
   { path: "/contact", changeFrequency: "monthly", priority: 0.5 },
   { path: "/free-diagnostic", changeFrequency: "monthly", priority: 0.7 },
+  { path: "/glossary", changeFrequency: "monthly", priority: 0.6 },
   { path: "/nvidia-inception", changeFrequency: "yearly", priority: 0.6 },
   { path: "/privacy", changeFrequency: "yearly", priority: 0.2 },
   { path: "/terms", changeFrequency: "yearly", priority: 0.2 },
@@ -69,7 +72,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         lastModified: now,
         changeFrequency: hasOpenings ? ("daily" as const) : ("weekly" as const),
         priority: hasOpenings ? 0.8 : 0.3,
-        alternates: hreflangAlternate(absoluteUrl(r.path)),
       };
     }
     return {
@@ -77,7 +79,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       lastModified: now,
       changeFrequency: r.changeFrequency,
       priority: r.priority,
-      alternates: hreflangAlternate(absoluteUrl(r.path)),
     };
   });
 
@@ -86,7 +87,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     lastModified: post.published_at ? new Date(post.published_at) : now,
     changeFrequency: "monthly",
     priority: 0.7,
-    alternates: hreflangAlternate(absoluteUrl(`/blog/${post.slug}`)),
   }));
 
   const careerEntries: MetadataRoute.Sitemap = vacancies.map((v) => ({
@@ -94,7 +94,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     lastModified: v.updated_at ? new Date(v.updated_at) : now,
     changeFrequency: "weekly",
     priority: 0.6,
-    alternates: hreflangAlternate(absoluteUrl(`/careers/${v.id}`)),
   }));
 
   return [...staticEntries, ...blogEntries, ...careerEntries];

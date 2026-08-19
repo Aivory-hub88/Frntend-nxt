@@ -8,7 +8,6 @@ export const metadata: Metadata = {
   description: "Privacy Policy and data usage guidelines for Aivory platform.",
   alternates: {
     canonical: "/privacy",
-    languages: { en: "/privacy", id: "/privacy" },
   },
   openGraph: {
     title: "Privacy Policy | Aivory",

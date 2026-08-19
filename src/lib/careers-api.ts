@@ -31,10 +31,15 @@ export interface Vacancy {
  */
 export async function getVacancies(): Promise<Vacancy[]> {
   try {
+    // Short timeout so an unreachable internal service URL (e.g. during
+    // `docker build`, which has no network route to the other containers)
+    // fails fast instead of hanging the caller — this function already
+    // degrades to [] on failure below.
     const response = await fetch(`${API_BASE_URL}/api/vacancies`, {
       headers: {
         "Content-Type": "application/json",
       },
+      signal: AbortSignal.timeout(8000),
     });
 
     if (!response.ok) {

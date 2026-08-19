@@ -4,7 +4,7 @@ import type { AnchorHTMLAttributes, ButtonHTMLAttributes, ReactNode } from 'reac
 type TechnicalFrameButtonCommonProps = {
   children: ReactNode;
   className?: string;
-  size?: 'default' | 'compact';
+  size?: 'default' | 'compact' | 'heroCompact';
 };
 
 type TechnicalFrameLinkProps = TechnicalFrameButtonCommonProps &
@@ -27,6 +27,9 @@ const baseClassName =
 const sizeClassNames = {
   default: 'min-h-[52px] px-8 py-3.5 text-[11px] tracking-[0.16em]',
   compact: 'min-h-[29px] px-[18px] py-2 text-[10px] tracking-[0.08em]',
+  // ~15% down from `default` -- used where the button needs to sit lighter
+  // (e.g. the hero CTA) without touching every other TechnicalFrameButton.
+  heroCompact: 'min-h-[44px] px-7 py-3 text-[9px] tracking-[0.14em]',
 } as const;
 
 function TechnicalFrameContent({ children }: { children: ReactNode }) {

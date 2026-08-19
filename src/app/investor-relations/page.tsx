@@ -8,7 +8,6 @@ export const metadata: Metadata = {
   description: "Investor relations and investment information for Aivory.",
   alternates: {
     canonical: "/investor-relations",
-    languages: { en: "/investor-relations", id: "/investor-relations" },
   },
   openGraph: {
     title: "Investor Relations | Aivory",

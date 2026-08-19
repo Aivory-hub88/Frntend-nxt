@@ -120,7 +120,7 @@ export default function LoginClient() {
               <label htmlFor="login-password" className="block text-[13px] font-medium text-white/85">
                 Password
               </label>
-              <a href="#" onClick={(e) => e.preventDefault()} className="text-[12px] text-[#b2cca2] hover:text-white transition-colors">
+              <a href="/forgot-password" className="text-[12px] text-[#b2cca2] hover:text-white transition-colors">
                 Forgot password?
               </a>
             </div>

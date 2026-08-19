@@ -26,7 +26,6 @@ export async function generateMetadata(): Promise<Metadata> {
     description: CAREERS_DESCRIPTION,
     alternates: {
       canonical: url,
-      languages: { en: url, id: url },
     },
     openGraph: {
       type: "website",

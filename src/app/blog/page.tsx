@@ -17,7 +17,6 @@ export const metadata: Metadata = {
     "Reporting and practical analysis on business operations, governed AI, and operational transformation from Aivory.",
   alternates: {
     canonical: "/blog",
-    languages: { en: "/blog", id: "/blog" },
   },
   openGraph: {
     type: "website",

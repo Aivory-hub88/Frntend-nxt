@@ -100,24 +100,24 @@ export function creditPackId(credits: number): string {
 export const ONE_TIME_PRODUCTS: OneTimeProduct[] = [
   {
     id: PRODUCT_IDS.DEEP_DIAGNOSTIC,
-    name: 'AI Readiness Deep Diagnostic',
-    price: 29,
+    name: 'Business Operations Assessment',
+    price: 79,
     currency: PRICING_CURRENCY,
     kind: 'one-time',
     interval: 'one-time',
   },
   {
     id: PRODUCT_IDS.BLUEPRINT,
-    name: 'AI System Blueprint + Roadmap',
-    price: 85,
+    name: 'Transformation Blueprint',
+    price: 249,
     currency: PRICING_CURRENCY,
     kind: 'one-time',
     interval: 'one-time',
   },
   {
     id: PRODUCT_IDS.FULL_STACK,
-    name: 'Deep Diagnostic + Blueprint + Roadmap',
-    price: 99,
+    name: 'Complete Transformation Package',
+    price: 299,
     currency: PRICING_CURRENCY,
     kind: 'one-time',
     interval: 'one-time',
@@ -131,16 +131,16 @@ export const ONE_TIME_PRODUCTS: OneTimeProduct[] = [
 export const SUBSCRIPTION_PRODUCTS: SubscriptionProduct[] = [
   {
     id: PRODUCT_IDS.FOUNDATION,
-    name: 'Foundation',
-    price: 20,
+    name: 'Operational',
+    price: 39,
     currency: PRICING_CURRENCY,
     kind: 'subscription',
     interval: 'month',
   },
   {
     id: PRODUCT_IDS.PRO,
-    name: 'Pro',
-    price: 44,
+    name: 'Business',
+    price: 99,
     currency: PRICING_CURRENCY,
     kind: 'subscription',
     interval: 'month',
@@ -165,19 +165,24 @@ export const SUBSCRIPTION_PRODUCTS: SubscriptionProduct[] = [
  * These must equal `CREDIT_PACKS_USD` in avry-payments' `app/services/pricing.py`,
  * which is what the gateway actually charges: the checkout call sends only a
  * product id, so a price authored here that differs from the server's is a price
- * we advertise and never collect. The anchors are the dashboard's published
- * points (100/$10, 500/$45, 1000/$85, 5000/$400) with the rest on the same
- * declining per-credit curve.
+ * we advertise and never collect. They must also match `creditPackages` in the
+ * dashboard's `components/settings/SettingsModal.tsx`, which is where customers
+ * pick a pack before being handed to this checkout.
+ *
+ * The previous values here (and on the server) sat 17-36% above what the
+ * dashboard advertised, which nobody had hit only because the dashboard's
+ * purchase button was still a mock alert. The curve declines with volume:
+ * $0.100/credit at the smallest pack down to $0.055 at the largest.
  */
 const CREDIT_PACK_DEFINITIONS: ReadonlyArray<readonly [credits: number, price: number]> = [
-  [50, 6],
-  [100, 10],
-  [250, 24],
-  [500, 45],
-  [1000, 85],
-  [2500, 205],
-  [5000, 400],
-  [10000, 750],
+  [50, 5],
+  [100, 9],
+  [250, 20],
+  [500, 38],
+  [1000, 70],
+  [2500, 165],
+  [5000, 300],
+  [10000, 550],
 ];
 
 export const CREDIT_PACKS: CreditPackProduct[] = CREDIT_PACK_DEFINITIONS.map(

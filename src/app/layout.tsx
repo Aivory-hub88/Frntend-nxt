@@ -25,7 +25,7 @@ const doto = Doto({
 });
 
 const SITE_NAME = 'Aivory AI';
-const SITE_TITLE = 'Aivory AI: AI Infrastructure for Business Transformation';
+const SITE_TITLE = 'Aivory AI: Infrastructure for Business Transformation';
 const SITE_DESCRIPTION =
   'Aivory helps businesses assess operations, design AI transformation blueprints, and deploy governed AI agents, workflow automation and operational intelligence.';
 
@@ -49,14 +49,14 @@ export const metadata: Metadata = {
   applicationName: SITE_NAME,
   verification: {
     google: '-X46S5bMyCLH8iqPOeCooGlLGvfl2X7soGY9MuaQqt4',
-    facebook: 'crlcggam8m22oh6vp9e3qp5hua9t4n',
   },
   alternates: {
     canonical: AIVORY_UK_URL,
-    languages: {
-      en: AIVORY_UK_URL,
-      id: AIVORY_UK_URL,
-    },
+    // No `languages` map here on purpose: en/id share one URL (client-side
+    // toggle, not separate pages), so per Google's own hreflang guidance a
+    // self-referencing en/id pair adds no real signal. The manual
+    // `x-default` tag below (the correct annotation for "one URL serves
+    // every language/region") is the only alternate this site needs.
   },
   robots: {
     index: true,
@@ -100,7 +100,6 @@ export default function RootLayout({
           rel="stylesheet"
         />
         <link rel="alternate" hrefLang="x-default" href={AIVORY_UK_URL} />
-        <meta name="facebook-domain-verification" content="crlcggam8m22oh6vp9e3qp5hua9t4n" />
         <script async src="https://www.googletagmanager.com/gtag/js?id=G-XYJ0EDEYS8" />
         <script
           dangerouslySetInnerHTML={{

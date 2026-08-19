@@ -59,7 +59,7 @@ function DashboardFrame({
       >
         <div className="flex items-center gap-2">
           <AivoryMark className="h-4 w-4" />
-          <span className="text-[10px] font-medium tracking-wide text-white/85">{label}</span>
+          <span className="text-[10px] font-light tracking-wide text-white/85">{label}</span>
         </div>
         <span className="text-[8px] uppercase tracking-[0.12em] text-[#a1a1aa]">{meta || 'Aivory workspace'}</span>
       </div>
@@ -83,7 +83,7 @@ function ReadinessLoader({ label }: { label: string }) {
           />
         ))}
       </div>
-      <span className="text-[10px] font-medium tracking-wide text-white/80">{label}</span>
+      <span className="text-[10px] font-light tracking-wide text-white/80">{label}</span>
       <div className="h-px w-28 overflow-hidden bg-white/10">
         <motion.div
           className="h-full bg-[#c7d3b5]"
@@ -123,7 +123,7 @@ function HoneyGateLoader({ label }: { label: string }) {
         ))}
       </div>
       <div className="text-center">
-        <p className="text-[10px] font-medium tracking-wide text-white/85">{label}</p>
+        <p className="text-[10px] font-light tracking-wide text-white/85">{label}</p>
         <p className="mt-1 text-[7px] uppercase tracking-[0.16em] text-[#a1a1aa]">Structuring objectives · dependencies · outcomes</p>
       </div>
     </div>
@@ -145,7 +145,7 @@ function OperationalHealthCard({ phase }: { phase: DiagnosticPhase }) {
   return (
     <motion.div key="operational-health" {...enter} className="flex h-full min-h-0 flex-col rounded-xl border border-white/[0.07] bg-[#3a3a36] p-3">
       <div className="border-b border-white/[0.07] pb-1.5">
-        <h5 className="text-[13px] font-semibold text-[#f7f7f7]">Operational Health</h5>
+        <h5 className="text-[13px] font-light text-[#f7f7f7]">Operational Health</h5>
       </div>
 
       <div className="grid grid-cols-[0.72fr_1.45fr] gap-3 border-b border-white/[0.07] py-2.5">
@@ -160,12 +160,12 @@ function OperationalHealthCard({ phase }: { phase: DiagnosticPhase }) {
               />
             </svg>
             <div className="absolute inset-0 flex flex-col items-center justify-center">
-              <strong className="text-[22px] font-semibold">49</strong>
+              <strong className="text-[22px] font-light">49</strong>
               <span className="text-[7px] text-[#a1a1aa]">Initiating</span>
             </div>
           </div>
           <p className="mt-1 text-[8px] text-white/80">49 vs industry median 50</p>
-          <p className="mt-1 text-center text-[5.5px] italic text-[#777773]">Directional benchmark, not a measured statistic.</p>
+          <p className="mt-1 text-center text-[5.5px] text-[#777773]">Directional benchmark, not a measured statistic.</p>
         </div>
 
         <div className="grid grid-cols-[1.15fr_.85fr] items-center gap-2">
@@ -189,7 +189,7 @@ function OperationalHealthCard({ phase }: { phase: DiagnosticPhase }) {
           <div className="text-[6px] text-[#a1a1aa]">
             <div className="mb-1.5 flex items-center gap-2"><span className="h-0.5 w-3 bg-[#c7d3b5]" />Your score</div>
             <div className="mb-2 flex items-center gap-2"><span className="w-3 border-t border-dashed border-[#e8d06f]" />Industry median</div>
-            <p className="text-center italic leading-relaxed text-[#777773]">Directional benchmark — a modeled estimate from published operations-maturity research, not a measured industry statistic.</p>
+            <p className="text-center leading-relaxed text-[#777773]">Directional benchmark — a modeled estimate from published operations-maturity research, not a measured industry statistic.</p>
           </div>
         </div>
       </div>
@@ -197,7 +197,7 @@ function OperationalHealthCard({ phase }: { phase: DiagnosticPhase }) {
       <p className="border-b border-white/[0.07] py-2 text-center text-[8px] text-white/85">Data is your weakest link — it trails the average of your other five dimensions by 19 points.</p>
 
       <div className="grid grid-cols-[105px_1fr] items-center gap-3 border-b border-white/[0.07] py-2">
-        <div><span className="text-[6px] uppercase tracking-[0.12em] text-[#a1a1aa]">Strongest</span><p className="text-[9px] font-medium">Governance</p></div>
+        <div><span className="text-[6px] uppercase tracking-[0.12em] text-[#a1a1aa]">Strongest</span><p className="text-[9px] font-light">Governance</p></div>
         <p className="flex items-start gap-2 text-[7px] leading-relaxed text-white/70"><span className="mt-0.5 text-[#c7d3b5]">▲</span>Your company scores 49/100, placing it at Initiating maturity. (composite blended 70% deterministic + 30% AI assessment)</p>
       </div>
 
@@ -216,7 +216,7 @@ function OperationalHealthCard({ phase }: { phase: DiagnosticPhase }) {
             </div>
           ))}
         </div>
-        <motion.p animate={{ opacity: phase === 'opportunity' ? 1 : 0.65 }} className="mt-1.5 text-[6px] italic text-white/55">Directional benchmark — modeled from published operations-maturity research.</motion.p>
+        <motion.p animate={{ opacity: phase === 'opportunity' ? 1 : 0.65 }} className="mt-1.5 text-[6px] text-white/55">Directional benchmark — modeled from published operations-maturity research.</motion.p>
       </div>
     </motion.div>
   );
@@ -255,7 +255,7 @@ export function DiagnosticAnimation() {
           <motion.div key="capture" {...enter} className="flex h-full items-center justify-center">
             <div className="w-full max-w-[330px] rounded-xl p-4" style={panelStyle}>
               <div className="mb-3 flex items-center justify-between">
-                <div><p className="text-[8px] uppercase tracking-[0.14em] text-[#c7d3b5]">Operations baseline</p><p className="mt-1 text-[12px] font-medium">How does work move today?</p></div>
+                <div><p className="text-[8px] uppercase tracking-[0.14em] text-[#c7d3b5]">Operations baseline</p><p className="mt-1 text-[12px] font-light">How does work move today?</p></div>
                 <span className="rounded-full border border-white/10 px-2 py-1 text-[8px] text-[#a1a1aa]">12 / 16</span>
               </div>
               <div className="mb-4 h-1 overflow-hidden rounded-full bg-white/5"><motion.div className="h-full bg-[#c7d3b5]" initial={{ width: '48%' }} animate={{ width: '75%' }} transition={{ duration: 1.3 }} /></div>
@@ -322,7 +322,7 @@ export function BlueprintAnimation() {
         {(phase === 'blueprint' || phase === 'ready') && (
           <motion.div key="blueprint" {...enter} className="flex h-full min-h-0 flex-col gap-2">
             <div className="flex items-center justify-between">
-              <div><p className="text-[8px] uppercase tracking-[0.14em] text-[#a1a1aa]">AI transformation blueprint</p><p className="text-[12px] font-medium">Lead-to-Revenue Architecture</p></div>
+              <div><p className="text-[8px] uppercase tracking-[0.14em] text-[#a1a1aa]">AI transformation blueprint</p><p className="text-[12px] font-light">Lead-to-Revenue Architecture</p></div>
               <span className="rounded-full border border-[#c7d3b5]/25 bg-[#c7d3b5]/10 px-2 py-1 text-[7px] text-[#dce7cd]">READY · 64%</span>
             </div>
 
@@ -330,7 +330,7 @@ export function BlueprintAnimation() {
               <p className="text-[6px] uppercase tracking-[0.12em] text-[#c7d3b5]">Strategic objective</p>
               <p className="mt-1 text-[9px] text-white/85">Scale qualified pipeline without increasing operational headcount.</p>
               <div className="mt-2 grid grid-cols-3 gap-3 border-t border-white/[0.07] pt-2">
-                {[[ 'Conversion', '+18%' ], [ 'Cycle time', '-32%' ], [ 'Manual work', '-41%' ]].map(([label, value]) => <div key={label}><p className="text-[6px] text-[#a1a1aa]">{label}</p><p className="text-[9px] font-medium">{value}</p></div>)}
+                {[[ 'Conversion', '+18%' ], [ 'Cycle time', '-32%' ], [ 'Manual work', '-41%' ]].map(([label, value]) => <div key={label}><p className="text-[6px] text-[#a1a1aa]">{label}</p><p className="text-[9px] font-light">{value}</p></div>)}
               </div>
             </div>
 
@@ -340,7 +340,7 @@ export function BlueprintAnimation() {
                 {[[ '01', 'Capture', 'CRM + Forms' ], [ '02', 'Enrich', 'Data layer' ], [ '03', 'Decide', 'AI routing' ], [ '04', 'Act', 'Sales ops' ]].map(([num, title, detail], index) => (
                   <div key={title} className="contents">
                     <motion.div className="min-w-0 flex-1 rounded-lg border border-white/[0.07] bg-[#353531] p-2" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: index * 0.14 }}>
-                      <span className="text-[6px] text-[#c7d3b5]">{num}</span><p className="truncate text-[8px] font-medium">{title}</p><p className="truncate text-[6px] text-[#a1a1aa]">{detail}</p>
+                      <span className="text-[6px] text-[#c7d3b5]">{num}</span><p className="truncate text-[8px] font-light">{title}</p><p className="truncate text-[6px] text-[#a1a1aa]">{detail}</p>
                     </motion.div>
                     {index < 3 && <motion.span className="h-px w-2 shrink-0 bg-[#c7d3b5]" initial={{ scaleX: 0 }} animate={{ scaleX: 1 }} transition={{ delay: 0.3 + index * 0.14 }} />}
                   </div>
@@ -404,7 +404,7 @@ export function RoadmapAnimation() {
   return (
     <DashboardFrame label="Transformation Roadmap" meta="Delivery plan">
       <div className="flex h-full min-h-0 flex-col gap-2">
-        <div className="flex items-center justify-between"><div><p className="text-[8px] uppercase tracking-[0.14em] text-[#a1a1aa]">Implementation roadmap</p><p className="text-[12px] font-medium">Lead Operations Transformation</p></div><span className="rounded-full border border-white/10 bg-[#282827] px-2 py-1 text-[7px] text-white/70">9 weeks</span></div>
+        <div className="flex items-center justify-between"><div><p className="text-[8px] uppercase tracking-[0.14em] text-[#a1a1aa]">Implementation roadmap</p><p className="text-[12px] font-light">Lead Operations Transformation</p></div><span className="rounded-full border border-white/10 bg-[#282827] px-2 py-1 text-[7px] text-white/70">9 weeks</span></div>
         <div className="rounded-xl px-3 py-3" style={panelStyle}>
           <div className="relative flex justify-between">
             <div className="absolute left-[7%] right-[7%] top-[11px] h-px bg-white/10" />
@@ -420,7 +420,7 @@ export function RoadmapAnimation() {
 
         <AnimatePresence mode="wait">
           <motion.div key={active} {...enter} className="min-h-0 flex-1 overflow-hidden rounded-xl" style={panelStyle}>
-            <div className="flex items-center justify-between border-b border-white/[0.07] px-3 py-2"><div><p className="text-[7px] uppercase text-[#c7d3b5]">Phase {active + 1}</p><p className="text-[10px] font-medium">{current.name}</p></div><span className="text-[7px] text-[#a1a1aa]">{checked}/3 complete</span></div>
+            <div className="flex items-center justify-between border-b border-white/[0.07] px-3 py-2"><div><p className="text-[7px] uppercase text-[#c7d3b5]">Phase {active + 1}</p><p className="text-[10px] font-light">{current.name}</p></div><span className="text-[7px] text-[#a1a1aa]">{checked}/3 complete</span></div>
             <div className="h-0.5 bg-white/5"><motion.div className="h-full bg-[#c7d3b5]" animate={{ width: `${checked * 33.33}%` }} /></div>
             <div className="grid grid-cols-[1.4fr_.8fr] gap-2 p-3">
               <div>

@@ -3,55 +3,10 @@
 import { useState } from 'react';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
 import { TechnicalFrameButton } from '@/components/ui/TechnicalFrameButton';
-
-/**
- * Imported rather than referenced by public path so the emitted URL carries a
- * content hash. Swapping the art then changes the URL, which is the only thing
- * that reliably evicts an already-cached image from browsers and the CDN edge.
- */
-import opsAssessment from '../../../public/images/transformation/01-operational-assessment.webp';
-import transformationDesign from '../../../public/images/transformation/02-transformation-design.webp';
-import enterpriseImplementation from '../../../public/images/transformation/03-enterprise-implementation.webp';
-import executiveEnablement from '../../../public/images/transformation/04-executive-enablement.webp';
-
-const FORMSUBMIT_ENDPOINT = 'https://formsubmit.co/ajax/sales@aivory.uk';
+import { PlanConfirmModal } from '@/components/payment/PlanConfirmModal';
+import { PRODUCT_IDS } from '@/lib/pricing';
 
 type SubmitState = 'idle' | 'submitting' | 'success' | 'error';
-
-/**
- * One woven tapestry per engagement stage. Full-bleed art, so it is framed
- * rather than floated. Masters: art-masters/transformation (gitignored).
- */
-const services = [
-  {
-    title: 'Operational Assessment',
-    description:
-      'Understand how your organisation operates today, identify operational bottlenecks, and uncover the highest-value transformation opportunities.',
-    image: opsAssessment,
-    alt: 'An embroidered tapestry: figures reviewing charts at a table before a heraldic wall panel.',
-  },
-  {
-    title: 'Transformation Design',
-    description:
-      'Design future operating models, intelligent workflows, governance frameworks, and AI deployment strategies tailored to your organisation.',
-    image: transformationDesign,
-    alt: 'An embroidered tapestry: a figure setting a great cogwheel beside a woven road leading to a castle.',
-  },
-  {
-    title: 'Enterprise Implementation',
-    description:
-      'Deploy governed AI systems, operational workflows, and enterprise integrations with measurable business outcomes.',
-    image: enterpriseImplementation,
-    alt: 'An embroidered tapestry: workers tending an interlocking machine of gears, pipes and dashboards.',
-  },
-  {
-    title: 'Executive Enablement',
-    description:
-      'Prepare leadership and operational teams with the knowledge, governance, and frameworks required to manage long-term transformation.',
-    image: executiveEnablement,
-    alt: 'An embroidered tapestry: three colleagues assembling a compass rose on a table beneath a crested banner.',
-  },
-];
 
 const fieldClassName =
   'border-b border-white/25 bg-transparent py-3 text-white outline-none transition-colors focus:border-white';
@@ -60,19 +15,22 @@ const labelClassName = 'font-mono text-[10px] uppercase tracking-[0.18em] text-w
 export default function PreFooterCTA() {
   const { ref, isVisible } = useScrollAnimation();
   const [status, setStatus] = useState<SubmitState>('idle');
+  const [showAssessmentModal, setShowAssessmentModal] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setStatus('submitting');
 
     try {
-      const res = await fetch(FORMSUBMIT_ENDPOINT, {
+      const fields = Object.fromEntries(new FormData(e.currentTarget));
+      const res = await fetch('/api/contact-form', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-        body: JSON.stringify(Object.fromEntries(new FormData(e.currentTarget))),
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ formType: 'intake', ...fields }),
       });
 
-      if (!res.ok) throw new Error('Submission failed');
+      const data = await res.json().catch(() => ({ ok: false }));
+      if (!res.ok || !data.ok) throw new Error('Submission failed');
       setStatus('success');
       e.currentTarget.reset();
     } catch {
@@ -107,49 +65,15 @@ export default function PreFooterCTA() {
               <p>Tell us about your business, your operational challenges, and where you want to go.</p>
               <p>We&apos;ll help identify where AI can create measurable business value.</p>
             </div>
+            <div className="mt-8">
+              <TechnicalFrameButton type="button" onClick={() => setShowAssessmentModal(true)}>
+                Begin Assessment
+              </TechnicalFrameButton>
+            </div>
           </div>
         </div>
 
-        <ol
-          className="border-b border-white/10"
-          data-service-layout="numbered-rows"
-          data-service-icon-count="4"
-        >
-          {services.map((service, index) => (
-            <li
-              key={service.title}
-              className="group grid gap-5 border-t border-white/10 py-8 transition-colors hover:bg-white/[0.018] md:py-10 lg:grid-cols-12 lg:items-start"
-            >
-              <span className="font-mono text-[10px] text-white/35 lg:col-span-1">
-                {String(index + 1).padStart(2, '0')}
-              </span>
-              <div className="lg:col-span-2">
-                {/* Full-bleed tapestries, so they read as framed thumbnails rather
-                    than floating icons — no matte to dissolve into the backdrop. */}
-                <div className="w-32 overflow-hidden rounded-[10px] ring-1 ring-inset ring-white/12 md:w-40 lg:w-full lg:max-w-[188px]">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={service.image.src}
-                    alt={service.alt}
-                    width={service.image.width}
-                    height={service.image.height}
-                    loading="lazy"
-                    decoding="async"
-                    className="block h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.05]"
-                  />
-                </div>
-              </div>
-              <h3 className="text-xl font-light tracking-[-0.015em] text-white/92 md:text-2xl lg:col-span-3">
-                {service.title}
-              </h3>
-              <p className="max-w-2xl text-sm font-light leading-7 text-white/55 lg:col-span-6 lg:col-start-7">
-                {service.description}
-              </p>
-            </li>
-          ))}
-        </ol>
-
-        <div className="grid gap-12 border-b border-white/10 py-16 md:py-20 lg:grid-cols-12">
+        <div className="grid gap-12 border-b border-t border-white/10 py-16 md:py-20 lg:grid-cols-12">
           <div className="lg:col-span-4">
             <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-white/45">
               Transformation intake / 02
@@ -166,11 +90,6 @@ export default function PreFooterCTA() {
               </div>
             ) : (
               <form className="flex flex-col gap-8" onSubmit={handleSubmit}>
-                <input type="hidden" name="_subject" value="New Enterprise Transformation Inquiry" />
-                <input type="hidden" name="_captcha" value="false" />
-                <input type="hidden" name="_template" value="table" />
-                <input type="hidden" name="_cc" value="irfan.reichmann@aivory.uk,samuel@aivory.id" />
-
                 <div className="grid grid-cols-1 gap-x-8 gap-y-8 md:grid-cols-2">
                   <div className="flex flex-col gap-2">
                     <label className={labelClassName}>
@@ -324,6 +243,13 @@ export default function PreFooterCTA() {
           </div>
         </div>
       </div>
+
+      {showAssessmentModal && (
+        <PlanConfirmModal
+          productId={PRODUCT_IDS.DEEP_DIAGNOSTIC}
+          onClose={() => setShowAssessmentModal(false)}
+        />
+      )}
     </section>
   );
 }

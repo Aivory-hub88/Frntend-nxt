@@ -22,7 +22,6 @@ export const metadata: Metadata = {
   description: PAGE_DESCRIPTION,
   alternates: {
     canonical: "/nvidia-inception",
-    languages: { en: "/nvidia-inception", id: "/nvidia-inception" },
   },
   openGraph: {
     type: "website",
