@@ -28,10 +28,15 @@ const COLUMNS: { key: keyof Omit<ComparisonRow, 'capability'>; label: string }[]
   { key: 'aivory', label: 'Aivory' },
 ];
 
-function StatusIcon({ status }: { status: Status }) {
+function StatusIcon({ status, highlight = false }: { status: Status; highlight?: boolean }) {
   if (status === 'yes') {
     return (
-      <svg className="w-4 h-4 text-[#bbe2ef]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <svg
+        className={`w-4 h-4 ${highlight ? 'text-emerald-400' : 'text-[#bbe2ef]'}`}
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+      >
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
       </svg>
     );
@@ -95,16 +100,26 @@ export default function EnterpriseComparisonSection() {
         {/* Header row */}
         <div className="grid grid-cols-[1.4fr_repeat(4,0.8fr)] md:grid-cols-[1.6fr_repeat(4,0.85fr)] px-4 md:px-8 py-4 border-b border-white/[0.08]">
           <span className="text-[11px] uppercase tracking-wider text-white/40 font-light">Capabilities</span>
-          {COLUMNS.map((col) => (
-            <span
-              key={col.key}
-              className={`text-[11px] uppercase tracking-wider font-light text-center ${
-                col.key === 'aivory' ? 'text-[#e4effd]' : 'text-white/40'
-              }`}
-            >
-              {col.label}
-            </span>
-          ))}
+          {COLUMNS.map((col) =>
+            col.key === 'aivory' ? (
+              <span key={col.key} className="flex items-center justify-center">
+                <img
+                  src="/aivory-logo.svg"
+                  alt="Aivory"
+                  width={383}
+                  height={79}
+                  className="h-3 w-auto object-contain brightness-0 invert opacity-90"
+                />
+              </span>
+            ) : (
+              <span
+                key={col.key}
+                className="text-[11px] uppercase tracking-wider font-light text-center text-white/40"
+              >
+                {col.label}
+              </span>
+            )
+          )}
         </div>
 
         {ROWS.map((row, i) => (
@@ -123,7 +138,7 @@ export default function EnterpriseComparisonSection() {
                   col.key === 'aivory' ? 'bg-[#e4effd]/[0.06] rounded-lg py-1.5 -mx-1' : ''
                 }`}
               >
-                <StatusIcon status={row[col.key]} />
+                <StatusIcon status={row[col.key]} highlight={col.key === 'aivory'} />
               </span>
             ))}
           </motion.div>
