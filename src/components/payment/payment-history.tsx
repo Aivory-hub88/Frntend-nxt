@@ -42,8 +42,9 @@ export interface PaymentHistoryProps {
  */
 function getProductName(product: string): string {
   const productNames: Record<string, string> = {
-    ai_snapshot: 'AI Snapshot',
-    ai_blueprint: 'AI Blueprint',
+    ai_snapshot: 'Business Operations Assessment',
+    ai_blueprint: 'Transformation Blueprint',
+    full_stack: 'Complete Transformation Package',
     foundation: 'Foundation Plan',
     pro: 'Pro Plan',
     enterprise: 'Enterprise Plan',

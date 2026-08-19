@@ -71,10 +71,10 @@ describe('PricingSection', () => {
     });
 
     it('does not hardcode prices that diverge from the catalog (the three prices match the SoT)', () => {
-      // Guard against literal drift: the catalog values are the published $29/$85/$99.
-      expect(expectedDeepDiagnosticPrice).toBe('$29');
-      expect(expectedBlueprintPrice).toBe('$85');
-      expect(expectedFullStackPrice).toBe('$99');
+      // Guard against literal drift: the catalog values are the published $79/$249/$299.
+      expect(expectedDeepDiagnosticPrice).toBe('$79');
+      expect(expectedBlueprintPrice).toBe('$249');
+      expect(expectedFullStackPrice).toBe('$299');
     });
   });
 

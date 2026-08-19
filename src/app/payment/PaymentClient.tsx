@@ -157,9 +157,11 @@ export default function PaymentClient() {
 
     switch (product) {
       case paymentConfig.products.SNAPSHOT:
-        return 'AI Snapshot';
+        return 'Business Operations Assessment';
       case paymentConfig.products.BLUEPRINT:
-        return 'AI Blueprint';
+        return 'Transformation Blueprint';
+      case paymentConfig.products.FULL_STACK:
+        return 'Complete Transformation Package';
       case paymentConfig.products.FOUNDATION:
         return 'Foundation Plan';
       case paymentConfig.products.PRO:

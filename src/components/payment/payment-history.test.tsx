@@ -98,9 +98,9 @@ describe('Payment History Component', () => {
     it('should render all payments in the list', () => {
       render(<PaymentHistory payments={mockPayments} />);
       
-      expect(screen.getByText('AI Snapshot')).toBeInTheDocument();
+      expect(screen.getByText('Business Operations Assessment')).toBeInTheDocument();
       expect(screen.getByText('Foundation Plan')).toBeInTheDocument();
-      expect(screen.getByText('AI Blueprint')).toBeInTheDocument();
+      expect(screen.getByText('Transformation Blueprint')).toBeInTheDocument();
     });
 
     it('should display correct payment amounts', () => {
@@ -252,19 +252,19 @@ describe('Payment History Component', () => {
       render(<PaymentHistory payments={mockPayments} loading={true} />);
       
       expect(screen.getByText('Payment History')).toBeInTheDocument();
-      expect(screen.getByText('AI Snapshot')).toBeInTheDocument();
+      expect(screen.getByText('Business Operations Assessment')).toBeInTheDocument();
     });
   });
 
   describe('Product Name Mapping', () => {
-    it('should map ai_snapshot to AI Snapshot', () => {
+    it('should map ai_snapshot to Business Operations Assessment', () => {
       render(<PaymentHistory payments={mockPayments} />);
-      expect(screen.getByText('AI Snapshot')).toBeInTheDocument();
+      expect(screen.getByText('Business Operations Assessment')).toBeInTheDocument();
     });
 
-    it('should map ai_blueprint to AI Blueprint', () => {
+    it('should map ai_blueprint to Transformation Blueprint', () => {
       render(<PaymentHistory payments={mockPayments} />);
-      expect(screen.getByText('AI Blueprint')).toBeInTheDocument();
+      expect(screen.getByText('Transformation Blueprint')).toBeInTheDocument();
     });
 
     it('should map foundation to Foundation Plan', () => {
@@ -311,7 +311,7 @@ describe('Payment History Component', () => {
     it('should have proper semantic structure for payment items', () => {
       render(<PaymentHistory payments={mockPayments} />);
       
-      const paymentItem = screen.getByText('AI Snapshot').closest('div');
+      const paymentItem = screen.getByText('Business Operations Assessment').closest('div');
       expect(paymentItem).toBeInTheDocument();
     });
   });

@@ -32,20 +32,20 @@ describe("PAYMENT_CONFIG sourced from pricing.ts", () => {
   });
 
   it("keeps the already-correct one-time prices from pricing.ts (Req 8.3)", () => {
-    expect(PAYMENT_CONFIG.snapshotPrice).toBe(29);
-    expect(PAYMENT_CONFIG.blueprintPrice).toBe(85);
+    expect(PAYMENT_CONFIG.snapshotPrice).toBe(79);
+    expect(PAYMENT_CONFIG.blueprintPrice).toBe(249);
     expect(PAYMENT_CONFIG.snapshotPrice).toBe(getProductPrice(PRODUCT_IDS.DEEP_DIAGNOSTIC));
     expect(PAYMENT_CONFIG.blueprintPrice).toBe(getProductPrice(PRODUCT_IDS.BLUEPRINT));
   });
 
-  it("adds the Full Stack product ($99, full_stack) from pricing.ts (Req 8.4)", () => {
+  it("adds the Full Stack product ($299, full_stack) from pricing.ts (Req 8.4)", () => {
     expect(PAYMENT_CONFIG.products.FULL_STACK).toBe("full_stack");
-    expect(PAYMENT_CONFIG.fullStackPrice).toBe(99);
+    expect(PAYMENT_CONFIG.fullStackPrice).toBe(299);
     expect(PAYMENT_CONFIG.fullStackPrice).toBe(getProductPrice(PRODUCT_IDS.FULL_STACK));
   });
 
   it("resolves the Full Stack payment amount via getPaymentAmount", () => {
-    expect(getPaymentAmount(PAYMENT_CONFIG.products.FULL_STACK)).toBe(99);
+    expect(getPaymentAmount(PAYMENT_CONFIG.products.FULL_STACK)).toBe(299);
   });
 
   it("derives credit prices from the pricing.ts credit packs", () => {
