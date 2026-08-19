@@ -99,7 +99,7 @@ describe('Payment History Component', () => {
       render(<PaymentHistory payments={mockPayments} />);
       
       expect(screen.getByText('Business Operations Assessment')).toBeInTheDocument();
-      expect(screen.getByText('Foundation Plan')).toBeInTheDocument();
+      expect(screen.getByText('Operational Plan')).toBeInTheDocument();
       expect(screen.getByText('Transformation Blueprint')).toBeInTheDocument();
     });
 
@@ -267,18 +267,18 @@ describe('Payment History Component', () => {
       expect(screen.getByText('Transformation Blueprint')).toBeInTheDocument();
     });
 
-    it('should map foundation to Foundation Plan', () => {
+    it('should map foundation to Operational Plan', () => {
       render(<PaymentHistory payments={mockPayments} />);
-      expect(screen.getByText('Foundation Plan')).toBeInTheDocument();
+      expect(screen.getByText('Operational Plan')).toBeInTheDocument();
     });
 
-    it('should map pro to Pro Plan', () => {
+    it('should map pro to Business Plan', () => {
       const proPayment = {
         ...mockPayments[0],
         product: 'pro' as const,
       };
       render(<PaymentHistory payments={[proPayment]} />);
-      expect(screen.getByText('Pro Plan')).toBeInTheDocument();
+      expect(screen.getByText('Business Plan')).toBeInTheDocument();
     });
 
     it('should map enterprise to Enterprise Plan', () => {

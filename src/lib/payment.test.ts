@@ -22,8 +22,8 @@ import {
 
 describe("PAYMENT_CONFIG sourced from pricing.ts", () => {
   it("uses the corrected subscription prices from pricing.ts (Req 8.2)", () => {
-    expect(PAYMENT_CONFIG.foundationPrice).toBe(20);
-    expect(PAYMENT_CONFIG.proPrice).toBe(44);
+    expect(PAYMENT_CONFIG.foundationPrice).toBe(39);
+    expect(PAYMENT_CONFIG.proPrice).toBe(99);
     expect(PAYMENT_CONFIG.enterprisePrice).toBe(499);
 
     expect(PAYMENT_CONFIG.foundationPrice).toBe(getProductPrice(PRODUCT_IDS.FOUNDATION));

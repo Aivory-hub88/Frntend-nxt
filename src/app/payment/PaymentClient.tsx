@@ -163,9 +163,9 @@ export default function PaymentClient() {
       case paymentConfig.products.FULL_STACK:
         return 'Complete Transformation Package';
       case paymentConfig.products.FOUNDATION:
-        return 'Foundation Plan';
+        return 'Operational Plan';
       case paymentConfig.products.PRO:
-        return 'Pro Plan';
+        return 'Business Plan';
       case paymentConfig.products.ENTERPRISE:
         return 'Enterprise Plan';
       default:

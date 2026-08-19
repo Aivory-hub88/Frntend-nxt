@@ -45,8 +45,8 @@ function getProductName(product: string): string {
     ai_snapshot: 'Business Operations Assessment',
     ai_blueprint: 'Transformation Blueprint',
     full_stack: 'Complete Transformation Package',
-    foundation: 'Foundation Plan',
-    pro: 'Pro Plan',
+    foundation: 'Operational Plan',
+    pro: 'Business Plan',
     enterprise: 'Enterprise Plan',
   };
   return productNames[product] || product;
