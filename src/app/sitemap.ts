@@ -36,6 +36,13 @@ const STATIC_ROUTES: Array<{
   { path: "/investor-relations", changeFrequency: "yearly", priority: 0.3 },
 ];
 
+// Only /about and /company have full server-rendered translations (one
+// route directory per locale, e.g. src/app/de/company) with matching
+// hreflang tags already emitted by those pages. English is the untranslated
+// default and stays out of this list -- it is already in STATIC_ROUTES.
+const TRANSLATED_LOCALES = ["ar", "de", "es", "fr", "ja", "ko", "nl", "pt", "zh"];
+const TRANSLATED_PATHS = ["/about", "/company"];
+
 /** Pull every published post by walking the paginated listing endpoint. */
 async function getAllBlogPosts() {
   try {
@@ -96,5 +103,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.6,
   }));
 
-  return [...staticEntries, ...blogEntries, ...careerEntries];
+  const localeEntries: MetadataRoute.Sitemap = TRANSLATED_LOCALES.flatMap((locale) =>
+    TRANSLATED_PATHS.map((path) => ({
+      url: absoluteUrl(`/${locale}${path}`),
+      lastModified: now,
+      changeFrequency: "monthly" as const,
+      priority: 0.5,
+    })),
+  );
+
+  return [...staticEntries, ...blogEntries, ...careerEntries, ...localeEntries];
 }
