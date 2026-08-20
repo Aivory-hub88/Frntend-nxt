@@ -125,6 +125,9 @@ export function createOrganization(siteUrl: PublicSiteUrl) {
       'No-Code AI Agent Deployment',
       'Autonomous Infrastructure Defence',
       'Governed AI Systems',
+      'AI Sales Automation',
+      'AI Customer Service Automation',
+      'AI Marketing Automation',
     ],
     sameAs: [
       'https://www.linkedin.com/company/aivory/',
