@@ -8,6 +8,7 @@ import {
   buildSiteGraph,
 } from '@/lib/seo';
 import { LanguageProvider } from '@/components/context/LanguageContext';
+import { HtmlLangSync } from '@/components/locale/HtmlLangSync';
 import AiTrap from '@/components/security/AiTrap';
 import CanaryLink from '@/components/security/CanaryLink';
 
@@ -114,6 +115,7 @@ export default function RootLayout({
       </head>
       <body className="bg-background text-white font-manrope antialiased overflow-x-hidden w-full" style={{ fontFamily: 'var(--font-manrope), Manrope, sans-serif' }}>
         <JsonLd data={buildSiteGraph(AIVORY_UK_URL)} />
+        <HtmlLangSync />
         <LanguageProvider initialLanguage="en">
           <AiTrap />
           <CanaryLink />
