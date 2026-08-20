@@ -68,15 +68,29 @@ export default function PreFooterCTA() {
               </p>
             </div>
             <div className="mt-8 flex flex-wrap gap-4">
-              <TechnicalFrameButton type="button" onClick={() => setActiveProductId(PRODUCT_IDS.DEEP_DIAGNOSTIC)}>
+              <TechnicalFrameButton
+                type="button"
+                size="compact"
+                onClick={() => setActiveProductId(PRODUCT_IDS.DEEP_DIAGNOSTIC)}
+              >
                 Begin Assessment
               </TechnicalFrameButton>
               <TechnicalFrameButton
                 type="button"
+                size="compact"
                 className="bg-transparent text-white/70 hover:text-white"
                 onClick={() => setActiveProductId(PRODUCT_IDS.FULL_STACK)}
               >
                 Complete Package
+              </TechnicalFrameButton>
+              <TechnicalFrameButton
+                href="https://book.aivory.uk/book/aivory-call"
+                target="_blank"
+                rel="noopener noreferrer"
+                size="compact"
+                className="bg-transparent text-white/70 hover:text-white"
+              >
+                Book a Call
               </TechnicalFrameButton>
             </div>
           </div>
