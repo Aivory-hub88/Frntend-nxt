@@ -73,7 +73,27 @@ export default function ContactClient() {
       {/* Content */}
       <div className="bg-black pt-12 pb-32 px-6 md:px-16 lg:px-24 font-manrope">
         <div className="max-w-3xl mx-auto">
-          
+
+          {/* Book a demo directly, no waiting on a reply */}
+          <div className="w-full bg-[#111111] rounded-xl border border-white/10 p-8 md:p-12 shadow-2xl mb-8 flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+            <div>
+              <h2 className="text-2xl font-bold tracking-tight mb-3 text-white">
+                Book a Demo
+              </h2>
+              <p className="text-white/75 text-base font-light">
+                Prefer to talk it through? Grab a slot on our calendar and skip the back-and-forth.
+              </p>
+            </div>
+            <TechnicalFrameButton
+              href="https://book.aivory.uk/book/aivory-call"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="shrink-0"
+            >
+              Book a Call
+            </TechnicalFrameButton>
+          </div>
+
           {status !== 'success' ? (
             <div className="w-full bg-[#111111] rounded-xl border border-white/10 p-8 md:p-12 shadow-2xl">
               <h2 className="text-2xl font-bold tracking-tight mb-3 text-white">
