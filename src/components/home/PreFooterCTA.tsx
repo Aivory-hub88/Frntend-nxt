@@ -256,7 +256,12 @@ export default function PreFooterCTA() {
 
                   <p className="text-sm font-light text-white/55 md:text-base">
                     Prefer speaking with our team?{' '}
-                    <a href="/contact" className="border-b border-white/35 pb-1 text-white/78 transition-colors hover:border-white hover:text-white">
+                    <a
+                      href="https://book.aivory.uk/book/aivory-call"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="border-b border-white/35 pb-1 text-white/78 transition-colors hover:border-white hover:text-white"
+                    >
                       Schedule a Discovery Call.
                     </a>
                   </p>
