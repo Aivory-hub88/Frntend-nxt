@@ -140,6 +140,24 @@ export default function Footer() {
                 className="h-[34px] md:h-[38px] w-auto shrink-0"
               />
             </a>
+            <a
+              href="https://www.instagram.com/aivorylab.ai"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-white/80 hover:text-white transition-colors text-sm"
+              aria-label="Follow Aivory AI on Instagram"
+            >
+              Instagram
+            </a>
+            <a
+              href="https://www.linkedin.com/company/aivoryai/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-white/80 hover:text-white transition-colors text-sm"
+              aria-label="Connect with Aivory AI on LinkedIn"
+            >
+              LinkedIn
+            </a>
           </div>
           {/* Scraper Trap - Invisible Link */}
           <a 

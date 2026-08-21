@@ -83,10 +83,11 @@ export default function ForgotPasswordClient() {
         {sent ? (
           <div className="space-y-6">
             <p className="text-[13px] leading-relaxed text-white/75 bg-white/[0.04] border border-white/10 rounded-lg px-4 py-4">
-              If <span className="text-white font-medium">{email}</span> belongs
-              to an Aivory account, a reset link is on its way. The link expires
-              in 60 minutes. Check your spam folder if it hasn&apos;t arrived in
-              a few minutes.
+              If{" "}
+              <span className="text-white font-medium">{email}</span>{" "}
+              belongs to an Aivory account, a reset link is on its way. The link
+              expires in 60 minutes. Check your spam folder if it hasn&apos;t
+              arrived in a few minutes.
             </p>
             <a
               href="/login"
