@@ -15,7 +15,7 @@ export const revalidate = 3600;
 
 const PAGE_TITLE = "NVIDIA Inception Program — Aivory";
 const PAGE_DESCRIPTION =
-  "Aivory AI is a member of the NVIDIA Inception Program (2026 cohort). The program supports startups advancing AI and data science with hardware, training, exposure, and technical go-to-market resources from NVIDIA.";
+  "Aivory AI is a member of the NVIDIA Inception Program (2026), gaining hardware, training and go-to-market support from NVIDIA.";
 
 export const metadata: Metadata = {
   title: PAGE_TITLE,

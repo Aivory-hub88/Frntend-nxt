@@ -7,7 +7,7 @@ import { JsonLd, absoluteUrl, createBreadcrumbList } from "@/lib/seo";
 export const metadata: Metadata = {
   title: "AI Lead Qualification Workflow | Aivory",
   description:
-    "An AI lead qualification workflow that scores, enriches and routes inbound leads in a single pass — no manual CRM hygiene, no missed follow-up. Deploy on Aivory in a day.",
+    'AI lead qualification workflow that scores, enriches and routes inbound leads in one pass. Deploy on Aivory in a day.',
   alternates: { canonical: "/templates/lead-qualification" },
   openGraph: {
     type: "website",

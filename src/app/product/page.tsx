@@ -11,7 +11,7 @@ import { DarkSectionSpotlight } from '@/components/ui/DarkSectionSpotlight';
 export const metadata: Metadata = {
   title: 'AI Operations Platform — Autonomous AI Agents for Business',
   description:
-    'Aivory is the agentic AI operations platform for business transformation: diagnostics, blueprints, no-code workflow automation, and autonomous AI agents deployed to Slack, HubSpot, and your CRM.',
+    'The agentic AI operations platform: diagnostics, blueprints, no-code automation and governed AI agents for your business.',
   alternates: {
     canonical: '/product',
   },

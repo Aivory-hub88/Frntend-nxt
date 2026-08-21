@@ -16,7 +16,7 @@ import { JsonLd, buildBastionGraph, siteUrlFromHeaders } from '@/lib/seo';
 
 export const metadata: Metadata = {
   title: 'Bastion | Autonomous Infrastructure Defence',
-  description: 'Bastion is an AI-native security operating layer that continuously observes infrastructure behavior, understands evolving threats, and autonomously coordinates defensive actions.',
+  description: 'Bastion is an AI-native security layer that observes infrastructure behavior and autonomously coordinates defensive actions.',
   alternates: { canonical: '/bastion' },
   openGraph: {
     title: 'Bastion | Autonomous Infrastructure Defence',

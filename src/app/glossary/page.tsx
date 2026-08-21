@@ -14,7 +14,7 @@ import {
 export const metadata: Metadata = {
   title: "AI Operations Glossary",
   description:
-    "Plain-English definitions for the terms that matter in AI operations: agentic AI platforms, autonomous agents, AI readiness assessments, orchestration, and governed deployment.",
+    'Plain-English definitions for AI operations terms: agentic AI, autonomous agents, readiness assessments and orchestration.',
   alternates: {
     canonical: "/glossary",
   },

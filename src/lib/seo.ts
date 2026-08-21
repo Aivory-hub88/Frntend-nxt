@@ -272,10 +272,11 @@ function createPlatformApplication(siteUrl: PublicSiteUrl) {
 function createBastionApplication(siteUrl: PublicSiteUrl) {
   const bastionUrl = absoluteUrlForSite(siteUrl, '/bastion');
   return {
-    '@type': 'SoftwareApplication',
-    '@id': `${bastionUrl}#software`,
+    '@type': 'Service',
+    '@id': `${bastionUrl}#service`,
     name: 'Bastion',
-    applicationCategory: 'SecurityApplication',
+    serviceType: 'Autonomous Infrastructure Defence',
+    provider: { '@id': `${siteUrl}/#organisation` },
     applicationSubCategory: 'Autonomous Infrastructure Defence',
     operatingSystem: 'Cloud, Hybrid, On-Premises, Edge, Container',
     url: bastionUrl,

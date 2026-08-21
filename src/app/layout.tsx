@@ -28,7 +28,7 @@ const doto = Doto({
 const SITE_NAME = 'Aivory AI';
 const SITE_TITLE = 'Aivory AI - Infrastructure for Business Transformation';
 const SITE_DESCRIPTION =
-  'Aivory helps businesses assess operations, design AI transformation blueprints, and deploy governed AI agents, workflow automation and operational intelligence.';
+  'Aivory AI helps businesses assess operations, deploy governed AI agents, and automate workflows with operational intelligence.';
 
 export const metadata: Metadata = {
   metadataBase: new URL(AIVORY_UK_URL),

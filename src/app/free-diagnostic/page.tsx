@@ -4,7 +4,7 @@ import FreeDiagnosticClient from "./FreeDiagnosticClient";
 export const metadata: Metadata = {
   title: "Free AI Readiness Assessment — Business Operations Diagnostic",
   description:
-    "Take Aivory's free AI readiness and operational maturity assessment. Twelve questions score your process, data, strategy, governance, and people maturity, and produce a downloadable report card.",
+    'Free AI readiness assessment: 12 questions score your process, data, strategy and governance maturity. Instant report card.',
   alternates: {
     canonical: "/free-diagnostic",
   },

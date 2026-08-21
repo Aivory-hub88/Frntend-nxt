@@ -12,7 +12,7 @@ import {
 export const metadata: Metadata = {
   title: "AI Workflow Automation for Business | Aivory",
   description:
-    "Automate repetitive business processes with AI workflow automation. Connect your CRM, inbox and operations into intelligent no-code workflows — deploy in days, not quarters.",
+    'Automate repetitive processes with AI workflow automation. Connect CRM, inbox and ops into intelligent workflows in days.',
   alternates: {
     canonical: "/ai-workflow-automation",
   },
