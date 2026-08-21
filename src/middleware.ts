@@ -73,6 +73,23 @@ export function middleware(request: NextRequest): NextResponse | undefined {
     return;
   }
 
+  // Legacy path redirects: old URLs that moved to new canonical paths.
+  // /diagnostic was the old diagnostic entry point; it now lives at
+  // /free-diagnostic. Return a 301 so search engines transfer link equity
+  // and users are never stranded on a 404.
+  const LEGACY_PATH_REDIRECTS: Record<string, string> = {
+    '/diagnostic': '/free-diagnostic',
+    '/diagnostic/': '/free-diagnostic',
+  };
+
+  const pathname = request.nextUrl.pathname;
+
+  if (LEGACY_PATH_REDIRECTS[pathname]) {
+    const target = new URL(LEGACY_PATH_REDIRECTS[pathname], request.url);
+    target.search = request.nextUrl.search;
+    return NextResponse.redirect(target, 301);
+  }
+
   const hostname = requestHostname(request);
 
   // Always bypass local development origins.

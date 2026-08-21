@@ -41,7 +41,7 @@ export default function ProductPage() {
 
       {/* Hero Header */}
       <HeroSection
-        title="AI Infrastructure for Business Transformation"
+        title="AI Operations & Automation Platform"
         subtitle="From diagnostic to deployment — everything you need to integrate AI into your business operations."
       />
 
