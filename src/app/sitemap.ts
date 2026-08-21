@@ -28,6 +28,8 @@ const STATIC_ROUTES: Array<{
   { path: "/company", changeFrequency: "monthly", priority: 0.6 },
   { path: "/contact", changeFrequency: "monthly", priority: 0.5 },
   { path: "/free-diagnostic", changeFrequency: "monthly", priority: 0.7 },
+  { path: "/ai-workflow-automation", changeFrequency: "monthly", priority: 0.9 },
+  { path: "/templates/lead-qualification", changeFrequency: "monthly", priority: 0.7 },
   { path: "/glossary", changeFrequency: "monthly", priority: 0.6 },
   { path: "/nvidia-inception", changeFrequency: "yearly", priority: 0.6 },
   { path: "/privacy", changeFrequency: "yearly", priority: 0.2 },
