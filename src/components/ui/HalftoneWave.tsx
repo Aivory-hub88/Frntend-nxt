@@ -33,7 +33,7 @@ export function HalftoneWave({ active = true, purpleColor }: { active?: boolean;
     renderer.setSize(width, height);
     
     const isMobile = window.innerWidth < 1024;
-    const baseDPR = isMobile ? 1 : Math.min(window.devicePixelRatio, 2);
+    const baseDPR = isMobile ? 1 : Math.min(window.devicePixelRatio, 1.6);
     renderer.setPixelRatio(baseDPR);
     
     // React runs this effect twice in development (StrictMode), and a canvas
@@ -499,6 +499,8 @@ export function HalftoneWave({ active = true, purpleColor }: { active?: boolean;
     let smoothMouseX = 0;
     let smoothMouseY = 0;
 
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
     const handleMouseMove = (event: MouseEvent) => {
       targetMouseX = (event.clientX / window.innerWidth) * 2 - 1;
       targetMouseY = -(event.clientY / window.innerHeight) * 2 + 1;
@@ -573,6 +575,12 @@ export function HalftoneWave({ active = true, purpleColor }: { active?: boolean;
 
 
         renderer.render(scene, camera);
+
+        if (prefersReducedMotion) {
+          // Serve a single static frame and stop the GPU loop entirely
+          cancelAnimationFrame(animationFrameId);
+          animationFrameId = 0;
+        }
       }
     };
     renderLoop();

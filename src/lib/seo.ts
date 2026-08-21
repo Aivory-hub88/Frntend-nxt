@@ -156,8 +156,9 @@ export function createOrganization(siteUrl: PublicSiteUrl) {
       'Operational Clarity',
     ],
     sameAs: [
-      'https://www.linkedin.com/company/aivory/',
-      'https://github.com/Aivory-hub88',
+      'https://www.linkedin.com/company/aivoryai/',
+      'https://www.producthunt.com/products/aivory-ai',
+      'https://www.instagram.com/aivorylab.ai',
     ],
     award: ['NVIDIA Inception Program (2026)'],
     contactPoint: {

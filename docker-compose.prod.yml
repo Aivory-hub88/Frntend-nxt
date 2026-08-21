@@ -73,6 +73,12 @@ services:
         NEXT_PUBLIC_TURNSTILE_SITE_KEY: 0x4AAAAAAESmFOravtG7NiWO
     container_name: avry-website
     restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO /dev/null --timeout=3 http://127.0.0.1:3000/favicon.ico || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
     networks:
       - aivory-network
     environment:
@@ -107,6 +113,10 @@ services:
       - "traefik.http.routers.main-app-trap.priority=20"
       - "traefik.http.routers.main-app-trap.service=main-app"
       - "traefik.http.services.main-app.loadbalancer.server.port=3000"
+      # Remove from LB pool when not ready; prevents 502 during deploys
+      - "traefik.http.services.main-app.loadbalancer.healthcheck.path=/favicon.ico"
+      - "traefik.http.services.main-app.loadbalancer.healthcheck.interval=5s"
+      - "traefik.http.services.main-app.loadbalancer.healthcheck.timeout=3s"
 
   # ── User Dashboard (port 9001) ─────────────────────────────────────────────
   avry-user-dashboard:

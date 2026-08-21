@@ -26,7 +26,7 @@ const doto = Doto({
 });
 
 const SITE_NAME = 'Aivory AI';
-const SITE_TITLE = 'Aivory AI: Infrastructure for Business Transformation';
+const SITE_TITLE = 'Aivory AI - Infrastructure for Business Transformation';
 const SITE_DESCRIPTION =
   'Aivory helps businesses assess operations, design AI transformation blueprints, and deploy governed AI agents, workflow automation and operational intelligence.';
 
@@ -53,11 +53,15 @@ export const metadata: Metadata = {
   },
   alternates: {
     canonical: AIVORY_UK_URL,
-    // No `languages` map here on purpose: en/id share one URL (client-side
-    // toggle, not separate pages), so per Google's own hreflang guidance a
-    // self-referencing en/id pair adds no real signal. The manual
-    // `x-default` tag below (the correct annotation for "one URL serves
-    // every language/region") is the only alternate this site needs.
+    // en/id share one URL (client-side toggle, not separate pages), so per
+    // Google's own hreflang guidance a self-referencing en/id pair adds no
+    // real signal; `x-default` alone is the correct annotation for "one URL
+    // serves every language/region". Pages that define their own
+    // `alternates` (about/company + locale variants) replace this map with
+    // their full hreflang set, avoiding duplicate conflicting x-defaults.
+    languages: {
+      "x-default": AIVORY_UK_URL,
+    },
   },
   robots: {
     index: true,
@@ -100,7 +104,6 @@ export default function RootLayout({
           href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700;800&family=Doto:wght@400;700;900&display=swap"
           rel="stylesheet"
         />
-        <link rel="alternate" hrefLang="x-default" href={AIVORY_UK_URL} />
         <script async src="https://www.googletagmanager.com/gtag/js?id=G-XYJ0EDEYS8" />
         <script
           dangerouslySetInnerHTML={{

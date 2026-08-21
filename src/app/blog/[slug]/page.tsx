@@ -1,5 +1,6 @@
 import type { Metadata } from "next"
 import Link from "next/link"
+import Breadcrumb from "@/components/ui/Breadcrumb"
 import Navbar from "@/components/home/Navbar"
 import Footer from "@/components/Footer"
 import { getBlogPost, type BlogPostDetail, type BlogContentBlock } from "@/lib/blog-api"
@@ -77,14 +78,6 @@ function formatDate(dateString: string): string {
     month: "long",
     year: "numeric",
   })
-}
-
-function ArticleArrow() {
-  return (
-    <svg aria-hidden="true" viewBox="0 0 16 16" className="h-4 w-4" fill="none">
-      <path d="M3 13 13 3M6 3h7v7" stroke="currentColor" strokeWidth="1.2" />
-    </svg>
-  )
 }
 
 function ContentBlock({ block, isRedacted }: { block: BlogContentBlock; isRedacted: boolean }) {
@@ -292,13 +285,14 @@ export default async function BlogPostPage(props: { params: Promise<{ slug: stri
         {error ? (
           <div className="flex flex-col items-center justify-center py-24 text-center">
             <p className="text-black/50 mb-6 text-[17px] font-light">{error}</p>
-            <Link
-              href="/blog"
-              className="inline-flex items-center gap-2 border-b border-black pb-1 text-[13px] font-light text-black transition-opacity hover:opacity-55"
-            >
-              Back to Blog
-              <ArticleArrow />
-            </Link>
+            <Breadcrumb
+              items={[
+                { name: "Home", href: "/" },
+                { name: "Blog", href: "/blog" },
+                { name: post.title },
+              ]}
+              className="mb-10"
+            />
           </div>
         ) : post ? (
           <article className="max-w-3xl mx-auto px-6 py-24 md:py-32">
@@ -308,6 +302,14 @@ export default async function BlogPostPage(props: { params: Promise<{ slug: stri
                 <JsonLd data={createFaqPageFromEntries(absoluteUrl(`/blog/${post.slug}`), faqEntries)} />
               ) : null
             })()}
+            <Breadcrumb
+              items={[
+                { name: "Home", href: "/" },
+                { name: "Blog", href: "/blog" },
+                { name: post.title },
+              ]}
+              className="mb-10"
+            />
             <JsonLd
               data={{
                 "@context": "https://schema.org",
@@ -317,7 +319,16 @@ export default async function BlogPostPage(props: { params: Promise<{ slug: stri
                 image: post.thumbnail_url || undefined,
                 datePublished: post.published_at,
                 dateModified: post.published_at,
-                author: { "@type": "Organization", name: post.author_name },
+                author:
+                  post.author_name === "Irfan Reichmann"
+                    ? {
+                        "@type": "Person",
+                        name: post.author_name,
+                        jobTitle: "Founder & CEO",
+                        url: absoluteUrl("/about"),
+                        sameAs: ["https://www.linkedin.com/in/irfan-reichmann/"],
+                      }
+                    : { "@type": "Organization", name: post.author_name },
                 publisher: ORGANIZATION,
                 mainEntityOfPage: {
                   "@type": "WebPage",
