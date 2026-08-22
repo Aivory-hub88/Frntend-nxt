@@ -77,8 +77,11 @@ export default function PreFooterCTA() {
                   Book a Call
                 </TechnicalFrameButton>
               </div>
-              <p className="mt-7 font-mono text-[11px] uppercase tracking-[0.14em] text-white/40">
-                <span className="text-white/75">500+</span> businesses transforming with Aivory
+              <p
+                className="mt-7 font-mono text-[11px] uppercase tracking-[0.14em] text-white/80"
+                style={{ textShadow: '0 1px 12px rgba(0,0,0,0.55)' }}
+              >
+                <span className="font-semibold text-white">500+</span> businesses transforming with Aivory
               </p>
             </div>
           </div>
