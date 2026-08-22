@@ -10,6 +10,7 @@ import PrivacySection from '@/components/home/PrivacySection';
 import PreFooterCTA from '@/components/home/PreFooterCTA';
 import Footer from '@/components/Footer';
 import ScrollRevealProvider from '@/components/home/ScrollRevealProvider';
+import { HalftoneWaveWrapper } from '@/components/ui/HalftoneWaveWrapper';
 import { DarkSectionSpotlight } from '@/components/ui/DarkSectionSpotlight';
 import { JsonLd, buildHomePageGraph, siteUrlFromHeaders } from '@/lib/seo';
 
@@ -20,7 +21,16 @@ export default function HomePage() {
     <main className="relative">
       <JsonLd data={buildHomePageGraph(siteUrl)} />
       <ScrollRevealProvider />
-      <section style={{ padding: 0 }} className="relative z-[1] bg-black">
+      <section style={{ padding: 0 }} className="relative z-[1] bg-background">
+        {/* Halftone flower — no separate gradient wash underneath it, so the
+            page still reads as pitch black wherever the flower's own
+            opacity crossfades to 0. */}
+        <div className="fixed inset-0 z-0 pointer-events-none">
+          <div className="w-full h-full">
+            <HalftoneWaveWrapper />
+          </div>
+        </div>
+
         <Navbar />
         <HeroSection />
 

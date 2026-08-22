@@ -443,8 +443,9 @@ export function InteractiveGrid() {
         </div>
 
         {/* 3-Column Grid Layout matching Grok style */}
-        <motion.div 
+        <motion.div
           className="grid grid-cols-1 md:grid-cols-3 gap-6"
+          style={{ zoom: 0.8 }}
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, amount: 0.1 }}
@@ -513,8 +514,9 @@ export function InteractiveGrid() {
         </motion.div>
         
         {/* NEW AGENT CARDS */}
-        <motion.div 
+        <motion.div
           className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6"
+          style={{ zoom: 0.8 }}
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, amount: 0.1 }}

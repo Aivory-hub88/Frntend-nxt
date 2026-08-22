@@ -188,7 +188,7 @@ export default function Navbar() {
 
       {/* Mobile Fullscreen Overlay Menu */}
       <div
-        className={`fixed inset-0 z-[9999] bg-black flex flex-col transition-all duration-300 md:hidden ${
+        className={`fixed inset-0 z-[9999] bg-background flex flex-col transition-all duration-300 md:hidden ${
           isMobileMenuOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
         }`}
       >
