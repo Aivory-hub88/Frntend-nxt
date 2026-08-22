@@ -3,6 +3,7 @@ import HeroSection from '@/components/home/HeroSection';
 import AIReadySection from '@/components/home/AIReadySection';
 import FeatureCards from '@/components/home/FeatureCards';
 import StatsSection from '@/components/home/StatsSection';
+import VideoDemoSection from '@/components/home/VideoDemoSection';
 import EnterpriseComparisonSection from '@/components/home/EnterpriseComparisonSection';
 import PricingClientWrapper from '@/app/pricing/PricingClientWrapper';
 import PrivacySection from '@/components/home/PrivacySection';
@@ -39,6 +40,8 @@ export default function HomePage() {
         <DarkSectionSpotlight className="relative bg-transparent">
           <div className="relative z-10">
             <AIReadySection />
+
+            <VideoDemoSection />
 
             <div className="w-full pt-16 md:pt-24 pb-2 md:pb-4 px-6 flex flex-col items-center justify-center text-center">
               <h2
