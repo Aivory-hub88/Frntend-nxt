@@ -46,7 +46,7 @@ function StatCardIcon({ path, small }: { path: ReactNode; small?: boolean }) {
       strokeWidth="1.5"
       strokeLinecap="round"
       strokeLinejoin="round"
-      className="text-white/45"
+      className="text-[#e4effd]/80"
     >
       {path}
     </svg>
@@ -119,19 +119,29 @@ function DiagnosticStatItem({
   return (
     <div
       ref={cardRef}
-      className="group relative spotlight-card auto-spotlight flex aspect-square min-w-0 flex-col items-center justify-center overflow-hidden rounded-[20px] border border-white/[0.09] bg-white/[0.035] px-4 py-5 text-center backdrop-blur-md transition-[background-color,border-color,box-shadow,opacity,transform] duration-[700ms] hover:border-white/[0.16] hover:bg-white/[0.055] hover:-translate-y-[2px]"
+      className="group relative spotlight-card auto-spotlight flex aspect-square min-w-0 flex-col items-center justify-center overflow-hidden rounded-[22px] px-4 py-5 text-center transition-[background,border-color,box-shadow,opacity,transform] duration-[700ms] hover:-translate-y-[3px]"
       style={{
         opacity: active ? 1 : 0,
         transform: active ? 'translateY(0)' : 'translateY(24px)',
         transitionTimingFunction: STAT_EASE_OUT,
         transitionDelay: `${delay}ms`,
-        boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.07), 0 18px 50px rgba(0,0,0,0.2)',
+        background: 'linear-gradient(160deg, rgba(255,255,255,0.09) 0%, rgba(255,255,255,0.025) 55%, rgba(255,255,255,0.015) 100%)',
+        backdropFilter: 'blur(22px)',
+        WebkitBackdropFilter: 'blur(22px)',
+        border: '1px solid rgba(255,255,255,0.13)',
+        boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.16), 0 24px 60px -12px rgba(0,0,0,0.45)',
       }}
     >
       <div className="mb-2 flex h-[64px] w-full flex-col items-center justify-center">
         {staticValue === undefined ? (
           <>
-            <div className="mb-2 flex h-7 w-7 items-center justify-center rounded-full border border-white/[0.1] bg-white/[0.04]">
+            <div
+              className="mb-2 flex h-8 w-8 items-center justify-center rounded-full"
+              style={{
+                background: 'radial-gradient(circle, rgba(228,239,253,0.14) 0%, rgba(228,239,253,0.03) 70%)',
+                border: '1px solid rgba(255,255,255,0.14)',
+              }}
+            >
               <StatCardIcon path={STAT_ICONS[icon]} small />
             </div>
             <div
@@ -158,8 +168,14 @@ function DiagnosticStatItem({
             </div>
           </>
         ) : (
-          <div className="flex h-11 w-11 items-center justify-center rounded-full border border-white/[0.1] bg-white/[0.04]">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" className="text-white/55">
+          <div
+            className="flex h-11 w-11 items-center justify-center rounded-full"
+            style={{
+              background: 'radial-gradient(circle, rgba(228,239,253,0.16) 0%, rgba(228,239,253,0.03) 70%)',
+              border: '1px solid rgba(255,255,255,0.14)',
+            }}
+          >
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" className="text-[#e4effd]/85">
               {STAT_ICONS[icon]}
             </svg>
           </div>
@@ -201,7 +217,7 @@ export default function FeatureCards() {
 
   return (
     <>
-      <div ref={animRef} className={`animate-on-scroll ${isVisible ? 'is-visible' : ''} w-full pt-4 md:pt-6 pb-12 relative overflow-hidden`} id="features" style={{ zIndex: 1 }}>
+      <div ref={animRef} className={`animate-on-scroll ${isVisible ? 'is-visible' : ''} w-full pt-4 md:pt-6 pb-2 relative overflow-hidden`} id="features" style={{ zIndex: 1 }}>
         <div className="max-w-[1400px] mx-auto px-6 md:px-12 lg:px-24 relative z-[1]">
           <div className="text-center flex flex-col justify-center items-center">
             {/* Diagnostic Stats Section */}
@@ -237,8 +253,11 @@ export default function FeatureCards() {
         </div>
       </div>
 
-      {/* Bento grid framework showcase (replaces the archived sticky-scroll version) */}
-      <div className="relative w-full">
+      {/* Bento grid framework showcase (replaces the archived sticky-scroll version).
+          Pulled up with a negative margin to cancel its own generous top padding,
+          which is tuned for standing alone on /product but is excessive stacked
+          directly under the stats cards here. */}
+      <div className="relative w-full -mt-4 md:-mt-8">
         <InteractiveGridShowcase />
         <InteractiveGrid />
       </div>
