@@ -281,12 +281,12 @@ export default function AboutPage() {
           <div className="border-b border-white/10 lg:col-span-7 lg:col-start-6">
             {FAQ_ENTITIES.map((entry, index) => (
               <details key={entry.question} className="group border-t border-white/10" open={index === 0}>
-                <summary className="flex cursor-pointer list-none items-start gap-5 py-6 marker:content-none md:py-7">
-                  <span className="pt-1 font-mono text-[9px] text-white/28">{String(index + 1).padStart(2, '0')}</span>
-                  <span className="flex-1 text-base font-light leading-7 text-white/85 md:text-lg">{entry.question}</span>
-                  <span className="text-xl font-light text-white/35 transition-transform group-open:rotate-45" aria-hidden="true">+</span>
+                <summary className="flex cursor-pointer list-none items-start gap-6 py-8 marker:content-none md:py-9">
+                  <span className="pt-1.5 font-mono text-[10px] text-white/28">{String(index + 1).padStart(2, '0')}</span>
+                  <span className="flex-1 text-lg font-light leading-8 text-white/85 md:text-xl">{entry.question}</span>
+                  <span className="text-2xl font-light text-white/35 transition-transform group-open:rotate-45" aria-hidden="true">+</span>
                 </summary>
-                <p className="max-w-3xl pb-7 pl-9 text-sm font-light leading-7 text-white/52 md:pb-9">{entry.answer}</p>
+                <p className="max-w-3xl pb-8 pl-9 text-base font-light leading-7 text-white/52 md:pb-10">{entry.answer}</p>
               </details>
             ))}
           </div>
