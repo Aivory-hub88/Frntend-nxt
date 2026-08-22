@@ -11,7 +11,7 @@ export default function VideoDemoSection() {
       className={`animate-on-scroll ${isVisible ? 'is-visible' : ''} w-full relative overflow-hidden`}
       style={{ padding: '40px 0 90px 0' }}
     >
-      <div className="relative z-[1] mx-auto max-w-[640px] px-5 lg:px-8">
+      <div className="relative z-[1] mx-auto max-w-[820px] px-5 lg:px-8">
         <div className="overflow-hidden rounded-[20px] border border-white/[0.09] bg-white/[0.035] backdrop-blur-md">
           {/* Browser chrome */}
           <div className="flex items-center gap-2 border-b border-white/[0.07] px-4 py-3">
