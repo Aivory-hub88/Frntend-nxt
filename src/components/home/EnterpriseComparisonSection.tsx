@@ -28,30 +28,35 @@ const COLUMNS: { key: keyof Omit<ComparisonRow, 'capability'>; label: string }[]
   { key: 'aivory', label: 'Aivory' },
 ];
 
-function StatusIcon({ status, highlight = false }: { status: Status; highlight?: boolean }) {
-  if (status === 'yes') {
-    return (
-      <svg
-        className={`w-4 h-4 ${highlight ? 'text-emerald-400' : 'text-[#bbe2ef]'}`}
-        fill="none"
-        viewBox="0 0 24 24"
-        stroke="currentColor"
-      >
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
-      </svg>
-    );
-  }
-  if (status === 'warn') {
-    return (
-      <svg className="w-4 h-4 text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 9v3.75m0 3.75h.008M10.29 3.86l-8.18 14.18A1.5 1.5 0 003.42 20.4h17.16a1.5 1.5 0 001.31-2.36L13.71 3.86a1.5 1.5 0 00-2.42 0z" />
-      </svg>
-    );
-  }
+const STATUS_STYLE: Record<Status, { ring: string; glow: string; icon: string }> = {
+  yes: { ring: 'rgba(52,211,153,0.4)', glow: 'radial-gradient(circle, rgba(52,211,153,0.16) 0%, rgba(52,211,153,0.02) 70%)', icon: 'text-emerald-400' },
+  warn: { ring: 'rgba(251,191,36,0.38)', glow: 'radial-gradient(circle, rgba(251,191,36,0.15) 0%, rgba(251,191,36,0.02) 70%)', icon: 'text-amber-400' },
+  no: { ring: 'rgba(248,113,113,0.32)', glow: 'radial-gradient(circle, rgba(248,113,113,0.12) 0%, rgba(248,113,113,0.02) 70%)', icon: 'text-red-400/85' },
+};
+
+function StatusIcon({ status }: { status: Status; highlight?: boolean }) {
+  const style = STATUS_STYLE[status];
   return (
-    <svg className="w-4 h-4 text-red-400/70" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12" />
-    </svg>
+    <span
+      className="inline-flex h-6 w-6 items-center justify-center rounded-full"
+      style={{ background: style.glow, border: `1px dashed ${style.ring}` }}
+    >
+      {status === 'yes' && (
+        <svg className={`h-3 w-3 ${style.icon}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+        </svg>
+      )}
+      {status === 'warn' && (
+        <svg className={`h-3 w-3 ${style.icon}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 9v3.75m0 3.75h.008M10.29 3.86l-8.18 14.18A1.5 1.5 0 003.42 20.4h17.16a1.5 1.5 0 001.31-2.36L13.71 3.86a1.5 1.5 0 00-2.42 0z" />
+        </svg>
+      )}
+      {status === 'no' && (
+        <svg className={`h-3 w-3 ${style.icon}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      )}
+    </span>
   );
 }
 
