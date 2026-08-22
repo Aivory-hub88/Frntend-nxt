@@ -34,11 +34,12 @@ function useCountUp(target: number, active: boolean, duration = 2000) {
 
 const STAT_EASE_OUT = 'cubic-bezier(0.23, 1, 0.32, 1)';
 
-function StatCardIcon({ path }: { path: ReactNode }) {
+function StatCardIcon({ path, small }: { path: ReactNode; small?: boolean }) {
+  const size = small ? 15 : 20;
   return (
     <svg
-      width="20"
-      height="20"
+      width={size}
+      height={size}
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
@@ -118,7 +119,7 @@ function DiagnosticStatItem({
   return (
     <div
       ref={cardRef}
-      className="group relative spotlight-card auto-spotlight flex min-w-0 flex-col items-center overflow-hidden rounded-[20px] border border-white/[0.09] bg-white/[0.035] px-5 py-7 text-center backdrop-blur-md transition-[background-color,border-color,box-shadow,opacity,transform] duration-[700ms] hover:border-white/[0.16] hover:bg-white/[0.055] hover:-translate-y-[2px]"
+      className="group relative spotlight-card auto-spotlight flex aspect-square min-w-0 flex-col items-center justify-center overflow-hidden rounded-[20px] border border-white/[0.09] bg-white/[0.035] px-4 py-5 text-center backdrop-blur-md transition-[background-color,border-color,box-shadow,opacity,transform] duration-[700ms] hover:border-white/[0.16] hover:bg-white/[0.055] hover:-translate-y-[2px]"
       style={{
         opacity: active ? 1 : 0,
         transform: active ? 'translateY(0)' : 'translateY(24px)',
@@ -127,17 +128,17 @@ function DiagnosticStatItem({
         boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.07), 0 18px 50px rgba(0,0,0,0.2)',
       }}
     >
-      <div className="mb-3 flex h-[108px] w-full flex-col items-center justify-center">
+      <div className="mb-2 flex h-[64px] w-full flex-col items-center justify-center">
         {staticValue === undefined ? (
           <>
-            <div className="mb-4 flex h-9 w-9 items-center justify-center rounded-full border border-white/[0.1] bg-white/[0.04]">
-              <StatCardIcon path={STAT_ICONS[icon]} />
+            <div className="mb-2 flex h-7 w-7 items-center justify-center rounded-full border border-white/[0.1] bg-white/[0.04]">
+              <StatCardIcon path={STAT_ICONS[icon]} small />
             </div>
             <div
               className="flex items-baseline justify-center font-light leading-none text-[#f5f5f3] [font-variant-numeric:tabular-nums]"
               style={{
                 fontFamily: "'Manrope', sans-serif",
-                fontSize: 'clamp(2.5rem, 4vw, 3.4rem)',
+                fontSize: 'clamp(1.9rem, 3vw, 2.5rem)',
                 letterSpacing: '-0.05em',
               }}
             >
@@ -146,9 +147,9 @@ function DiagnosticStatItem({
                 <span
                   className="font-light text-white/55"
                   style={{
-                    fontSize: 'clamp(1rem, 1.7vw, 1.35rem)',
+                    fontSize: 'clamp(0.85rem, 1.3vw, 1.05rem)',
                     letterSpacing: '-0.025em',
-                    marginLeft: '0.3em',
+                    marginLeft: '0.25em',
                   }}
                 >
                   {suffix}
@@ -157,17 +158,17 @@ function DiagnosticStatItem({
             </div>
           </>
         ) : (
-          <div className="flex h-16 w-16 items-center justify-center rounded-full border border-white/[0.1] bg-white/[0.04]">
-            <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" className="text-white/55">
+          <div className="flex h-11 w-11 items-center justify-center rounded-full border border-white/[0.1] bg-white/[0.04]">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" className="text-white/55">
               {STAT_ICONS[icon]}
             </svg>
           </div>
         )}
       </div>
-      <div className="mb-2 text-[13px] font-medium leading-snug tracking-[0.01em] text-[#f0f0ee] md:text-[14px]">
+      <div className="mb-1.5 text-[12.5px] font-medium leading-snug tracking-[0.01em] text-[#f0f0ee] md:text-[13.5px]">
         {title}
       </div>
-      <div className="max-w-[210px] text-[12px] font-normal leading-relaxed text-white/65 md:text-[12.5px]">
+      <div className="line-clamp-3 max-w-[195px] text-[11px] font-normal leading-relaxed text-white/65 md:text-[11.5px]">
         {description}
       </div>
     </div>
