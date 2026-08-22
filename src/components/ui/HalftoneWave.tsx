@@ -140,33 +140,27 @@ export function HalftoneWave({ active = true, purpleColor }: { active?: boolean;
           vec2 local = fract(gl_FragCoord.xy / uPixelSize);
           vec2 p3 = floor(local * 3.0);
 
-          int charIndex = int(floor(density * 5.99));
+          // 8-level dispersed-dot growth (center -> corners -> edges) instead
+          // of the old 5-shape diagonal/X set. Same 3x3 sub-grid, same 3px
+          // cell, same one-fragment-shader-invocation-per-pixel cost -- this
+          // is purely a richer branch tree, so it reads denser/smoother with
+          // zero extra GPU work. Never reaches a fully-lit sub-cell (max is
+          // 7/9) so the halftone dot silhouette never collapses into a block.
+          int charIndex = int(floor(density * 8.99));
           if (charIndex == 0) discard; // empty cell: skip glyph branches
           float shape = 0.0;
 
-          // Coverage has to climb one sub-cell per level, or the top levels
-          // collapse onto the same brightness and the shading goes flat: 1/9,
-          // 2/9, 3/9, 4/9, 5/9. The ceiling is the X — filling the cell outright
-          // would read as a lit square and destroy the halftone.
-          if (charIndex == 1) {
-              // centre
-              if (p3.x == 1.0 && p3.y == 1.0) shape = 1.0;
-          } else if (charIndex == 2) {
-              // centre + one corner
-              if (p3.x == 1.0 && p3.y == 1.0) shape = 1.0;
-              if (p3.x == 0.0 && p3.y == 0.0) shape = 1.0;
-          } else if (charIndex == 3) {
-              // one diagonal
-              if (p3.x == p3.y) shape = 1.0;
-          } else if (charIndex == 4) {
-              // diagonal + opposite corner
-              if (p3.x == p3.y) shape = 1.0;
-              if (p3.x == 0.0 && p3.y == 2.0) shape = 1.0;
-          } else if (charIndex >= 5) {
-              // full X
-              if (p3.x == p3.y) shape = 1.0;
-              if (p3.x == (2.0 - p3.y)) shape = 1.0;
-          }
+          float rank;
+          if (p3.x == 1.0 && p3.y == 1.0) rank = 0.0;      // centre
+          else if (p3.x == 0.0 && p3.y == 0.0) rank = 1.0; // corners
+          else if (p3.x == 2.0 && p3.y == 2.0) rank = 2.0;
+          else if (p3.x == 0.0 && p3.y == 2.0) rank = 3.0;
+          else if (p3.x == 2.0 && p3.y == 0.0) rank = 4.0;
+          else if (p3.x == 1.0 && p3.y == 0.0) rank = 5.0; // edges
+          else if (p3.x == 1.0 && p3.y == 2.0) rank = 6.0;
+          else rank = 7.0;
+
+          if (rank < float(charIndex)) shape = 1.0;
           
           if (shape == 0.0) discard;
           
