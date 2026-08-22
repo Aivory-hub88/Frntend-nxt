@@ -8,10 +8,10 @@ export default function AIReadySection() {
   return (
     <div
       ref={ref}
-      className={`animate-on-scroll ${isVisible ? "is-visible" : ""} w-full py-16 md:py-24 relative`}
+      className={`animate-on-scroll ${isVisible ? "is-visible" : ""} w-full pt-16 md:pt-24 pb-4 md:pb-6 relative`}
     >
       <div className="max-w-[1400px] mx-auto px-6 md:px-12 lg:px-24 relative z-[1]">
-        <div className="flex flex-col md:flex-row items-center md:items-start justify-between gap-12 mb-20">
+        <div className="flex flex-col md:flex-row items-center md:items-start justify-between gap-12 mb-6">
           {/* Left Column */}
           <div className="w-full md:w-1/2 flex justify-start">
             <h2

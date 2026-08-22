@@ -43,7 +43,7 @@ export default function HomePage() {
 
             <VideoDemoSection />
 
-            <div className="w-full pt-16 md:pt-24 pb-2 md:pb-4 px-6 flex flex-col items-center justify-center text-center">
+            <div className="w-full pt-4 md:pt-8 pb-2 md:pb-4 px-6 flex flex-col items-center justify-center text-center">
               <h2
                 className="text-2xl md:text-3xl lg:text-4xl font-light tracking-tight text-[#B3B3B3] leading-relaxed max-w-3xl"
                 style={{ fontFamily: "'Manrope', sans-serif", fontWeight: 300 }}
