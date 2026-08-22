@@ -131,7 +131,7 @@ export default function PrivacySection() {
           </div>
         </div>
 
-        <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-4">
+        <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-4" style={{ zoom: 0.75 }}>
           {privacyItems.map((item, index) => (
             <article
               key={item.text}
