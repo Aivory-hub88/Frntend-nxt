@@ -58,12 +58,16 @@ function StatusIcon({ status, highlight = false }: { status: Status; highlight?:
 export default function EnterpriseComparisonSection() {
   const reduceMotion = useReducedMotion();
 
+  // Opacity-only entrance (no translateY): the Aivory column's highlight lane is a
+  // per-row background that must stay pixel-aligned with the badge above/below it at
+  // every instant of the stagger, not just at rest. A translateY offset made rows
+  // settle at slightly different times, so the lane visibly seamed between rows
+  // mid-animation even though it was perfectly aligned once everything came to rest.
   const rowVariants = {
-    hidden: { opacity: 0, y: reduceMotion ? 0 : 24 },
+    hidden: { opacity: 0 },
     visible: {
       opacity: 1,
-      y: 0,
-      transition: { type: 'spring' as const, damping: 25, stiffness: 200 },
+      transition: { duration: reduceMotion ? 0 : 0.4, ease: [0.23, 1, 0.32, 1] as const },
     },
   };
 
