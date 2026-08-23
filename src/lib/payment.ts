@@ -492,6 +492,16 @@ export async function createPaymentTransaction(
   // into one — sending the raw count 422s before checkout can open.
   const productId = typeof product === 'number' ? `credits_${product}` : product;
 
+  // handlePaymentSuccess/Pending/Failure (Snap's callbacks, below) read these
+  // module-level fields. openPaymentModal used to be the only caller and set
+  // them itself, so a caller that skips it — like CheckoutForm's
+  // runRealPayment, which calls this function directly — left both null and
+  // handlePaymentSuccess silently no-op'd: confirmPayment() never fired and
+  // the order sat waiting on the Midtrans webhook instead of settling
+  // immediately. Setting them here covers every caller uniformly.
+  currentPaymentProduct = productId;
+  currentPaymentAmount = amount;
+
   // No amount is sent: the payments service prices the product from its own
   // catalogue, so a browser cannot name its own price.
   const response = await fetch(`${API_BASE_URL}/api/v1/payments/midtrans/create`, {

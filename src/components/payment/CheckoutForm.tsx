@@ -37,6 +37,7 @@ import {
 import { formatCheckoutPrice, type CheckoutCurrency } from '@/lib/checkout-format';
 import { SpotlightButton } from '@/components/ui/SpotlightButton';
 import TurnstileWidget from '@/components/payment/TurnstileWidget';
+import { trackEvent } from '@/lib/analytics';
 
 // Live. Set to true only to demo the flow without touching the gateway; the
 // mock path collects card-shaped fields locally and transmits nothing.
@@ -413,6 +414,11 @@ export function CheckoutForm({
       if (isMidtransAvailable()) {
         // Snap owns channel choice, card entry and 3-D Secure from here.
         await startMidtransSnap(result.token);
+        trackEvent('purchase', {
+          value: priceUsd,
+          currency: 'USD',
+          transaction_id: result.order_id,
+        });
         setStep('success');
         return;
       }
