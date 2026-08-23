@@ -107,7 +107,7 @@ export default function EnterpriseComparisonSection() {
           {COLUMNS.map((col) =>
             col.key === 'aivory' ? (
               <span key={col.key} className="relative flex items-center justify-center">
-                <span className="pointer-events-none absolute -inset-y-4 inset-x-0 bg-gradient-to-b from-[#e4effd]/[0.09] to-[#e4effd]/[0.03] rounded-t-xl" />
+                <span className="pointer-events-none absolute -inset-y-4 left-0 right-[-1rem] md:right-[-2rem] bg-gradient-to-b from-[#e4effd]/[0.09] to-[#e4effd]/[0.03] rounded-tr-2xl" />
                 <img
                   src="/aivory-logo.svg"
                   alt="Aivory"
@@ -142,8 +142,8 @@ export default function EnterpriseComparisonSection() {
                 <span key={col.key} className="relative flex items-center justify-center">
                   {col.key === 'aivory' && (
                     <span
-                      className={`pointer-events-none absolute -inset-y-4 inset-x-0 bg-[#e4effd]/[0.05] ${
-                        isLast ? 'rounded-b-xl' : ''
+                      className={`pointer-events-none absolute -inset-y-4 left-0 right-[-1rem] md:right-[-2rem] bg-[#e4effd]/[0.05] ${
+                        isLast ? 'rounded-br-2xl' : ''
                       }`}
                     />
                   )}
