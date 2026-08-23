@@ -1,5 +1,6 @@
 import type { Metadata } from "next"
 import Link from "next/link"
+import Image from "next/image"
 import Navbar from "@/components/home/Navbar"
 import Footer from "@/components/Footer"
 import { getBlogPosts, type BlogPost, type BlogPostsResponse } from "@/lib/blog-api"
@@ -91,14 +92,17 @@ function FeaturedStory({ post }: { post: BlogPost }) {
 
       <Link
         href={`/blog/${post.slug}`}
-        className="group block aspect-[16/10] overflow-hidden bg-[#11110f] lg:col-span-7"
+        className="group relative block aspect-[16/10] overflow-hidden bg-[#11110f] lg:col-span-7"
         aria-label={`Read ${post.title}`}
       >
         {post.thumbnail_url ? (
-          <img
+          <Image
             src={post.thumbnail_url}
             alt={post.title}
-            className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.025]"
+            fill
+            sizes="(min-width: 1024px) 58vw, 100vw"
+            priority
+            className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.025]"
           />
         ) : (
           <ImageFallback title={post.title} />
@@ -114,12 +118,14 @@ function FeaturedRow({ post, index }: { post: BlogPost; index: number }) {
       href={`/blog/${post.slug}`}
       className="group flex flex-col gap-4"
     >
-      <div className="aspect-[16/10] overflow-hidden bg-[#11110f]">
+      <div className="relative aspect-[16/10] overflow-hidden bg-[#11110f]">
         {post.thumbnail_url ? (
-          <img
+          <Image
             src={post.thumbnail_url}
             alt={post.title}
-            className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.025]"
+            fill
+            sizes="(min-width: 1024px) 33vw, 100vw"
+            className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.025]"
           />
         ) : (
           <ImageFallback title={post.title} />
@@ -175,12 +181,14 @@ function ArchiveRow({ post }: { post: BlogPost }) {
             Read article <ArticleArrow />
           </span>
         </div>
-        <div className="hidden aspect-[4/3] overflow-hidden bg-[#11110f] md:block">
+        <div className="relative hidden aspect-[4/3] overflow-hidden bg-[#11110f] md:block">
           {post.thumbnail_url ? (
-            <img
+            <Image
               src={post.thumbnail_url}
               alt=""
-              className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.035]"
+              fill
+              sizes="180px"
+              className="object-cover transition-transform duration-700 group-hover:scale-[1.035]"
             />
           ) : (
             <ImageFallback title={post.title} />
