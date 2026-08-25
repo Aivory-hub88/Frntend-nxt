@@ -252,6 +252,15 @@ function clearAuthCookies(): void {
 }
 
 /** Login with email + password — uses the backend auth service (works locally without Supabase). */
+/** Thrown by login() when the account is inside its 32h no-purchase window. */
+export class PaymentRequiredError extends Error {
+  deadlineAt: string;
+  constructor(deadlineAt: string) {
+    super("payment_required");
+    this.deadlineAt = deadlineAt;
+  }
+}
+
 export async function login(email: string, password: string): Promise<User> {
   const backendUrl = getServiceUrl("backend");
   const res = await fetch(`${backendUrl}/api/v1/auth/login`, {
@@ -262,7 +271,11 @@ export async function login(email: string, password: string): Promise<User> {
 
   if (!res.ok) {
     const err = await res.json().catch(() => ({}));
-    throw new Error(err.detail || "Login failed");
+    const detail = err.detail;
+    if (res.status === 402 && detail && typeof detail === "object" && detail.error === "payment_required") {
+      throw new PaymentRequiredError(detail.deadline_at);
+    }
+    throw new Error(typeof detail === "string" ? detail : "Login failed");
   }
 
   const data = await res.json();

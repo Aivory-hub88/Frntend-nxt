@@ -3,7 +3,7 @@
 import { useEffect, useState, FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import { isAuthenticated, login as authLogin } from "@/lib/auth";
+import { isAuthenticated, login as authLogin, PaymentRequiredError } from "@/lib/auth";
 
 /**
  * Login Page Component
@@ -52,6 +52,10 @@ export default function LoginClient() {
       await authLogin(email, password);
       router.push("/");
     } catch (err) {
+      if (err instanceof PaymentRequiredError) {
+        router.push(`/complete-payment?deadline=${encodeURIComponent(err.deadlineAt)}`);
+        return;
+      }
       setError(
         err instanceof Error ? err.message : "Login failed. Please try again."
       );
