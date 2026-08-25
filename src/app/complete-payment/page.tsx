@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import CompletePaymentClient from "./CompletePaymentClient";
 
 export const metadata: Metadata = {
@@ -11,5 +12,11 @@ export const metadata: Metadata = {
 };
 
 export default function CompletePaymentPage() {
-  return <CompletePaymentClient />;
+  // useSearchParams() in CompletePaymentClient requires a Suspense boundary,
+  // or the build fails prerendering this page.
+  return (
+    <Suspense fallback={null}>
+      <CompletePaymentClient />
+    </Suspense>
+  );
 }
