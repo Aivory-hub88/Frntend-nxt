@@ -56,7 +56,7 @@ const cards: PricingCard[] = [
   {
     title: 'Business Operations\nAssessment',
     price: 79,
-    frequency: 'One-time',
+    frequency: 'Per use',
     description: 'Gain a clear understanding of how your organisation operates before making AI decisions.',
     features: [
       '• Operational maturity assessment',
@@ -71,7 +71,7 @@ const cards: PricingCard[] = [
   {
     title: 'Transformation\nBlueprint',
     price: 249,
-    frequency: 'One-time',
+    frequency: 'Per use',
     description: 'Transform operational insights into a practical blueprint for business transformation and governed AI deployment.',
     features: [
       '• Operational transformation blueprint',
@@ -87,7 +87,7 @@ const cards: PricingCard[] = [
     title: 'Complete Transformation Package',
     subtitle: 'Business Operations Assessment\n+\nTransformation Blueprint\n+\nTransformation Roadmap',
     price: 299,
-    frequency: 'One-time',
+    frequency: 'Per use',
     description: 'Everything required to move from operational assessment to a clear transformation strategy.',
     features: [
       '• Business Operations Assessment',
