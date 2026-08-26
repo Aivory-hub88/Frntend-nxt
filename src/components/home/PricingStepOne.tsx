@@ -69,7 +69,7 @@ const cards: PricingCard[] = [
     productId: PRODUCT_IDS.DEEP_DIAGNOSTIC,
   },
   {
-    title: 'Transformation\nBlueprint',
+    title: 'Transformation\nBlueprint + Roadmap',
     price: 249,
     frequency: 'Per use',
     description: 'Transform operational insights into a practical blueprint for business transformation and governed AI deployment.',
