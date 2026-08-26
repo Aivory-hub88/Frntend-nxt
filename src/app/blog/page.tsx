@@ -342,17 +342,17 @@ export default async function BlogPage(props: {
           ])}
         />
 
-        <section className="mx-auto max-w-[1480px] px-6 pb-16 pt-40 md:px-12 md:pb-24 md:pt-52">
+        <section className="mx-auto max-w-[1480px] px-6 pb-16 pt-40 md:px-12 lg:px-24 md:pb-24 md:pt-52">
           <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-black/60">
             Newsroom
           </p>
-          <h1 className="mt-5 text-[52px] font-light leading-[0.95] tracking-[-0.055em] md:text-[82px] lg:text-[104px]">
+          <h1 className="mt-5 text-[44px] font-light leading-[1.15] tracking-[-0.02em] md:text-[64px] lg:text-[80px]">
             News &amp; Insights
           </h1>
         </section>
 
         {featuredPosts.length > 0 && (
-          <section className="mx-auto max-w-[1480px] px-6 pb-16 md:px-12 md:pb-24">
+          <section className="mx-auto max-w-[1480px] px-6 pb-16 md:px-12 lg:px-24 md:pb-24">
             <FeaturedStory post={featuredPosts[0]} />
             {featuredPosts.length > 1 && (
               <div className="mt-12 grid gap-8 border-t border-black/25 pt-10 md:grid-cols-2">
@@ -365,13 +365,13 @@ export default async function BlogPage(props: {
         )}
 
         <section aria-labelledby="all-articles-heading">
-          <div className="mx-auto max-w-[1480px] px-6 pb-8 md:px-12 md:pb-12">
+          <div className="mx-auto max-w-[1480px] px-6 pb-8 md:px-12 lg:px-24 md:pb-12">
             <h2 id="all-articles-heading" className="text-[34px] font-light tracking-[-0.035em] md:text-[52px]">
               {query ? `Search results for "${query}"` : "All articles"}
             </h2>
           </div>
 
-          <div className="bg-[#050505] px-6 py-8 text-white md:px-12 md:py-10">
+          <div className="bg-[#050505] px-6 py-8 text-white md:px-12 lg:px-24 md:py-10">
             <form action="/blog" method="get" role="search" className="mx-auto flex max-w-[1480px] items-end gap-4">
               <label htmlFor="newsroom-search" className="sr-only">Search newsroom</label>
               <span aria-hidden="true" className="pb-3 text-white/60">
@@ -397,7 +397,7 @@ export default async function BlogPage(props: {
             </form>
           </div>
 
-          <div className="mx-auto max-w-[1480px] px-6 pb-24 pt-12 md:px-12 md:pb-36 md:pt-16">
+          <div className="mx-auto max-w-[1480px] px-6 pb-24 pt-12 md:px-12 lg:px-24 md:pb-36 md:pt-16">
             {error ? (
               <div className="border-t border-black/25 py-16">
                 <p className="max-w-xl text-[17px] font-light leading-relaxed text-black/70">{error}</p>

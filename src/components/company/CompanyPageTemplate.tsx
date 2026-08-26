@@ -57,14 +57,14 @@ export function CompanyPageTemplate({ content }: { content: CompanyContent }) {
             "linear-gradient(to bottom, #050505 0, #050505 64px, #efeee8 64px, #efeee8 100%)",
         }}
       >
-        <section className="mx-auto max-w-[1480px] px-6 pb-16 pt-40 md:px-12 md:pb-24 md:pt-52">
+        <section className="mx-auto max-w-[1480px] px-6 pb-16 pt-40 md:px-12 lg:px-24 md:pb-24 md:pt-52">
           <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-black/60">{content.eyebrow}</p>
           <h1 className="mt-5 max-w-[1180px] text-[40px] font-light leading-[1.2] tracking-[-0.015em] text-[#11110f] md:text-[58px] lg:text-[72px]">
             {content.heroHeading}
           </h1>
         </section>
 
-        <section className="mx-auto max-w-[1480px] px-6 pb-24 md:px-12 md:pb-32">
+        <section className="mx-auto max-w-[1480px] px-6 pb-24 md:px-12 lg:px-24 md:pb-32">
           <div className="grid border-t border-black/25 pt-8 lg:grid-cols-12 lg:gap-12">
             <div className="flex flex-col pb-10 lg:col-span-5 lg:min-h-[430px] lg:pb-0">
               <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-black/60">{content.aboutLabel}</p>
@@ -97,7 +97,7 @@ export function CompanyPageTemplate({ content }: { content: CompanyContent }) {
           </div>
         </section>
 
-        <section className="mx-auto max-w-[1480px] px-6 pb-24 md:px-12 md:pb-36">
+        <section className="mx-auto max-w-[1480px] px-6 pb-24 md:px-12 lg:px-24 md:pb-36">
           <div className="grid border-t border-black/25 pt-8 lg:grid-cols-12 lg:gap-12">
             <div className="pb-10 lg:col-span-4 lg:pb-0">
               <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-black/60">{content.whyExistLabel}</p>
@@ -114,7 +114,7 @@ export function CompanyPageTemplate({ content }: { content: CompanyContent }) {
         </section>
 
         <section aria-labelledby="way-of-working-heading">
-          <div className="mx-auto max-w-[1480px] px-6 pb-8 md:px-12 md:pb-12">
+          <div className="mx-auto max-w-[1480px] px-6 pb-8 md:px-12 lg:px-24 md:pb-12">
             <p className="mb-4 font-mono text-[10px] uppercase tracking-[0.18em] text-black/60">{content.howWeWorkLabel}</p>
             <h2
               id="way-of-working-heading"
@@ -124,7 +124,7 @@ export function CompanyPageTemplate({ content }: { content: CompanyContent }) {
             </h2>
           </div>
 
-          <div className="mx-auto max-w-[1480px] px-6 pb-24 md:px-12 md:pb-36">
+          <div className="mx-auto max-w-[1480px] px-6 pb-24 md:px-12 lg:px-24 md:pb-36">
             {content.waysOfWorking.map((item) => (
               <article
                 key={item.number}
@@ -144,7 +144,7 @@ export function CompanyPageTemplate({ content }: { content: CompanyContent }) {
           </div>
         </section>
 
-        <section className="mx-auto max-w-[1480px] px-6 pb-24 md:px-12 md:pb-36">
+        <section className="mx-auto max-w-[1480px] px-6 pb-24 md:px-12 lg:px-24 md:pb-36">
           <div className="grid border-t border-black/25 lg:grid-cols-2">
             <article className="border-b border-black/25 py-10 lg:border-b-0 lg:border-r rtl:lg:border-r-0 rtl:lg:border-l lg:py-14 lg:pr-12 rtl:lg:pr-0 rtl:lg:pl-12">
               <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-black/60">{content.missionLabel}</p>
@@ -163,7 +163,7 @@ export function CompanyPageTemplate({ content }: { content: CompanyContent }) {
         </section>
 
         <section aria-labelledby="principles-heading">
-          <div className="mx-auto max-w-[1480px] px-6 pb-8 md:px-12 md:pb-12">
+          <div className="mx-auto max-w-[1480px] px-6 pb-8 md:px-12 lg:px-24 md:pb-12">
             <p className="mb-4 font-mono text-[10px] uppercase tracking-[0.18em] text-black/60">{content.beliefsLabel}</p>
             <h2
               id="principles-heading"
@@ -173,7 +173,7 @@ export function CompanyPageTemplate({ content }: { content: CompanyContent }) {
             </h2>
           </div>
 
-          <div className="mx-auto max-w-[1480px] px-6 pb-24 md:px-12 md:pb-36">
+          <div className="mx-auto max-w-[1480px] px-6 pb-24 md:px-12 lg:px-24 md:pb-36">
             {content.principles.map((principle, index) => (
               <article
                 key={principle.title}
@@ -193,7 +193,7 @@ export function CompanyPageTemplate({ content }: { content: CompanyContent }) {
           </div>
         </section>
 
-        <section className="mx-auto max-w-[1480px] px-6 pb-24 md:px-12 md:pb-36">
+        <section className="mx-auto max-w-[1480px] px-6 pb-24 md:px-12 lg:px-24 md:pb-36">
           <div className="grid border-y border-black/25 py-10 md:grid-cols-[150px_minmax(0,1fr)_180px] md:items-center md:py-14">
             <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-black/60">{content.startConversationLabel}</p>
             <h2 className="mt-6 max-w-3xl text-[24px] font-light leading-[1.3] tracking-[-0.01em] md:mt-0 md:text-[34px]">

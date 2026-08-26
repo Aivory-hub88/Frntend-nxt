@@ -61,7 +61,7 @@ function ArrowIcon() {
 export function CompanyContentJa() {
   return (
     <div className="bg-[#efeee8] text-[#11110f]">
-      <section className="mx-auto max-w-[1480px] px-6 pb-24 md:px-12 md:pb-36">
+      <section className="mx-auto max-w-[1480px] px-6 pb-24 md:px-12 lg:px-24 md:pb-36">
         <div className="grid border-t border-black/25 pt-8 lg:grid-cols-12 lg:gap-12">
           <div className="pb-10 lg:col-span-4 lg:pb-0">
             <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-black/60">
@@ -80,7 +80,7 @@ export function CompanyContentJa() {
       </section>
 
       <section aria-labelledby="way-of-working-heading">
-        <div className="mx-auto max-w-[1480px] px-6 pb-8 md:px-12 md:pb-12">
+        <div className="mx-auto max-w-[1480px] px-6 pb-8 md:px-12 lg:px-24 md:pb-12">
           <p className="mb-4 font-mono text-[10px] uppercase tracking-[0.18em] text-black/60">
             働き方
           </p>
@@ -92,7 +92,7 @@ export function CompanyContentJa() {
           </h2>
         </div>
 
-        <div className="mx-auto max-w-[1480px] px-6 pb-24 md:px-12 md:pb-36">
+        <div className="mx-auto max-w-[1480px] px-6 pb-24 md:px-12 lg:px-24 md:pb-36">
           {waysOfWorking.map((item) => (
             <article
               key={item.number}
@@ -112,7 +112,7 @@ export function CompanyContentJa() {
         </div>
       </section>
 
-      <section className="mx-auto max-w-[1480px] px-6 pb-24 md:px-12 md:pb-36">
+      <section className="mx-auto max-w-[1480px] px-6 pb-24 md:px-12 lg:px-24 md:pb-36">
         <div className="grid border-t border-black/25 lg:grid-cols-2">
           <article className="border-b border-black/25 py-10 lg:border-b-0 lg:border-r lg:py-14 lg:pr-12">
             <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-black/60">
@@ -135,7 +135,7 @@ export function CompanyContentJa() {
       </section>
 
       <section aria-labelledby="principles-heading">
-        <div className="mx-auto max-w-[1480px] px-6 pb-8 md:px-12 md:pb-12">
+        <div className="mx-auto max-w-[1480px] px-6 pb-8 md:px-12 lg:px-24 md:pb-12">
           <p className="mb-4 font-mono text-[10px] uppercase tracking-[0.18em] text-black/60">
             私たちが信じること
           </p>
@@ -147,7 +147,7 @@ export function CompanyContentJa() {
           </h2>
         </div>
 
-        <div className="mx-auto max-w-[1480px] px-6 pb-24 md:px-12 md:pb-36">
+        <div className="mx-auto max-w-[1480px] px-6 pb-24 md:px-12 lg:px-24 md:pb-36">
           {principles.map((principle, index) => (
             <article
               key={principle.title}
@@ -167,7 +167,7 @@ export function CompanyContentJa() {
         </div>
       </section>
 
-      <section className="mx-auto max-w-[1480px] px-6 pb-24 md:px-12 md:pb-36">
+      <section className="mx-auto max-w-[1480px] px-6 pb-24 md:px-12 lg:px-24 md:pb-36">
         <div className="grid border-y border-black/25 py-10 md:grid-cols-[150px_minmax(0,1fr)_180px] md:items-center md:py-14">
           <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-black/60">
             会話を始める

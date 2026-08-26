@@ -1,16 +1,16 @@
 export function CompanyHero() {
   return (
     <>
-      <section className="mx-auto max-w-[1480px] px-6 pb-16 pt-40 md:px-12 md:pb-24 md:pt-52">
+      <section className="mx-auto max-w-[1480px] px-6 pb-16 pt-40 md:px-12 lg:px-24 md:pb-24 md:pt-52">
         <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-black/60">
           Company
         </p>
-        <h1 className="mt-5 max-w-[1180px] text-[52px] font-light leading-[0.95] tracking-[-0.055em] text-[#11110f] md:text-[82px] lg:text-[104px]">
+        <h1 className="mt-5 max-w-[1180px] text-[44px] font-light leading-[1.15] tracking-[-0.02em] text-[#11110f] md:text-[64px] lg:text-[80px]">
           Better operations begin with clarity.
         </h1>
       </section>
 
-      <section className="mx-auto max-w-[1480px] px-6 pb-24 md:px-12 md:pb-32">
+      <section className="mx-auto max-w-[1480px] px-6 pb-24 md:px-12 lg:px-24 md:pb-32">
         <div className="grid border-t border-black/25 pt-8 lg:grid-cols-12 lg:gap-12">
           <div className="flex flex-col pb-10 lg:col-span-5 lg:min-h-[430px] lg:pb-0">
             <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-black/60">

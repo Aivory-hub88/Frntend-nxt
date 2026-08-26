@@ -78,14 +78,14 @@ export function AboutPageTemplate({ content }: { content: AboutContent }) {
         className="text-[#11110f]"
         style={{ fontWeight: 300, background: ABOUT_HERO_BACKGROUND }}
       >
-        <div className="mx-auto max-w-[1480px] px-6 pb-16 pt-40 md:px-12 md:pb-24 md:pt-52">
+        <div className="mx-auto max-w-[1480px] px-6 pb-16 pt-40 md:px-12 lg:px-24 md:pb-24 md:pt-52">
           <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-black/60">{content.heroEyebrow}</p>
           <h1 className="mt-5 max-w-[1180px] text-[44px] font-light leading-[1.15] tracking-[-0.02em] text-[#11110f] md:text-[64px] lg:text-[80px]">
             {content.heroHeading}
           </h1>
         </div>
 
-        <div className="mx-auto max-w-[1480px] px-6 pb-20 md:px-12 md:pb-28">
+        <div className="mx-auto max-w-[1480px] px-6 pb-20 md:px-12 lg:px-24 md:pb-28">
           <div className="grid border-t border-black/25 pt-8 lg:grid-cols-12 lg:gap-12">
             <div className="pb-8 lg:col-span-4 lg:pb-0">
               <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-black/60">{content.whatWeDoLabel}</p>
@@ -117,7 +117,7 @@ export function AboutPageTemplate({ content }: { content: AboutContent }) {
 
       <AboutArchitecturalSignal />
 
-      <section className="border-b border-white/10 px-6 py-20 md:px-12 md:py-28 lg:px-24">
+      <section className="border-b border-white/10 px-6 py-20 md:px-12 lg:px-24 md:py-28 lg:px-24">
         <div className="mx-auto grid max-w-[1400px] gap-12 lg:grid-cols-12">
           <div className="lg:col-span-4">
             <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-white/42">{content.eyebrow02}</p>
@@ -138,7 +138,7 @@ export function AboutPageTemplate({ content }: { content: AboutContent }) {
         </div>
       </section>
 
-      <section className="border-b border-white/10 px-6 py-20 md:px-12 md:py-28 lg:px-24">
+      <section className="border-b border-white/10 px-6 py-20 md:px-12 lg:px-24 md:py-28 lg:px-24">
         <div className="mx-auto max-w-[1400px]">
           <div className="grid gap-12 lg:grid-cols-12">
             <div className="lg:col-span-4">
@@ -170,7 +170,7 @@ export function AboutPageTemplate({ content }: { content: AboutContent }) {
         </div>
       </section>
 
-      <section id="how-it-works" className="border-b border-white/10 px-6 py-20 md:px-12 md:py-28 lg:px-24">
+      <section id="how-it-works" className="border-b border-white/10 px-6 py-20 md:px-12 lg:px-24 md:py-28 lg:px-24">
         <div className="mx-auto max-w-[1400px]">
           <div className="grid gap-10 pb-14 lg:grid-cols-12 lg:pb-20">
             <div className="lg:col-span-4">
@@ -210,7 +210,7 @@ export function AboutPageTemplate({ content }: { content: AboutContent }) {
         </div>
       </section>
 
-      <section className="border-b border-white/10 px-6 py-20 md:px-12 md:py-28 lg:px-24">
+      <section className="border-b border-white/10 px-6 py-20 md:px-12 lg:px-24 md:py-28 lg:px-24">
         <div className="mx-auto max-w-[1400px]">
           <div className="grid gap-12 lg:grid-cols-12">
             <div className="lg:col-span-4">
@@ -241,7 +241,7 @@ export function AboutPageTemplate({ content }: { content: AboutContent }) {
         </div>
       </section>
 
-      <section id="frequently-asked-questions" className="border-b border-white/10 px-6 py-20 md:px-12 md:py-28 lg:px-24">
+      <section id="frequently-asked-questions" className="border-b border-white/10 px-6 py-20 md:px-12 lg:px-24 md:py-28 lg:px-24">
         <div className="mx-auto grid max-w-[1400px] gap-14 lg:grid-cols-12">
           <div className="lg:col-span-4 lg:sticky lg:top-28 lg:self-start">
             <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-white/42">{content.eyebrow06}</p>
@@ -265,7 +265,7 @@ export function AboutPageTemplate({ content }: { content: AboutContent }) {
         </div>
       </section>
 
-      <section className="px-6 py-20 md:px-12 md:py-28 lg:px-24" data-about-cta="square">
+      <section className="px-6 py-20 md:px-12 lg:px-24 md:py-28 lg:px-24" data-about-cta="square">
         <div className="mx-auto grid max-w-[1400px] gap-10 border-y border-white/15 py-12 md:py-16 lg:grid-cols-12 lg:items-end">
           <div className="lg:col-span-7">
             <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-white/42">{content.eyebrow07}</p>

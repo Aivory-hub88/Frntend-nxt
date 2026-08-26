@@ -88,11 +88,11 @@ export default function GlossaryPage() {
           ])}
         />
 
-        <section className="mx-auto max-w-[1480px] px-6 pb-16 pt-40 md:px-12 md:pb-20 md:pt-52">
+        <section className="mx-auto max-w-[1480px] px-6 pb-16 pt-40 md:px-12 lg:px-24 md:pb-20 md:pt-52">
           <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-black/60">
             Reference
           </p>
-          <h1 className="mt-5 max-w-4xl text-[52px] font-light leading-[0.95] tracking-[-0.055em] md:text-[82px] lg:text-[96px]">
+          <h1 className="mt-5 max-w-4xl text-[44px] font-light leading-[1.15] tracking-[-0.02em] md:text-[64px] lg:text-[80px]">
             AI Operations Glossary
           </h1>
           <p className="mt-8 max-w-xl text-[16px] font-light leading-[1.7] text-black/70 md:text-[17px]">
@@ -101,7 +101,7 @@ export default function GlossaryPage() {
         </section>
 
         <section aria-labelledby="glossary-terms-heading">
-          <div className="mx-auto max-w-[1480px] px-6 pb-24 pt-4 md:px-12 md:pb-36">
+          <div className="mx-auto max-w-[1480px] px-6 pb-24 pt-4 md:px-12 lg:px-24 md:pb-36">
             {GLOSSARY_ENTRIES.map((entry, index) => (
               <GlossaryRow key={entry.term} entry={entry} index={index} />
             ))}
