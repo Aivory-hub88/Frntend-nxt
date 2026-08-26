@@ -4,13 +4,13 @@ import { useEffect, useRef, useState } from 'react';
 
 const messages = [
   'Make AI Make Sense&reg;',
-  'Operational clarity, not another pilot.',
-  'From Data &rarr; Decisions &rarr; Action.',
-  'Transform operations with confidence.',
-  'Turn complexity into operational clarity.',
-  'From operational clarity to governed AI,',
+  'Operational clarity, not another pilot',
+  'From data &rarr; decisions &rarr; action',
+  'Transform operations with confidence',
+  'Turn complexity into operational clarity',
+  'From operational clarity to governed execution',
   'Assess &rarr; Design &rarr; Deploy',
-  'Turn data into decisions you can act on.',
+  'Turn data into decisions you can act on',
 ];
 
 export default function RotatingText() {
