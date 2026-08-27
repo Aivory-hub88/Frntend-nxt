@@ -17,6 +17,27 @@ import { getServiceUrl } from "./services";
 const STORAGE_KEY = "aivory_auth";
 
 /**
+ * A tier as stored against a user.
+ *
+ * Three things are conflated in this one field by the backend and are kept
+ * together for that reason: the no-plan value (`free`), the one-time products
+ * that grant a feature flag (`snapshot`, `blueprint`), and the subscription
+ * tiers (`operational`, `business`, `enterprise`). The subscription names are
+ * the 2026 rebrand ids; `foundation` and `pro` are their pre-rebrand aliases
+ * and may still appear on rows written before the rename.
+ */
+export type UserTier =
+  | "free"
+  | "snapshot"
+  | "blueprint"
+  | "operational"
+  | "business"
+  | "enterprise"
+  // Pre-rebrand aliases, still present on older rows.
+  | "foundation"
+  | "pro";
+
+/**
  * User interface — derived from the Supabase user. `account_type`/`tier` live
  * in Supabase user_metadata; completion flags default to false until the user
  * profile endpoint provides them.
@@ -27,7 +48,7 @@ export interface User {
   account_type: "free" | "demo" | "superadmin" | "admin";
   company_name?: string;
   created_at: string;
-  tier: "free" | "snapshot" | "blueprint" | "enterprise";
+  tier: UserTier;
   is_subscribed: boolean;
   has_diagnostic: boolean;
   has_snapshot: boolean;

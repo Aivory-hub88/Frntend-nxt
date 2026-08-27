@@ -214,9 +214,10 @@ const OFFER_DESCRIPTIONS: Record<string, string> = {
   [PRODUCT_IDS.DEEP_DIAGNOSTIC]: 'One-time operational maturity and AI opportunity assessment',
   [PRODUCT_IDS.BLUEPRINT]: 'Operational transformation blueprint and AI deployment strategy',
   [PRODUCT_IDS.FULL_STACK]: 'Assessment, blueprint, and transformation roadmap',
-  [PRODUCT_IDS.FOUNDATION]: 'Monthly platform licence — Operational Workspace and 1 AI Workforce',
-  [PRODUCT_IDS.PRO]: 'Monthly business licence for expanded AI operations and automation',
-  [PRODUCT_IDS.ENTERPRISE]: 'Monthly enterprise licence for governed AI operations at scale',
+  [PRODUCT_IDS.OPERATIONAL]: 'Monthly platform licence — Operational Workspace and 1 AI Workforce',
+  [PRODUCT_IDS.BUSINESS]: 'Monthly business licence for expanded AI operations and automation',
+  // Enterprise is sales-assisted and not in the product catalogue, so it
+  // publishes no Offer and needs no description here.
 };
 
 function createOffer(siteUrl: PublicSiteUrl, product: Product) {

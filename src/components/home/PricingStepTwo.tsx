@@ -70,7 +70,7 @@ const plans: Plan[] = [
       'Multilingual',
     ],
     cta: 'Request Licence',
-    productId: PRODUCT_IDS.FOUNDATION,
+    productId: PRODUCT_IDS.OPERATIONAL,
   },
   {
     name: 'Business',
@@ -89,7 +89,7 @@ const plans: Plan[] = [
       'Usage Analytics',
     ],
     cta: 'Request Licence',
-    productId: PRODUCT_IDS.PRO,
+    productId: PRODUCT_IDS.BUSINESS,
     mostPopular: true,
   },
   {

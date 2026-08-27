@@ -47,8 +47,9 @@ function requirePrice(id: string): number {
  * Every price and product id is sourced from the pricing single source of
  * truth (`pricing.ts`) rather than hard-coded here, so the payment module can
  * never silently diverge from the published homepage prices. The corrected
- * subscription prices (Foundation 20, Pro 44, Enterprise 499) and the Full
- * Stack product ($99) all flow in from `pricing.ts`.
+ * subscription prices (Operational $39, Business $99) and the Full Stack
+ * product all flow in from `pricing.ts`. Enterprise is sales-assisted and has
+ * no self-serve price, so it is not part of this config.
  */
 export const PAYMENT_CONFIG: PaymentConfig = {
   // One-time product prices (USD) — sourced from pricing.ts
@@ -56,9 +57,8 @@ export const PAYMENT_CONFIG: PaymentConfig = {
   blueprintPrice: requirePrice(PRODUCT_IDS.BLUEPRINT),
   fullStackPrice: requirePrice(PRODUCT_IDS.FULL_STACK),
   // Subscription prices — sourced from pricing.ts
-  foundationPrice: requirePrice(PRODUCT_IDS.FOUNDATION),
-  proPrice: requirePrice(PRODUCT_IDS.PRO),
-  enterprisePrice: requirePrice(PRODUCT_IDS.ENTERPRISE),
+  operationalPrice: requirePrice(PRODUCT_IDS.OPERATIONAL),
+  businessPrice: requirePrice(PRODUCT_IDS.BUSINESS),
   // Credit prices — derived from the pricing.ts credit packs
   creditPrices: CREDIT_PACKS.reduce<Record<number, number>>((map, pack) => {
     map[pack.credits] = pack.price;
@@ -70,9 +70,8 @@ export const PAYMENT_CONFIG: PaymentConfig = {
     SNAPSHOT: PRODUCT_IDS.DEEP_DIAGNOSTIC,
     BLUEPRINT: PRODUCT_IDS.BLUEPRINT,
     FULL_STACK: PRODUCT_IDS.FULL_STACK,
-    FOUNDATION: PRODUCT_IDS.FOUNDATION,
-    PRO: PRODUCT_IDS.PRO,
-    ENTERPRISE: PRODUCT_IDS.ENTERPRISE,
+    OPERATIONAL: PRODUCT_IDS.OPERATIONAL,
+    BUSINESS: PRODUCT_IDS.BUSINESS,
   },
 
   // Credit products — derived from the pricing.ts credit packs
@@ -204,9 +203,8 @@ function getPaymentCatalogDefinitions(): CatalogProductDefinition[] {
     { id: PAYMENT_CONFIG.products.SNAPSHOT, price: PAYMENT_CONFIG.snapshotPrice },
     { id: PAYMENT_CONFIG.products.BLUEPRINT, price: PAYMENT_CONFIG.blueprintPrice },
     { id: PAYMENT_CONFIG.products.FULL_STACK, price: PAYMENT_CONFIG.fullStackPrice },
-    { id: PAYMENT_CONFIG.products.FOUNDATION, price: PAYMENT_CONFIG.foundationPrice },
-    { id: PAYMENT_CONFIG.products.PRO, price: PAYMENT_CONFIG.proPrice },
-    { id: PAYMENT_CONFIG.products.ENTERPRISE, price: PAYMENT_CONFIG.enterprisePrice },
+    { id: PAYMENT_CONFIG.products.OPERATIONAL, price: PAYMENT_CONFIG.operationalPrice },
+    { id: PAYMENT_CONFIG.products.BUSINESS, price: PAYMENT_CONFIG.businessPrice },
   ];
   for (const [credits, price] of Object.entries(PAYMENT_CONFIG.creditPrices)) {
     definitions.push({ id: `credits_${credits}`, price });
@@ -426,12 +424,10 @@ export function getPaymentAmount(product: string | number): number | null {
       return PAYMENT_CONFIG.blueprintPrice;
     case PAYMENT_CONFIG.products.FULL_STACK:
       return PAYMENT_CONFIG.fullStackPrice;
-    case PAYMENT_CONFIG.products.FOUNDATION:
-      return PAYMENT_CONFIG.foundationPrice;
-    case PAYMENT_CONFIG.products.PRO:
-      return PAYMENT_CONFIG.proPrice;
-    case PAYMENT_CONFIG.products.ENTERPRISE:
-      return PAYMENT_CONFIG.enterprisePrice;
+    case PAYMENT_CONFIG.products.OPERATIONAL:
+      return PAYMENT_CONFIG.operationalPrice;
+    case PAYMENT_CONFIG.products.BUSINESS:
+      return PAYMENT_CONFIG.businessPrice;
     default:
       console.error('Invalid product:', product);
       return null;
@@ -828,7 +824,7 @@ export function getCreditPrice(amount: number): number | null {
 
 /**
  * Open payment modal for a specific product
- * @param product - Product to purchase (ai_snapshot, ai_blueprint, foundation, pro, enterprise, or credit amount)
+ * @param product - Product to purchase (ai_snapshot, ai_blueprint, operational, business, or credit amount)
  */
 export async function openPaymentModal(product: string | number): Promise<void> {
   console.log('PaymentModal: Opening for product:', product);
@@ -842,12 +838,10 @@ export async function openPaymentModal(product: string | number): Promise<void> 
     currentPaymentAmount = PAYMENT_CONFIG.blueprintPrice;
   } else if (product === PAYMENT_CONFIG.products.FULL_STACK) {
     currentPaymentAmount = PAYMENT_CONFIG.fullStackPrice;
-  } else if (product === PAYMENT_CONFIG.products.FOUNDATION) {
-    currentPaymentAmount = PAYMENT_CONFIG.foundationPrice;
-  } else if (product === PAYMENT_CONFIG.products.PRO) {
-    currentPaymentAmount = PAYMENT_CONFIG.proPrice;
-  } else if (product === PAYMENT_CONFIG.products.ENTERPRISE) {
-    currentPaymentAmount = PAYMENT_CONFIG.enterprisePrice;
+  } else if (product === PAYMENT_CONFIG.products.OPERATIONAL) {
+    currentPaymentAmount = PAYMENT_CONFIG.operationalPrice;
+  } else if (product === PAYMENT_CONFIG.products.BUSINESS) {
+    currentPaymentAmount = PAYMENT_CONFIG.businessPrice;
   } else if (typeof product === 'number') {
     currentPaymentAmount = PAYMENT_CONFIG.creditPrices[product];
     currentPaymentProduct = `credits_${product}`;

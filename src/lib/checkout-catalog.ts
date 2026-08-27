@@ -5,7 +5,7 @@
  * what the customer saw before clicking through.
  */
 
-import { PRODUCT_IDS } from '@/lib/pricing';
+import { PRODUCT_IDS, TIER_IDS } from '@/lib/pricing';
 
 export interface CheckoutServiceInfo {
   /** One-line explanation of what the service is / who it's for. */
@@ -48,7 +48,7 @@ const CHECKOUT_SERVICE_INFO: Record<string, CheckoutServiceInfo> = {
       'Executive implementation plan',
     ],
   },
-  [PRODUCT_IDS.FOUNDATION]: {
+  [PRODUCT_IDS.OPERATIONAL]: {
     description:
       'For organisations beginning their operational transformation journey.',
     features: [
@@ -61,7 +61,7 @@ const CHECKOUT_SERVICE_INFO: Record<string, CheckoutServiceInfo> = {
       'Multilingual',
     ],
   },
-  [PRODUCT_IDS.PRO]: {
+  [PRODUCT_IDS.BUSINESS]: {
     description:
       'For growing organisations modernising multiple business functions.',
     features: [
@@ -75,7 +75,7 @@ const CHECKOUT_SERVICE_INFO: Record<string, CheckoutServiceInfo> = {
       'Usage Analytics',
     ],
   },
-  [PRODUCT_IDS.ENTERPRISE]: {
+  [TIER_IDS.ENTERPRISE]: {
     description:
       'For organisation-wide transformation with enterprise governance.',
     features: [
