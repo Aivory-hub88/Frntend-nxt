@@ -413,12 +413,29 @@ export function CheckoutForm({
 
       if (isMidtransAvailable()) {
         // Snap owns channel choice, card entry and 3-D Secure from here.
-        await startMidtransSnap(result.token);
-        trackEvent('purchase', {
-          value: priceUsd,
-          currency: 'USD',
-          transaction_id: result.order_id,
-        });
+        const snapResult = await startMidtransSnap(result.token);
+
+        // startMidtransSnap resolves for pending payments as well as paid
+        // ones -- bank transfer / VA and convenience-store orders land in
+        // Snap's onPending with instructions issued and no money received.
+        // Firing `purchase` on those inflates the Google Ads Purchase
+        // conversion (a GA4 import of this very event) and feeds smart
+        // bidding orders that may never be paid, which matters here because
+        // VA is a common method for Indonesian customers. Only a settled
+        // card capture or a settlement counts; a capture still sitting in
+        // fraud review does not.
+        const transactionStatus = snapResult?.transaction_status;
+        const isPaid =
+          transactionStatus === 'settlement' ||
+          (transactionStatus === 'capture' && snapResult?.fraud_status !== 'challenge');
+
+        if (isPaid) {
+          trackEvent('purchase', {
+            value: priceUsd,
+            currency: 'USD',
+            transaction_id: result.order_id,
+          });
+        }
         setStep('success');
         return;
       }
