@@ -98,18 +98,21 @@ export default function HeroSection() {
         </p>
 
         <div
-          className="animate-slide-up-1 mt-12 md:mt-14 flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-5"
+          className="animate-slide-up-1 mt-12 md:mt-14 flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-[26px]"
           style={{ animationDelay: ENTER_DELAYS[3] }}
         >
           {/* The official lockup already reads "NVIDIA Inception Program", so
-              the row deliberately does not repeat "inception member" in text. */}
+              the row deliberately does not repeat "inception member" in text.
+              Badge, copy and gap are all scaled ~30% over the first pass --
+              at the original size the white lockup read as a stray sticker
+              rather than as part of the line. */}
           <img
             src="/images/badges/nvidia-inception-badge-v2.svg"
             alt="NVIDIA Inception Program — Aivory AI is a member (2026 cohort)"
-            className="h-[34px] md:h-[40px] w-auto shrink-0 opacity-90"
+            className="h-[44px] md:h-[52px] w-auto shrink-0 opacity-90"
           />
           <p
-            className="font-mono text-[10px] md:text-[11px] uppercase tracking-[0.14em] text-white/45 text-center md:whitespace-nowrap pointer-events-none select-none"
+            className="font-mono text-[13px] md:text-[14px] uppercase tracking-[0.14em] text-white/45 text-center md:whitespace-nowrap pointer-events-none select-none"
             aria-label="500 plus businesses transforming with Aivory. Zero training on your data."
           >
             500+ businesses transforming{' '}
