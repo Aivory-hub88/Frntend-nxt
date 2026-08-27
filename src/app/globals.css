@@ -806,6 +806,19 @@ body,
   animation-delay: 0.8s;
 }
 
+/* The hero's staggered entrance is pure movement — under reduced motion the
+   rows must simply be there, not slide. Opacity is kept at 1 rather than
+   faded, since the fade only exists to carry the translate. */
+@media (prefers-reduced-motion: reduce) {
+  .animate-slide-up-1,
+  .animate-slide-up-2,
+  .animate-slide-up-3 {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+}
+
 @keyframes gentle-bounce {
   0%, 100% {
     transform: translateY(0);

@@ -22,7 +22,7 @@ export type TechnicalFrameButtonProps =
   | TechnicalFrameNativeButtonProps;
 
 const baseClassName =
-  'group relative inline-flex items-center justify-center border border-white/20 bg-black font-mono font-medium uppercase text-white/85 transition-[border-color,color,box-shadow] duration-300 hover:border-white/45 hover:bg-black hover:text-white hover:shadow-[0_0_24px_rgba(255,255,255,0.07)] focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-white/70 focus-visible:ring-offset-2 focus-visible:ring-offset-black disabled:cursor-not-allowed disabled:opacity-45';
+  'group relative inline-flex items-center justify-center border border-white/20 bg-black font-mono font-medium uppercase text-white/85 transition-[border-color,color,box-shadow,transform] duration-300 active:scale-[0.97] active:duration-[160ms] hover:border-white/45 hover:bg-black hover:text-white hover:shadow-[0_0_24px_rgba(255,255,255,0.07)] focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-white/70 focus-visible:ring-offset-2 focus-visible:ring-offset-black disabled:cursor-not-allowed disabled:opacity-45';
 
 const sizeClassNames = {
   default: 'min-h-[52px] px-8 py-3.5 text-[11px] tracking-[0.16em]',
