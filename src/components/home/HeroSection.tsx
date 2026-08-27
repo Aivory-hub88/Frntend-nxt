@@ -47,7 +47,7 @@ export default function HeroSection() {
       >
         <div className="animate-slide-up-1" style={{ animationDelay: ENTER_DELAYS[0] }}>
           <h1
-            className="silver-swipe-text text-[29px] md:text-[45px] font-light tracking-tight text-center leading-[1.15] text-balance pointer-events-none select-none"
+            className="silver-swipe-text text-[25px] md:text-[38px] font-light tracking-tight text-center leading-[1.15] text-balance pointer-events-none select-none"
             style={{ fontFamily: "'Manrope', sans-serif" }}
           >
             Make AI Make Sense
@@ -56,8 +56,15 @@ export default function HeroSection() {
                 transparent with no background of its own and renders blank.
                 The mark opts out with a solid fill of its own. */}
             <sup
-              className="align-super text-[0.42em] tracking-normal"
-              style={{ color: '#ffffff', WebkitTextFillColor: '#ffffff' }}
+              className="text-[0.55em] tracking-normal"
+              style={{
+                color: '#ffffff',
+                WebkitTextFillColor: '#ffffff',
+                // `vertical-align: super` leaves the mark floating well clear
+                // of the wordmark. An explicit rise (relative to the mark's
+                // own size) seats it against the cap height instead.
+                verticalAlign: '0.35em',
+              }}
             >
               &reg;
             </sup>{' '}
