@@ -90,7 +90,7 @@ export default function HeroSection() {
         </div>
 
         <p
-          className="animate-slide-up-1 mt-7 md:mt-8 text-[14px] md:text-[16px] font-light tracking-tight text-white/55 pointer-events-none select-none"
+          className="animate-slide-up-1 mt-7 md:mt-8 text-[17px] md:text-[19px] font-light tracking-tight text-white/55 pointer-events-none select-none"
           style={{ fontFamily: "'Manrope', sans-serif", animationDelay: ENTER_DELAYS[2] }}
         >
           Self-guided <span className="text-white/25">&middot;</span> One sitting{' '}
@@ -98,21 +98,21 @@ export default function HeroSection() {
         </p>
 
         <div
-          className="animate-slide-up-1 mt-12 md:mt-14 flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-[26px]"
+          className="animate-slide-up-1 mt-12 md:mt-14 flex flex-col sm:flex-row items-center justify-center gap-[14px] sm:gap-[23px]"
           style={{ animationDelay: ENTER_DELAYS[3] }}
         >
           {/* The official lockup already reads "NVIDIA Inception Program", so
               the row deliberately does not repeat "inception member" in text.
-              Badge, copy and gap are all scaled ~30% over the first pass --
-              at the original size the white lockup read as a stray sticker
-              rather than as part of the line. */}
+              Badge, copy and gap are scaled together (~30% over the first
+              pass, then trimmed 10%) -- at the original size the white lockup
+              read as a stray sticker rather than as part of the line. */}
           <img
             src="/images/badges/nvidia-inception-badge-v2.svg"
             alt="NVIDIA Inception Program — Aivory AI is a member (2026 cohort)"
-            className="h-[44px] md:h-[52px] w-auto shrink-0 opacity-90"
+            className="h-[40px] md:h-[47px] w-auto shrink-0 opacity-90"
           />
           <p
-            className="font-mono text-[13px] md:text-[14px] uppercase tracking-[0.14em] text-white/45 text-center md:whitespace-nowrap pointer-events-none select-none"
+            className="font-mono text-[12px] md:text-[13px] uppercase tracking-[0.14em] text-white/45 text-center md:whitespace-nowrap pointer-events-none select-none"
             aria-label="500 plus businesses transforming with Aivory. Zero training on your data."
           >
             500+ businesses transforming{' '}
