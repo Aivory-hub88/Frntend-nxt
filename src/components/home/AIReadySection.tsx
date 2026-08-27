@@ -36,14 +36,24 @@ export default function AIReadySection() {
 
           {/* Right Column */}
           <div className="w-full md:w-1/2 flex flex-col justify-start text-left">
+            {/* The two assertions carry the full-white emphasis -- the turn
+                ("We reverse the model.") and the payoff ("Then scale with
+                governed AI agents.") -- while the steps between them stay at
+                the base weight so the paragraph still reads as one thought. */}
             <p className="text-white/80 font-light leading-relaxed text-[14px] md:text-[16px] m-0 max-w-xl">
-              Most organisations deploy AI before understanding how work gets done.{" "}
+              Most organisations deploy AI before understanding how work actually gets done.
+              <br />
+              <br />
               <span className="text-white font-light">We reverse the model.</span>
               <br />
+              Map the operation.
               <br />
-              Map the operation. Connect the systems.{" "}
+              <br />
+              Get a blueprint of quick-win automations.
+              <br />
+              <br />
               <span className="text-white font-light">
-                Deploy intelligence where it creates measurable impact.
+                Then scale with governed AI agents.
               </span>
             </p>
           </div>
