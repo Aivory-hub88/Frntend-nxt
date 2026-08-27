@@ -36,26 +36,31 @@ export default function AIReadySection() {
 
           {/* Right Column */}
           <div className="w-full md:w-1/2 flex flex-col justify-start text-left">
-            {/* The two assertions carry the full-white emphasis -- the turn
+            {/* Real blocks with their own spacing rather than stacked <br/>s:
+                double line breaks inside one <p> give every gap the same
+                height as a wrapped line, so the four beats read as one flat
+                list. `text-balance` splits the opening sentence into even
+                lines instead of running the first to the edge and stranding
+                a single word ("done.") underneath it.
+
+                The two assertions carry the full-white emphasis -- the turn
                 ("We reverse the model.") and the payoff ("Then scale with
                 governed AI agents.") -- while the steps between them stay at
-                the base weight so the paragraph still reads as one thought. */}
-            <p className="text-white/80 font-light leading-relaxed text-[14px] md:text-[16px] m-0 max-w-xl">
-              Most organisations deploy AI before understanding how work actually gets done.
-              <br />
-              <br />
-              <span className="text-white font-light">We reverse the model.</span>
-              <br />
-              Map the operation.
-              <br />
-              <br />
-              Get a blueprint of quick-win automations.
-              <br />
-              <br />
-              <span className="text-white font-light">
+                the base weight so the block still reads as one thought. */}
+            <div className="text-white/80 font-light leading-relaxed text-[14px] md:text-[16px] max-w-2xl space-y-4 md:space-y-5 [&>p]:m-0">
+              <p className="text-balance">
+                Most organisations deploy AI before understanding how work actually gets done.
+              </p>
+              <p>
+                <span className="text-white font-light">We reverse the model.</span>
+                <br />
+                Map the operation.
+              </p>
+              <p>Get a blueprint of quick-win automations.</p>
+              <p className="text-white font-light">
                 Then scale with governed AI agents.
-              </span>
-            </p>
+              </p>
+            </div>
           </div>
         </div>
       </div>

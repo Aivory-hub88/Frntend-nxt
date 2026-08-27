@@ -1,9 +1,63 @@
 'use client';
 
+import { useEffect, useRef } from 'react';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
 
 export default function VideoDemoSection() {
   const { ref, isVisible } = useScrollAnimation();
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  // The demo freezes part-way through without this. `autoPlay` starts the
+  // video at page load, while the section is still far below the fold, and
+  // Chrome suspends muted autoplay video it considers off-screen -- measured
+  // on production, it stops at ~15.8s with readyState 4, no error, and 59s
+  // already buffered. It is never resumed when the section is scrolled into
+  // view, so the visitor meets a still frame.
+  //
+  // `autoPlay` stays so the demo still moves if this effect never runs; the
+  // observer owns playback from here, and the pause handler covers the case
+  // where the browser suspends it again just as the section reveals.
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    let intersecting = false;
+    let retried = false;
+
+    // Rejects only when playback is blocked outright, which is nothing we
+    // can recover from -- and an unhandled rejection would land in the
+    // console on every scroll past.
+    const attemptPlay = () => void video.play().catch(() => {});
+
+    const onPause = () => {
+      // Only a browser-initiated pause can happen while the video is in
+      // view; retry once so a suspension that lands mid-reveal does not
+      // strand it, then leave it alone rather than fighting in a loop.
+      if (!intersecting || retried) return;
+      retried = true;
+      attemptPlay();
+    };
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        intersecting = entry.isIntersecting;
+        if (intersecting) {
+          retried = false;
+          attemptPlay();
+        } else {
+          video.pause();
+        }
+      },
+      { threshold: 0.15 },
+    );
+
+    video.addEventListener('pause', onPause);
+    observer.observe(video);
+    return () => {
+      video.removeEventListener('pause', onPause);
+      observer.disconnect();
+    };
+  }, []);
 
   return (
     <div
@@ -29,6 +83,7 @@ export default function VideoDemoSection() {
           {/* Video */}
           <div className="relative w-full bg-black leading-none">
             <video
+              ref={videoRef}
               autoPlay
               loop
               muted

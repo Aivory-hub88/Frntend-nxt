@@ -60,10 +60,12 @@ export default function HeroSection() {
               style={{
                 color: '#ffffff',
                 WebkitTextFillColor: '#ffffff',
-                // `vertical-align: super` leaves the mark floating well clear
-                // of the wordmark. An explicit rise (relative to the mark's
-                // own size) seats it against the cap height instead.
-                verticalAlign: '0.35em',
+                // Manrope already draws the mark high inside its own em box
+                // (its ink stops ~6px above the baseline at this size), so
+                // <sup>'s default `vertical-align: super` stacks a second
+                // rise on top and leaves it floating. Sitting it on the
+                // baseline lands its top at the cap height of the wordmark.
+                verticalAlign: 'baseline',
               }}
             >
               &reg;
