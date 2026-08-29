@@ -46,8 +46,8 @@ export default function HomePage() {
                 className="text-[26px] sm:text-[28px] md:text-[28px] lg:text-[32px] font-light tracking-tight text-[#B3B3B3] leading-[1.35] max-w-3xl"
                 style={{ fontFamily: "var(--font-manrope), 'Manrope', sans-serif", fontWeight: 300 }}
               >
-                Beyond AI chat.<br />
-                <span className="text-white font-light">Built to understand how your business actually operates.</span>
+                Beyond AI chat<br />
+                <span className="text-white font-light">Understand how business really works</span>
               </h2>
             </div>
 
