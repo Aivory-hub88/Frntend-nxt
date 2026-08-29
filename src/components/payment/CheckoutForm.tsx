@@ -406,11 +406,20 @@ export function CheckoutForm({
       // Card details go straight from this form to Midtrans and come back as a
       // single-use token. They never touch an Aivory server, and the customer
       // never types them a second time into someone else's popup.
-      if (!isMidtransAvailable() && !window.MIDTRANS_CLIENT_KEY) {
+      // The client key is ALWAYS needed here. This used to be guarded by
+      // `!isMidtransAvailable() && ...`, copied from the Snap path where that
+      // reads "Snap is already loaded, so no key is needed" — but tokenisation
+      // needs the key regardless. Once Snap's SDK was present the key was
+      // never fetched, so this bailed out and every card silently fell back to
+      // the Snap popup.
+      if (!window.MIDTRANS_CLIENT_KEY) {
         await fetchMidtransClientKey();
       }
       const clientKey = window.MIDTRANS_CLIENT_KEY;
-      if (!clientKey) return false;
+      if (!clientKey) {
+        console.warn('[checkout] No Midtrans client key; falling back to Snap');
+        return false;
+      }
 
       await loadMidtrans3ds(clientKey, window.MIDTRANS_IS_PRODUCTION !== false);
       cardTokenId = await getCardToken({
@@ -421,7 +430,13 @@ export function CheckoutForm({
     }
 
     const result = await createDirectCharge(productId, picked, cardTokenId);
-    if (result.fallback_to_snap || !result.success) return false;
+    if (result.fallback_to_snap || !result.success) {
+      console.warn(
+        '[checkout] Direct charge declined, falling back to Snap:',
+        result.error || 'channel not served by Core API',
+      );
+      return false;
+    }
 
     // A card charge that needs 3-D Secure comes back with the issuer's URL
     // instead of a finished payment.
