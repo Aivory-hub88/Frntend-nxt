@@ -87,7 +87,7 @@ export default function EnterpriseComparisonSection() {
           COMPETITIVE LANDSCAPE
         </SpotlightButton>
         <h3
-          className="text-4xl md:text-5xl font-light tracking-normal"
+          className="text-[26px] sm:text-[28px] md:text-[28px] lg:text-[32px] font-light tracking-tight"
           style={{ fontFamily: "var(--font-manrope), 'Manrope', sans-serif", fontWeight: 300 }}
         >
           Why Enterprise Choose <span style={{ color: '#e4effd' }}>Aivory.</span>
@@ -158,7 +158,8 @@ export default function EnterpriseComparisonSection() {
       </motion.div>
 
       <p className="text-center text-white/40 text-sm font-light mt-8 max-w-xl mx-auto">
-        Nobody else combines consulting-grade business understanding with software-grade scalability.
+        Understand deeply.<br />
+        Scale intelligently.
       </p>
     </section>
   );
