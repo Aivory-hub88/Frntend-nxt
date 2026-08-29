@@ -1,5 +1,11 @@
 'use client';
 
+/* Pre-emit critique: P5 H4 E5 S5 R5 V3 D5 */
+/* V3 is a knowing trade: a 2-lead/6-supporting hierarchy was built and measured,
+   and it grew the section 1049px -> 1275px with a void mid-card because the copy
+   is too short to fill a half-width panel. Eight equal claims read better on an
+   even grid than under a hierarchy the content cannot support. */
+
 import type { ReactNode } from 'react';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
 
@@ -15,6 +21,8 @@ import { useScrollAnimation } from '@/hooks/useScrollAnimation';
  */
 type Item = {
   tag: string;
+  /** Which halftone field this card's ornament uses; no two cards repeat. */
+  pattern: Pattern;
   title: string;
   body: string;
   icon: ReactNode;
@@ -27,14 +35,83 @@ const svg = {
   viewBox: '0 0 24 24',
   fill: 'none',
   stroke: 'currentColor',
-  strokeWidth: 0.9,
   strokeLinecap: 'round' as const,
   strokeLinejoin: 'round' as const,
 };
 
+/**
+ * Halftone ornament. Every card carries one and no two are alike — but the
+ * variation has to be structural, not cosmetic: eight different falloffs of the
+ * same corner blob still read as one repeated shape. So each pattern here is a
+ * different geometry (rings, rays, stripes, chevrons, lattice, wave, ramp,
+ * corner arc), and each carries its own grid pitch and dot scale.
+ *
+ * Density is a pure function of grid position — no randomness — so server and
+ * client render identical markup and hydration stays quiet.
+ */
+type Pattern = 'arc' | 'rings' | 'rays' | 'columns' | 'chevron' | 'wave' | 'lattice' | 'ramp';
+
+const clamp01 = (n: number) => (n < 0 ? 0 : n > 1 ? 1 : n);
+/** 0→1→0 triangle wave; the building block for evenly repeating bands. */
+const tri = (t: number) => 1 - Math.abs(((t % 1) + 1) % 1 * 2 - 1);
+
+type Spec = {
+  /** Grid pitch. Coarse grids read as bold ornament, fine ones as texture. */
+  cols: number;
+  rows: number;
+  maxR: number;
+  /** u,v run 0→1 across the ornament box. */
+  field: (u: number, v: number) => number;
+};
+
+const PATTERNS: Record<Pattern, Spec> = {
+  // Quarter arc packed into the corner — the reference's own motif.
+  arc: { cols: 11, rows: 11, maxR: 9.5, field: (u, v) => clamp01(1 - Math.hypot(1 - u, 1 - v) / 1.05) },
+  // Concentric bullseye.
+  rings: { cols: 12, rows: 12, maxR: 8.5, field: (u, v) => Math.abs(Math.sin(Math.hypot(u - 0.55, v - 0.55) * Math.PI * 3.1)) },
+  // Sunburst: size swings with the angle around the centre, not the distance.
+  rays: { cols: 12, rows: 12, maxR: 8.5, field: (u, v) => Math.abs(Math.sin(Math.atan2(v - 0.5, u - 0.5) * 5)) * clamp01(Math.hypot(u - 0.5, v - 0.5) * 2.6) },
+  // Vertical bars, constant down the column.
+  columns: { cols: 13, rows: 11, maxR: 9, field: (u) => tri(u * 3.2) },
+  // Diagonal chevrons folded about the vertical centre line.
+  chevron: { cols: 12, rows: 12, maxR: 8.5, field: (u, v) => tri((Math.abs(u - 0.5) + v) * 2.6) },
+  // Single travelling wave.
+  wave: { cols: 14, rows: 11, maxR: 8, field: (u, v) => clamp01(1 - Math.abs(v - (0.5 + 0.36 * Math.sin(u * Math.PI * 2))) * 3) },
+  // Diamond lattice.
+  lattice: { cols: 12, rows: 12, maxR: 8.5, field: (u, v) => tri((Math.abs(u - 0.5) + Math.abs(v - 0.5)) * 2.8) },
+  // Clean horizontal ramp, every row identical — a graded wall, not a blob.
+  ramp: { cols: 13, rows: 11, maxR: 8.5, field: (u) => clamp01(u * 1.1) },
+};
+
+function Halftone({ pattern, tone }: { pattern: Pattern; tone: 'ink' | 'onAccent' }) {
+  const { cols, rows, maxR, field } = PATTERNS[pattern];
+  const step = maxR * 2.35;
+  const dots = [];
+
+  for (let j = 0; j < rows; j += 1) {
+    for (let i = 0; i < cols; i += 1) {
+      const r = field(i / (cols - 1), j / (rows - 1)) * maxR;
+      if (r < 0.5) continue;
+      dots.push(<circle key={`${i}-${j}`} cx={i * step + step / 2} cy={j * step + step / 2} r={r} />);
+    }
+  }
+
+  return (
+    <svg
+      viewBox={`0 0 ${cols * step} ${rows * step}`}
+      aria-hidden="true"
+      className={`h-full w-full ${tone === 'onAccent' ? 'text-[#110f0e]' : 'text-[#ff2f00]'}`}
+      fill="currentColor"
+    >
+      {dots}
+    </svg>
+  );
+}
+
 const privacyItems: Item[] = [
   {
     tag: 'no training',
+    pattern: 'arc',
     title: "We don't train on your data.",
     body: 'Your prompts, documents and outputs are never folded back into a model.',
     accent: true,
@@ -47,6 +124,7 @@ const privacyItems: Item[] = [
   },
   {
     tag: 'on-premise',
+    pattern: 'chevron',
     title: 'Processed and stored locally.',
     body: 'Workloads run on infrastructure you own, inside your own network boundary.',
     icon: (
@@ -59,6 +137,7 @@ const privacyItems: Item[] = [
   },
   {
     tag: 'compliance',
+    pattern: 'rays',
     title: 'GDPR compliant by design.',
     body: 'Data minimisation, retention limits and erasure are built into the pipeline.',
     icon: (
@@ -70,6 +149,7 @@ const privacyItems: Item[] = [
   },
   {
     tag: 'no logs',
+    pattern: 'wave',
     title: 'Zero server logging.',
     body: 'No request bodies, no transcripts, no silent copies held for debugging.',
     icon: (
@@ -82,6 +162,7 @@ const privacyItems: Item[] = [
   },
   {
     tag: 'end-to-end',
+    pattern: 'ramp',
     title: 'End-to-end private.',
     body: 'Encrypted in transit from the first request through to the final response.',
     icon: (
@@ -96,6 +177,7 @@ const privacyItems: Item[] = [
   },
   {
     tag: 'at rest',
+    pattern: 'rings',
     title: 'Encrypted at rest.',
     body: 'Every stored record sits behind AES-256 with keys held on your side.',
     icon: (
@@ -108,6 +190,7 @@ const privacyItems: Item[] = [
   },
   {
     tag: 'no sharing',
+    pattern: 'columns',
     title: 'No third-party sharing.',
     body: 'Nothing is passed to advertisers, brokers or analytics vendors. Ever.',
     icon: (
@@ -119,6 +202,7 @@ const privacyItems: Item[] = [
   },
   {
     tag: 'enterprise',
+    pattern: 'lattice',
     title: 'Enterprise grade.',
     body: 'Role-based access, audit trails and single sign-on across every workspace.',
     icon: (
@@ -140,7 +224,8 @@ export default function PrivacySection() {
       ref={ref}
       data-privacy-layout="editorial"
       data-privacy-icon-count="8"
-      className={`animate-on-scroll ${isVisible ? 'is-visible' : ''} w-full border-t border-white/10 py-20 font-sans text-white md:py-28`}
+      className={`animate-on-scroll ${isVisible ? 'is-visible' : ''} w-full border-t border-white/10 font-sans text-white`}
+      style={{ paddingBlock: 'clamp(4.5rem, 8vw, 7.5rem)' }}
     >
       <div className="mx-auto max-w-[1400px] px-6 md:px-12 lg:px-24">
         <div className="grid gap-10 pb-14 lg:grid-cols-12 lg:pb-20">
@@ -176,55 +261,59 @@ export default function PrivacySection() {
           {privacyItems.map((item) => (
             <article
               key={item.title}
-              className={`privacy-card group flex min-h-[290px] flex-col rounded-[20px] border p-7 ${
+              className={`privacy-card relative flex min-h-[330px] flex-col overflow-hidden rounded-[20px] border p-7 ${
                 item.accent
-                  ? 'privacy-card--accent border-transparent bg-[#c4c9b8] text-[#110f0e]'
-                  : 'border-white/[0.07] bg-[#151312] text-white'
+                  ? 'privacy-card--accent border-transparent bg-[#ff2f00] text-[#110f0e]'
+                  : 'border-transparent bg-[#ededed] text-[#110f0e]'
               }`}
             >
               <p
                 className={`font-mono text-[10px] uppercase tracking-[0.2em] ${
-                  item.accent ? 'text-[#110f0e]/55' : 'text-white/40'
+                  item.accent ? 'text-[#110f0e]' : 'text-[#110f0e]/70'
                 }`}
               >
                 {item.tag}
               </p>
 
               <h3
-                className="mt-4 text-[21px] font-light leading-[1.22] tracking-[-0.02em]"
-                style={{ fontFamily: "'Manrope', sans-serif", fontWeight: 300 }}
+                className="mt-4 leading-[1.2] tracking-[-0.02em]"
+                style={{
+                  fontFamily: "'Manrope', sans-serif",
+                  fontWeight: 400,
+                  fontSize: 'clamp(19px, 1.5vw, 21px)',
+                }}
               >
                 {item.title}
               </h3>
 
               <p
-                className={`mt-3 text-[13.5px] font-light leading-[1.6] ${
-                  item.accent ? 'text-[#110f0e]/65' : 'text-white/45'
-                }`}
+                className={`mt-3 font-light leading-[1.6] ${
+                  item.accent ? 'text-[#110f0e]' : 'text-[#110f0e]/65'
+                } text-[13.5px]`}
                 style={{ fontFamily: "'Manrope', sans-serif", fontWeight: 300 }}
               >
                 {item.body}
               </p>
 
-              <div className="mt-auto flex items-end justify-between pt-10">
-                <span
-                  className={`privacy-card__mark block h-11 w-11 ${
-                    item.accent ? 'text-[#110f0e]/75' : 'text-white/55'
-                  }`}
-                >
-                  {item.icon}
-                </span>
-                <span
-                  aria-hidden="true"
-                  className={`privacy-card__plus flex h-7 w-7 items-center justify-center rounded-full ${
-                    item.accent ? 'bg-[#110f0e]/10 text-[#110f0e]/70' : 'bg-white/[0.06] text-white/50'
-                  }`}
-                >
-                  <svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth={1.2} strokeLinecap="round">
-                    <path d="M6 1.5v9M1.5 6h9" />
-                  </svg>
-                </span>
-              </div>
+              <span
+                aria-hidden="true"
+                className="pointer-events-none absolute -bottom-8 -right-8 h-[215px] w-[215px]"
+                style={{
+                  maskImage: 'linear-gradient(to top, #000 46%, transparent 88%)',
+                  WebkitMaskImage: 'linear-gradient(to top, #000 46%, transparent 88%)',
+                }}
+              >
+                <Halftone pattern={item.pattern} tone={item.accent ? 'onAccent' : 'ink'} />
+              </span>
+
+              <span
+                className={`privacy-card__mark relative mt-auto block h-11 w-11 pt-9 ${
+                  item.accent ? 'text-[#110f0e]' : 'text-[#110f0e]/70'
+                }`}
+                style={{ strokeWidth: 0.9, boxSizing: 'content-box' }}
+              >
+                {item.icon}
+              </span>
             </article>
           ))}
         </div>
