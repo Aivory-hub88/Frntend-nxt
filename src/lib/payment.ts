@@ -561,6 +561,8 @@ export interface DirectChargeResult {
 export async function createDirectCharge(
   product: string | number,
   channel: string,
+  /** Single-use card token from the browser. Required for `credit_card`. */
+  cardTokenId?: string,
 ): Promise<DirectChargeResult> {
   if (!isAuthenticated()) {
     throw new Error('User not authenticated');
@@ -589,6 +591,7 @@ export async function createDirectCharge(
       channel,
       customer_email: user.email,
       customer_first_name: user.email.split('@')[0],
+      ...(cardTokenId ? { card_token_id: cardTokenId } : {}),
     }),
   });
 

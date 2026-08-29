@@ -35,6 +35,7 @@ import {
   fetchMidtransClientKey,
 } from '@/lib/payment';
 import { createDirectCharge, type DirectChargeResult } from '@/lib/payment';
+import { loadMidtrans3ds, getCardToken, authenticate3ds } from '@/lib/midtrans-3ds';
 import { formatCheckoutPrice, type CheckoutCurrency } from '@/lib/checkout-format';
 import { SpotlightButton } from '@/components/ui/SpotlightButton';
 import TurnstileWidget from '@/components/payment/TurnstileWidget';
@@ -61,7 +62,7 @@ type Step =
   | 'processing'
   | 'awaiting'
   | 'success';
-type Channel = 'credit_card' | 'gopay' | 'dana' | 'qris';
+type Channel = 'credit_card' | 'gopay' | 'qris';
 
 export interface CheckoutFormProps {
   productId: string;
@@ -93,15 +94,6 @@ const CHANNELS: { id: Channel; label: string; badge: React.ReactNode }[] = [
     badge: (
       <div className="px-2 h-5 bg-blue-500 rounded flex items-center justify-center text-[10px] font-bold text-white">
         gopay
-      </div>
-    ),
-  },
-  {
-    id: 'dana',
-    label: 'DANA (E-Wallet)',
-    badge: (
-      <div className="px-2 h-5 bg-[#118EEA] rounded flex items-center justify-center text-[10px] font-bold text-white">
-        DANA
       </div>
     ),
   },
@@ -306,6 +298,9 @@ export function CheckoutForm({
   // Core API result for the channel the customer picked — the QR, deeplink or
   // VA number we draw ourselves instead of handing the screen to Snap.
   const [charge, setCharge] = useState<DirectChargeResult | null>(null);
+  // The issuing bank's 3-D Secure page, shown in an overlay so the customer
+  // stays on this checkout instead of being sent to a separate tab.
+  const [threeDsUrl, setThreeDsUrl] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [langOpen, setLangOpen] = useState(false);
 
@@ -363,7 +358,7 @@ export function CheckoutForm({
     hour12: false,
   });
 
-  const isEwallet = channel === 'gopay' || channel === 'dana';
+  const isEwallet = channel === 'gopay';
   const channelLabel = CHANNELS.find((c) => c.id === channel)?.label ?? '';
 
   const detailsValid =
@@ -391,7 +386,7 @@ export function CheckoutForm({
   // on purpose: it needs Midtrans' browser tokenisation library first. DANA is
   // absent because Core API has no payment_type for it at all — both keep
   // running through Snap.
-  const DIRECT_CHANNELS = new Set(['gopay', 'qris']);
+  const DIRECT_CHANNELS = new Set(['gopay', 'qris', 'credit_card']);
 
   // Opt-in while the direct path is proven against real money. Until a real
   // charge per channel has settled, every customer keeps the Snap flow that is
@@ -402,8 +397,48 @@ export function CheckoutForm({
     new URLSearchParams(window.location.search).get('pay') === 'direct';
 
   const runDirectCharge = async (picked: Channel): Promise<boolean> => {
-    const result = await createDirectCharge(productId, picked);
+    let cardTokenId: string | undefined;
+
+    if (picked === 'credit_card') {
+      // Card details go straight from this form to Midtrans and come back as a
+      // single-use token. They never touch an Aivory server, and the customer
+      // never types them a second time into someone else's popup.
+      if (!isMidtransAvailable() && !window.MIDTRANS_CLIENT_KEY) {
+        await fetchMidtransClientKey();
+      }
+      const clientKey = window.MIDTRANS_CLIENT_KEY;
+      if (!clientKey) return false;
+
+      await loadMidtrans3ds(clientKey, window.MIDTRANS_IS_PRODUCTION !== false);
+      cardTokenId = await getCardToken({
+        number: cardNumber,
+        expiry: cardExpiry,
+        cvv: cardCvv,
+      });
+    }
+
+    const result = await createDirectCharge(productId, picked, cardTokenId);
     if (result.fallback_to_snap || !result.success) return false;
+
+    // A card charge that needs 3-D Secure comes back with the issuer's URL
+    // instead of a finished payment.
+    if (result.redirect_url) {
+      const outcome = await authenticate3ds(
+        result.redirect_url,
+        (url) => setThreeDsUrl(url),
+        () => setThreeDsUrl(null),
+      );
+      if (outcome === 'success') {
+        trackEvent('purchase', {
+          value: priceUsd,
+          currency: 'USD',
+          transaction_id: result.order_id,
+        });
+        setStep('success');
+        return true;
+      }
+    }
+
     setCharge(result);
     setStep('awaiting');
     return true;
@@ -1071,6 +1106,30 @@ export function CheckoutForm({
             <p className="mt-6 text-[15px] text-gray-600">
               {isEwallet ? `Confirming your ${channelLabel.replace(' (E-Wallet)', '')} payment…` : 'Processing your payment…'}
             </p>
+          </div>
+        )}
+
+        {/* ---- 3-D SECURE ---- */}
+        {threeDsUrl && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4">
+            <div className="w-full max-w-md overflow-hidden rounded-2xl bg-white shadow-2xl">
+              <div className="border-b border-gray-200 px-5 py-3">
+                <p className="text-[13px] font-medium text-gray-900">
+                  Verify with your bank
+                </p>
+                <p className="mt-0.5 text-[12px] text-gray-500">
+                  {/* Naming the owner of this screen matters: it looks nothing
+                      like our checkout, and an unexplained bank page mid-payment
+                      is exactly what a phishing attempt looks like. */}
+                  This step is provided by your card issuer.
+                </p>
+              </div>
+              <iframe
+                src={threeDsUrl}
+                title="3-D Secure verification"
+                className="h-[420px] w-full border-0"
+              />
+            </div>
           </div>
         )}
 
