@@ -16,7 +16,7 @@ const METHODS = [
 export default function PaymentMethods() {
   return (
     <div className="flex flex-col items-center gap-3">
-      <span className="text-[10px] uppercase tracking-[0.16em] text-[#494949]/50 font-medium">
+      <span className="text-[10px] uppercase tracking-[0.16em] text-[#494949] font-medium">
         We accept
       </span>
       <ul className="flex flex-wrap items-center justify-center gap-x-7 gap-y-4 list-none m-0 p-0">
