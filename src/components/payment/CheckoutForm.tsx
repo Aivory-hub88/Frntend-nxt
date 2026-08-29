@@ -262,17 +262,25 @@ function QrPlaceholder() {
   );
 }
 
+/**
+ * Midtrans attribution badge. The wordmark used to be typed out in Tailwind
+ * classes; it is now the official lockup from midtrans.com. The white-on-dark
+ * variant sits at /payments/midtrans.svg if a dark surface ever needs it.
+ * Spacing is deliberately left to the call site.
+ */
 function MidtransBadge() {
   return (
-    <div className="mt-12 flex justify-center">
-      <div className="inline-flex items-center gap-2 border border-blue-200 bg-blue-50/50 rounded px-3 py-1.5">
-        <span className="text-[10px] font-semibold text-blue-400 tracking-wider">
-          POWERED BY
-        </span>
-        <span className="text-sm font-bold text-blue-500 tracking-tight">
-          midtrans
-        </span>
-      </div>
+    <div className="inline-flex items-center gap-2.5 border border-blue-200 bg-blue-50/50 rounded px-3 py-1.5">
+      <span className="text-[10px] font-semibold text-blue-400 tracking-wider">
+        POWERED BY
+      </span>
+      <img
+        src="/payments/midtrans-blue.svg"
+        alt="Midtrans"
+        height={15}
+        style={{ height: 15, width: 'auto' }}
+        decoding="async"
+      />
     </div>
   );
 }
@@ -902,7 +910,9 @@ export function CheckoutForm({
                 {verifying ? 'Verifying…' : 'Continue'}
               </SpotlightButton>
             </div>
-            <MidtransBadge />
+            <div className="mt-12 flex justify-center">
+              <MidtransBadge />
+            </div>
           </div>
         )}
 
@@ -1073,14 +1083,17 @@ export function CheckoutForm({
                 was true. It now also carries a real card on the live path,
                 where "no payment data is transmitted" is flatly false and
                 exactly the wrong thing to tell someone about to be charged.
-                Card details go straight to Midtrans for tokenisation; they
-                never reach an Aivory server, which is what the live wording
-                should say. */}
-            <p className="mt-4 text-center text-xs text-gray-400">
-              {MOCK_PAYMENT
-                ? 'Preview only — no payment data is transmitted or stored.'
-                : 'Powered by Midtrans — card details go directly to Midtrans and are never stored by Aivory.'}
-            </p>
+                The live path therefore shows the Midtrans badge instead of a
+                claim about where the card data goes. */}
+            {MOCK_PAYMENT ? (
+              <p className="mt-4 text-center text-xs text-gray-400">
+                Preview only — no payment data is transmitted or stored.
+              </p>
+            ) : (
+              <div className="mt-5 flex justify-center">
+                <MidtransBadge />
+              </div>
+            )}
           </div>
         )}
 
