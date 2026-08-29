@@ -3,9 +3,17 @@
  * Handles all API calls for the careers/vacancies system
  */
 
-import { getServiceUrl } from "./services";
+import { resolveFetchBase } from "./services";
 
-const API_BASE_URL = getServiceUrl("careers");
+/**
+ * Base URL for the careers service, or null when this environment cannot
+ * reach it — see `resolveFetchBase`. Resolved per call rather than once at
+ * module load, because the same module is evaluated on both the server and
+ * the client and the answer differs.
+ */
+function careersBase(): string | null {
+  return resolveFetchBase("careers");
+}
 
 /**
  * Vacancy interface matching the avry-careers service response
@@ -30,12 +38,17 @@ export interface Vacancy {
  * @returns Promise resolving to array of open vacancies
  */
 export async function getVacancies(): Promise<Vacancy[]> {
+  const base = careersBase();
+  // No usable base means a build-time prerender, where the careers container
+  // is not on the network at all. Serve the empty list the caller already
+  // falls back to; ISR fills the page in on the first revalidation.
+  if (!base) return [];
+
   try {
-    // Short timeout so an unreachable internal service URL (e.g. during
-    // `docker build`, which has no network route to the other containers)
-    // fails fast instead of hanging the caller — this function already
-    // degrades to [] on failure below.
-    const response = await fetch(`${API_BASE_URL}/api/vacancies`, {
+    // Short timeout so an unreachable internal service URL (e.g. a container
+    // that is up but not yet accepting connections) fails fast instead of
+    // hanging the caller — this function already degrades to [] below.
+    const response = await fetch(`${base}/api/vacancies`, {
       headers: {
         "Content-Type": "application/json",
       },
@@ -60,8 +73,11 @@ export async function getVacancies(): Promise<Vacancy[]> {
  * @returns Promise resolving to vacancy detail or null
  */
 export async function getVacancy(vacancyId: string): Promise<Vacancy | null> {
+  const base = careersBase();
+  if (!base) return null;
+
   try {
-    const response = await fetch(`${API_BASE_URL}/api/vacancies/${vacancyId}`, {
+    const response = await fetch(`${base}/api/vacancies/${vacancyId}`, {
       headers: {
         "Content-Type": "application/json",
       },
@@ -115,9 +131,12 @@ export interface ApplicationFormSchema {
 export async function getApplicationFormSchema(
   vacancyId: string
 ): Promise<ApplicationFormSchema | null> {
+  const base = careersBase();
+  if (!base) return null;
+
   try {
     const response = await fetch(
-      `${API_BASE_URL}/api/vacancies/${vacancyId}/form`,
+      `${base}/api/vacancies/${vacancyId}/form`,
       {
         headers: {
           "Content-Type": "application/json",
@@ -155,9 +174,14 @@ export async function submitApplication(
   vacancyId: string,
   formData: FormData
 ): Promise<{ success: boolean; error?: string }> {
+  const base = careersBase();
+  if (!base) {
+    return { success: false, error: "Applications are unavailable right now. Please try again shortly." };
+  }
+
   try {
     const response = await fetch(
-      `${API_BASE_URL}/api/vacancies/${vacancyId}/apply`,
+      `${base}/api/vacancies/${vacancyId}/apply`,
       {
         method: "POST",
         body: formData,
