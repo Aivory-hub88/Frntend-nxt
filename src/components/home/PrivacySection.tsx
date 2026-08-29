@@ -1,93 +1,134 @@
 'use client';
 
-import type { StaticImageData } from 'next/image';
+import type { ReactNode } from 'react';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
 
 /**
- * Imported rather than referenced by public path so the emitted URL carries a
- * content hash. Swapping the art then changes the URL, which is the only thing
- * that reliably evicts an already-cached image from browsers and the CDN edge.
- */
-import noTraining from '../../../public/images/privacy/01-no-training.webp';
-import onPremise from '../../../public/images/privacy/02-on-premise.webp';
-import compliance from '../../../public/images/privacy/03-compliance.webp';
-import noLogs from '../../../public/images/privacy/04-no-logs.webp';
-import endToEnd from '../../../public/images/privacy/05-end-to-end.webp';
-import atRest from '../../../public/images/privacy/06-at-rest.webp';
-import noSharing from '../../../public/images/privacy/07-no-sharing.webp';
-import enterprise from '../../../public/images/privacy/08-enterprise.webp';
-
-/**
- * Each card is a woven tapestry panel — hand-generated art living in
- * public/images/privacy. Masters are kept out of the bundle in art-masters/privacy.
- * Prompts and the regeneration brief: docs/privacy-card-art-prompts.json
+ * Card layout follows the Pangram Pangram / Apple product-card pattern:
+ * eyebrow label, a short display headline, one supporting line, and a
+ * minimal line mark anchored to the bottom of the card. The ornate tapestry
+ * art it replaced read as decorative stock and sat outside the rest of the
+ * site's restrained visual language.
+ *
+ * Icons are inline so they inherit `currentColor` and stay crisp on the
+ * accent card, where the palette flips to dark-on-light.
  */
 type Item = {
-  text: string;
   tag: string;
-  image: StaticImageData;
-  /** Describes the tapestry itself, for anyone who can't see it. */
-  alt: string;
-  /** Warm base behind the panel while the image decodes. */
-  tint: string;
+  title: string;
+  body: string;
+  icon: ReactNode;
+  /** Exactly one card carries the brand accent, as the section's focal point. */
+  accent?: boolean;
+};
+
+/** Shared geometry so every mark reads at the same optical weight. */
+const svg = {
+  viewBox: '0 0 24 24',
+  fill: 'none',
+  stroke: 'currentColor',
+  strokeWidth: 0.9,
+  strokeLinecap: 'round' as const,
+  strokeLinejoin: 'round' as const,
 };
 
 const privacyItems: Item[] = [
   {
-    text: "We don't train on your data.",
     tag: 'no training',
-    image: noTraining,
-    alt: 'An embroidered coat of arms: a padlock and globe on a shield held by a lion and a griffin, over a banner reading Privacy.',
-    tint: '#2E2A1C',
+    title: "We don't train on your data.",
+    body: 'Your prompts, documents and outputs are never folded back into a model.',
+    accent: true,
+    icon: (
+      <svg {...svg} aria-hidden="true">
+        <rect x="8" y="8" width="8" height="8" rx="1.5" />
+        <path d="M10 5V8M14 5V8M10 16v3M14 16v3M5 10h3M5 14h3M16 10h3M16 14h3" />
+      </svg>
+    ),
   },
   {
-    text: 'Processed & Stored Locally',
     tag: 'on-premise',
-    image: onPremise,
-    alt: 'An embroidered shield bearing a fortified castle with a golden padlock and key, flanked by stitched dragons.',
-    tint: '#1D2A33',
+    title: 'Processed and stored locally.',
+    body: 'Workloads run on infrastructure you own, inside your own network boundary.',
+    icon: (
+      <svg {...svg} aria-hidden="true">
+        <rect x="3.5" y="4.5" width="17" height="6" rx="1.5" />
+        <rect x="3.5" y="13.5" width="17" height="6" rx="1.5" />
+        <path d="M7 7.5h.01M7 16.5h.01" />
+      </svg>
+    ),
   },
   {
-    text: 'GDPR compliant by design.',
     tag: 'compliance',
-    image: compliance,
-    alt: 'An embroidered shield lettered GDPR ringed by twelve stars, encircled by stitched figures holding hands.',
-    tint: '#3A2418',
+    title: 'GDPR compliant by design.',
+    body: 'Data minimisation, retention limits and erasure are built into the pipeline.',
+    icon: (
+      <svg {...svg} aria-hidden="true">
+        <path d="M12 3.5l7 2.5v6c0 4-3 7.2-7 8.5-4-1.3-7-4.5-7-8.5V6l7-2.5z" />
+        <path d="M9 12l2.2 2.2L15.5 10" />
+      </svg>
+    ),
   },
   {
-    text: 'Zero server logging',
     tag: 'no logs',
-    image: noLogs,
-    alt: 'Embroidered server racks bound by a knotted cord reading Zero Logs, closed with a padlock marked Private.',
-    tint: '#33291B',
+    title: 'Zero server logging.',
+    body: 'No request bodies, no transcripts, no silent copies held for debugging.',
+    icon: (
+      <svg {...svg} aria-hidden="true">
+        <path d="M6.5 3.5h7l4 4v13h-11z" />
+        <path d="M13.5 3.5v4h4" />
+        <path d="M9.5 14.5h5" />
+      </svg>
+    ),
   },
   {
-    text: 'End to end private',
     tag: 'end-to-end',
-    image: endToEnd,
-    alt: 'Two stitched Renaissance figures holding a woven banner that reads End To End Private, cherubs in each corner.',
-    tint: '#3A2A1E',
+    title: 'End-to-end private.',
+    body: 'Encrypted in transit from the first request through to the final response.',
+    icon: (
+      <svg {...svg} aria-hidden="true">
+        <circle cx="4" cy="12" r="1.8" />
+        <circle cx="20" cy="12" r="1.8" />
+        <path d="M5.8 12h2.7M15.5 12h2.7" />
+        <rect x="9" y="10.5" width="6" height="5.5" rx="1.2" />
+        <path d="M10.5 10.5V9a1.5 1.5 0 013 0v1.5" />
+      </svg>
+    ),
   },
   {
-    text: 'Encrypted at rest',
     tag: 'at rest',
-    image: atRest,
-    alt: 'Two embroidered figures holding sealed scrolls, a padlock and key stitched between them inside a braided cord.',
-    tint: '#2B3140',
+    title: 'Encrypted at rest.',
+    body: 'Every stored record sits behind AES-256 with keys held on your side.',
+    icon: (
+      <svg {...svg} aria-hidden="true">
+        <ellipse cx="12" cy="6.5" rx="7" ry="2.75" />
+        <path d="M5 6.5v11c0 1.5 3.1 2.75 7 2.75s7-1.25 7-2.75v-11" />
+        <path d="M9.5 13.5h5v4h-5zM10.75 13.5v-1.25a1.25 1.25 0 012.5 0v1.25" />
+      </svg>
+    ),
   },
   {
-    text: 'No third-party sharing',
     tag: 'no sharing',
-    image: noSharing,
-    alt: 'An embroidered guard with a padlock shield standing over a data chest, turning two cloaked figures away.',
-    tint: '#3A1F18',
+    title: 'No third-party sharing.',
+    body: 'Nothing is passed to advertisers, brokers or analytics vendors. Ever.',
+    icon: (
+      <svg {...svg} aria-hidden="true">
+        <path d="M10.5 14l-2.2 2.2a3.4 3.4 0 01-4.8-4.8L5.7 9.2" />
+        <path d="M13.5 10l2.2-2.2a3.4 3.4 0 014.8 4.8L18.3 14.8" />
+      </svg>
+    ),
   },
   {
-    text: 'Enterprise grade',
     tag: 'enterprise',
-    image: enterprise,
-    alt: 'A quartered embroidered coat of arms with a lion, a building, a tree and a wheat sheaf, held by two cherubs.',
-    tint: '#22293A',
+    title: 'Enterprise grade.',
+    body: 'Role-based access, audit trails and single sign-on across every workspace.',
+    icon: (
+      <svg {...svg} aria-hidden="true">
+        <path d="M5 20V6.5a1 1 0 011-1h7a1 1 0 011 1V20" />
+        <path d="M14 20v-9h4a1 1 0 011 1v8" />
+        <path d="M3.5 20h17" />
+        <path d="M8 9h3M8 12.5h3M8 16h3M16.5 14h.01" />
+      </svg>
+    ),
   },
 ];
 
@@ -131,42 +172,58 @@ export default function PrivacySection() {
           </div>
         </div>
 
-        <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-4" style={{ zoom: 0.75 }}>
-          {privacyItems.map((item, index) => (
+        <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+          {privacyItems.map((item) => (
             <article
-              key={item.text}
-              className="group rounded-[26px] border border-white/[0.09] bg-[#0C0C0F] p-2.5 shadow-[0_28px_64px_-34px_rgba(0,0,0,0.95)] transition duration-500 hover:-translate-y-1 hover:border-white/20"
+              key={item.title}
+              className={`privacy-card group flex min-h-[290px] flex-col rounded-[20px] border p-7 ${
+                item.accent
+                  ? 'privacy-card--accent border-transparent bg-[#c4c9b8] text-[#110f0e]'
+                  : 'border-white/[0.07] bg-[#151312] text-white'
+              }`}
             >
-              <div
-                className="relative aspect-[4/3] overflow-hidden rounded-[18px] ring-1 ring-inset ring-white/[0.07]"
-                style={{ backgroundColor: item.tint }}
+              <p
+                className={`font-mono text-[10px] uppercase tracking-[0.2em] ${
+                  item.accent ? 'text-[#110f0e]/55' : 'text-white/40'
+                }`}
               >
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={item.image.src}
-                  alt={item.alt}
-                  width={item.image.width}
-                  height={item.image.height}
-                  loading={index < 4 ? 'eager' : 'lazy'}
-                  decoding="async"
-                  className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
-                />
-                <span className="absolute right-3 top-3 rounded-full bg-black/45 px-2 py-0.5 font-mono text-[9px] tracking-[0.16em] text-white/85 backdrop-blur-sm">
-                  {String(index + 1).padStart(2, '0')}
-                </span>
-              </div>
+                {item.tag}
+              </p>
 
-              <div className="px-3 pb-3 pt-5">
-                <p
-                  className="text-[17px] leading-snug tracking-[-0.012em] text-white/88 md:text-lg"
-                  style={{ fontFamily: "'Manrope', sans-serif", fontWeight: 300 }}
+              <h3
+                className="mt-4 text-[21px] font-light leading-[1.22] tracking-[-0.02em]"
+                style={{ fontFamily: "'Manrope', sans-serif", fontWeight: 300 }}
+              >
+                {item.title}
+              </h3>
+
+              <p
+                className={`mt-3 text-[13.5px] font-light leading-[1.6] ${
+                  item.accent ? 'text-[#110f0e]/65' : 'text-white/45'
+                }`}
+                style={{ fontFamily: "'Manrope', sans-serif", fontWeight: 300 }}
+              >
+                {item.body}
+              </p>
+
+              <div className="mt-auto flex items-end justify-between pt-10">
+                <span
+                  className={`privacy-card__mark block h-11 w-11 ${
+                    item.accent ? 'text-[#110f0e]/75' : 'text-white/55'
+                  }`}
                 >
-                  {item.text}
-                </p>
-                <div className="mt-5 flex items-center justify-between border-t border-white/[0.07] pt-3 font-mono text-[9px] uppercase tracking-[0.2em] text-white/32">
-                  <span>{item.tag}</span>
-                  <span className="transition-colors group-hover:text-white/55">✦</span>
-                </div>
+                  {item.icon}
+                </span>
+                <span
+                  aria-hidden="true"
+                  className={`privacy-card__plus flex h-7 w-7 items-center justify-center rounded-full ${
+                    item.accent ? 'bg-[#110f0e]/10 text-[#110f0e]/70' : 'bg-white/[0.06] text-white/50'
+                  }`}
+                >
+                  <svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth={1.2} strokeLinecap="round">
+                    <path d="M6 1.5v9M1.5 6h9" />
+                  </svg>
+                </span>
               </div>
             </article>
           ))}
