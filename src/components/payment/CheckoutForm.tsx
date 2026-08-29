@@ -605,10 +605,21 @@ export function CheckoutForm({
       });
       if (!response.ok) throw new Error('verification rejected');
       setHumanVerified(true);
-      // Live checkout hands off to Snap immediately — the card / PIN / OTP
-      // steps are the mock path only, and must never sit in front of a real
-      // gateway that collects the same data itself.
-      if (MOCK_PAYMENT) {
+      // Live checkout used to hand straight to Snap here, because the card
+      // form was mock-only: putting it in front of a real gateway that
+      // collects the same data itself would have asked for the card twice.
+      //
+      // That is no longer true for the direct path — we tokenise the card
+      // ourselves, so the form has to be shown or there is nothing to
+      // tokenise. Skipping it is exactly why every card fell back to Snap:
+      // runRealPayment ran with the card fields still empty, getCardToken
+      // threw, and the fallback did its job silently.
+      //
+      // Everything else still goes straight through: e-wallets and QRIS need
+      // no details from us, and a card on the Snap path must not be asked
+      // twice.
+      const collectCardHere = directPayEnabled && channel === 'credit_card';
+      if (MOCK_PAYMENT || collectCardHere) {
         setStep('details');
       } else {
         await runRealPayment();
