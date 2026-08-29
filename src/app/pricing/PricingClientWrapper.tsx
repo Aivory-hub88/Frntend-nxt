@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { useLanguage } from '@/components/context/LanguageContext';
 import PricingStepOne from '@/components/home/PricingStepOne';
 import PricingStepTwo from '@/components/home/PricingStepTwo';
+import PaymentMethods from '@/components/home/PaymentMethods';
 
 export default function PricingClientWrapper({ withBackground = false }: { withBackground?: boolean }) {
   const { language } = useLanguage();
@@ -26,7 +27,7 @@ export default function PricingClientWrapper({ withBackground = false }: { withB
             Every transformation begins with understanding how your organisation operates. Assess first, build your transformation strategy, then deploy AI with confidence.
           </p>
         </div>
-        <div className="flex justify-center mb-6 sticky top-24 z-50">
+        <div className="flex justify-center sticky top-24 z-50">
           <div className="bg-white/60 p-1.5 rounded-full inline-flex border border-[#494949]/10 shadow-sm backdrop-blur-md">
             <button
               onClick={() => setCurrency('IDR')}
@@ -45,6 +46,9 @@ export default function PricingClientWrapper({ withBackground = false }: { withB
               USD
             </button>
           </div>
+        </div>
+        <div className="mt-7 mb-2">
+          <PaymentMethods />
         </div>
       </div>
       <div style={{ zoom: 0.75 }} className="transition-opacity duration-300">
