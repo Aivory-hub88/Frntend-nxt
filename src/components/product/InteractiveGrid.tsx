@@ -89,7 +89,7 @@ function SpotlightCard({ children, className = '' }: { children: React.ReactNode
   );
 }
 
-// ── Autonomous Agent Card ─────────────────────────────────
+// ── Generalist Agent Card ─────────────────────────────────
 // Animated chat conversation cycling through Slack, WhatsApp, Telegram interfaces
 function AutonomousAgentAnimation() {
   const [phase, setPhase] = useState(0);
@@ -454,16 +454,16 @@ export function InteractiveGrid() {
           }}
         >
 
-          {/* Card 1: Autonomous AI Agent */}
+          {/* Card 1: Generalist AI Agent */}
           <motion.div variants={{
             hidden: { opacity: 0, y: 30, scale: 0.95 },
             visible: { opacity: 1, y: 0, scale: 1, transition: { type: 'spring', damping: 25, stiffness: 200 } }
           }} className="flex flex-col h-full">
             <SpotlightCard className="flex flex-col p-6 auto-spotlight h-full">
               <div className="relative z-10 mb-5">
-                <h4 className="text-lg font-light text-white mb-2">Autonomous AI Agent</h4>
+                <h4 className="text-lg font-light text-white mb-2">Generalist AI Agent</h4>
                 <p className="text-white/50 text-[13px] font-light leading-relaxed">
-                  Deploy autonomous agents inside your communication hubs. They triage, respond, and update your CRM 24/7.
+                  One agent carrying every toolkit, deployed inside your communication hubs. It triages, responds, and updates your CRM 24/7.
                 </p>
               </div>
               {/* Animated chat interface */}
