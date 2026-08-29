@@ -145,7 +145,12 @@ export function PaymentHistory({
       {payments.length === 0 ? (
         <div className="text-center py-12">
           <div className="inline-block p-4 rounded-full bg-bg-tertiary mb-4">
+            {/* Decorative: "No payment history yet" sits right beside it, so
+                exposing the icon would only add an unnamed graphic to the
+                screen-reader output ahead of the sentence that says it. */}
             <svg
+              aria-hidden="true"
+              focusable="false"
               className="w-8 h-8 text-gray-300"
               fill="none"
               stroke="currentColor"
@@ -162,11 +167,11 @@ export function PaymentHistory({
           <p className="text-gray-200">No payment history yet</p>
         </div>
       ) : (
-        <div className="space-y-4">
+        <ul className="space-y-4 list-none p-0 m-0">
           {payments.map((payment) => {
             const statusInfo = getStatusInfo(payment.status);
             return (
-              <div
+              <li
                 key={payment.paymentId}
                 className="rounded-xl border border-white/[0.07] bg-[#2a2a27] p-5 hover:border-white/[0.15] transition-colors duration-200"
               >
@@ -239,10 +244,10 @@ export function PaymentHistory({
                     </div>
                   </div>
                 </div>
-              </div>
+              </li>
             );
           })}
-        </div>
+        </ul>
       )}
 
       {/* Refresh Button (if no payments) */}

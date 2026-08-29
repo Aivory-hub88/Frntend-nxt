@@ -71,6 +71,9 @@ export interface AssessmentStrings {
     deliverySending: (email: string) => string;
     deliverySent: (email: string) => string;
     deliveryFailed: string;
+    emailUndeliverable: string;
+    emailDidYouMean: (suggestion: string) => string;
+    emailUseSuggestion: string;
     languageLabel: string;
   };
   card: {
@@ -242,6 +245,9 @@ const EN: AssessmentStrings = {
     deliverySending: e => `Emailing a copy to ${e}…`,
     deliverySent: e => `A copy is on its way to ${e}.`,
     deliveryFailed: 'We could not email a copy just now — your download above has the full report.',
+    emailUndeliverable: 'That domain cannot receive email — please check the address.',
+    emailDidYouMean: s => `Did you mean ${s}?`,
+    emailUseSuggestion: 'Use this',
     languageLabel: 'Language',
   },
   card: {
@@ -397,6 +403,9 @@ const ID: AssessmentStrings = {
     deliverySending: e => `Mengirim salinan ke ${e}…`,
     deliverySent: e => `Salinan sedang dalam perjalanan ke ${e}.`,
     deliveryFailed: 'Kami belum berhasil mengirim salinannya — unduhan di atas sudah berisi laporan lengkap.',
+    emailUndeliverable: 'Domain itu tidak bisa menerima email — mohon periksa kembali alamatnya.',
+    emailDidYouMean: s => `Maksud Anda ${s}?`,
+    emailUseSuggestion: 'Pakai ini',
     languageLabel: 'Bahasa',
   },
   card: {

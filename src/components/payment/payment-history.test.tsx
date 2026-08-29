@@ -82,8 +82,9 @@ describe('Payment History Component', () => {
       
       expect(screen.getByText('No payment history yet')).toBeInTheDocument();
       
-      const icon = screen.getByRole('img');
-      expect(icon).toBeInTheDocument();
+      // The icon is decorative and aria-hidden, so it must NOT appear as an
+      // image to assistive tech -- the sentence above carries the meaning.
+      expect(screen.queryByRole('img')).not.toBeInTheDocument();
     });
 
     it('should show refresh button in empty state when onRefresh is provided', () => {
@@ -138,15 +139,15 @@ describe('Payment History Component', () => {
     it('should display dates in readable format', () => {
       render(<PaymentHistory payments={mockPayments} />);
       
-      expect(screen.getByText('January 15, 2024')).toBeInTheDocument();
-      expect(screen.getByText('January 16, 2024')).toBeInTheDocument();
-      expect(screen.getByText('January 17, 2024')).toBeInTheDocument();
+      expect(screen.getByText(/January 15, 2024/)).toBeInTheDocument();
+      expect(screen.getByText(/January 16, 2024/)).toBeInTheDocument();
+      expect(screen.getByText(/January 17, 2024/)).toBeInTheDocument();
     });
 
     it('should display verification date when available', () => {
       render(<PaymentHistory payments={mockPayments} />);
       
-      expect(screen.getByText('January 18, 2024')).toBeInTheDocument();
+      expect(screen.getByText(/January 18, 2024/)).toBeInTheDocument();
     });
   });
 
