@@ -106,27 +106,42 @@ export default function HeroSection() {
           <span className="text-white/25">&middot;</span> No sales pitch
         </p>
 
+        {/* Credential bar. The NVIDIA lockup is supplied as an opaque white
+            panel and cannot be recoloured, so on this dark hero it always wins
+            the row on contrast: previously a 47px near-white block sat beside
+            13px text at 45% white, and the two read as unrelated objects
+            sharing a line rather than one statement.
+            The bar makes the white panel a deliberate cell instead of a stray
+            sticker — badge trimmed towards the type's weight, copy lifted to
+            70% and split into two cells against hairline rules, everything
+            bounded by one rounded surface in the site's own card language.
+            No backdrop blur here: this sits over the animated WebGL hero,
+            where blur costs a full re-composite every frame. */}
         <div
-          className="animate-slide-up-1 mt-12 md:mt-14 flex flex-col sm:flex-row items-center justify-center gap-[14px] sm:gap-[23px]"
+          className="animate-slide-up-1 mt-12 md:mt-14 flex justify-center"
           style={{ animationDelay: ENTER_DELAYS[3] }}
         >
-          {/* The official lockup already reads "NVIDIA Inception Program", so
-              the row deliberately does not repeat "inception member" in text.
-              Badge, copy and gap are scaled together (~30% over the first
-              pass, then trimmed 10%) -- at the original size the white lockup
-              read as a stray sticker rather than as part of the line. */}
-          <img
-            src="/images/badges/nvidia-inception-badge-v2.svg"
-            alt="NVIDIA Inception Program — Aivory AI is a member (2026 cohort)"
-            className="h-[40px] md:h-[47px] w-auto shrink-0 opacity-90"
-          />
-          <p
-            className="font-mono text-[12px] md:text-[13px] uppercase tracking-[0.14em] text-white/45 text-center md:whitespace-nowrap pointer-events-none select-none"
-            aria-label="500 plus businesses transforming with Aivory. Zero training on your data."
-          >
-            500+ businesses transforming{' '}
-            <span className="text-white/20">&middot;</span> Zero training on your data
-          </p>
+          <div className="flex flex-col items-center gap-3.5 rounded-[16px] border border-white/[0.12] bg-white/[0.04] p-3 sm:flex-row sm:gap-0 sm:p-2 sm:pr-6">
+            {/* The official lockup already reads "NVIDIA Inception Program",
+                so the copy deliberately never repeats "inception member". */}
+            <img
+              src="/images/badges/nvidia-inception-badge-v2.svg"
+              alt="NVIDIA Inception Program — Aivory AI is a member (2026 cohort)"
+              className="h-[32px] md:h-[35px] w-auto shrink-0 rounded-[5px]"
+            />
+
+            <span className="h-px w-full shrink-0 bg-white/[0.14] sm:mx-5 sm:h-[26px] sm:w-px" />
+
+            <p className="font-mono text-[11px] md:text-[12px] uppercase tracking-[0.16em] text-white/70 pointer-events-none select-none">
+              500+ businesses transforming
+            </p>
+
+            <span className="h-px w-full shrink-0 bg-white/[0.14] sm:mx-5 sm:h-[26px] sm:w-px" />
+
+            <p className="font-mono text-[11px] md:text-[12px] uppercase tracking-[0.16em] text-white/70 pointer-events-none select-none">
+              Zero training on your data
+            </p>
+          </div>
         </div>
       </div>
     </div>
