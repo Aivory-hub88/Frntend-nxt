@@ -1069,8 +1069,17 @@ export function CheckoutForm({
                     : `Pay ${priceLabel}`}
               </SpotlightButton>
             </div>
+            {/* This step used to render in mock mode only, so the disclaimer
+                was true. It now also carries a real card on the live path,
+                where "no payment data is transmitted" is flatly false and
+                exactly the wrong thing to tell someone about to be charged.
+                Card details go straight to Midtrans for tokenisation; they
+                never reach an Aivory server, which is what the live wording
+                should say. */}
             <p className="mt-4 text-center text-xs text-gray-400">
-              Preview only — no payment data is transmitted or stored.
+              {MOCK_PAYMENT
+                ? 'Preview only — no payment data is transmitted or stored.'
+                : 'Powered by Midtrans — card details go directly to Midtrans and are never stored by Aivory.'}
             </p>
           </div>
         )}
@@ -1168,6 +1177,18 @@ export function CheckoutForm({
             <p className="text-[13px] uppercase tracking-[0.14em] text-gray-500">
               {channelLabel}
             </p>
+
+            {/* The exact figure the gateway will collect, straight from the
+                charge response — not the page's own USD-to-IDR estimate.
+                The site computes a display price from its own rate feed and a
+                separately-configured margin, so the two can drift; for a
+                virtual-account transfer the customer must key in the precise
+                amount, and an estimate is worse than useless there. */}
+            {typeof charge.amount_idr === 'number' && (
+              <p className="mt-2 text-[26px] font-semibold tracking-tight text-gray-900">
+                Rp{charge.amount_idr.toLocaleString('id-ID')}
+              </p>
+            )}
             <p className="mt-2 text-[15px] text-gray-600">
               {charge.va_number
                 ? 'Transfer the exact amount to the account below.'
