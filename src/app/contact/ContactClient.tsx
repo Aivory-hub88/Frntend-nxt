@@ -60,7 +60,7 @@ export default function ContactClient() {
           
           <h1
             className="text-4xl sm:text-5xl md:text-[56px] font-light text-white mb-12 leading-[1.1] tracking-tight w-full"
-            style={{ fontFamily: "'Manrope', sans-serif" }}
+            style={{ fontFamily: "var(--font-manrope), 'Manrope', sans-serif" }}
           >
             Contact
           </h1>

@@ -85,7 +85,7 @@ function ResetPasswordInner() {
           </div>
           <h2
             className="text-2xl font-semibold text-white mb-2 tracking-tight"
-            style={{ fontFamily: "'Manrope', sans-serif" }}
+            style={{ fontFamily: "var(--font-manrope), 'Manrope', sans-serif" }}
           >
             Choose a new password
           </h2>

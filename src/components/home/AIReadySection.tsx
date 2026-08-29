@@ -16,7 +16,7 @@ export default function AIReadySection() {
           <div className="w-full md:w-1/2 flex justify-start">
             <h2
               className="text-3xl sm:text-4xl md:text-[31px] lg:text-[38px] font-light tracking-tight leading-[1.1] text-white m-0 text-left"
-              style={{ fontFamily: "'Manrope', sans-serif", fontWeight: 300 }}
+              style={{ fontFamily: "var(--font-manrope), 'Manrope', sans-serif", fontWeight: 300 }}
             >
               Transformation requires
               <br />

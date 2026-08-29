@@ -100,10 +100,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${manrope.variable} ${doto.variable} antialiased scroll-smooth`}>
       <head>
-        <link
-          href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700;800&family=Doto:wght@400;700;900&display=swap"
-          rel="stylesheet"
-        />
+        <link rel="preload" as="image" href="/Aivory_logo_2_2026.svg" fetchPriority="high" />
         <script async src="https://www.googletagmanager.com/gtag/js?id=G-XYJ0EDEYS8" />
         <script
           dangerouslySetInnerHTML={{

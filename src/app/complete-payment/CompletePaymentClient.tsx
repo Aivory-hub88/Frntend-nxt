@@ -53,7 +53,7 @@ export default function CompletePaymentClient() {
           </div>
           <h2
             className="text-2xl font-semibold text-white mb-3 tracking-tight"
-            style={{ fontFamily: "'Manrope', sans-serif" }}
+            style={{ fontFamily: "var(--font-manrope), 'Manrope', sans-serif" }}
           >
             Finish your purchase to continue
           </h2>

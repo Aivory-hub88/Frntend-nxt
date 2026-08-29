@@ -88,7 +88,7 @@ export default function EnterpriseComparisonSection() {
         </SpotlightButton>
         <h3
           className="text-4xl md:text-5xl font-light tracking-normal"
-          style={{ fontFamily: "'Manrope', sans-serif", fontWeight: 300 }}
+          style={{ fontFamily: "var(--font-manrope), 'Manrope', sans-serif", fontWeight: 300 }}
         >
           Why Enterprise Choose <span style={{ color: '#e4effd' }}>Aivory.</span>
         </h3>

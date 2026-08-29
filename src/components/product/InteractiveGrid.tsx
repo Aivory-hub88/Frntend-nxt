@@ -434,7 +434,7 @@ export function InteractiveGrid() {
           >
             THE PLATFORM
           </SpotlightButton>
-          <h3 className="text-4xl md:text-5xl font-light tracking-normal mb-4" style={{ fontFamily: "'Manrope', sans-serif", fontWeight: 300 }}>
+          <h3 className="text-4xl md:text-5xl font-light tracking-normal mb-4" style={{ fontFamily: "var(--font-manrope), 'Manrope', sans-serif", fontWeight: 300 }}>
             Add Agentic Hands to Your <span style={{ color: '#e4effd' }}>Team.</span>
           </h3>
           <p className="text-white max-w-xl mx-auto font-light leading-relaxed">
@@ -543,11 +543,11 @@ export function InteractiveGrid() {
 }
 
 const MULTILINGUAL_TEXTS = [
-  { text: "Multilingual by default. No configuration required.", font: "'Manrope', sans-serif" },
-  { text: "Multibahasa secara default. Tanpa konfigurasi tambahan.", font: "'Manrope', sans-serif" },
-  { text: "Multilingue par défaut. Aucune configuration requise.", font: "'Manrope', sans-serif" },
-  { text: "Mehrsprachig standardmäßig. Keine Konfiguration erforderlich.", font: "'Manrope', sans-serif" },
-  { text: "Multilingüe por defecto. No se requiere configuración.", font: "'Manrope', sans-serif" },
+  { text: "Multilingual by default. No configuration required.", font: "var(--font-manrope), 'Manrope', sans-serif" },
+  { text: "Multibahasa secara default. Tanpa konfigurasi tambahan.", font: "var(--font-manrope), 'Manrope', sans-serif" },
+  { text: "Multilingue par défaut. Aucune configuration requise.", font: "var(--font-manrope), 'Manrope', sans-serif" },
+  { text: "Mehrsprachig standardmäßig. Keine Konfiguration erforderlich.", font: "var(--font-manrope), 'Manrope', sans-serif" },
+  { text: "Multilingüe por defecto. No se requiere configuración.", font: "var(--font-manrope), 'Manrope', sans-serif" },
   { text: "默认支持多语言。无需任何配置。", font: "'PingFang SC', 'Microsoft YaHei', 'Noto Sans SC', sans-serif" },
   { text: "標準で多言語対応。設定は一切不要です。", font: "'Hiragino Kaku Gothic ProN', 'Meiryo', 'Noto Sans JP', sans-serif" },
   { text: "متعدد اللغات افتراضياً. لا حاجة لأي إعداد", font: "'Tajawal', 'Cairo', 'Noto Kufi Arabic', system-ui, sans-serif" }
@@ -599,7 +599,7 @@ function IntegrationsMarquee() {
         }}
       />
       <div className="text-center mb-10 md:mb-12 px-6 relative">
-        <h3 className="relative text-[22px] md:text-[32px] font-light text-white mb-3 tracking-normal" style={{ fontFamily: "'Manrope', sans-serif", textShadow: '0 2px 12px rgba(0,0,0,0.6)' }}>
+        <h3 className="relative text-[22px] md:text-[32px] font-light text-white mb-3 tracking-normal" style={{ fontFamily: "var(--font-manrope), 'Manrope', sans-serif", textShadow: '0 2px 12px rgba(0,0,0,0.6)' }}>
           Every Aivory agent speaks multiple languages. Literally.
         </h3>
         <p className={`relative text-[20px] md:text-[22px] text-white font-light transition-opacity duration-500 ${isFading ? 'opacity-0' : 'opacity-100'}`} style={{ fontFamily: MULTILINGUAL_TEXTS[langIndex].font, textShadow: '0 2px 12px rgba(0,0,0,0.6)' }}>
@@ -972,10 +972,10 @@ function AgentCard({ agent }: { agent: typeof NEW_AGENTS[0] }) {
   return (
     <SpotlightCard className="group flex flex-col p-6 relative overflow-hidden transition-all duration-500 hover:-translate-y-1 hover:border-white/10 hover:shadow-[0_0_30px_rgba(174,201,157,0.05)] cursor-default auto-spotlight h-full">
       <div className="relative z-10 mb-5 flex-shrink-0">
-        <h4 className="text-lg font-light text-white mb-2" style={{ fontFamily: "'Manrope', sans-serif" }}>
+        <h4 className="text-lg font-light text-white mb-2" style={{ fontFamily: "var(--font-manrope), 'Manrope', sans-serif" }}>
           {agent.title}
         </h4>
-        <p className="text-white/50 text-[13px] font-light leading-relaxed" style={{ fontFamily: "'Manrope', sans-serif" }}>
+        <p className="text-white/50 text-[13px] font-light leading-relaxed" style={{ fontFamily: "var(--font-manrope), 'Manrope', sans-serif" }}>
           {agent.description}
         </p>
       </div>

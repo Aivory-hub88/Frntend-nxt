@@ -56,7 +56,7 @@ export function CTAFooter({ title, subtitle, primaryCta, secondaryCta }: CTAFoot
         {/* Monospaced tag */}
         <div
           className="text-[12px] text-[#dfe2d8] tracking-[0.25em] uppercase mb-4 font-manrope font-light"
-          style={{ fontFamily: "'Manrope', sans-serif" }}
+          style={{ fontFamily: "var(--font-manrope), 'Manrope', sans-serif" }}
         >
           // GET STARTED NOW
         </div>
@@ -64,7 +64,7 @@ export function CTAFooter({ title, subtitle, primaryCta, secondaryCta }: CTAFoot
         {/* Title */}
         <h2
           className="text-4xl md:text-5xl font-light tracking-normal mb-6 text-white leading-tight md:whitespace-nowrap"
-          style={{ fontFamily: "'Manrope', sans-serif" }}
+          style={{ fontFamily: "var(--font-manrope), 'Manrope', sans-serif" }}
         >
           {title}
         </h2>
@@ -73,7 +73,7 @@ export function CTAFooter({ title, subtitle, primaryCta, secondaryCta }: CTAFoot
         {subtitle && (
           <p
             className="text-white/75 text-base md:text-lg font-light mb-10 max-w-xl leading-relaxed"
-            style={{ fontFamily: "'Manrope', sans-serif" }}
+            style={{ fontFamily: "var(--font-manrope), 'Manrope', sans-serif" }}
           >
             {subtitle}
           </p>

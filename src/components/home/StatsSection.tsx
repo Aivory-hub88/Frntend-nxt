@@ -58,7 +58,7 @@ function StatCounter({ stat, active, delay, index }: { stat: StatItem; active: b
     >
       <div
         className="flex h-[60px] items-center justify-center font-light leading-none tracking-[-0.055em] text-[#f3f4ef] [font-variant-numeric:tabular-nums] sm:h-[66px]"
-        style={{ fontFamily: "'Manrope', sans-serif", fontSize: 'clamp(2.45rem, 3.5vw, 3.65rem)' }}
+        style={{ fontFamily: "var(--font-manrope), 'Manrope', sans-serif", fontSize: 'clamp(2.45rem, 3.5vw, 3.65rem)' }}
       >
         {value}
         {stat.suffix && (
@@ -69,7 +69,7 @@ function StatCounter({ stat, active, delay, index }: { stat: StatItem; active: b
       </div>
       <div
         className="mt-3 flex min-h-[20px] items-center justify-center text-[9px] font-light uppercase leading-relaxed tracking-[0.1em] text-white/48 sm:whitespace-nowrap sm:text-[10px] sm:tracking-[0.11em]"
-        style={{ fontFamily: "'Manrope', sans-serif" }}
+        style={{ fontFamily: "var(--font-manrope), 'Manrope', sans-serif" }}
       >
         {stat.label}
       </div>

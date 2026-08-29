@@ -74,7 +74,7 @@ export default function VideoDemoSection() {
             <span className="h-[10px] w-[10px] rounded-full bg-[#6bb35a]" />
             <div
               className="ml-3 flex-1 truncate rounded-md border border-white/[0.07] bg-white/[0.04] px-3 py-1 text-center text-[11px] text-white/40 sm:text-[12px]"
-              style={{ fontFamily: "'Manrope', sans-serif" }}
+              style={{ fontFamily: "var(--font-manrope), 'Manrope', sans-serif" }}
             >
               Aivory
             </div>

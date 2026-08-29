@@ -147,7 +147,7 @@ function DiagnosticStatItem({
             <div
               className="flex items-baseline justify-center font-light leading-none text-[#f5f5f3] [font-variant-numeric:tabular-nums]"
               style={{
-                fontFamily: "'Manrope', sans-serif",
+                fontFamily: "var(--font-manrope), 'Manrope', sans-serif",
                 fontSize: 'clamp(1.9rem, 3vw, 2.5rem)',
                 letterSpacing: '-0.05em',
               }}

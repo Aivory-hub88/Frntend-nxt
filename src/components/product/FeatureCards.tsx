@@ -93,7 +93,7 @@ function DiagnosticStatItem({
       <div
         className="font-light text-white leading-none mb-4 flex items-baseline justify-center [font-variant-numeric:tabular-nums]"
         style={{
-          fontFamily: "'Manrope', sans-serif",
+          fontFamily: "var(--font-manrope), 'Manrope', sans-serif",
           fontSize: 'clamp(1.95rem, 3.25vw, 2.9rem)',
           textShadow: '0 0 40px rgba(124, 58, 237, 0.35)',
         }}
@@ -155,7 +155,7 @@ export default function FeatureCards() {
         <div style={{ zoom: 0.8 }}>
           <div className="max-w-[1400px] mx-auto px-6 md:px-12 lg:px-24 relative z-[1]">
           <div className="text-center flex flex-col justify-center items-center">
-            <h2 className="text-2xl md:text-3xl font-light tracking-tight mb-6 leading-tight text-white max-w-3xl" style={{ fontFamily: "'Manrope', sans-serif", fontWeight: 300 }}>
+            <h2 className="text-2xl md:text-3xl font-light tracking-tight mb-6 leading-tight text-white max-w-3xl" style={{ fontFamily: "var(--font-manrope), 'Manrope', sans-serif", fontWeight: 300 }}>
               Turn operational complexity<br />
               into business <span className="italic" style={{ color: '#e4effd' }}>clarity.</span>
             </h2>
@@ -169,7 +169,7 @@ export default function FeatureCards() {
               <div className="uppercase tracking-[0.2em] text-[#d0d0d4] text-[14px] md:text-[17px] font-semibold mb-3">
                 FROM INSIGHT TO EXECUTION. IN MINUTES.
               </div>
-              <h3 className="text-[10px] md:text-base font-light text-white mb-12" style={{ zoom: 0.95, fontFamily: "'Manrope', sans-serif", fontWeight: 300 }}>
+              <h3 className="text-[10px] md:text-base font-light text-white mb-12" style={{ zoom: 0.95, fontFamily: "var(--font-manrope), 'Manrope', sans-serif", fontWeight: 300 }}>
                 Understand your operations, prioritise what matters, and deploy AI with confidence.
               </h3>
 

@@ -37,7 +37,7 @@ export default function PreFooterCTA() {
               </p>
               <h2
                 className="no-word-split mt-5 max-w-lg text-3xl font-light leading-[1.12] tracking-[-0.03em] md:text-[44px]"
-                style={{ fontFamily: "'Manrope', sans-serif", fontWeight: 300 }}
+                style={{ fontFamily: "var(--font-manrope), 'Manrope', sans-serif", fontWeight: 300 }}
               >
                 Start your transformation.
               </h2>

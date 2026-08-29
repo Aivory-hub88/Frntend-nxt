@@ -48,7 +48,7 @@ export default function HeroSection() {
         <div className="animate-slide-up-1" style={{ animationDelay: ENTER_DELAYS[0] }}>
           <h1
             className="silver-swipe-text text-[25px] md:text-[38px] font-light tracking-tight text-center leading-[1.15] text-balance pointer-events-none select-none"
-            style={{ fontFamily: "'Manrope', sans-serif" }}
+            style={{ fontFamily: "var(--font-manrope), 'Manrope', sans-serif" }}
           >
             Make AI Make Sense
             {/* silver-swipe-text paints its gradient on the h1 and clips it to
@@ -100,7 +100,7 @@ export default function HeroSection() {
 
         <p
           className="animate-slide-up-1 mt-7 md:mt-8 text-[17px] md:text-[19px] font-light tracking-tight text-white/55 pointer-events-none select-none"
-          style={{ fontFamily: "'Manrope', sans-serif", animationDelay: ENTER_DELAYS[2] }}
+          style={{ fontFamily: "var(--font-manrope), 'Manrope', sans-serif", animationDelay: ENTER_DELAYS[2] }}
         >
           Self-guided <span className="text-white/25">&middot;</span> One sitting{' '}
           <span className="text-white/25">&middot;</span> No sales pitch

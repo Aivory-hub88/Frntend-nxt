@@ -77,7 +77,7 @@ export function SpotlightButton({ href, onClick, children, className = '', icon 
 
   const defaultStyle = {
     padding: '0.75rem 1.5rem',
-    fontFamily: "'Manrope', sans-serif",
+    fontFamily: "var(--font-manrope), 'Manrope', sans-serif",
     fontWeight: 400,
     fontSize: '0.75rem',
     letterSpacing: '0.1em',

@@ -235,7 +235,7 @@ export default function PrivacySection() {
             </p>
             <h2
               className="no-word-split mt-5 max-w-lg text-3xl font-light leading-[1.12] tracking-[-0.03em] md:text-[44px]"
-              style={{ fontFamily: "'Manrope', sans-serif", fontWeight: 300 }}
+              style={{ fontFamily: "var(--font-manrope), 'Manrope', sans-serif", fontWeight: 300 }}
             >
               Data sovereignty is non-negotiable.
             </h2>
@@ -244,13 +244,13 @@ export default function PrivacySection() {
           <div className="lg:col-span-6 lg:col-start-7 lg:self-end">
             <p
               className="max-w-2xl text-xl font-light leading-[1.55] tracking-[-0.015em] text-white/82 md:text-2xl"
-              style={{ fontFamily: "'Manrope', sans-serif", fontWeight: 300 }}
+              style={{ fontFamily: "var(--font-manrope), 'Manrope', sans-serif", fontWeight: 300 }}
             >
               Your operational intelligence should remain under your control—at every layer of the system.
             </p>
             <p
               className="mt-7 max-w-xl text-[15px] font-light leading-7 text-white/55"
-              style={{ fontFamily: "'Manrope', sans-serif", fontWeight: 300 }}
+              style={{ fontFamily: "var(--font-manrope), 'Manrope', sans-serif", fontWeight: 300 }}
             >
               Zero model training. Zero third-party logging. Your operational data remains entirely within your control.
             </p>
@@ -278,7 +278,7 @@ export default function PrivacySection() {
               <h3
                 className="mt-4 leading-[1.2] tracking-[-0.02em]"
                 style={{
-                  fontFamily: "'Manrope', sans-serif",
+                  fontFamily: "var(--font-manrope), 'Manrope', sans-serif",
                   fontWeight: 400,
                   fontSize: 'clamp(19px, 1.5vw, 21px)',
                 }}
@@ -290,7 +290,7 @@ export default function PrivacySection() {
                 className={`mt-3 font-light leading-[1.6] ${
                   item.accent ? 'text-[#110f0e]' : 'text-[#110f0e]/65'
                 } text-[13.5px]`}
-                style={{ fontFamily: "'Manrope', sans-serif", fontWeight: 300 }}
+                style={{ fontFamily: "var(--font-manrope), 'Manrope', sans-serif", fontWeight: 300 }}
               >
                 {item.body}
               </p>

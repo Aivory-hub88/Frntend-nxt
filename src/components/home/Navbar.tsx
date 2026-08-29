@@ -66,11 +66,17 @@ export default function Navbar() {
       <div className="h-16 max-w-[1400px] mx-auto flex justify-between items-center" style={{ padding: '0 clamp(1rem, 4vw, 2rem)' }}>
         {/* Left: Aivory logo */}
         <Link href="/" className="flex items-center">
+          {/* Measured as the page's LCP element — the hero headline paints via
+              a clipped gradient and the flower is a canvas, so this 1.4KB mark
+              is what the metric actually lands on. It therefore gets explicit
+              priority instead of queueing behind the rest of the page. */}
           <img
             src="/Aivory_logo_2_2026.svg"
             alt="Aivory Logo"
             width={383}
             height={79}
+            fetchPriority="high"
+            decoding="sync"
             className="h-[26px] w-auto object-contain"
           />
         </Link>
@@ -83,7 +89,7 @@ export default function Navbar() {
               className={`flex items-center gap-1.5 transition-all duration-300 ${
                 language === 'en' ? 'opacity-100 grayscale-0' : 'opacity-40 grayscale hover:opacity-70'
               }`}
-              style={{ fontFamily: "'Manrope', sans-serif", fontSize: '10px' }}
+              style={{ fontFamily: "var(--font-manrope), 'Manrope', sans-serif", fontSize: '10px' }}
             >
               <Image src="/uk-flag.svg" alt="EN" width={14} height={10} className="rounded-[2px] object-cover h-[10px] w-[14px]" />
               EN
@@ -94,7 +100,7 @@ export default function Navbar() {
               className={`flex items-center gap-1.5 transition-all duration-300 ${
                 language === 'id' ? 'opacity-100 grayscale-0' : 'opacity-40 grayscale hover:opacity-70'
               }`}
-              style={{ fontFamily: "'Manrope', sans-serif", fontSize: '10px' }}
+              style={{ fontFamily: "var(--font-manrope), 'Manrope', sans-serif", fontSize: '10px' }}
             >
               <Image src="/id-flag.svg" alt="ID" width={14} height={10} className="rounded-[2px] object-cover h-[10px] w-[14px]" />
               ID
@@ -103,47 +109,47 @@ export default function Navbar() {
           <Link
             href="/product"
             className="text-white font-normal uppercase tracking-normal no-underline hover:underline transition-all duration-200"
-            style={{ fontFamily: "'Manrope', sans-serif", fontSize: '10px' }}
+            style={{ fontFamily: "var(--font-manrope), 'Manrope', sans-serif", fontSize: '10px' }}
           >
             PRODUCT
           </Link>
           <Link
             href="/company"
             className="text-white font-normal uppercase tracking-normal no-underline hover:underline transition-all duration-200"
-            style={{ fontFamily: "'Manrope', sans-serif", fontSize: '10px' }}
+            style={{ fontFamily: "var(--font-manrope), 'Manrope', sans-serif", fontSize: '10px' }}
           >
             COMPANY
           </Link>
           <Link
             href="/pricing"
             className="text-white font-normal uppercase tracking-normal no-underline hover:underline transition-all duration-200"
-            style={{ fontFamily: "'Manrope', sans-serif", fontSize: '10px' }}
+            style={{ fontFamily: "var(--font-manrope), 'Manrope', sans-serif", fontSize: '10px' }}
           >
             PRICING
           </Link>
           <Link
             href="/blog"
             className="text-white font-normal uppercase tracking-normal no-underline hover:underline transition-all duration-200"
-            style={{ fontFamily: "'Manrope', sans-serif", fontSize: '10px' }}
+            style={{ fontFamily: "var(--font-manrope), 'Manrope', sans-serif", fontSize: '10px' }}
           >
             BLOG
           </Link>
           <Link
             href="/careers"
             className="text-white font-normal uppercase tracking-normal no-underline hover:underline transition-all duration-200"
-            style={{ fontFamily: "'Manrope', sans-serif", fontSize: '10px' }}
+            style={{ fontFamily: "var(--font-manrope), 'Manrope', sans-serif", fontSize: '10px' }}
           >
             CAREERS
           </Link>
           {authed ? (
             <>
-              <span className="text-white" style={{ fontFamily: "'Manrope', sans-serif", fontSize: '11px' }}>
+              <span className="text-white" style={{ fontFamily: "var(--font-manrope), 'Manrope', sans-serif", fontSize: '11px' }}>
                 Welcome, {userName}
               </span>
               <button
                 onClick={() => logout()}
                 className="text-white font-normal uppercase tracking-normal no-underline hover:underline transition-all duration-200 bg-transparent border-none cursor-pointer"
-                style={{ fontFamily: "'Manrope', sans-serif", fontSize: '10px' }}
+                style={{ fontFamily: "var(--font-manrope), 'Manrope', sans-serif", fontSize: '10px' }}
               >
                 SIGN OUT
               </button>
@@ -152,7 +158,7 @@ export default function Navbar() {
             <button
               onClick={() => setIsSignInModalOpen(true)}
               className="text-white font-normal uppercase tracking-normal no-underline hover:underline transition-all duration-200 bg-transparent border-none cursor-pointer"
-              style={{ fontFamily: "'Manrope', sans-serif", fontSize: '10px' }}
+              style={{ fontFamily: "var(--font-manrope), 'Manrope', sans-serif", fontSize: '10px' }}
             >
               SIGN IN
             </button>
@@ -221,7 +227,7 @@ export default function Navbar() {
             href="/product"
             onClick={() => setIsMobileMenuOpen(false)}
             className="text-white text-3xl font-light tracking-tight no-underline hover:text-white/70 transition-colors"
-            style={{ fontFamily: "'Manrope', sans-serif" }}
+            style={{ fontFamily: "var(--font-manrope), 'Manrope', sans-serif" }}
           >
             Product
           </Link>
@@ -229,7 +235,7 @@ export default function Navbar() {
             href="/company"
             onClick={() => setIsMobileMenuOpen(false)}
             className="text-white text-3xl font-light tracking-tight no-underline hover:text-white/70 transition-colors"
-            style={{ fontFamily: "'Manrope', sans-serif" }}
+            style={{ fontFamily: "var(--font-manrope), 'Manrope', sans-serif" }}
           >
             Company
           </Link>
@@ -237,7 +243,7 @@ export default function Navbar() {
             href="/pricing"
             onClick={() => setIsMobileMenuOpen(false)}
             className="text-white text-3xl font-light tracking-tight no-underline hover:text-white/70 transition-colors"
-            style={{ fontFamily: "'Manrope', sans-serif" }}
+            style={{ fontFamily: "var(--font-manrope), 'Manrope', sans-serif" }}
           >
             Pricing
           </Link>
@@ -245,7 +251,7 @@ export default function Navbar() {
             href="/blog"
             onClick={() => setIsMobileMenuOpen(false)}
             className="text-white text-3xl font-light tracking-tight no-underline hover:text-white/70 transition-colors"
-            style={{ fontFamily: "'Manrope', sans-serif" }}
+            style={{ fontFamily: "var(--font-manrope), 'Manrope', sans-serif" }}
           >
             Blog
           </Link>
@@ -253,7 +259,7 @@ export default function Navbar() {
             href="/careers"
             onClick={() => setIsMobileMenuOpen(false)}
             className="text-white text-3xl font-light tracking-tight no-underline hover:text-white/70 transition-colors"
-            style={{ fontFamily: "'Manrope', sans-serif" }}
+            style={{ fontFamily: "var(--font-manrope), 'Manrope', sans-serif" }}
           >
             Careers
           </Link>
@@ -261,7 +267,7 @@ export default function Navbar() {
             <button
               onClick={() => { setIsMobileMenuOpen(false); logout(); }}
               className="text-white text-3xl font-light tracking-tight no-underline hover:text-white/70 transition-colors bg-transparent border-none cursor-pointer text-left"
-              style={{ fontFamily: "'Manrope', sans-serif" }}
+              style={{ fontFamily: "var(--font-manrope), 'Manrope', sans-serif" }}
             >
               Sign Out
             </button>
@@ -269,7 +275,7 @@ export default function Navbar() {
             <button
               onClick={() => { setIsMobileMenuOpen(false); setIsSignInModalOpen(true); }}
               className="text-white text-3xl font-light tracking-tight no-underline hover:text-white/70 transition-colors bg-transparent border-none cursor-pointer text-left"
-              style={{ fontFamily: "'Manrope', sans-serif" }}
+              style={{ fontFamily: "var(--font-manrope), 'Manrope', sans-serif" }}
             >
               Sign In
             </button>
@@ -297,7 +303,7 @@ export default function Navbar() {
             className={`flex items-center gap-2 transition-all duration-300 ${
               language === 'en' ? 'opacity-100 grayscale-0' : 'opacity-40 grayscale hover:opacity-70'
             }`}
-            style={{ fontFamily: "'Manrope', sans-serif", fontSize: '12px' }}
+            style={{ fontFamily: "var(--font-manrope), 'Manrope', sans-serif", fontSize: '12px' }}
           >
             <Image src="/uk-flag.svg" alt="EN" width={18} height={12} className="rounded-[2px] object-cover h-[12px] w-[18px]" />
             EN
@@ -308,7 +314,7 @@ export default function Navbar() {
             className={`flex items-center gap-2 transition-all duration-300 ${
               language === 'id' ? 'opacity-100 grayscale-0' : 'opacity-40 grayscale hover:opacity-70'
             }`}
-            style={{ fontFamily: "'Manrope', sans-serif", fontSize: '12px' }}
+            style={{ fontFamily: "var(--font-manrope), 'Manrope', sans-serif", fontSize: '12px' }}
           >
             <Image src="/id-flag.svg" alt="ID" width={18} height={12} className="rounded-[2px] object-cover h-[12px] w-[18px]" />
             ID

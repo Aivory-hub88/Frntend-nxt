@@ -25,7 +25,7 @@ export function HeroSection({ title, subtitle }: HeroSectionProps) {
         isVisible ? "is-visible" : ""
       } relative text-[#11110f]`}
       style={{
-        fontFamily: "'Manrope', sans-serif",
+        fontFamily: "var(--font-manrope), 'Manrope', sans-serif",
         fontWeight: 300,
         background: HERO_BACKGROUND,
       }}

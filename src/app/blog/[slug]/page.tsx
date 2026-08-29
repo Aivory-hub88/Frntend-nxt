@@ -286,7 +286,7 @@ export default async function BlogPostPage(props: { params: Promise<{ slug: stri
       <main
         className="flex-1 bg-[#efeee8] text-[#11110f]"
         style={{
-          fontFamily: "'Manrope', sans-serif",
+          fontFamily: "var(--font-manrope), 'Manrope', sans-serif",
           fontWeight: 300,
           background: "linear-gradient(to bottom, #050505 0, #050505 64px, #efeee8 64px, #efeee8 100%)",
         }}
