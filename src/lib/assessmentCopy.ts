@@ -63,8 +63,6 @@ export interface AssessmentStrings {
     emailCta: string;
     emailNote: string;
     emailInvalid: string;
-    downloadPdf: string;
-    buildingPdf: string;
     sharePng: string;
     renderingPng: string;
     pdfDownloaded: string;
@@ -239,7 +237,6 @@ const EN: AssessmentStrings = {
     emailCta: 'Get my report',
     emailNote: 'Unlocks the downloadable report below. No spam — we use this to send your report and nothing else.',
     emailInvalid: 'Enter a valid email address.',
-    downloadPdf: 'Download the report (PDF)', buildingPdf: 'Building PDF…',
     sharePng: 'Share as image (PNG)', renderingPng: 'Rendering images…',
     pdfDownloaded: 'Your PDF report has downloaded — check your downloads folder.',
     deliverySending: e => `Emailing a copy to ${e}…`,
@@ -397,7 +394,6 @@ const ID: AssessmentStrings = {
     emailCta: 'Kirim laporan saya',
     emailNote: 'Membuka unduhan laporan di bawah. Tanpa spam — alamat ini hanya kami pakai untuk mengirim laporan Anda.',
     emailInvalid: 'Masukkan alamat email yang valid.',
-    downloadPdf: 'Unduh laporan (PDF)', buildingPdf: 'Menyiapkan PDF…',
     sharePng: 'Bagikan sebagai gambar (PNG)', renderingPng: 'Menyiapkan gambar…',
     pdfDownloaded: 'Laporan PDF Anda sudah terunduh — cek folder unduhan Anda.',
     deliverySending: e => `Mengirim salinan ke ${e}…`,
