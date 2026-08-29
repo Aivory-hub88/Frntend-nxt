@@ -111,7 +111,7 @@ export function InteractiveGridShowcase() {
           >
             Operational Framework
           </SpotlightButton>
-          <h3 className="text-4xl md:text-5xl font-light tracking-normal mb-6 leading-tight" style={{ zoom: 0.7 }}>
+          <h3 className="text-[37px] md:text-[46px] font-light tracking-tight mb-6 leading-tight" style={{ zoom: 0.7 }}>
             From Operational Clarity <br className="hidden md:block" />to <span style={{ color: '#e4effd' }}>Intelligent Operations</span>
           </h3>
           <p className="text-white/75 font-light leading-relaxed">

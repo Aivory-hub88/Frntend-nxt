@@ -2685,7 +2685,7 @@ export function InteractiveShowcase({
               >
                 Operational Framework
               </SpotlightButton>
-              <h3 className="text-3xl md:text-4xl lg:text-5xl font-light tracking-tight mb-6 leading-tight" style={{ zoom: 0.7 }}>
+              <h3 className="text-[37px] md:text-[40px] lg:text-[46px] font-light tracking-tight mb-6 leading-tight" style={{ zoom: 0.7 }}>
                 From Operational Clarity
                 <br />
                 to <span style={{ color: "#e4effd" }}>Intelligent Operations</span>

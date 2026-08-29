@@ -36,7 +36,7 @@ export default function PreFooterCTA() {
                 Strategic engagement / 01
               </p>
               <h2
-                className="no-word-split mt-5 max-w-lg text-3xl font-light leading-[1.12] tracking-[-0.03em] md:text-[44px]"
+                className="no-word-split mt-5 max-w-lg text-[26px] sm:text-[28px] md:text-[28px] lg:text-[32px] font-light leading-[1.15] tracking-[-0.03em]"
                 style={{ fontFamily: "var(--font-manrope), 'Manrope', sans-serif", fontWeight: 300 }}
               >
                 Start your transformation.
@@ -83,7 +83,7 @@ export default function PreFooterCTA() {
             <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-white/45">
               Questions / 02
             </p>
-            <h3 className="mt-5 max-w-sm text-3xl font-light leading-[1.15] tracking-[-0.025em] md:text-[40px]">
+            <h3 className="mt-5 max-w-sm text-[26px] sm:text-[28px] md:text-[28px] lg:text-[32px] font-light leading-[1.15] tracking-[-0.025em]">
               Clear answers about Aivory.
             </h3>
           </div>

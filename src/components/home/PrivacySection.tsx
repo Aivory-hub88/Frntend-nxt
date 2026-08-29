@@ -234,7 +234,7 @@ export default function PrivacySection() {
               Privacy &amp; security / 01
             </p>
             <h2
-              className="no-word-split mt-5 max-w-lg text-3xl font-light leading-[1.12] tracking-[-0.03em] md:text-[44px]"
+              className="no-word-split mt-5 max-w-lg text-[26px] sm:text-[28px] md:text-[28px] lg:text-[32px] font-light leading-[1.15] tracking-[-0.03em]"
               style={{ fontFamily: "var(--font-manrope), 'Manrope', sans-serif", fontWeight: 300 }}
             >
               Data sovereignty is non-negotiable.
