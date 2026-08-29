@@ -11,11 +11,11 @@ export default function AIReadySection() {
       className={`animate-on-scroll ${isVisible ? "is-visible" : ""} w-full pt-16 md:pt-24 pb-4 md:pb-6 relative`}
     >
       <div className="max-w-[1400px] mx-auto px-6 md:px-12 lg:px-24 relative z-[1]">
-        <div className="flex flex-col md:flex-row items-center md:items-start justify-between gap-12 mb-6">
+        <div className="grid grid-cols-1 gap-10 mb-6 md:grid-cols-12 md:gap-8 md:items-start">
           {/* Left Column */}
-          <div className="w-full md:w-1/2 flex justify-start">
+          <div className="md:col-span-5 flex justify-start">
             <h2
-              className="text-3xl sm:text-4xl md:text-[31px] lg:text-[38px] font-light tracking-tight leading-[1.1] text-white m-0 text-left"
+              className="text-[26px] sm:text-[28px] md:text-[28px] lg:text-[32px] font-light tracking-tight leading-[1.15] text-white m-0 text-left"
               style={{ fontFamily: "var(--font-manrope), 'Manrope', sans-serif", fontWeight: 300 }}
             >
               Transformation requires
@@ -46,7 +46,7 @@ export default function AIReadySection() {
               soft scrim sits behind it. Gradient only -- no backdrop blur:
               blurring a live animating layer costs a re-composite every frame
               (the trap already documented on the operations-stack cards). */}
-          <div className="w-full md:w-1/2 relative flex flex-col justify-start text-left">
+          <div className="relative flex flex-col justify-start text-left md:col-span-6 md:col-start-6">
             <div
               aria-hidden="true"
               className="pointer-events-none absolute -inset-x-8 -inset-y-10 -z-10"

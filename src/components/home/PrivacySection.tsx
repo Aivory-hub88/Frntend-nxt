@@ -100,7 +100,7 @@ function Halftone({ pattern, tone }: { pattern: Pattern; tone: 'ink' | 'onAccent
     <svg
       viewBox={`0 0 ${cols * step} ${rows * step}`}
       aria-hidden="true"
-      className={`h-full w-full ${tone === 'onAccent' ? 'text-[#110f0e]' : 'text-[#ff2f00]'}`}
+      className={`h-full w-full ${tone === 'onAccent' ? 'text-white' : 'text-[#ff2f00]'}`}
       fill="currentColor"
     >
       {dots}
@@ -263,13 +263,13 @@ export default function PrivacySection() {
               key={item.title}
               className={`privacy-card relative flex min-h-[330px] flex-col overflow-hidden rounded-[20px] border p-7 ${
                 item.accent
-                  ? 'privacy-card--accent border-transparent bg-[#ff2f00] text-[#110f0e]'
+                  ? 'privacy-card--accent border-transparent bg-[#ff2f00] text-white'
                   : 'border-transparent bg-[#ededed] text-[#110f0e]'
               }`}
             >
               <p
                 className={`font-mono text-[10px] uppercase tracking-[0.2em] ${
-                  item.accent ? 'text-[#110f0e]' : 'text-[#110f0e]/70'
+                  item.accent ? 'text-white' : 'text-[#110f0e]/70'
                 }`}
               >
                 {item.tag}
@@ -288,7 +288,7 @@ export default function PrivacySection() {
 
               <p
                 className={`mt-3 font-light leading-[1.6] ${
-                  item.accent ? 'text-[#110f0e]' : 'text-[#110f0e]/65'
+                  item.accent ? 'text-white' : 'text-[#110f0e]/65'
                 } text-[13.5px]`}
                 style={{ fontFamily: "var(--font-manrope), 'Manrope', sans-serif", fontWeight: 300 }}
               >
@@ -308,7 +308,7 @@ export default function PrivacySection() {
 
               <span
                 className={`privacy-card__mark relative mt-auto block h-11 w-11 pt-9 ${
-                  item.accent ? 'text-[#110f0e]' : 'text-[#110f0e]/70'
+                  item.accent ? 'text-white' : 'text-[#110f0e]/70'
                 }`}
                 style={{ strokeWidth: 0.9, boxSizing: 'content-box' }}
               >
