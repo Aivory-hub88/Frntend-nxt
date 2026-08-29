@@ -28,6 +28,15 @@ const nextConfig = {
         destination: '/blog/how-to-run-a-business-operations-assessment',
         permanent: true,
       },
+      {
+        // The assessment lived at /diagnostic before it was renamed, and the
+        // old hero CTA pointed at /diagnostic?type=free. Nothing replaced the
+        // route, so every old inbound link and indexed URL was returning 404.
+        // Next carries the query string over, so ?type=free survives.
+        source: '/diagnostic',
+        destination: '/free-diagnostic',
+        permanent: true,
+      },
     ];
   },
 };
