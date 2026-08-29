@@ -34,6 +34,7 @@ import {
   loadMidtransSnap,
   fetchMidtransClientKey,
 } from '@/lib/payment';
+import { createDirectCharge, type DirectChargeResult } from '@/lib/payment';
 import { formatCheckoutPrice, type CheckoutCurrency } from '@/lib/checkout-format';
 import { SpotlightButton } from '@/components/ui/SpotlightButton';
 import TurnstileWidget from '@/components/payment/TurnstileWidget';
@@ -58,6 +59,7 @@ type Step =
   | 'pin'
   | 'otp'
   | 'processing'
+  | 'awaiting'
   | 'success';
 type Channel = 'credit_card' | 'gopay' | 'dana' | 'qris';
 
@@ -301,6 +303,9 @@ export function CheckoutForm({
 
   const [step, setStep] = useState<Step>(initialAuthed ? 'method' : 'auth');
   const [channel, setChannel] = useState<Channel | null>(null);
+  // Core API result for the channel the customer picked — the QR, deeplink or
+  // VA number we draw ourselves instead of handing the screen to Snap.
+  const [charge, setCharge] = useState<DirectChargeResult | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [langOpen, setLangOpen] = useState(false);
 
@@ -382,10 +387,42 @@ export function CheckoutForm({
     setTimeout(() => setStep('success'), 1600);
   };
 
+  // Core API channels that can be drawn entirely on this page. Card is absent
+  // on purpose: it needs Midtrans' browser tokenisation library first. DANA is
+  // absent because Core API has no payment_type for it at all — both keep
+  // running through Snap.
+  const DIRECT_CHANNELS = new Set(['gopay', 'qris']);
+
+  // Opt-in while the direct path is proven against real money. Until a real
+  // charge per channel has settled, every customer keeps the Snap flow that is
+  // known to work; adding `?pay=direct` to the URL is how we exercise the new
+  // one on production without exposing it.
+  const directPayEnabled =
+    typeof window !== 'undefined' &&
+    new URLSearchParams(window.location.search).get('pay') === 'direct';
+
+  const runDirectCharge = async (picked: Channel): Promise<boolean> => {
+    const result = await createDirectCharge(productId, picked);
+    if (result.fallback_to_snap || !result.success) return false;
+    setCharge(result);
+    setStep('awaiting');
+    return true;
+  };
+
   const runRealPayment = async () => {
     setStep('processing');
     setError(null);
     try {
+      // Draw the payment ourselves where we can. A refusal falls through to
+      // Snap rather than stranding the customer.
+      if (directPayEnabled && channel && DIRECT_CHANNELS.has(channel)) {
+        try {
+          if (await runDirectCharge(channel)) return;
+        } catch (directErr) {
+          console.warn('Direct charge unavailable, falling back to Snap:', directErr);
+        }
+      }
+
       // The server prices the product from its own catalogue — no amount is
       // sent from here. The Channel ids in CHANNELS are deliberately the same
       // strings Midtrans uses, so the picked one passes straight through and
@@ -1033,6 +1070,57 @@ export function CheckoutForm({
             <div className="w-12 h-12 rounded-full border-4 border-gray-200 border-t-[#4a90e2] animate-spin" />
             <p className="mt-6 text-[15px] text-gray-600">
               {isEwallet ? `Confirming your ${channelLabel.replace(' (E-Wallet)', '')} payment…` : 'Processing your payment…'}
+            </p>
+          </div>
+        )}
+
+        {/* ---- AWAITING PAYMENT (Aivory-drawn, no Snap popup) ---- */}
+        {step === 'awaiting' && charge && (
+          <div className="py-8 flex flex-col items-center text-center">
+            <p className="text-[13px] uppercase tracking-[0.14em] text-gray-500">
+              {channelLabel}
+            </p>
+            <p className="mt-2 text-[15px] text-gray-600">
+              {charge.va_number
+                ? 'Transfer the exact amount to the account below.'
+                : 'Scan the code with your payment app to complete the purchase.'}
+            </p>
+
+            {/* QRIS / GoPay QR. Midtrans hands back a hosted image as well as
+                the raw string, so there is nothing to encode here. */}
+            {charge.qr_url && (
+              <img
+                src={charge.qr_url}
+                alt={`${channelLabel} payment QR code`}
+                className="mt-6 w-56 h-56 rounded-xl border border-gray-200 bg-white p-3"
+              />
+            )}
+
+            {/* Phones cannot scan their own screen, so the app hand-off is the
+                route that actually works there. */}
+            {charge.deeplink_url && (
+              <a
+                href={charge.deeplink_url}
+                className="mt-6 inline-flex items-center justify-center rounded-lg bg-[#4a90e2] px-6 py-3 text-[14px] font-medium text-white transition-colors hover:bg-[#3f7fc9] sm:hidden"
+              >
+                Open {channelLabel.replace(' (E-Wallet)', '')}
+              </a>
+            )}
+
+            {charge.va_number && (
+              <div className="mt-6 w-full max-w-sm rounded-xl border border-gray-200 bg-gray-50 p-4 text-left">
+                <p className="text-[12px] uppercase tracking-[0.1em] text-gray-500">
+                  {(charge.va_bank || 'bank').toUpperCase()} virtual account
+                </p>
+                <p className="mt-1 font-mono text-[20px] tracking-wide text-gray-900">
+                  {charge.va_number}
+                </p>
+              </div>
+            )}
+
+            <p className="mt-6 text-[13px] text-gray-500">
+              This page updates as soon as your payment is confirmed. It is safe
+              to close it &mdash; your purchase is recorded either way.
             </p>
           </div>
         )}

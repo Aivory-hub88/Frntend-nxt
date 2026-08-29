@@ -526,6 +526,80 @@ export async function createPaymentTransaction(
   return result;
 }
 
+export interface DirectChargeResult {
+  success: boolean;
+  order_id?: string;
+  channel?: string;
+  transaction_status?: string;
+  expiry_time?: string;
+  amount_idr?: number;
+  /** Exactly one of these is set, depending on the channel. */
+  qr_string?: string | null;
+  qr_url?: string | null;
+  deeplink_url?: string | null;
+  va_number?: string | null;
+  va_bank?: string | null;
+  biller_code?: string | null;
+  redirect_url?: string | null;
+  error?: string;
+  /** Core API has no payment_type for this channel (DANA) — use Snap. */
+  fallback_to_snap?: boolean;
+}
+
+/**
+ * Charge through Core API so the payment is drawn on our own page instead of
+ * inside Snap's popup.
+ *
+ * Returns the one render field the chosen channel needs — a QR string, an app
+ * deeplink, or a virtual-account number. `fallback_to_snap` comes back for a
+ * channel Core API cannot serve (DANA), and the caller should run the Snap path
+ * for it rather than showing an error.
+ *
+ * Card is not routed here: it needs Midtrans' browser tokenisation library
+ * first, which is a separate step.
+ */
+export async function createDirectCharge(
+  product: string | number,
+  channel: string,
+): Promise<DirectChargeResult> {
+  if (!isAuthenticated()) {
+    throw new Error('User not authenticated');
+  }
+
+  const user = getUser();
+  if (!user || !user.user_id) {
+    throw new Error('User account not properly configured');
+  }
+
+  const productId = typeof product === 'number' ? `credits_${product}` : product;
+
+  // Same reason as createPaymentTransaction: the webhook-settlement helpers
+  // read these module-level fields, and a caller that leaves them null makes
+  // confirmPayment() a silent no-op.
+  currentPaymentProduct = productId;
+  currentPaymentAmount = getPaymentAmount(product);
+
+  // No amount is sent — the payments service prices from its own catalogue.
+  const response = await fetch(`${API_BASE_URL}/api/v1/payments/midtrans/charge`, {
+    method: 'POST',
+    headers: authHeaders(),
+    body: JSON.stringify({
+      user_id: user.user_id,
+      product: productId,
+      channel,
+      customer_email: user.email,
+      customer_first_name: user.email.split('@')[0],
+    }),
+  });
+
+  if (!response.ok) {
+    const error = await response.json().catch(() => ({}));
+    throw new Error(error.detail || 'Failed to start the payment');
+  }
+
+  return (await response.json()) as DirectChargeResult;
+}
+
 /**
  * File an out-of-band ("manual") payment for admin verification.
  *
