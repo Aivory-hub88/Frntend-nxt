@@ -36,6 +36,16 @@ import {
 } from '@/lib/payment';
 import { createDirectCharge, type DirectChargeResult } from '@/lib/payment';
 import { loadMidtrans3ds, getCardToken, authenticate3ds } from '@/lib/midtrans-3ds';
+import {
+  detectCardBrand,
+  lookupBin,
+  formatBankName,
+  formatBinType,
+  BRAND_ICONS,
+  BRAND_LABELS,
+  BIN_LENGTH,
+  type BinInfo,
+} from '@/lib/card-brand';
 import { formatCheckoutPrice, type CheckoutCurrency } from '@/lib/checkout-format';
 import { SpotlightButton } from '@/components/ui/SpotlightButton';
 import TurnstileWidget from '@/components/payment/TurnstileWidget';
@@ -72,39 +82,45 @@ export interface CheckoutFormProps {
   onComplete: () => void;
 }
 
+/**
+ * A payment mark, sized per logo so a wordmark and a symbol carry the same
+ * optical weight — the same treatment the pricing page uses. These are the
+ * official marks from /public/payments; they used to be approximations drawn
+ * with Tailwind classes (a "VISA" text box, two coloured circles for
+ * Mastercard, a red "QRIS" chip).
+ */
+function ChannelMark({ src, alt, height }: { src: string; alt: string; height: number }) {
+  return (
+    <img
+      src={src}
+      alt={alt}
+      height={height}
+      style={{ height, width: 'auto' }}
+      decoding="async"
+    />
+  );
+}
+
 const CHANNELS: { id: Channel; label: string; badge: React.ReactNode }[] = [
   {
     id: 'credit_card',
     label: 'Credit / Debit Card',
     badge: (
-      <div className="flex gap-1">
-        <div className="w-8 h-5 bg-gray-100 rounded flex items-center justify-center text-[10px] font-bold text-blue-800 border border-gray-200">
-          VISA
-        </div>
-        <div className="w-8 h-5 bg-gray-100 rounded flex items-center justify-center border border-gray-200">
-          <div className="w-3 h-3 bg-red-500 rounded-full mix-blend-multiply opacity-80 -mr-1" />
-          <div className="w-3 h-3 bg-yellow-400 rounded-full mix-blend-multiply opacity-80" />
-        </div>
+      <div className="flex items-center gap-2.5">
+        <ChannelMark src="/payments/visa.svg" alt="Visa" height={14} />
+        <ChannelMark src="/payments/mastercard.svg" alt="Mastercard" height={18} />
       </div>
     ),
   },
   {
     id: 'gopay',
     label: 'GoPay (E-Wallet)',
-    badge: (
-      <div className="px-2 h-5 bg-blue-500 rounded flex items-center justify-center text-[10px] font-bold text-white">
-        gopay
-      </div>
-    ),
+    badge: <ChannelMark src="/payments/gopay.svg" alt="GoPay" height={13} />,
   },
   {
     id: 'qris',
     label: 'QRIS',
-    badge: (
-      <div className="px-2 h-5 bg-[#EE1D52] rounded flex items-center justify-center text-[10px] font-bold text-white tracking-wide">
-        QRIS
-      </div>
-    ),
+    badge: <ChannelMark src="/payments/qris.svg" alt="QRIS" height={14} />,
   },
 ];
 
@@ -327,10 +343,47 @@ export function CheckoutForm({
   const [cardExpiry, setCardExpiry] = useState('');
   const [cardCvv, setCardCvv] = useState('');
   const [cardName, setCardName] = useState('');
+  // Issuing-bank / credit-vs-debit metadata from Midtrans' BIN API. Purely
+  // informational: nothing below gates on it, per Midtrans' own guidance that
+  // BIN values are advisory and may be empty.
+  const [binInfo, setBinInfo] = useState<BinInfo | null>(null);
   const [billingAddress, setBillingAddress] = useState('');
   const [billingCity, setBillingCity] = useState('');
   const [billingPostal, setBillingPostal] = useState('');
   const [billingCountry, setBillingCountry] = useState('Indonesia');
+
+  // Network from the leading digits — local, instant, runs on every keystroke.
+  const cardBrand = detectCardBrand(cardNumber);
+
+  // The bank behind those digits needs Midtrans. Debounced and keyed on the
+  // BIN alone, so it fires once per card rather than once per keystroke, and
+  // an in-flight request is aborted the moment the BIN changes.
+  const cardBin = cardNumber.replace(/\D/g, '').slice(0, BIN_LENGTH);
+  useEffect(() => {
+    if (cardBin.length < BIN_LENGTH) {
+      setBinInfo(null);
+      return;
+    }
+
+    const controller = new AbortController();
+    const timer = setTimeout(async () => {
+      if (!window.MIDTRANS_CLIENT_KEY) await fetchMidtransClientKey();
+      const key = window.MIDTRANS_CLIENT_KEY;
+      if (!key) return;
+      const info = await lookupBin(
+        cardBin,
+        key,
+        window.MIDTRANS_IS_PRODUCTION !== false,
+        controller.signal,
+      );
+      setBinInfo(info);
+    }, 350);
+
+    return () => {
+      clearTimeout(timer);
+      controller.abort();
+    };
+  }, [cardBin]);
 
   // E-wallet fields
   const [phone, setPhone] = useState('');
@@ -931,14 +984,36 @@ export function CheckoutForm({
               <div className="flex flex-col gap-4">
                 <div>
                   <label className={labelClass}>Card Number</label>
-                  <input
-                    type="text"
-                    inputMode="numeric"
-                    placeholder="4811 1111 1111 1114"
-                    value={cardNumber}
-                    onChange={(e) => setCardNumber(formatCardNumber(e.target.value))}
-                    className={inputClass}
-                  />
+                  <div className="relative">
+                    <input
+                      type="text"
+                      inputMode="numeric"
+                      placeholder="4811 1111 1111 1114"
+                      value={cardNumber}
+                      onChange={(e) => setCardNumber(formatCardNumber(e.target.value))}
+                      className={`${inputClass} pr-14`}
+                    />
+                    {cardBrand && BRAND_ICONS[cardBrand] && (
+                      <img
+                        key={cardBrand}
+                        src={BRAND_ICONS[cardBrand]}
+                        alt={BRAND_LABELS[cardBrand]}
+                        className="card-brand-mark absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none"
+                        style={{ height: cardBrand === 'mastercard' ? 20 : 14, width: 'auto' }}
+                        decoding="async"
+                      />
+                    )}
+                  </div>
+                  {(binInfo?.bank || binInfo?.binType) && (
+                    <p className="mt-1.5 text-xs text-gray-500">
+                      {[
+                        binInfo.bank ? formatBankName(binInfo.bank) : null,
+                        binInfo.binType ? formatBinType(binInfo.binType) : null,
+                      ]
+                        .filter(Boolean)
+                        .join(' · ')}
+                    </p>
+                  )}
                 </div>
                 <div className="flex gap-4">
                   <div className="flex-1">
