@@ -13,7 +13,7 @@ export default function AIReadySection() {
       <div className="max-w-[1400px] mx-auto px-6 md:px-12 lg:px-24 relative z-[1]">
         <div className="grid grid-cols-1 gap-10 mb-6 md:grid-cols-12 md:gap-8 md:items-start">
           {/* Left Column */}
-          <div className="md:col-span-5 flex justify-start">
+          <div className="md:col-span-5 md:col-start-2 flex justify-start">
             <h2
               className="text-[26px] sm:text-[28px] md:text-[28px] lg:text-[32px] font-light tracking-tight leading-[1.15] text-white m-0 text-left"
               style={{ fontFamily: "var(--font-manrope), 'Manrope', sans-serif", fontWeight: 300 }}
