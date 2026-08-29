@@ -46,7 +46,7 @@ export default function AIReadySection() {
               soft scrim sits behind it. Gradient only -- no backdrop blur:
               blurring a live animating layer costs a re-composite every frame
               (the trap already documented on the operations-stack cards). */}
-          <div className="relative flex flex-col justify-start text-left md:col-span-6 md:col-start-6">
+          <div className="relative flex flex-col justify-start text-left md:col-span-6 md:col-start-7">
             <div
               aria-hidden="true"
               className="pointer-events-none absolute -inset-x-8 -inset-y-10 -z-10"
@@ -56,15 +56,15 @@ export default function AIReadySection() {
               }}
             />
 
-            <p className="max-w-[46ch] text-[14px] md:text-[16px] font-light leading-relaxed text-white/60">
+            <p className="max-w-[54ch] text-[14px] md:text-[16px] font-light leading-relaxed text-white/60">
               Most organisations deploy AI before understanding how work actually gets done.
             </p>
 
-            <p className="mt-6 max-w-[46ch] text-[17px] md:text-[19px] font-light leading-snug tracking-tight text-white">
+            <p className="mt-6 max-w-[54ch] text-[17px] md:text-[19px] font-light leading-snug tracking-tight text-white">
               We reverse the model.
             </p>
 
-            <ol className="mt-7 max-w-[46ch] border-b border-white/[0.13]">
+            <ol className="mt-7 max-w-[54ch] border-b border-white/[0.13]">
               {[
                 'Map the operation.',
                 'Get a blueprint of quick-win automations.',

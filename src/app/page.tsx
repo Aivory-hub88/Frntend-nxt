@@ -43,7 +43,7 @@ export default function HomePage() {
 
             <div className="w-full pt-4 md:pt-8 pb-2 md:pb-4 px-6 flex flex-col items-center justify-center text-center">
               <h2
-                className="text-2xl md:text-3xl lg:text-4xl font-light tracking-tight text-[#B3B3B3] leading-relaxed max-w-3xl"
+                className="text-[26px] sm:text-[28px] md:text-[28px] lg:text-[32px] font-light tracking-tight text-[#B3B3B3] leading-[1.35] max-w-3xl"
                 style={{ fontFamily: "var(--font-manrope), 'Manrope', sans-serif", fontWeight: 300 }}
               >
                 Beyond AI chat.<br />

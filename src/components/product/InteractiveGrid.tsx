@@ -434,7 +434,7 @@ export function InteractiveGrid() {
           >
             THE PLATFORM
           </SpotlightButton>
-          <h3 className="text-4xl md:text-5xl font-light tracking-normal mb-4" style={{ fontFamily: "var(--font-manrope), 'Manrope', sans-serif", fontWeight: 300 }}>
+          <h3 className="text-[26px] sm:text-[28px] md:text-[28px] lg:text-[32px] font-light tracking-tight mb-4" style={{ fontFamily: "var(--font-manrope), 'Manrope', sans-serif", fontWeight: 300 }}>
             Add Agentic Hands to Your <span style={{ color: '#e4effd' }}>Team.</span>
           </h3>
           <p className="text-white max-w-xl mx-auto font-light leading-relaxed">
