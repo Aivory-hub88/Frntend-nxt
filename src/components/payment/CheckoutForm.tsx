@@ -388,13 +388,16 @@ export function CheckoutForm({
   // running through Snap.
   const DIRECT_CHANNELS = new Set(['gopay', 'qris', 'credit_card']);
 
-  // Opt-in while the direct path is proven against real money. Until a real
-  // charge per channel has settled, every customer keeps the Snap flow that is
-  // known to work; adding `?pay=direct` to the URL is how we exercise the new
-  // one on production without exposing it.
+  // On by default. This was opt-in while the direct path was unproven, but the
+  // opt-in was the reason nobody ever saw it — the flag has to be remembered on
+  // every visit, so the checkout simply stayed on Snap.
+  //
+  // Defaulting it on is safe because a direct charge that throws or comes back
+  // fallback_to_snap drops through to the Snap path below rather than stranding
+  // the customer. `?pay=snap` forces the old flow if the new one ever misbehaves.
   const directPayEnabled =
-    typeof window !== 'undefined' &&
-    new URLSearchParams(window.location.search).get('pay') === 'direct';
+    typeof window === 'undefined' ||
+    new URLSearchParams(window.location.search).get('pay') !== 'snap';
 
   const runDirectCharge = async (picked: Channel): Promise<boolean> => {
     let cardTokenId: string | undefined;
@@ -1181,6 +1184,21 @@ export function CheckoutForm({
               This page updates as soon as your payment is confirmed. It is safe
               to close it &mdash; your purchase is recorded either way.
             </p>
+
+            {/* The automatic fallback only catches a charge that FAILS. If one
+                succeeds but what we drew is unusable — a QR that will not
+                load — nothing else would rescue the customer, so give them a
+                way out by hand. */}
+            <button
+              type="button"
+              onClick={() => {
+                setCharge(null);
+                window.location.search = 'pay=snap';
+              }}
+              className="mt-3 text-[13px] text-gray-500 underline underline-offset-2 hover:text-gray-700"
+            >
+              Having trouble? Pay another way
+            </button>
           </div>
         )}
 
