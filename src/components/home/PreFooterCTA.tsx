@@ -67,15 +67,6 @@ export default function PreFooterCTA() {
                 >
                   Complete Package
                 </TechnicalFrameButton>
-                <TechnicalFrameButton
-                  href="https://book.aivory.uk/book/aivory-call"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  size="compact"
-                  className="bg-transparent text-white/70 hover:text-white"
-                >
-                  Book a Call
-                </TechnicalFrameButton>
               </div>
               <p
                 className="mt-7 font-mono text-[11px] uppercase tracking-[0.14em] text-white/80"
