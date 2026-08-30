@@ -563,7 +563,8 @@ export function HalftoneWave({ active = true, purpleColor }: { active?: boolean;
       // alone can't catch this since the canvas is a fixed full-viewport
       // background that's always "intersecting".
       if (isVisible && activeRef.current) {
-        const time = clock.getElapsedTime() % 1000;
+        const rawTime = clock.getElapsedTime();
+        const time = rawTime % 1000;
         uniforms.uTime.value = time;
         
         // Immersive gentle floating motion when in Hero (progress = 0)
@@ -591,7 +592,7 @@ export function HalftoneWave({ active = true, purpleColor }: { active?: boolean;
         // motion instead comes from the elegant, continuous Z-axis turbine
         // spin below.
         group.rotation.y = (Math.PI / 1.5) + dragRotationY + smoothMouseX * 0.15;
-        group.rotation.z = time * 0.15; // Counter-clockwise turbine spin
+        group.rotation.z = rawTime * 0.15; // Counter-clockwise turbine spin
         
         uniforms.uScroll.value += (targetScroll - uniforms.uScroll.value) * 0.05;
         
