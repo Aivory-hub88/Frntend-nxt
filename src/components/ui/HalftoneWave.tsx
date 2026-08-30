@@ -536,6 +536,15 @@ export function HalftoneWave({ active = true, purpleColor }: { active?: boolean;
       if (document.hidden) isVisible = false;
     };
     document.addEventListener('visibilitychange', onVisibility);
+    const onContextLost = (e: Event) => {
+      e.preventDefault();
+      cancelAnimationFrame(animationFrameId);
+    };
+    const onContextRestored = () => {
+      if (!animationFrameId) renderLoop();
+    };
+    renderer.domElement.addEventListener('webglcontextlost', onContextLost);
+    renderer.domElement.addEventListener('webglcontextrestored', onContextRestored);
 
     let batteryFrame = 0;
     // Deliberately uncapped when plugged: renders at display refresh (60/120Hz).
@@ -554,7 +563,7 @@ export function HalftoneWave({ active = true, purpleColor }: { active?: boolean;
       // alone can't catch this since the canvas is a fixed full-viewport
       // background that's always "intersecting".
       if (isVisible && activeRef.current) {
-        const time = clock.getElapsedTime();
+        const time = clock.getElapsedTime() % 1000;
         uniforms.uTime.value = time;
         
         // Immersive gentle floating motion when in Hero (progress = 0)
@@ -624,6 +633,8 @@ export function HalftoneWave({ active = true, purpleColor }: { active?: boolean;
       clearTimeout(anchorTimer);
       observer.disconnect();
       document.removeEventListener('visibilitychange', onVisibility);
+      renderer.domElement.removeEventListener('webglcontextlost', onContextLost);
+      renderer.domElement.removeEventListener('webglcontextrestored', onContextRestored);
       window.removeEventListener('scroll', onScroll);
       window.removeEventListener('resize', handleResize);
       window.removeEventListener('pointerdown', onPointerDown);
