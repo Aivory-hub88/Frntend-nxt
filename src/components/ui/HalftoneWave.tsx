@@ -33,7 +33,10 @@ export function HalftoneWave({ active = true, purpleColor }: { active?: boolean;
     renderer.setSize(width, height);
     
     const isMobile = window.innerWidth < 1024;
-    const baseDPR = isMobile ? 1 : Math.min(window.devicePixelRatio, 1.6);
+    const hwConcurrency = (navigator as unknown as { hardwareConcurrency?: number }).hardwareConcurrency ?? 4;
+    const deviceMem = (navigator as unknown as { deviceMemory?: number }).deviceMemory ?? 4;
+    const isLowEnd = hwConcurrency <= 4 || deviceMem <= 4;
+    const baseDPR = isMobile ? 1 : isLowEnd ? 1 : Math.min(window.devicePixelRatio, 1.2);
     renderer.setPixelRatio(baseDPR);
     
     // React runs this effect twice in development (StrictMode), and a canvas
@@ -184,7 +187,7 @@ export function HalftoneWave({ active = true, purpleColor }: { active?: boolean;
           
           // Create a shimmering effect mixing the dynamic core color and Purple/#2a545b
           float purpleAmount = (1.0 - scrollT) * 0.977;
-          float coreShimmer = 0.5 + 0.5 * sin(uTime * 2.0 + vLocalPos.x * 6.0 - vLocalPos.y * 5.0 + cos(uTime + vLocalPos.z * 4.0));
+           float coreShimmer = 0.5 + 0.5 * sin(uTime * 1.8 + vLocalPos.x * 4.0);
           vec3 mixedCore = mix(dynamicCore, corePurple, coreShimmer * purpleAmount);
           
           // Keep the orange/purple transition smoothly fading towards the edge.
@@ -210,7 +213,7 @@ export function HalftoneWave({ active = true, purpleColor }: { active?: boolean;
           // Living color nuance - override violet accent with #2a545b
           vec3 accentA = mix(vec3(0.30, 0.16, 0.55), uCustomPurple * 1.1, uUseCustomPurple); 
           vec3 accentB = mix(vec3(0.08, 0.28, 0.42), uCustomPurple * 0.9, uUseCustomPurple); 
-          float shimmer = 0.5 + 0.5 * sin(uTime * 1.2 + vLocalPos.y * 5.0 + vLocalPos.x * 4.0 + sin(uTime * 0.8 + vLocalPos.z * 3.0));
+           float shimmer = 0.5 + 0.5 * sin(uTime * 1.2 + vLocalPos.y * 3.0);
           vec3 accent = mix(accentA, accentB, shimmer);
           float accentGate = mix(0.5, 1.0, indigoGradient);
           finalColor += accent * ((0.11 + uScroll * 0.12) * accentGate);
@@ -243,7 +246,8 @@ export function HalftoneWave({ active = true, purpleColor }: { active?: boolean;
     // 256 spends ~66k vertices on it, 128 spends ~17k. The output is quantised
     // to a 3.6px halftone cell downstream, which discards far more detail than
     // the extra subdivisions ever resolved.
-    const geometry = new THREE.SphereGeometry(1, 128, 128);
+    const segs = isMobile ? 64 : isLowEnd ? 64 : 96;
+    const geometry = new THREE.SphereGeometry(1, segs, segs);
     const material = new THREE.ShaderMaterial({
       uniforms,
       side: THREE.FrontSide, 
@@ -509,6 +513,10 @@ export function HalftoneWave({ active = true, purpleColor }: { active?: boolean;
       isVisible = entry.isIntersecting;
     }, { threshold: 0.0 });
     observer.observe(renderer.domElement);
+    const onVisibility = () => {
+      if (document.hidden) isVisible = false;
+    };
+    document.addEventListener('visibilitychange', onVisibility);
 
     // Deliberately uncapped: the loop renders on every animation frame, so it
     // runs at the display's native refresh (60Hz, 120Hz). Gating this to a
@@ -519,6 +527,7 @@ export function HalftoneWave({ active = true, purpleColor }: { active?: boolean;
     // and the visibility gate below), not by dropping frames.
     const renderLoop = () => {
       animationFrameId = requestAnimationFrame(renderLoop);
+      if (document.hidden) return;
       // Skip the render (and all the per-frame math above it) while the
       // caller has faded this out (e.g. scrolled into a section that hides
       // it) -- this is the actual GPU-saving gate, IntersectionObserver
@@ -594,6 +603,7 @@ export function HalftoneWave({ active = true, purpleColor }: { active?: boolean;
       cancelAnimationFrame(animationFrameId);
       clearTimeout(anchorTimer);
       observer.disconnect();
+      document.removeEventListener('visibilitychange', onVisibility);
       window.removeEventListener('scroll', onScroll);
       window.removeEventListener('resize', handleResize);
       window.removeEventListener('pointerdown', onPointerDown);

@@ -39,5 +39,18 @@ const nextConfig = {
       },
     ];
   },
+  async headers() {
+    return [
+      {
+        source: "/:path*",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, s-maxage=31536000, max-age=60, stale-while-revalidate=300",
+          },
+        ],
+      },
+    ];
+  },
 };
 module.exports = nextConfig;
