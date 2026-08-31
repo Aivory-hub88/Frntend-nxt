@@ -62,8 +62,11 @@ export default function Navbar() {
   };
 
   return (
-    <nav className="absolute top-0 left-0 right-0 z-[1000]" style={{ background: 'transparent' }}>
-      <div className="h-16 max-w-[1400px] mx-auto flex justify-between items-center" style={{ padding: '0 clamp(1rem, 4vw, 2rem)' }}>
+    <nav className="fixed top-4 inset-x-0 z-[1000] flex justify-center px-4">
+      <div
+        className="h-16 w-full max-w-[1400px] flex justify-between items-center rounded-2xl border border-white/10 bg-black/40 backdrop-blur-xl shadow-[0_8px_30px_-4px_rgba(0,0,0,0.5)]"
+        style={{ padding: '0 clamp(1rem, 4vw, 2rem)' }}
+      >
         {/* Left: Aivory logo */}
         <Link href="/" className="flex items-center">
           {/* Measured as the page's LCP element — the hero headline paints via
