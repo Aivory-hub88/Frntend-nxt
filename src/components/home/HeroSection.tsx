@@ -125,9 +125,9 @@ export default function HeroSection() {
             {/* The official lockup already reads "NVIDIA Inception Program",
                 so the copy deliberately never repeats "inception member". */}
             <img
-              src="/images/badges/nvidia-inception-badge-v2.svg"
+              src="/images/nvidia-inception/nvidia-inception-program-badge-rgb-for-screen-negative.svg"
               alt="NVIDIA Inception Program — Aivory AI is a member (2026 cohort)"
-              className="h-[32px] md:h-[35px] w-auto shrink-0 rounded-[5px]"
+              className="h-[25px] md:h-[27px] w-auto shrink-0"
             />
 
             <span className="h-px w-full shrink-0 bg-white/[0.14] sm:mx-5 sm:h-[26px] sm:w-px" />

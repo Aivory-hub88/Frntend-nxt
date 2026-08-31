@@ -97,9 +97,9 @@ export default function Footer() {
             <div className="col-span-2 md:col-span-1 flex items-start mt-8 md:mt-0">
               <div className="flex flex-row items-center gap-4">
                 <img
-                  src="/Aivory_logo_2_2026.svg"
+                  src="/Aivory_new_logo_white.svg"
                   alt="Aivory Logo"
-                  className="h-[28px] md:h-[36px] w-auto shrink-0 opacity-90"
+                  className="h-[56px] md:h-[72px] w-auto shrink-0 opacity-90"
                 />
                 <Link
                   href="/nvidia-inception"
@@ -108,9 +108,9 @@ export default function Footer() {
                   title="NVIDIA Inception Program — 2026 cohort"
                 >
                   <img
-                    src="/images/badges/nvidia-inception-badge-v2.svg"
+                    src="/images/nvidia-inception/nvidia-inception-program-badge-rgb-for-screen-negative.svg"
                     alt="NVIDIA Inception Program — Aivory AI is a member (2026 cohort)"
-                    className="h-[44px] md:h-[52px] w-auto shrink-0"
+                    className="h-[34px] md:h-[40px] w-auto shrink-0"
                   />
                 </Link>
               </div>

@@ -71,13 +71,13 @@ export default function Navbar() {
               is what the metric actually lands on. It therefore gets explicit
               priority instead of queueing behind the rest of the page. */}
           <img
-            src="/Aivory_logo_2_2026.svg"
+            src="/Aivory_new_logo_white.svg"
             alt="Aivory Logo"
-            width={383}
-            height={79}
+            width={1260}
+            height={512}
             fetchPriority="high"
             decoding="sync"
-            className="h-[26px] w-auto object-contain"
+            className="h-[52px] w-auto object-contain"
           />
         </Link>
 
@@ -202,11 +202,11 @@ export default function Navbar() {
         <div className="h-16 flex justify-between items-center px-4">
           <Link href="/" onClick={() => setIsMobileMenuOpen(false)}>
             <img
-              src="/Aivory_logo_2_2026.svg"
+              src="/Aivory_new_logo_white.svg"
               alt="Aivory Logo"
-              width={383}
-              height={79}
-              className="h-[26px] w-auto object-contain"
+              width={1260}
+              height={512}
+              className="h-[52px] w-auto object-contain"
             />
           </Link>
           <button
