@@ -3,6 +3,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { useLanguage } from '@/components/context/LanguageContext';
 import SignInModal from '@/components/auth/SignInModal';
 import { isAuthenticated, getUser, logout } from '@/lib/auth';
@@ -25,6 +26,18 @@ export default function Navbar() {
   const [authed, setAuthed] = useState(false);
   const [userName, setUserName] = useState('');
   const [accountType, setAccountType] = useState('free');
+  const [mounted, setMounted] = useState(false);
+
+  // Fixed nav needs to escape whatever stacking context the host page wraps
+  // it in — several pages nest it inside a `relative z-10` hero wrapper that
+  // sits before an equally-`z-10` sibling further down the page, which wins
+  // paint order by DOM position and buries the nav under later sections once
+  // scrolled past the hero. Portaling to <body> after mount sidesteps that
+  // entirely; the pre-mount render (SSR + first paint) stays in place so the
+  // logo still lands in the initial HTML for LCP.
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     const check = () => {
@@ -61,7 +74,7 @@ export default function Navbar() {
     window.location.href = dashUrl;
   };
 
-  return (
+  const nav = (
     <nav className="fixed top-4 inset-x-0 z-[1000] flex justify-center px-4">
       <div
         className="h-16 w-full max-w-[1400px] flex justify-between items-center rounded-2xl border border-white/10 bg-black/75 backdrop-blur-2xl backdrop-saturate-150 shadow-[inset_0_1px_0_rgba(255,255,255,0.12),0_8px_30px_-4px_rgba(0,0,0,0.5)]"
@@ -326,10 +339,12 @@ export default function Navbar() {
       </div>
 
       {/* Sign In Modal */}
-      <SignInModal 
-        isOpen={isSignInModalOpen} 
-        onClose={() => setIsSignInModalOpen(false)} 
+      <SignInModal
+        isOpen={isSignInModalOpen}
+        onClose={() => setIsSignInModalOpen(false)}
       />
     </nav>
   );
+
+  return mounted ? createPortal(nav, document.body) : nav;
 }
