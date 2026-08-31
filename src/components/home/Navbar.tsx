@@ -64,7 +64,7 @@ export default function Navbar() {
   return (
     <nav className="fixed top-4 inset-x-0 z-[1000] flex justify-center px-4">
       <div
-        className="h-16 w-full max-w-[1400px] flex justify-between items-center rounded-2xl border border-white/10 bg-black/40 backdrop-blur-xl shadow-[0_8px_30px_-4px_rgba(0,0,0,0.5)]"
+        className="h-16 w-full max-w-[1400px] flex justify-between items-center rounded-2xl border border-white/10 bg-black/35 backdrop-blur-2xl backdrop-saturate-150 shadow-[inset_0_1px_0_rgba(255,255,255,0.12),0_8px_30px_-4px_rgba(0,0,0,0.5)]"
         style={{ padding: '0 clamp(1rem, 4vw, 2rem)' }}
       >
         {/* Left: Aivory logo */}
