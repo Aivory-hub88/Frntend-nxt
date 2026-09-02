@@ -92,7 +92,10 @@ export default function VideoDemoSection() {
               disablePictureInPicture
               className="block w-full h-auto"
             >
-              <source src="/aivory-console-demo.mp4" type="video/mp4" />
+              {/* -v2: the old filename is cached at the Cloudflare edge with
+                  s-maxage=1yr, so an in-place overwrite would keep serving
+                  the old 5.9MB file there regardless of origin changes. */}
+              <source src="/aivory-console-demo-v2.mp4" type="video/mp4" />
             </video>
           </div>
         </div>
