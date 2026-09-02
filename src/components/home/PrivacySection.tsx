@@ -90,7 +90,13 @@ function Halftone({ pattern, tone }: { pattern: Pattern; tone: 'ink' | 'onAccent
 
   for (let j = 0; j < rows; j += 1) {
     for (let i = 0; i < cols; i += 1) {
-      const r = field(i / (cols - 1), j / (rows - 1)) * maxR;
+      // Rounded to 3dp: Math.sin/hypot/atan2 can return a float64 that
+      // differs in its last bit or two between the server's libm (Node on
+      // Linux) and the browser's, which strings to a different literal and
+      // trips a hydration mismatch on every single dot in the pattern.
+      // Rounding collapses that platform-level epsilon before it reaches
+      // the rendered attribute.
+      const r = Math.round(field(i / (cols - 1), j / (rows - 1)) * maxR * 1000) / 1000;
       if (r < 0.5) continue;
       dots.push(<circle key={`${i}-${j}`} cx={i * step + step / 2} cy={j * step + step / 2} r={r} />);
     }

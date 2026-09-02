@@ -39,9 +39,9 @@ export function HalftoneWave({ active = true, purpleColor }: { active?: boolean;
     let isOnBattery = false;
     const baseDPR = isMobile ? 1 : isLowEnd ? 1 : Math.min(window.devicePixelRatio, 1.2);
     renderer.setPixelRatio(baseDPR);
-    const batteryApi = (navigator as unknown as { getBattery?: () => Promise<{ charging: boolean; addEventListener: (type: string, cb: () => void) => void }> }).getBattery;
-    if (batteryApi) {
-      batteryApi().then((b) => {
+    const navigatorWithBattery = navigator as unknown as { getBattery?: () => Promise<{ charging: boolean; addEventListener: (type: string, cb: () => void) => void }> };
+    if (navigatorWithBattery.getBattery) {
+      navigatorWithBattery.getBattery().then((b) => {
         isOnBattery = !b.charging;
         if (isOnBattery) {
           isLowEnd = true;
@@ -539,6 +539,7 @@ export function HalftoneWave({ active = true, purpleColor }: { active?: boolean;
     const onContextLost = (e: Event) => {
       e.preventDefault();
       cancelAnimationFrame(animationFrameId);
+      animationFrameId = 0;
     };
     const onContextRestored = () => {
       if (!animationFrameId) renderLoop();

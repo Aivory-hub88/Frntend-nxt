@@ -429,7 +429,11 @@ export function RoadmapAnimation() {
                 <p className="mb-1.5 text-[6px] uppercase tracking-[0.12em] text-[#a1a1aa]">Milestones</p>
                 {milestones.map((milestone, index) => (
                   <div key={milestone} className="mb-1.5 flex items-center gap-2 text-[7px] text-white/75">
-                    <motion.span className="flex h-3.5 w-3.5 shrink-0 items-center justify-center rounded border text-[8px]" animate={{ background: index < checked ? UI.accent : 'transparent', borderColor: index < checked ? UI.accent : 'rgba(255,255,255,.16)', color: index < checked ? '#20201e' : 'transparent' }}>✓</motion.span>
+                    {/* 'transparent' isn't an animatable color -- Motion can't interpolate
+                        to/from it and silently drops the transition, which also disrupted
+                        the shared animate() call enough to leave a NaN opacity on later
+                        properties. Zero-alpha rgba fades correctly instead. */}
+                    <motion.span className="flex h-3.5 w-3.5 shrink-0 items-center justify-center rounded border text-[8px]" animate={{ background: index < checked ? UI.accent : 'rgba(0,0,0,0)', borderColor: index < checked ? UI.accent : 'rgba(255,255,255,.16)', color: index < checked ? '#20201e' : 'rgba(32,32,30,0)' }}>✓</motion.span>
                     <span className={index < checked ? 'text-white/45 line-through' : ''}>{milestone}</span>
                   </div>
                 ))}
