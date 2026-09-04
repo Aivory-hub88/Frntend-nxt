@@ -52,30 +52,19 @@ export default function HeroSection() {
             className="silver-swipe-text text-[25px] md:text-[38px] font-light tracking-tight text-center leading-[1.15] text-balance pointer-events-none select-none"
             style={{ fontFamily: "var(--font-manrope), 'Manrope', sans-serif" }}
           >
-            Make AI Make Sense
-            {/* silver-swipe-text paints its gradient on the h1 and clips it to
-                the text, so any child inherits -webkit-text-fill-color:
-                transparent with no background of its own and renders blank.
-                The mark opts out with a solid fill of its own. */}
-            <sup
-              className="text-[0.55em] tracking-normal"
-              style={{
-                color: '#ffffff',
-                WebkitTextFillColor: '#ffffff',
-                // Manrope already draws the mark high inside its own em box
-                // (its ink stops ~6px above the baseline at this size), so
-                // <sup>'s default `vertical-align: super` stacks a second
-                // rise on top and leaves it floating. Sitting it on the
-                // baseline lands its top at the cap height of the wordmark.
-                verticalAlign: 'baseline',
-              }}
-            >
-              &reg;
-            </sup>{' '}
-            from mapping
+            Every operation runs on something.
             <br className="hidden md:block" />{' '}
-            how your business actually runs
+            Make it Aivory
           </h1>
+
+          <p
+            className="mt-5 md:mt-6 text-[14px] md:text-[16px] font-light tracking-tight leading-[1.65] text-white/60 pointer-events-none select-none"
+            style={{ fontFamily: "var(--font-manrope), 'Manrope', sans-serif" }}
+          >
+            Map how your business actually works
+            <br />
+            Deploy intelligence where it actually matters
+          </p>
         </div>
 
         <div
