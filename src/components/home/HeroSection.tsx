@@ -104,33 +104,31 @@ export default function HeroSection() {
           <span className="text-white/25">&middot;</span> No sales pitch
         </p>
 
-        {/* Credential row — badge and copy, no surface. The translucent
-            rounded bar that used to bound them was there to stop the opaque
-            white NVIDIA lockup reading as a stray sticker against the old
-            bright hero; on the current dark ambient the badge no longer
-            outshouts the type, so the chrome was only adding weight. The
-            hairline rules went with it: the gap separates the two claims. */}
+        {/* Trust bar — one line, same &middot;-divided rhythm as the
+            "Self-guided / One sitting / No sales pitch" tagline above it,
+            rather than a separate badge+copy row with its own layout. The
+            NVIDIA mark stays the official image lockup (shrunk to sit inline
+            with the text) rather than becoming plain text: it's the badge
+            that actually says "Inception Program", not a claim we make
+            ourselves. */}
         <div
           className="animate-slide-up-1 mt-12 md:mt-14 flex justify-center"
           style={{ animationDelay: ENTER_DELAYS[3] }}
         >
-          <div className="flex flex-col items-center gap-3.5 sm:flex-row sm:gap-7">
-            {/* The official lockup already reads "NVIDIA Inception Program",
-                so the copy deliberately never repeats "inception member". */}
-            <img
-              src="/images/nvidia-inception/nvidia-inception-program-badge-rgb-for-screen-negative.svg"
-              alt="NVIDIA Inception Program — Aivory AI is a member (2026 cohort)"
-              className="h-[25px] md:h-[27px] w-auto shrink-0"
-            />
-
-            <p className="font-mono text-[11px] md:text-[12px] uppercase tracking-[0.16em] text-white/70 pointer-events-none select-none">
-              500+ businesses transforming
-            </p>
-
-            <p className="font-mono text-[11px] md:text-[12px] uppercase tracking-[0.16em] text-white/70 pointer-events-none select-none">
-              Zero training on your data
-            </p>
-          </div>
+          <p className="flex flex-wrap items-center justify-center gap-x-2.5 gap-y-2 max-w-xl text-center font-mono text-[11px] md:text-[12px] uppercase tracking-[0.16em] text-white/70 pointer-events-none select-none">
+            <span>500+ businesses running on Aivory</span>
+            <span className="text-white/25" aria-hidden="true">&middot;</span>
+            <span>Zero training on your data</span>
+            <span className="text-white/25" aria-hidden="true">&middot;</span>
+            <span className="inline-flex items-center gap-1.5">
+              <img
+                src="/images/nvidia-inception/nvidia-inception-program-badge-rgb-for-screen-negative.svg"
+                alt=""
+                className="h-[14px] md:h-[15px] w-auto shrink-0"
+              />
+              NVIDIA Inception 2026
+            </span>
+          </p>
         </div>
       </div>
     </div>
