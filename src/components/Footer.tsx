@@ -41,8 +41,8 @@ export default function Footer({ landingAmbient = false }: FooterProps) {
     <footer
       className={
         landingAmbient
-          ? 'relative isolate w-full overflow-hidden bg-[#191919] text-white pt-24 pb-12 font-sans'
-          : 'relative isolate w-full overflow-hidden bg-[#03141b] text-white pt-24 pb-12 font-sans'
+          ? 'relative isolate w-full overflow-hidden bg-[#031116] text-white pt-24 pb-12 font-sans'
+          : 'relative isolate w-full overflow-hidden bg-[#031116] text-white pt-24 pb-12 font-sans'
       }
     >
       {!landingAmbient && (
