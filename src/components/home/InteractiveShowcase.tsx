@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import { motion, animate, AnimatePresence } from "framer-motion";
 import dynamic from "next/dynamic";
 import { SpotlightButton } from "@/components/ui/SpotlightButton";
+import { SHOWCASE_ACCENT, SHOWCASE_ACCENT_RGB } from "@/lib/theme-colors";
 
 const LabFlaskCanvas = dynamic(
   () => import("./LabFlask3D").then((mod) => mod.LabFlaskCanvas),
@@ -359,7 +360,7 @@ export function DiagnosticAnimation() {
               style={{ top: "50%", left: "50%", x: "-50%", y: "-50%" }}
             >
               <div className="flex flex-col gap-1.5">
-                <span className="text-[10px] text-[#bbe2ef] font-medium tracking-wider uppercase">
+                <span className="text-[10px] text-showcase-accent font-medium tracking-wider uppercase">
                   Company Name
                 </span>
                 <div className="w-full h-10 bg-[#111111]/80 border border-white/10 rounded-md flex items-center px-3 relative overflow-hidden">
@@ -379,11 +380,11 @@ export function DiagnosticAnimation() {
               </div>
 
               <div className="flex flex-col gap-1.5 relative z-20">
-                <span className="text-[10px] text-[#bbe2ef] font-medium tracking-wider uppercase">
+                <span className="text-[10px] text-showcase-accent font-medium tracking-wider uppercase">
                   Company Size
                 </span>
                 <div
-                  className={`w-full h-10 bg-[#111111]/80 border ${companySizeState === "open" || companySizeState === "selected" ? "border-[#bbe2ef]/50 ring-1 ring-[#bbe2ef]/30" : "border-white/10"} rounded-md flex items-center justify-between px-3 relative transition-all duration-300`}
+                  className={`w-full h-10 bg-[#111111]/80 border ${companySizeState === "open" || companySizeState === "selected" ? "border-showcase-accent/50 ring-1 ring-showcase-accent/30" : "border-white/10"} rounded-md flex items-center justify-between px-3 relative transition-all duration-300`}
                 >
                   <span
                     className={`text-sm ${companySizeState === "done" ? "text-white/90" : "text-white/40"}`}
@@ -393,7 +394,7 @@ export function DiagnosticAnimation() {
                       : "Select size..."}
                   </span>
                   <svg
-                    className={`w-4 h-4 text-white/40 transition-transform duration-300 ${companySizeState === "open" || companySizeState === "selected" ? "rotate-180 text-[#bbe2ef]" : ""}`}
+                    className={`w-4 h-4 text-white/40 transition-transform duration-300 ${companySizeState === "open" || companySizeState === "selected" ? "rotate-180 text-showcase-accent" : ""}`}
                     fill="none"
                     viewBox="0 0 24 24"
                     stroke="currentColor"
@@ -433,7 +434,7 @@ export function DiagnosticAnimation() {
                             key={i}
                             className={`px-3 py-2 text-sm rounded-md transition-colors duration-200 ${
                               companySizeState === "selected" && i === 2
-                                ? "bg-[#bbe2ef]/15 text-[#bbe2ef]"
+                                ? "bg-showcase-accent/15 text-showcase-accent"
                                 : "text-white/60"
                             }`}
                           >
@@ -458,7 +459,7 @@ export function DiagnosticAnimation() {
               className="flex flex-col gap-4 w-full max-w-[320px] mx-auto"
             >
               <div className="flex items-center justify-between">
-                <span className="text-[10px] sm:text-xs text-[#bbe2ef] font-medium tracking-wider uppercase">
+                <span className="text-[10px] sm:text-xs text-showcase-accent font-medium tracking-wider uppercase">
                   {currentStep.phase}
                 </span>
               </div>
@@ -474,14 +475,14 @@ export function DiagnosticAnimation() {
                     transition={{ type: "spring", stiffness: 300, damping: 30 }}
                     className={`flex items-center gap-3 rounded-lg px-4 py-3 border transition-colors duration-300 ${
                       selectedIdx === i
-                        ? "bg-[#bbe2ef]/10 border-[#bbe2ef]/30 shadow-[0_0_10px_rgba(187, 226, 239,0.1)]"
+                        ? "bg-showcase-accent/10 border-showcase-accent/30 shadow-[0_0_10px_theme(colors.showcase-accent/10%)]"
                         : "bg-white/5 border-white/5"
                     }`}
                   >
                     <div
                       className={`w-4 h-4 rounded-full border flex items-center justify-center transition-colors shrink-0 ${
                         selectedIdx === i
-                          ? "border-[#bbe2ef]"
+                          ? "border-showcase-accent"
                           : "border-white/30"
                       }`}
                     >
@@ -491,13 +492,13 @@ export function DiagnosticAnimation() {
                             initial={{ scale: 0 }}
                             animate={{ scale: 1 }}
                             exit={{ scale: 0 }}
-                            className="w-2 h-2 bg-[#bbe2ef] rounded-full"
+                            className="w-2 h-2 bg-showcase-accent rounded-full"
                           />
                         )}
                       </AnimatePresence>
                     </div>
                     <span
-                      className={`text-xs sm:text-sm ${selectedIdx === i ? "text-[#bbe2ef]" : "text-white/75"}`}
+                      className={`text-xs sm:text-sm ${selectedIdx === i ? "text-showcase-accent" : "text-white/75"}`}
                     >
                       {opt}
                     </span>
@@ -533,7 +534,7 @@ export function DiagnosticAnimation() {
                       repeat: Infinity,
                       delay: pos.delay,
                     }}
-                    className="absolute w-2.5 h-2.5 sm:w-3.5 sm:h-3.5 rounded-full bg-[#bbe2ef]"
+                    className="absolute w-2.5 h-2.5 sm:w-3.5 sm:h-3.5 rounded-full bg-showcase-accent"
                     style={{
                       top: pos.top,
                       left: pos.left,
@@ -542,7 +543,7 @@ export function DiagnosticAnimation() {
                   />
                 ))}
               </div>
-              <span className="text-sm sm:text-base text-[#bbe2ef] font-medium tracking-wide">
+              <span className="text-sm sm:text-base text-showcase-accent font-medium tracking-wide">
                 Aivory is analysing responses{dots}
               </span>
             </motion.div>
@@ -577,7 +578,7 @@ export function DiagnosticAnimation() {
               cy="50"
               r="42"
               fill="none"
-              stroke="#bbe2ef"
+              stroke={SHOWCASE_ACCENT}
               strokeWidth="6"
               strokeDasharray={264}
               initial={{ strokeDashoffset: 264 }}
@@ -585,7 +586,7 @@ export function DiagnosticAnimation() {
                 strokeDashoffset: barsVisible ? 264 - 264 * 0.42 : 264,
               }}
               transition={{ duration: 1.5, type: "spring", bounce: 0 }}
-              className="drop-shadow-[0_0_8px_rgba(187, 226, 239,0.4)]"
+              className="drop-shadow-[0_0_8px_theme(colors.showcase-accent/40%)]"
             />
           </svg>
           <div className="absolute flex flex-col items-center">
@@ -612,7 +613,7 @@ export function DiagnosticAnimation() {
                   initial={{ opacity: 0 }}
                   animate={{ opacity: barsVisible ? 1 : 0 }}
                   transition={{ delay: dim.delay }}
-                  className="text-[#bbe2ef]"
+                  className="text-showcase-accent"
                 >
                   {dim.val}%
                 </motion.span>
@@ -627,7 +628,7 @@ export function DiagnosticAnimation() {
                     type: "spring",
                     bounce: 0,
                   }}
-                  className="absolute left-0 top-0 h-full bg-[#bbe2ef] rounded-full"
+                  className="absolute left-0 top-0 h-full bg-showcase-accent rounded-full"
                 />
               </div>
             </div>
@@ -703,18 +704,18 @@ export function DiagnosticAnimation() {
           {phase === "document" && (
             <div className="flex flex-col items-center gap-3 animate-fade-in-up">
               <div
-                className="relative w-[150px] sm:w-[164px] rounded-xl overflow-hidden bg-gradient-to-b from-[#171b16] to-[#0c0e0b] border border-[#bbe2ef]/25"
+                className="relative w-[150px] sm:w-[164px] rounded-xl overflow-hidden bg-gradient-to-b from-[#171b16] to-[#0c0e0b] border border-showcase-accent/25"
                 style={{
                   boxShadow:
-                    "0 14px 34px -10px rgba(0,0,0,0.75), 0 0 22px rgba(187, 226, 239,0.14), inset 0 1px 0 rgba(255,255,255,0.06)",
+                    `0 14px 34px -10px rgba(0,0,0,0.75), 0 0 22px rgba(${SHOWCASE_ACCENT_RGB},0.14), inset 0 1px 0 rgba(255,255,255,0.06)`,
                   animation: "doc-float 3.2s ease-in-out infinite",
                 }}
               >
                 {/* top accent bar */}
-                <div className="h-[3px] w-full bg-gradient-to-r from-[#bbe2ef]/40 via-[#bbe2ef] to-[#bbe2ef]/40" />
+                <div className="h-[3px] w-full bg-gradient-to-r from-showcase-accent/40 via-showcase-accent to-showcase-accent/40" />
                 {/* header */}
                 <div className="flex items-center gap-2 px-3 pt-2.5 pb-1.5">
-                  <div className="w-6 h-6 rounded-md bg-[#bbe2ef]/12 border border-[#bbe2ef]/40 flex items-center justify-center text-[#bbe2ef] shrink-0">
+                  <div className="w-6 h-6 rounded-md bg-showcase-accent/12 border border-showcase-accent/40 flex items-center justify-center text-showcase-accent shrink-0">
                     <svg
                       className="w-3.5 h-3.5"
                       fill="none"
@@ -730,7 +731,7 @@ export function DiagnosticAnimation() {
                     </svg>
                   </div>
                   <div className="flex-1 min-w-0">
-                    <div className="h-[6px] w-[64%] rounded-full bg-[#bbe2ef]/70" />
+                    <div className="h-[6px] w-[64%] rounded-full bg-showcase-accent/70" />
                     <div className="h-[4px] w-[40%] rounded-full bg-white/20 mt-1.5" />
                   </div>
                 </div>
@@ -741,11 +742,11 @@ export function DiagnosticAnimation() {
                   <div className="h-[4px] w-[68%] rounded-full bg-white/10" />
                   {/* mini score row */}
                   <div className="flex items-center gap-2 pt-1">
-                    <span className="text-[7px] leading-none font-semibold text-[#bbe2ef] bg-[#bbe2ef]/12 border border-[#bbe2ef]/30 rounded px-1.5 py-[3px]">
+                    <span className="text-[7px] leading-none font-semibold text-showcase-accent bg-showcase-accent/12 border border-showcase-accent/30 rounded px-1.5 py-[3px]">
                       42%
                     </span>
                     <div className="h-[4px] flex-1 rounded-full bg-white/10 overflow-hidden">
-                      <div className="h-full w-[42%] rounded-full bg-[#bbe2ef]/70" />
+                      <div className="h-full w-[42%] rounded-full bg-showcase-accent/70" />
                     </div>
                   </div>
                 </div>
@@ -754,12 +755,12 @@ export function DiagnosticAnimation() {
                   className="absolute inset-x-0 h-7 pointer-events-none"
                   style={{
                     background:
-                      "linear-gradient(to bottom, transparent, rgba(187, 226, 239,0.28), transparent)",
+                      `linear-gradient(to bottom, transparent, rgba(${SHOWCASE_ACCENT_RGB},0.28), transparent)`,
                     animation: "doc-scan 2.4s ease-in-out infinite",
                   }}
                 />
               </div>
-              <span className="text-[10px] sm:text-[11px] text-[#bbe2ef]/90 uppercase tracking-[0.22em] font-medium px-3 py-1 bg-[#0d0d0d]/80 border border-white/5 rounded-md whitespace-nowrap backdrop-blur-sm shadow-[0_4px_12px_rgba(0,0,0,0.5)]">
+              <span className="text-[10px] sm:text-[11px] text-showcase-accent/90 uppercase tracking-[0.22em] font-medium px-3 py-1 bg-[#0d0d0d]/80 border border-white/5 rounded-md whitespace-nowrap backdrop-blur-sm shadow-[0_4px_12px_rgba(0,0,0,0.5)]">
                 Deep Assessment Results
               </span>
               <span className="text-xs sm:text-sm text-white/70 bg-[#111111]/80 px-4 py-1 rounded-full backdrop-blur-sm mt-2 opacity-0 animate-[fade-in-text_2.0s_ease-out_forwards]">
@@ -891,7 +892,7 @@ export function ConsoleAnimation() {
               ].map((pos, i) => (
                 <div
                   key={i}
-                  className="absolute w-[3px] h-[3px] rounded-full bg-[#bbe2ef] animate-octagon-dot"
+                  className="absolute w-[3px] h-[3px] rounded-full bg-showcase-accent animate-octagon-dot"
                   style={{
                     top: pos.top,
                     left: pos.left,
@@ -973,7 +974,7 @@ export function ConsoleAnimation() {
                 ].map((pos, i) => (
                   <div
                     key={i}
-                    className="absolute w-[3px] h-[3px] rounded-full bg-[#bbe2ef] animate-octagon-dot"
+                    className="absolute w-[3px] h-[3px] rounded-full bg-showcase-accent animate-octagon-dot"
                     style={{
                       top: pos.top,
                       left: pos.left,
@@ -1015,7 +1016,7 @@ export function ConsoleAnimation() {
                   className="flex items-start gap-2 opacity-0 animate-fade-in-up"
                   style={{ animationDelay: item.delay }}
                 >
-                  <div className="w-1.5 h-1.5 rounded-full bg-[#bbe2ef] mt-1.5 shrink-0" />
+                  <div className="w-1.5 h-1.5 rounded-full bg-showcase-accent mt-1.5 shrink-0" />
                   <div className="flex flex-col">
                     <span className="text-white/80 text-[12px] sm:text-[13px] leading-snug">
                       {item.title}:{" "}
@@ -1074,7 +1075,7 @@ export function ConsoleAnimation() {
               />
             </svg>
           </button>
-          <button className="w-8 h-8 rounded-full bg-[#bbe2ef] flex items-center justify-center text-[#494949] hover:bg-[#7ac4c7] transition-colors">
+          <button className="w-8 h-8 rounded-full bg-showcase-accent flex items-center justify-center text-[#494949] hover:bg-[#7ac4c7] transition-colors">
             {phase === "typing" || phase === "thinking" ? (
               <div className="w-3 h-3 bg-black rounded-[2px]" />
             ) : (
@@ -1223,7 +1224,7 @@ export function WorkflowAnimation() {
               ].map((pos, i) => (
                 <div
                   key={i}
-                  className="absolute w-[3px] h-[3px] rounded-full bg-[#bbe2ef] animate-octagon-dot"
+                  className="absolute w-[3px] h-[3px] rounded-full bg-showcase-accent animate-octagon-dot"
                   style={{
                     top: pos.top,
                     left: pos.left,
@@ -1270,7 +1271,7 @@ export function WorkflowAnimation() {
                 ].map((pos, i) => (
                   <div
                     key={i}
-                    className="absolute w-[3px] h-[3px] rounded-full bg-[#bbe2ef] animate-octagon-dot"
+                    className="absolute w-[3px] h-[3px] rounded-full bg-showcase-accent animate-octagon-dot"
                     style={{
                       top: pos.top,
                       left: pos.left,
@@ -1311,16 +1312,16 @@ export function WorkflowAnimation() {
                 className="absolute top-1/2 left-[10%] right-[10%] h-[2px] -translate-y-1/2 -z-10 origin-left animate-scale-x rounded-full"
                 style={{
                   background:
-                    "linear-gradient(to right, rgba(187, 226, 239,0.1), rgba(187, 226, 239,0.8), rgba(193,204,200,0.1))",
+                    `linear-gradient(to right, rgba(${SHOWCASE_ACCENT_RGB},0.1), rgba(${SHOWCASE_ACCENT_RGB},0.8), rgba(193,204,200,0.1))`,
                   animationDuration: "0.8s",
                 }}
               />
 
               {/* flowing data dots */}
               <span
-                className="absolute top-1/2 -translate-y-1/2 w-2 h-2 rounded-full bg-[#bbe2ef] -z-10"
+                className="absolute top-1/2 -translate-y-1/2 w-2 h-2 rounded-full bg-showcase-accent -z-10"
                 style={{
-                  boxShadow: "0 0 12px 2px #bbe2ef",
+                  boxShadow: `0 0 12px 2px ${SHOWCASE_ACCENT}`,
                   animation: "node-flow-continuous 1.2s ease-in-out infinite",
                 }}
               />
@@ -1343,9 +1344,9 @@ export function WorkflowAnimation() {
                 }}
               >
                 {/* output handle */}
-                <span className="absolute top-1/2 -translate-y-1/2 -right-[6px] w-3 h-3 rounded-full bg-[#0c0d0f] border-2 border-[#bbe2ef] z-20" />
+                <span className="absolute top-1/2 -translate-y-1/2 -right-[6px] w-3 h-3 rounded-full bg-[#0c0d0f] border-2 border-showcase-accent z-20" />
                 <div className="flex items-center gap-1 mb-1.5">
-                  <span className="w-1 h-1 rounded-full bg-[#bbe2ef]" />
+                  <span className="w-1 h-1 rounded-full bg-showcase-accent" />
                   <span className="text-[6.5px] sm:text-[8px] uppercase tracking-[0.14em] text-white/65 font-semibold">
                     Trigger
                   </span>
@@ -1366,26 +1367,26 @@ export function WorkflowAnimation() {
 
               {/* Node 2: AI Agent (Extract) */}
               <div
-                className="relative flex flex-col items-center w-[72px] sm:w-[100px] rounded-2xl pt-2 pb-2.5 px-2 z-20 border border-[#bbe2ef]/30 bg-gradient-to-b from-[#23262b] to-[#15171b]"
+                className="relative flex flex-col items-center w-[72px] sm:w-[100px] rounded-2xl pt-2 pb-2.5 px-2 z-20 border border-showcase-accent/30 bg-gradient-to-b from-[#23262b] to-[#15171b]"
                 style={{
                   boxShadow:
-                    "0 10px 26px -8px rgba(0,0,0,0.7), 0 0 20px rgba(187, 226, 239,0.16), inset 0 1px 0 rgba(255,255,255,0.06)",
+                    `0 10px 26px -8px rgba(0,0,0,0.7), 0 0 20px rgba(${SHOWCASE_ACCENT_RGB},0.16), inset 0 1px 0 rgba(255,255,255,0.06)`,
                   animation: "node-pop 0.6s ease-out 0.2s both",
                 }}
               >
                 {/* live indicator */}
-                <span className="absolute top-[-4px] right-[-4px] w-3 h-3 rounded-full bg-[#bbe2ef] premium-ping z-30" />
-                <span className="absolute top-[-4px] right-[-4px] w-3 h-3 rounded-full bg-[#bbe2ef] border border-[#0c0d0f] z-30" />
+                <span className="absolute top-[-4px] right-[-4px] w-3 h-3 rounded-full bg-showcase-accent premium-ping z-30" />
+                <span className="absolute top-[-4px] right-[-4px] w-3 h-3 rounded-full bg-showcase-accent border border-[#0c0d0f] z-30" />
                 {/* handles both sides */}
-                <span className="absolute top-1/2 -translate-y-1/2 -left-[6px] w-3 h-3 rounded-full bg-[#0c0d0f] border-2 border-[#bbe2ef] z-20" />
+                <span className="absolute top-1/2 -translate-y-1/2 -left-[6px] w-3 h-3 rounded-full bg-[#0c0d0f] border-2 border-showcase-accent z-20" />
                 <span className="absolute top-1/2 -translate-y-1/2 -right-[6px] w-3 h-3 rounded-full bg-[#0c0d0f] border-2 border-[#c1ccc8] z-20" />
                 <div className="flex items-center gap-1 mb-1.5">
-                  <span className="w-1 h-1 rounded-full bg-[#bbe2ef]" />
-                  <span className="text-[6.5px] sm:text-[8px] uppercase tracking-[0.14em] text-[#bbe2ef]/80 font-semibold">
+                  <span className="w-1 h-1 rounded-full bg-showcase-accent" />
+                  <span className="text-[6.5px] sm:text-[8px] uppercase tracking-[0.14em] text-showcase-accent/80 font-semibold">
                     AI Agent
                   </span>
                 </div>
-                <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl flex items-center justify-center bg-gradient-to-br from-[#bbe2ef] to-[#62a6aa] shadow-[0_2px_6px_rgba(0,0,0,0.35)] mb-1.5">
+                <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl flex items-center justify-center bg-gradient-to-br from-showcase-accent to-[#62a6aa] shadow-[0_2px_6px_rgba(0,0,0,0.35)] mb-1.5">
                   <svg
                     className="w-5 h-5 text-[#111]"
                     viewBox="0 0 24 24"
@@ -1477,7 +1478,7 @@ export function WorkflowAnimation() {
           )}
         </div>
         <div className="flex items-center gap-1.5 shrink-0">
-          <button className="w-8 h-8 rounded-full bg-[#bbe2ef] flex items-center justify-center text-[#494949] hover:bg-[#7ac4c7] transition-colors">
+          <button className="w-8 h-8 rounded-full bg-showcase-accent flex items-center justify-center text-[#494949] hover:bg-[#7ac4c7] transition-colors">
             {phase === "typing" || phase === "generating" ? (
               <div className="w-3 h-3 bg-black rounded-[2px]" />
             ) : (
@@ -1677,16 +1678,16 @@ export function RoadmapAnimation() {
                 }}
               >
                 <div
-                  className="relative w-[150px] sm:w-[164px] rounded-xl overflow-hidden bg-gradient-to-b from-[#171b16] to-[#0c0e0b] border border-[#bbe2ef]/25"
+                  className="relative w-[150px] sm:w-[164px] rounded-xl overflow-hidden bg-gradient-to-b from-[#171b16] to-[#0c0e0b] border border-showcase-accent/25"
                   style={{
                     boxShadow:
-                      "0 14px 34px -10px rgba(0,0,0,0.75), 0 0 22px rgba(187, 226, 239,0.14), inset 0 1px 0 rgba(255,255,255,0.06)",
+                      `0 14px 34px -10px rgba(0,0,0,0.75), 0 0 22px rgba(${SHOWCASE_ACCENT_RGB},0.14), inset 0 1px 0 rgba(255,255,255,0.06)`,
                     animation: "doc-float 3.2s ease-in-out infinite",
                   }}
                 >
-                  <div className="h-[3px] w-full bg-gradient-to-r from-[#bbe2ef]/40 via-[#bbe2ef] to-[#bbe2ef]/40" />
+                  <div className="h-[3px] w-full bg-gradient-to-r from-showcase-accent/40 via-showcase-accent to-showcase-accent/40" />
                   <div className="flex items-center gap-2 px-3 pt-2.5 pb-1.5">
-                    <div className="w-6 h-6 rounded-md bg-[#bbe2ef]/12 border border-[#bbe2ef]/40 flex items-center justify-center text-[#bbe2ef] shrink-0">
+                    <div className="w-6 h-6 rounded-md bg-showcase-accent/12 border border-showcase-accent/40 flex items-center justify-center text-showcase-accent shrink-0">
                       <svg
                         className="w-3.5 h-3.5"
                         fill="none"
@@ -1702,7 +1703,7 @@ export function RoadmapAnimation() {
                       </svg>
                     </div>
                     <div className="flex-1 min-w-0">
-                      <div className="h-[6px] w-[64%] rounded-full bg-[#bbe2ef]/70" />
+                      <div className="h-[6px] w-[64%] rounded-full bg-showcase-accent/70" />
                       <div className="h-[4px] w-[40%] rounded-full bg-white/20 mt-1.5" />
                     </div>
                   </div>
@@ -1711,11 +1712,11 @@ export function RoadmapAnimation() {
                     <div className="h-[4px] w-[86%] rounded-full bg-white/10" />
                     <div className="h-[4px] w-[68%] rounded-full bg-white/10" />
                     <div className="flex items-center gap-2 pt-1">
-                      <span className="text-[7px] leading-none font-semibold text-[#bbe2ef] bg-[#bbe2ef]/12 border border-[#bbe2ef]/30 rounded px-1.5 py-[3px]">
+                      <span className="text-[7px] leading-none font-semibold text-showcase-accent bg-showcase-accent/12 border border-showcase-accent/30 rounded px-1.5 py-[3px]">
                         98%
                       </span>
                       <div className="h-[4px] flex-1 rounded-full bg-white/10 overflow-hidden">
-                        <div className="h-full w-[98%] rounded-full bg-[#bbe2ef]/70" />
+                        <div className="h-full w-[98%] rounded-full bg-showcase-accent/70" />
                       </div>
                     </div>
                   </div>
@@ -1723,12 +1724,12 @@ export function RoadmapAnimation() {
                     className="absolute inset-x-0 h-7 pointer-events-none"
                     style={{
                       background:
-                        "linear-gradient(to bottom, transparent, rgba(187, 226, 239,0.28), transparent)",
+                        `linear-gradient(to bottom, transparent, rgba(${SHOWCASE_ACCENT_RGB},0.28), transparent)`,
                       animation: "doc-scan 2.4s ease-in-out infinite",
                     }}
                   />
                 </div>
-                <span className="text-[10px] sm:text-[11px] text-[#bbe2ef]/90 uppercase tracking-[0.22em] font-medium px-3 py-1 bg-[#0d0d0d]/80 border border-white/5 rounded-md whitespace-nowrap backdrop-blur-sm shadow-[0_4px_12px_rgba(0,0,0,0.5)]">
+                <span className="text-[10px] sm:text-[11px] text-showcase-accent/90 uppercase tracking-[0.22em] font-medium px-3 py-1 bg-[#0d0d0d]/80 border border-white/5 rounded-md whitespace-nowrap backdrop-blur-sm shadow-[0_4px_12px_rgba(0,0,0,0.5)]">
                   System Blueprint
                 </span>
               </div>
@@ -1743,7 +1744,7 @@ export function RoadmapAnimation() {
                 return (
                   <div
                     key={`roadmap-particle-${i}`}
-                    className="absolute w-[3.5px] h-[3.5px] sm:w-[4px] sm:h-[4px] rounded-full bg-[#bbe2ef] z-30"
+                    className="absolute w-[3.5px] h-[3.5px] sm:w-[4px] sm:h-[4px] rounded-full bg-showcase-accent z-30"
                     style={
                       {
                         left: "50%",
@@ -1753,7 +1754,7 @@ export function RoadmapAnimation() {
                         animation: `particle-shatter 1.4s cubic-bezier(0.2, 0.8, 0.2, 1) forwards`,
                         animationDelay: `${3.3 + (i % 4) * 0.04}s`,
                         opacity: 0,
-                        boxShadow: "0 0 8px 1.5px rgba(187, 226, 239,0.8)",
+                        boxShadow: `0 0 8px 1.5px rgba(${SHOWCASE_ACCENT_RGB},0.8)`,
                       } as React.CSSProperties
                     }
                   />
@@ -1761,7 +1762,7 @@ export function RoadmapAnimation() {
               })}
 
               <div
-                className="absolute left-1/2 top-[calc(50%+20px)] -translate-x-1/2 -translate-y-1/2 w-40 h-40 bg-[#bbe2ef] rounded-full blur-[40px] z-10 pointer-events-none"
+                className="absolute left-1/2 top-[calc(50%+20px)] -translate-x-1/2 -translate-y-1/2 w-40 h-40 bg-showcase-accent rounded-full blur-[40px] z-10 pointer-events-none"
                 style={{
                   animation: "pulse-ring 1.8s ease-out forwards",
                   animationDelay: "3.3s",
@@ -1786,12 +1787,12 @@ export function RoadmapAnimation() {
 
           {/* Progress Line W1 to W2 */}
           <div
-            className={`absolute top-1/2 left-[36px] sm:left-[52px] right-1/2 h-[1px] bg-[#bbe2ef] -translate-y-1/2 -z-10 origin-left transition-all duration-700 ${step >= 5 ? "scale-x-100 opacity-100" : "scale-x-0 opacity-0"}`}
+            className={`absolute top-1/2 left-[36px] sm:left-[52px] right-1/2 h-[1px] bg-showcase-accent -translate-y-1/2 -z-10 origin-left transition-all duration-700 ${step >= 5 ? "scale-x-100 opacity-100" : "scale-x-0 opacity-0"}`}
           />
 
           {/* Progress Line W2 to W3 */}
           <div
-            className={`absolute top-1/2 left-1/2 right-[36px] sm:right-[52px] h-[1px] bg-[#bbe2ef] -translate-y-1/2 -z-10 origin-left transition-all duration-700 ${step >= 9 ? "scale-x-100 opacity-100" : "scale-x-0 opacity-0"}`}
+            className={`absolute top-1/2 left-1/2 right-[36px] sm:right-[52px] h-[1px] bg-showcase-accent -translate-y-1/2 -z-10 origin-left transition-all duration-700 ${step >= 9 ? "scale-x-100 opacity-100" : "scale-x-0 opacity-0"}`}
           />
 
           {/* Traveling light pulses that ride the connectors as each wave unlocks */}
@@ -1817,7 +1818,7 @@ export function RoadmapAnimation() {
                 <div
                   className={`w-10 h-10 rounded-full border flex items-center justify-center text-xs transition-all duration-500 relative z-10 ${
                     isActive
-                      ? "border-[#bbe2ef] bg-[#111111] text-[#bbe2ef] font-semibold scale-110 shadow-[0_0_15px_rgba(187, 226, 239,0.3)]"
+                      ? "border-showcase-accent bg-[#111111] text-showcase-accent font-semibold scale-110 shadow-[0_0_15px_theme(colors.showcase-accent/30%)]"
                       : "border-white/10 bg-[#111111] text-white/60 scale-100"
                   }`}
                   style={{ fontFamily: "'Doto', 'Courier New', monospace" }}
@@ -1842,7 +1843,7 @@ export function RoadmapAnimation() {
             className="roadmap-glow absolute -inset-4 -z-10 rounded-3xl blur-xl"
             style={{
               background:
-                "radial-gradient(circle at 50% 38%, rgba(187, 226, 239,0.18), transparent 70%)",
+                `radial-gradient(circle at 50% 38%, rgba(${SHOWCASE_ACCENT_RGB},0.18), transparent 70%)`,
             }}
           />
           <SpotlightCard className="p-4 sm:p-6 w-full space-y-4 shadow-lg transition-all duration-500">
@@ -1865,7 +1866,7 @@ export function RoadmapAnimation() {
                     <span
                       className={`w-5 h-5 rounded border flex items-center justify-center shrink-0 transition-colors duration-500 ${
                         isDone
-                          ? "border-[#bbe2ef] bg-[#bbe2ef]/10"
+                          ? "border-showcase-accent bg-showcase-accent/10"
                           : "border-white/10"
                       }`}
                     >
@@ -1877,7 +1878,7 @@ export function RoadmapAnimation() {
                           height="11"
                           viewBox="0 0 24 24"
                           fill="none"
-                          stroke="#bbe2ef"
+                          stroke={SHOWCASE_ACCENT}
                           strokeWidth="3.5"
                           strokeLinecap="round"
                           strokeLinejoin="round"
@@ -2182,18 +2183,18 @@ export function BlueprintAnimation() {
                   >
                     {/* Diagnostic report card */}
                     <div
-                      className="relative w-[150px] sm:w-[164px] rounded-xl overflow-hidden bg-gradient-to-b from-[#171b16] to-[#0c0e0b] border border-[#bbe2ef]/25"
+                      className="relative w-[150px] sm:w-[164px] rounded-xl overflow-hidden bg-gradient-to-b from-[#171b16] to-[#0c0e0b] border border-showcase-accent/25"
                       style={{
                         boxShadow:
-                          "0 14px 34px -10px rgba(0,0,0,0.75), 0 0 22px rgba(187, 226, 239,0.14), inset 0 1px 0 rgba(255,255,255,0.06)",
+                          `0 14px 34px -10px rgba(0,0,0,0.75), 0 0 22px rgba(${SHOWCASE_ACCENT_RGB},0.14), inset 0 1px 0 rgba(255,255,255,0.06)`,
                         animation: "doc-float 3.2s ease-in-out infinite",
                       }}
                     >
                       {/* top accent bar */}
-                      <div className="h-[3px] w-full bg-gradient-to-r from-[#bbe2ef]/40 via-[#bbe2ef] to-[#bbe2ef]/40" />
+                      <div className="h-[3px] w-full bg-gradient-to-r from-showcase-accent/40 via-showcase-accent to-showcase-accent/40" />
                       {/* header */}
                       <div className="flex items-center gap-2 px-3 pt-2.5 pb-1.5">
-                        <div className="w-6 h-6 rounded-md bg-[#bbe2ef]/12 border border-[#bbe2ef]/40 flex items-center justify-center text-[#bbe2ef] shrink-0">
+                        <div className="w-6 h-6 rounded-md bg-showcase-accent/12 border border-showcase-accent/40 flex items-center justify-center text-showcase-accent shrink-0">
                           <svg
                             className="w-3.5 h-3.5"
                             fill="none"
@@ -2209,7 +2210,7 @@ export function BlueprintAnimation() {
                           </svg>
                         </div>
                         <div className="flex-1 min-w-0">
-                          <div className="h-[6px] w-[64%] rounded-full bg-[#bbe2ef]/70" />
+                          <div className="h-[6px] w-[64%] rounded-full bg-showcase-accent/70" />
                           <div className="h-[4px] w-[40%] rounded-full bg-white/20 mt-1.5" />
                         </div>
                       </div>
@@ -2220,11 +2221,11 @@ export function BlueprintAnimation() {
                         <div className="h-[4px] w-[68%] rounded-full bg-white/10" />
                         {/* mini score row */}
                         <div className="flex items-center gap-2 pt-1">
-                          <span className="text-[7px] leading-none font-semibold text-[#bbe2ef] bg-[#bbe2ef]/12 border border-[#bbe2ef]/30 rounded px-1.5 py-[3px]">
+                          <span className="text-[7px] leading-none font-semibold text-showcase-accent bg-showcase-accent/12 border border-showcase-accent/30 rounded px-1.5 py-[3px]">
                             42%
                           </span>
                           <div className="h-[4px] flex-1 rounded-full bg-white/10 overflow-hidden">
-                            <div className="h-full w-[42%] rounded-full bg-[#bbe2ef]/70" />
+                            <div className="h-full w-[42%] rounded-full bg-showcase-accent/70" />
                           </div>
                         </div>
                       </div>
@@ -2233,12 +2234,12 @@ export function BlueprintAnimation() {
                         className="absolute inset-x-0 h-7 pointer-events-none"
                         style={{
                           background:
-                            "linear-gradient(to bottom, transparent, rgba(187, 226, 239,0.28), transparent)",
+                            `linear-gradient(to bottom, transparent, rgba(${SHOWCASE_ACCENT_RGB},0.28), transparent)`,
                           animation: "doc-scan 2.4s ease-in-out infinite",
                         }}
                       />
                     </div>
-                    <span className="text-[10px] sm:text-[11px] text-[#bbe2ef]/90 uppercase tracking-[0.22em] font-medium px-3 py-1 bg-[#0d0d0d]/80 border border-white/5 rounded-md whitespace-nowrap backdrop-blur-sm shadow-[0_4px_12px_rgba(0,0,0,0.5)]">
+                    <span className="text-[10px] sm:text-[11px] text-showcase-accent/90 uppercase tracking-[0.22em] font-medium px-3 py-1 bg-[#0d0d0d]/80 border border-white/5 rounded-md whitespace-nowrap backdrop-blur-sm shadow-[0_4px_12px_rgba(0,0,0,0.5)]">
                       Deep Assessment Results
                     </span>
                   </div>
@@ -2258,7 +2259,7 @@ export function BlueprintAnimation() {
                     return (
                       <div
                         key={`particle-${i}`}
-                        className="absolute w-[3.5px] h-[3.5px] sm:w-[4px] sm:h-[4px] rounded-full bg-[#bbe2ef] z-30"
+                        className="absolute w-[3.5px] h-[3.5px] sm:w-[4px] sm:h-[4px] rounded-full bg-showcase-accent z-30"
                         style={
                           {
                             left: "50%",
@@ -2268,7 +2269,7 @@ export function BlueprintAnimation() {
                             animation: `particle-shatter 1.4s cubic-bezier(0.2, 0.8, 0.2, 1) forwards`,
                             animationDelay: `${3.3 + (i % 4) * 0.04}s`,
                             opacity: 0,
-                            boxShadow: "0 0 8px 1.5px rgba(187, 226, 239,0.8)",
+                            boxShadow: `0 0 8px 1.5px rgba(${SHOWCASE_ACCENT_RGB},0.8)`,
                           } as React.CSSProperties
                         }
                       />
@@ -2277,7 +2278,7 @@ export function BlueprintAnimation() {
 
                   {/* Ethereal Glow left behind */}
                   <div
-                    className="absolute left-1/2 top-[calc(50%+20px)] -translate-x-1/2 -translate-y-1/2 w-40 h-40 bg-[#bbe2ef] rounded-full blur-[40px] z-10 pointer-events-none"
+                    className="absolute left-1/2 top-[calc(50%+20px)] -translate-x-1/2 -translate-y-1/2 w-40 h-40 bg-showcase-accent rounded-full blur-[40px] z-10 pointer-events-none"
                     style={{
                       animation: "pulse-ring 1.8s ease-out forwards",
                       animationDelay: "3.3s",
@@ -2290,9 +2291,9 @@ export function BlueprintAnimation() {
                     className="absolute left-1/2 bottom-[20px] w-[4px] h-[50px] rounded-full z-0 pointer-events-none"
                     style={{
                       background:
-                        "linear-gradient(to bottom, rgba(187, 226, 239,0), #bbe2ef, #bbe2ef, rgba(187, 226, 239,0))",
+                        `linear-gradient(to bottom, rgba(${SHOWCASE_ACCENT_RGB},0), ${SHOWCASE_ACCENT}, ${SHOWCASE_ACCENT}, rgba(${SHOWCASE_ACCENT_RGB},0))`,
                       boxShadow:
-                        "0 0 20px 4px rgba(187, 226, 239,0.8), 0 0 40px rgba(187, 226, 239,0.4)",
+                        `0 0 20px 4px rgba(${SHOWCASE_ACCENT_RGB},0.8), 0 0 40px rgba(${SHOWCASE_ACCENT_RGB},0.4)`,
                       animation:
                         "data-stream-flow 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards",
                       animationDelay: "3.25s",
@@ -2321,7 +2322,7 @@ export function BlueprintAnimation() {
                       Data: Partially Centralised
                     </div>
                     <div
-                      className="bg-[#bbe2ef]/10 border border-[#bbe2ef]/30 rounded-md px-3 py-1.5 sm:px-4 sm:py-2 text-[10px] sm:text-sm text-[#bbe2ef] shadow-[0_0_15px_rgba(187, 226, 239,0.15)] font-medium whitespace-nowrap opacity-0 animate-[pop-in-pill_0.6s_ease-out_forwards]"
+                      className="bg-showcase-accent/10 border border-showcase-accent/30 rounded-md px-3 py-1.5 sm:px-4 sm:py-2 text-[10px] sm:text-sm text-showcase-accent shadow-[0_0_15px_theme(colors.showcase-accent/15%)] font-medium whitespace-nowrap opacity-0 animate-[pop-in-pill_0.6s_ease-out_forwards]"
                       style={{ animationDelay: "3.9s" }}
                     >
                       Score: 42%
@@ -2334,18 +2335,18 @@ export function BlueprintAnimation() {
           {phase === "generate" && (
             <div className="flex flex-col items-center justify-center gap-6 animate-fade-in-up">
               <div className="relative w-28 h-28 sm:w-36 sm:h-36 flex items-center justify-center">
-                <div className="absolute inset-[-10px] border border-[#bbe2ef]/20 rounded-full premium-ping" />
-                <div className="absolute inset-0 bg-[#bbe2ef]/5 rounded-full blur-2xl" />
+                <div className="absolute inset-[-10px] border border-showcase-accent/20 rounded-full premium-ping" />
+                <div className="absolute inset-0 bg-showcase-accent/5 rounded-full blur-2xl" />
                 <div className="w-full h-full flex items-center justify-center z-10">
                   <LabFlaskCanvas />
                 </div>
               </div>
               <div className="flex flex-col items-center">
-                <span className="text-sm sm:text-base text-[#bbe2ef] uppercase tracking-widest font-medium">
+                <span className="text-sm sm:text-base text-showcase-accent uppercase tracking-widest font-medium">
                   Brewing Blueprint
                 </span>
                 <div className="w-32 sm:w-48 h-1 bg-white/10 rounded-full mt-4 overflow-hidden relative">
-                  <div className="h-full bg-[#bbe2ef] rounded-full animate-[loading-bar_3.5s_ease-in-out_forwards]" />
+                  <div className="h-full bg-showcase-accent rounded-full animate-[loading-bar_3.5s_ease-in-out_forwards]" />
                 </div>
               </div>
             </div>
@@ -2359,7 +2360,7 @@ export function BlueprintAnimation() {
           <div
             className={`flex flex-col items-center mb-4 sm:mb-8 ${phase === "blueprint" ? "animate-[blueprint-header-enter_0.8s_ease-out_forwards]" : "opacity-0"}`}
           >
-            <span className="text-[10px] sm:text-xs text-[#bbe2ef] uppercase tracking-[0.1em] font-medium mb-1 drop-shadow-[0_0_8px_rgba(187, 226, 239,0.5)]">
+            <span className="text-[10px] sm:text-xs text-showcase-accent uppercase tracking-[0.1em] font-medium mb-1 drop-shadow-[0_0_8px_theme(colors.showcase-accent/50%)]">
               Tailored Blueprint
             </span>
             <span className="text-lg sm:text-xl text-white font-light text-center">
@@ -2384,7 +2385,7 @@ export function BlueprintAnimation() {
               }}
             >
               <div className="absolute left-0 top-3 bottom-3 w-[3px] rounded-full bg-white/20" />
-              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[#bbe2ef]/10 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000" />
+              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-showcase-accent/10 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000" />
               {/* left */}
               <div className="flex items-center gap-2.5 flex-1 min-w-0 pr-4 relative z-10">
                 <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-white/[0.06] border border-white/10 flex items-center justify-center text-white/70 shrink-0">
@@ -2416,23 +2417,23 @@ export function BlueprintAnimation() {
                 <div className="relative h-[1px] w-full bg-white/20">
                   {/* Premium Node Connector (Mini) */}
                   <div className="absolute left-1/2 top-[0.5px] -translate-x-1/2 -translate-y-1/2 flex items-center justify-center">
-                    <div className="absolute w-[18px] h-[18px] rounded-full border border-[#bbe2ef]/40 animate-[ping_2.5s_cubic-bezier(0,0,0.2,1)_infinite] opacity-60" />
-                    <div className="absolute w-[10px] h-[10px] rounded-full border border-[#bbe2ef]/60 bg-[#1c1c22]/80 backdrop-blur-md shadow-[0_0_6px_rgba(178,204,162,0.3)]" />
-                    <div className="w-[4px] h-[4px] rounded-full bg-[#bbe2ef] shadow-[0_0_8px_1px_rgba(178,204,162,1)] z-10" />
+                    <div className="absolute w-[18px] h-[18px] rounded-full border border-showcase-accent/40 animate-[ping_2.5s_cubic-bezier(0,0,0.2,1)_infinite] opacity-60" />
+                    <div className="absolute w-[10px] h-[10px] rounded-full border border-showcase-accent/60 bg-[#1c1c22]/80 backdrop-blur-md shadow-[0_0_6px_rgba(178,204,162,0.3)]" />
+                    <div className="w-[4px] h-[4px] rounded-full bg-showcase-accent shadow-[0_0_8px_1px_rgba(178,204,162,1)] z-10" />
                   </div>
                 </div>
               </div>
               {/* right */}
               <div className="flex items-center gap-2 sm:gap-2.5 flex-1 min-w-0 pl-1 sm:pl-4 justify-end text-right relative z-10">
                 <div className="flex flex-col min-w-0 w-full text-right">
-                  <span className="text-[7.5px] sm:text-[10px] text-[#bbe2ef]/80 uppercase tracking-wider mb-0.5">
+                  <span className="text-[7.5px] sm:text-[10px] text-showcase-accent/80 uppercase tracking-wider mb-0.5">
                     Resolution Layer
                   </span>
                   <span className="text-[9px] sm:text-sm text-white/90 font-medium leading-tight sm:leading-snug truncate">
                     Autonomous Data Sync
                   </span>
                 </div>
-                <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-[#bbe2ef]/12 border border-[#bbe2ef]/35 flex items-center justify-center text-[#bbe2ef] shrink-0">
+                <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-showcase-accent/12 border border-showcase-accent/35 flex items-center justify-center text-showcase-accent shrink-0">
                   <svg
                     className="w-3.5 h-3.5"
                     viewBox="0 0 24 24"
@@ -2460,7 +2461,7 @@ export function BlueprintAnimation() {
               }}
             >
               <div className="absolute left-0 top-3 bottom-3 w-[3px] rounded-full bg-white/20" />
-              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[#bbe2ef]/10 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000" />
+              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-showcase-accent/10 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000" />
               <div className="flex items-center gap-2.5 flex-1 min-w-0 pr-4 relative z-10">
                 <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-white/[0.06] border border-white/10 flex items-center justify-center text-white/70 shrink-0">
                   <svg
@@ -2488,24 +2489,24 @@ export function BlueprintAnimation() {
                   {/* Premium Node Connector (Mini) */}
                   <div className="absolute left-1/2 top-[0.5px] -translate-x-1/2 -translate-y-1/2 flex items-center justify-center transform scale-75 sm:scale-100">
                     <div
-                      className="absolute w-[18px] h-[18px] rounded-full border border-[#bbe2ef]/40 animate-[ping_2.5s_cubic-bezier(0,0,0.2,1)_infinite] opacity-60"
+                      className="absolute w-[18px] h-[18px] rounded-full border border-showcase-accent/40 animate-[ping_2.5s_cubic-bezier(0,0,0.2,1)_infinite] opacity-60"
                       style={{ animationDelay: "0.4s" }}
                     />
-                    <div className="absolute w-[10px] h-[10px] rounded-full border border-[#bbe2ef]/60 bg-[#1c1c22]/80 backdrop-blur-md shadow-[0_0_6px_rgba(178,204,162,0.3)]" />
-                    <div className="w-[4px] h-[4px] rounded-full bg-[#bbe2ef] shadow-[0_0_8px_1px_rgba(178,204,162,1)] z-10" />
+                    <div className="absolute w-[10px] h-[10px] rounded-full border border-showcase-accent/60 bg-[#1c1c22]/80 backdrop-blur-md shadow-[0_0_6px_rgba(178,204,162,0.3)]" />
+                    <div className="w-[4px] h-[4px] rounded-full bg-showcase-accent shadow-[0_0_8px_1px_rgba(178,204,162,1)] z-10" />
                   </div>
                 </div>
               </div>
               <div className="flex items-center gap-2 sm:gap-2.5 flex-1 min-w-0 pl-1 sm:pl-4 justify-end text-right relative z-10">
                 <div className="flex flex-col min-w-0 w-full text-right">
-                  <span className="text-[7.5px] sm:text-[10px] text-[#bbe2ef]/80 uppercase tracking-wider mb-0.5">
+                  <span className="text-[7.5px] sm:text-[10px] text-showcase-accent/80 uppercase tracking-wider mb-0.5">
                     Action Engine
                   </span>
                   <span className="text-[9px] sm:text-sm text-white/90 font-medium leading-tight sm:leading-snug truncate">
                     Automated Triage Flow
                   </span>
                 </div>
-                <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-[#bbe2ef]/12 border border-[#bbe2ef]/35 flex items-center justify-center text-[#bbe2ef] shrink-0">
+                <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-showcase-accent/12 border border-showcase-accent/35 flex items-center justify-center text-showcase-accent shrink-0">
                   <svg
                     className="w-3.5 h-3.5"
                     viewBox="0 0 24 24"
@@ -2522,7 +2523,7 @@ export function BlueprintAnimation() {
             className={`mt-4 sm:mt-8 text-center ${phase === "blueprint" ? "animate-[blueprint-card-enter_0.7s_ease-out_forwards]" : "opacity-0"}`}
             style={{ animationDelay: phase === "blueprint" ? "0.6s" : "0s" }}
           >
-            <span className="text-[9px] sm:text-[10px] text-[#bbe2ef]/60 uppercase tracking-[0.15em] font-medium drop-shadow-sm">
+            <span className="text-[9px] sm:text-[10px] text-showcase-accent/60 uppercase tracking-[0.15em] font-medium drop-shadow-sm">
               Aivory Engine Processing Capacity: 98% Efficiency
             </span>
           </div>
@@ -2543,13 +2544,13 @@ export function BlueprintAnimation() {
                     className="relative w-36 h-[104px] bg-[#111111] border border-white/10 rounded-xl overflow-hidden flex flex-col"
                     style={{
                       boxShadow:
-                        "0 14px 34px -10px rgba(0,0,0,0.75), 0 0 22px rgba(187, 226, 239,0.14), inset 0 1px 0 rgba(255,255,255,0.06)",
+                        `0 14px 34px -10px rgba(0,0,0,0.75), 0 0 22px rgba(${SHOWCASE_ACCENT_RGB},0.14), inset 0 1px 0 rgba(255,255,255,0.06)`,
                       animation: "doc-float 3.2s ease-in-out infinite",
                     }}
                   >
-                    <div className="h-[3px] w-full bg-gradient-to-r from-[#bbe2ef]/40 via-[#bbe2ef] to-[#bbe2ef]/40" />
+                    <div className="h-[3px] w-full bg-gradient-to-r from-showcase-accent/40 via-showcase-accent to-showcase-accent/40" />
                     <div className="flex items-center gap-2 px-3 pt-2.5 pb-1.5">
-                      <div className="w-6 h-6 rounded-md bg-[#bbe2ef]/12 border border-[#bbe2ef]/40 flex items-center justify-center text-[#bbe2ef] shrink-0">
+                      <div className="w-6 h-6 rounded-md bg-showcase-accent/12 border border-showcase-accent/40 flex items-center justify-center text-showcase-accent shrink-0">
                         <svg
                           className="w-3.5 h-3.5"
                           fill="none"
@@ -2565,7 +2566,7 @@ export function BlueprintAnimation() {
                         </svg>
                       </div>
                       <div className="flex-1 min-w-0">
-                        <div className="h-[6px] w-[64%] rounded-full bg-[#bbe2ef]/70" />
+                        <div className="h-[6px] w-[64%] rounded-full bg-showcase-accent/70" />
                         <div className="h-[4px] w-[40%] rounded-full bg-white/20 mt-1.5" />
                       </div>
                     </div>
@@ -2574,11 +2575,11 @@ export function BlueprintAnimation() {
                       <div className="h-[4px] w-[86%] rounded-full bg-white/10" />
                       <div className="h-[4px] w-[68%] rounded-full bg-white/10" />
                       <div className="flex items-center gap-2 pt-1">
-                        <span className="text-[7px] leading-none font-semibold text-[#bbe2ef] bg-[#bbe2ef]/12 border border-[#bbe2ef]/30 rounded px-1.5 py-[3px]">
+                        <span className="text-[7px] leading-none font-semibold text-showcase-accent bg-showcase-accent/12 border border-showcase-accent/30 rounded px-1.5 py-[3px]">
                           98%
                         </span>
                         <div className="h-[4px] flex-1 rounded-full bg-white/10 overflow-hidden">
-                          <div className="h-full w-[98%] rounded-full bg-[#bbe2ef]/70" />
+                          <div className="h-full w-[98%] rounded-full bg-showcase-accent/70" />
                         </div>
                       </div>
                     </div>
@@ -2586,12 +2587,12 @@ export function BlueprintAnimation() {
                       className="absolute inset-x-0 h-7 pointer-events-none"
                       style={{
                         background:
-                          "linear-gradient(to bottom, transparent, rgba(187, 226, 239,0.28), transparent)",
+                          `linear-gradient(to bottom, transparent, rgba(${SHOWCASE_ACCENT_RGB},0.28), transparent)`,
                         animation: "doc-scan 2.4s ease-in-out infinite",
                       }}
                     />
                   </div>
-                  <span className="text-[10px] sm:text-[11px] text-[#bbe2ef]/90 uppercase tracking-[0.22em] font-medium px-4 py-1.5 bg-[#0d0d0d]/80 border border-white/5 rounded-full whitespace-nowrap backdrop-blur-sm shadow-[0_4px_12px_rgba(0,0,0,0.5)]">
+                  <span className="text-[10px] sm:text-[11px] text-showcase-accent/90 uppercase tracking-[0.22em] font-medium px-4 py-1.5 bg-[#0d0d0d]/80 border border-white/5 rounded-full whitespace-nowrap backdrop-blur-sm shadow-[0_4px_12px_rgba(0,0,0,0.5)]">
                     System Blueprint
                   </span>
                   <span className="text-[19px] text-white/50 font-medium tracking-wide mt-1 animate-pulse">
@@ -2773,16 +2774,16 @@ export function InteractiveShowcase() {
                     }`}
                   >
                     {/* The Line */}
-                    <div className="h-[1px] bg-gradient-to-r from-transparent via-[#bbe2ef]/50 to-[#bbe2ef]/80 flex-grow" />
+                    <div className="h-[1px] bg-gradient-to-r from-transparent via-showcase-accent/50 to-showcase-accent/80 flex-grow" />
 
                     {/* Premium Node Connector */}
                     <div className="relative flex items-center justify-center shrink-0 translate-x-[1px]">
                       {/* Outer ping animation */}
-                      <div className="absolute w-[24px] h-[24px] rounded-full border-[1.5px] border-[#bbe2ef]/40 animate-[ping_2.5s_cubic-bezier(0,0,0.2,1)_infinite] opacity-60" />
+                      <div className="absolute w-[24px] h-[24px] rounded-full border-[1.5px] border-showcase-accent/40 animate-[ping_2.5s_cubic-bezier(0,0,0.2,1)_infinite] opacity-60" />
                       {/* Static Glass Ring */}
-                      <div className="absolute w-[14px] h-[14px] rounded-full border border-[#bbe2ef]/60 bg-[#1c1c22]/80 backdrop-blur-md shadow-[0_0_8px_rgba(178,204,162,0.3)]" />
+                      <div className="absolute w-[14px] h-[14px] rounded-full border border-showcase-accent/60 bg-[#1c1c22]/80 backdrop-blur-md shadow-[0_0_8px_rgba(178,204,162,0.3)]" />
                       {/* Solid glowing core */}
-                      <div className="w-[6px] h-[6px] rounded-full bg-[#bbe2ef] shadow-[0_0_12px_2px_rgba(178,204,162,1)] z-10" />
+                      <div className="w-[6px] h-[6px] rounded-full bg-showcase-accent shadow-[0_0_12px_2px_rgba(178,204,162,1)] z-10" />
                     </div>
                   </div>
                 </div>

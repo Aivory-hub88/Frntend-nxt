@@ -680,7 +680,7 @@ const NEW_AGENTS = [
 function getBadgeColor(status: string) {
   const s = status.toLowerCase();
   if (s.includes('resolved') || s.includes('triaged') || s.includes('qualified') || s.includes('synced')) {
-    return 'bg-[#bbe2ef]/10 text-[#bbe2ef] border-[#bbe2ef]/20';
+    return 'bg-showcase-accent/10 text-showcase-accent border-showcase-accent/20';
   }
   if (s.includes('escalating') || s.includes('nurture') || s.includes('reviewing')) {
     return 'bg-amber-500/10 text-amber-400 border-amber-500/20';
@@ -716,7 +716,7 @@ function TypewriterText({ text, onComplete, active = true }: { text: string, onC
     return () => clearInterval(interval);
   }, [text, onComplete, active]);
 
-  return <span>{displayed}<span className="ml-[2px] w-[2px] h-2.5 bg-[#bbe2ef] animate-pulse inline-block align-middle" /></span>;
+  return <span>{displayed}<span className="ml-[2px] w-[2px] h-2.5 bg-showcase-accent animate-pulse inline-block align-middle" /></span>;
 }
 
 function AgentFlowVisual({ title }: { title: string }) {
@@ -802,14 +802,14 @@ function AgentFlowVisual({ title }: { title: string }) {
           </div>
           <div className="ml-0.5">{arrowRight}</div>
           <div className="ml-0.5">
-            <div className={`w-7 h-7 rounded-xl border flex items-center justify-center transition-colors duration-700 ${reducedMotion || csState.status === 'resolved' ? 'bg-[#bbe2ef]/10 text-[#bbe2ef] border-[#bbe2ef]/20' : 'bg-white/5 text-white/40 border-white/10'}`}>
+            <div className={`w-7 h-7 rounded-xl border flex items-center justify-center transition-colors duration-700 ${reducedMotion || csState.status === 'resolved' ? 'bg-showcase-accent/10 text-showcase-accent border-showcase-accent/20' : 'bg-white/5 text-white/40 border-white/10'}`}>
               <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
               </svg>
             </div>
           </div>
           <div className="ml-auto flex items-center shrink-0">
-            <div className={`px-2 py-0.5 text-[9px] font-mono rounded-sm border transition-colors duration-700 uppercase tracking-widest ${csState.status === 'processing' && !reducedMotion ? 'bg-blue-400/10 text-blue-400 border-blue-400/20' : 'bg-[#bbe2ef]/10 text-[#bbe2ef] border-[#bbe2ef]/20'}`}>
+            <div className={`px-2 py-0.5 text-[9px] font-mono rounded-sm border transition-colors duration-700 uppercase tracking-widest ${csState.status === 'processing' && !reducedMotion ? 'bg-blue-400/10 text-blue-400 border-blue-400/20' : 'bg-showcase-accent/10 text-showcase-accent border-showcase-accent/20'}`}>
               {reducedMotion ? 'RESOLVED' : csState.status}
             </div>
           </div>
@@ -821,7 +821,7 @@ function AgentFlowVisual({ title }: { title: string }) {
           {['BUDGET', 'AUTHORITY', 'NEED', 'TIME'].map((tag, i) => {
             const isLit = reducedMotion || lqPhase >= i;
             return (
-              <div key={tag} className={`px-2 py-1 text-[9px] font-mono rounded border transition-colors duration-300 ${isLit ? 'bg-[#bbe2ef]/10 text-[#bbe2ef] border-[#bbe2ef]/20' : 'bg-white/5 text-white/30 border-white/10'}`}>
+              <div key={tag} className={`px-2 py-1 text-[9px] font-mono rounded border transition-colors duration-300 ${isLit ? 'bg-showcase-accent/10 text-showcase-accent border-showcase-accent/20' : 'bg-white/5 text-white/30 border-white/10'}`}>
                  {tag}
               </div>
             );
@@ -838,9 +838,9 @@ function AgentFlowVisual({ title }: { title: string }) {
            </div>
            <div className="flex-1 h-[1px] bg-white/5 relative overflow-hidden shrink-0 mx-2">
               {!reducedMotion && inView && (
-                <div className="absolute top-0 left-0 h-full w-8 bg-gradient-to-r from-transparent via-[#bbe2ef] to-transparent animate-travel" />
+                <div className="absolute top-0 left-0 h-full w-8 bg-gradient-to-r from-transparent via-showcase-accent to-transparent animate-travel" />
               )}
-              {reducedMotion && <div className="absolute top-0 left-full -translate-x-full h-full w-full bg-[#bbe2ef]/50" />}
+              {reducedMotion && <div className="absolute top-0 left-full -translate-x-full h-full w-full bg-showcase-accent/50" />}
            </div>
            <div className="w-8 h-8 flex items-center justify-center bg-[#111111] border border-white/5 rounded-xl z-10 shrink-0">
               <svg className="w-4 h-4 text-white/60" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -849,9 +849,9 @@ function AgentFlowVisual({ title }: { title: string }) {
            </div>
            <div className="flex-1 h-[1px] bg-white/5 relative overflow-hidden shrink-0 mx-2">
               {!reducedMotion && inView && (
-                <div className="absolute top-0 left-0 h-full w-8 bg-gradient-to-r from-transparent via-[#bbe2ef] to-transparent animate-travel" style={{ animationDelay: '1s' }} />
+                <div className="absolute top-0 left-0 h-full w-8 bg-gradient-to-r from-transparent via-showcase-accent to-transparent animate-travel" style={{ animationDelay: '1s' }} />
               )}
-              {reducedMotion && <div className="absolute top-0 left-full -translate-x-full h-full w-full bg-[#bbe2ef]/50" />}
+              {reducedMotion && <div className="absolute top-0 left-full -translate-x-full h-full w-full bg-showcase-accent/50" />}
            </div>
            <div className="w-8 h-8 flex items-center justify-center bg-[#111111] border border-white/5 rounded-xl z-10 shrink-0">
               <img src="/integrations/icons/slack.svg" alt="Slack" width={16} height={16} className="w-4 h-4 opacity-80" />
@@ -947,15 +947,15 @@ function TaskQueueAnimation({ tasks, offset }: { tasks: any[], offset: number })
               {isProcessing ? (
                 <div className="flex items-center gap-2">
                   <div className="flex space-x-1 mt-0.5">
-                    <div className="w-1.5 h-1.5 bg-[#bbe2ef] rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
-                    <div className="w-1.5 h-1.5 bg-[#bbe2ef] rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
-                    <div className="w-1.5 h-1.5 bg-[#bbe2ef] rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
+                    <div className="w-1.5 h-1.5 bg-showcase-accent rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
+                    <div className="w-1.5 h-1.5 bg-showcase-accent rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
+                    <div className="w-1.5 h-1.5 bg-showcase-accent rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
                   </div>
-                  <span className="text-[10px] text-[#bbe2ef]/80 font-mono">{task.result}</span>
+                  <span className="text-[10px] text-showcase-accent/80 font-mono">{task.result}</span>
                 </div>
               ) : (
-                <div className="text-[10px] text-[#bbe2ef] font-light truncate flex items-center gap-1.5">
-                  <span className="text-[#bbe2ef]/60">→</span> {task.result}
+                <div className="text-[10px] text-showcase-accent font-light truncate flex items-center gap-1.5">
+                  <span className="text-showcase-accent/60">→</span> {task.result}
                 </div>
               )}
             </div>
@@ -984,10 +984,10 @@ function AgentCard({ agent }: { agent: typeof NEW_AGENTS[0] }) {
         {/* Status Header */}
         <div className="absolute top-4 left-4 flex items-center gap-2 z-20">
           <div className="relative flex items-center justify-center w-2 h-2">
-            <span className="absolute inline-flex w-full h-full rounded-full bg-[#bbe2ef] opacity-75 animate-ping" />
-            <span className="relative inline-flex w-2 h-2 rounded-full bg-[#bbe2ef]" />
+            <span className="absolute inline-flex w-full h-full rounded-full bg-showcase-accent opacity-75 animate-ping" />
+            <span className="relative inline-flex w-2 h-2 rounded-full bg-showcase-accent" />
           </div>
-          <span className="text-[9px] text-[#bbe2ef] uppercase tracking-widest font-mono">
+          <span className="text-[9px] text-showcase-accent uppercase tracking-widest font-mono">
             {agent.status}
           </span>
         </div>

@@ -107,7 +107,7 @@ export function InteractiveGridShowcase() {
           {/* Card 1: Diagnostic */}
           <SpotlightCard className="col-span-1 md:col-span-1 lg:col-span-2">
             <div className="relative z-10 mb-4 flex-shrink-0">
-              <span className="text-[#bbe2ef] text-[13px] font-medium tracking-[0.2em] mb-2 block uppercase" style={{ fontFamily: "'Doto', 'Courier New', monospace" }}>{showcaseProducts[0].step}</span>
+              <span className="text-showcase-accent text-[13px] font-medium tracking-[0.2em] mb-2 block uppercase" style={{ fontFamily: "'Doto', 'Courier New', monospace" }}>{showcaseProducts[0].step}</span>
               <h4 className="text-xl font-medium mb-2">{renderTitle(showcaseProducts[0].title)}</h4>
               <p className="text-white/70 text-[13px] font-light leading-relaxed">{showcaseProducts[0].description}</p>
             </div>
@@ -119,7 +119,7 @@ export function InteractiveGridShowcase() {
           {/* Card 2: Blueprint */}
           <SpotlightCard className="col-span-1 md:col-span-1 lg:col-span-2">
             <div className="relative z-10 mb-4 flex-shrink-0">
-              <span className="text-[#bbe2ef] text-[13px] font-medium tracking-[0.2em] mb-2 block uppercase" style={{ fontFamily: "'Doto', 'Courier New', monospace" }}>{showcaseProducts[1].step}</span>
+              <span className="text-showcase-accent text-[13px] font-medium tracking-[0.2em] mb-2 block uppercase" style={{ fontFamily: "'Doto', 'Courier New', monospace" }}>{showcaseProducts[1].step}</span>
               <h4 className="text-xl font-medium mb-2">{renderTitle(showcaseProducts[1].title)}</h4>
               <p className="text-white/70 text-[13px] font-light leading-relaxed">{showcaseProducts[1].description}</p>
             </div>
@@ -131,7 +131,7 @@ export function InteractiveGridShowcase() {
           {/* Card 3: Roadmap */}
           <SpotlightCard className="col-span-1 md:col-span-2 lg:col-span-2">
             <div className="relative z-10 mb-4 flex-shrink-0">
-              <span className="text-[#bbe2ef] text-[13px] font-medium tracking-[0.2em] mb-2 block uppercase" style={{ fontFamily: "'Doto', 'Courier New', monospace" }}>{showcaseProducts[2].step}</span>
+              <span className="text-showcase-accent text-[13px] font-medium tracking-[0.2em] mb-2 block uppercase" style={{ fontFamily: "'Doto', 'Courier New', monospace" }}>{showcaseProducts[2].step}</span>
               <h4 className="text-xl font-medium mb-2">{renderTitle(showcaseProducts[2].title)}</h4>
               <p className="text-white/70 text-[13px] font-light leading-relaxed">{showcaseProducts[2].description}</p>
             </div>
@@ -143,7 +143,7 @@ export function InteractiveGridShowcase() {
           {/* Card 4: Console */}
           <SpotlightCard className="col-span-1 md:col-span-1 lg:col-span-3">
             <div className="relative z-10 mb-4 flex-shrink-0">
-              <span className="text-[#bbe2ef] text-[13px] font-medium tracking-[0.2em] mb-2 block uppercase" style={{ fontFamily: "'Doto', 'Courier New', monospace" }}>{showcaseProducts[3].step}</span>
+              <span className="text-showcase-accent text-[13px] font-medium tracking-[0.2em] mb-2 block uppercase" style={{ fontFamily: "'Doto', 'Courier New', monospace" }}>{showcaseProducts[3].step}</span>
               <h4 className="text-xl font-medium mb-2">{renderTitle(showcaseProducts[3].title)}</h4>
               <p className="text-white/70 text-[13px] font-light leading-relaxed max-w-md">{showcaseProducts[3].description}</p>
             </div>
@@ -155,7 +155,7 @@ export function InteractiveGridShowcase() {
           {/* Card 5: Workflow */}
           <SpotlightCard className="col-span-1 md:col-span-1 lg:col-span-3">
             <div className="relative z-10 mb-4 flex-shrink-0">
-              <span className="text-[#bbe2ef] text-[13px] font-medium tracking-[0.2em] mb-2 block uppercase" style={{ fontFamily: "'Doto', 'Courier New', monospace" }}>{showcaseProducts[4].step}</span>
+              <span className="text-showcase-accent text-[13px] font-medium tracking-[0.2em] mb-2 block uppercase" style={{ fontFamily: "'Doto', 'Courier New', monospace" }}>{showcaseProducts[4].step}</span>
               <h4 className="text-xl font-medium mb-2">{renderTitle(showcaseProducts[4].title)}</h4>
               <p className="text-white/70 text-[13px] font-light leading-relaxed max-w-md">{showcaseProducts[4].description}</p>
             </div>

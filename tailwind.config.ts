@@ -1,4 +1,5 @@
 import type { Config } from 'tailwindcss';
+import { SHOWCASE_ACCENT } from './src/lib/theme-colors';
 
 const config: Config = {
   content: [
@@ -28,6 +29,9 @@ const config: Config = {
         'accent-hover': '#dbe0ce',
         border: 'rgba(255,255,255,0.08)',
         'border-hover': 'rgba(255,255,255,0.18)',
+        // Interactive showcase's cyan accent -- see src/lib/theme-colors.ts
+        // for why this exists as a named token instead of a repeated hex.
+        'showcase-accent': SHOWCASE_ACCENT,
       },
       fontFamily: {
         manrope: ['var(--font-manrope)', 'sans-serif'],
