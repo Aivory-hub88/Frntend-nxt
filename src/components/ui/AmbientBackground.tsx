@@ -69,24 +69,21 @@ export function AmbientBackground({
         style={{ background: lowerWash }}
       />
 
-      {/* Grain sits last (painted over the blobs and the lower wash) so
-          nothing dilutes it. mix-blend-mode: overlay/soft-light both work by
-          amplifying contrast around the backdrop's OWN midtone -- on a
-          near-black backdrop (this one sits around 3-8% luminance) that
-          midtone essentially doesn't exist, so the blended result barely
-          moves off the original colour no matter how strong the grain
-          texture is. `screen` instead treats the grain as light being added
-          on top, which is visible on a dark backdrop by construction.
-          legacy-footer sits on lighter, more varied surfaces elsewhere in
-          the app, where overlay/soft-light do have contrast to work with, so
-          it keeps its original treatment untouched. */}
-      <div
-        className={`absolute inset-0 ${legacyFooter ? 'opacity-[0.055] mix-blend-soft-light' : 'opacity-[0.16] mix-blend-screen'}`}
-        style={{
-          backgroundImage: GRAIN_TEXTURE,
-          backgroundSize: legacyFooter ? '200px 200px' : '140px 140px',
-        }}
-      />
+      {/* No grain on landing -- tried overlay (invisible against this dark
+          backdrop's near-zero midtone) and screen (visible, but read as
+          washing the colour out/dull rather than adding texture); reverted
+          rather than keep chasing it. legacy-footer's original subtle
+          static is untouched -- it sits on lighter surfaces elsewhere in
+          the app where it was never in question. */}
+      {legacyFooter && (
+        <div
+          className="absolute inset-0 opacity-[0.055] mix-blend-soft-light"
+          style={{
+            backgroundImage: GRAIN_TEXTURE,
+            backgroundSize: '200px 200px',
+          }}
+        />
+      )}
     </div>
   );
 }
