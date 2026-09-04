@@ -57,8 +57,15 @@ export default function HeroSection() {
             Make it Aivory
           </h1>
 
+          {/* no-word-split: opts this out of ScrollRevealProvider's global
+              `h2, p` GSAP SplitType pass. That reveal wraps each word in its
+              own transformed/will-change layer, which fights the gradient's
+              own background-clip:text compositing layer here and paints the
+              two lines stacked on top of each other instead of one above the
+              other. The hero already animates this in on load via the
+              parent's `animate-slide-up-1`, so no reveal behaviour is lost. */}
           <p
-            className="mt-5 md:mt-6 text-[14px] md:text-[16px] font-light tracking-tight leading-[1.65] text-white/60 pointer-events-none select-none"
+            className="no-word-split silver-swipe-text mt-5 md:mt-6 text-[19px] md:text-[24px] font-light tracking-tight leading-[1.4] pointer-events-none select-none"
             style={{ fontFamily: "var(--font-manrope), 'Manrope', sans-serif" }}
           >
             Map how your business actually works
