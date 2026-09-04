@@ -483,9 +483,17 @@ export function HalftoneWave({ active = true, purpleColor }: { active?: boolean;
     let targetDragRotationY = 0;
 
     const onPointerDown = (e: PointerEvent) => {
+      const target = e.target instanceof Element ? e.target : null;
+      const footer = mountRef.current?.closest('footer');
+
+      // The WebGL flower is footer-only. Ignore events from elsewhere on the
+      // page and never hijack links, buttons, or form controls inside footer.
+      if (!(footer instanceof HTMLElement) || !target || !footer.contains(target)) return;
+      if (target.closest('a, button, input, textarea, select, [role="button"]')) return;
+
       isDragging = true;
       previousMousePosition = { x: e.clientX, y: e.clientY };
-      if (mountRef.current) mountRef.current.style.cursor = 'grabbing';
+      footer.style.cursor = 'grabbing';
     };
 
     const onPointerMove = (e: PointerEvent) => {
@@ -501,7 +509,8 @@ export function HalftoneWave({ active = true, purpleColor }: { active?: boolean;
 
     const onPointerUp = () => {
       isDragging = false;
-      if (mountRef.current) mountRef.current.style.cursor = 'grab';
+      const footer = mountRef.current?.closest('footer');
+      if (footer instanceof HTMLElement) footer.style.cursor = 'grab';
     };
 
     const canvas = renderer.domElement;
@@ -528,21 +537,53 @@ export function HalftoneWave({ active = true, purpleColor }: { active?: boolean;
     }
     // -------------------------------------
 
+    const isCanvasInViewport = () => {
+      const bounds = renderer.domElement.getBoundingClientRect();
+      return bounds.width > 0 && bounds.height > 0 &&
+        bounds.bottom > 0 && bounds.right > 0 &&
+        bounds.top < window.innerHeight && bounds.left < window.innerWidth;
+    };
+
     const observer = new IntersectionObserver(([entry]) => {
-      isVisible = entry.isIntersecting;
+      // Browsers may deliver a final non-intersecting entry while a tab is
+      // being hidden. Ignore it until visibility is restored and geometry can
+      // be checked synchronously.
+      if (!document.hidden) isVisible = entry.isIntersecting;
     }, { threshold: 0.0 });
     observer.observe(renderer.domElement);
+
+    let contextLost = false;
     const onVisibility = () => {
-      if (document.hidden) isVisible = false;
+      if (document.hidden) {
+        isVisible = false;
+        cancelAnimationFrame(animationFrameId);
+        animationFrameId = 0;
+        return;
+      }
+
+      // A fixed canvas often does not trigger IntersectionObserver again after
+      // a minimized/background tab is restored. Re-evaluate it and seed one
+      // authoritative loop so a stale observer flag or dropped rAF cannot
+      // leave the flower frozen.
+      isVisible = isCanvasInViewport();
+      handleScroll();
+      cancelAnimationFrame(animationFrameId);
+      animationFrameId = 0;
+      if (!contextLost && !prefersReducedMotion) renderLoop();
     };
     document.addEventListener('visibilitychange', onVisibility);
+    window.addEventListener('pageshow', onVisibility);
+
     const onContextLost = (e: Event) => {
       e.preventDefault();
+      contextLost = true;
       cancelAnimationFrame(animationFrameId);
       animationFrameId = 0;
     };
     const onContextRestored = () => {
-      if (!animationFrameId) renderLoop();
+      contextLost = false;
+      isVisible = isCanvasInViewport();
+      if (!document.hidden && !animationFrameId) renderLoop();
     };
     renderer.domElement.addEventListener('webglcontextlost', onContextLost);
     renderer.domElement.addEventListener('webglcontextrestored', onContextRestored);

@@ -77,7 +77,11 @@ export default function Navbar() {
   const nav = (
     <nav className="fixed top-0 inset-x-0 z-[1000]">
       <div
-        className="h-16 w-full flex justify-between items-center border-b border-white/5 bg-black/35 backdrop-blur-2xl backdrop-saturate-150 shadow-[0_8px_30px_-4px_rgba(0,0,0,0.5)]"
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-[rgba(3,20,27,0.68)] via-[rgba(3,20,27,0.42)] to-transparent backdrop-blur-2xl backdrop-saturate-150 [mask-image:linear-gradient(to_bottom,black_0%,black_68%,transparent_100%)] [-webkit-mask-image:linear-gradient(to_bottom,black_0%,black_68%,transparent_100%)]"
+      />
+      <div
+        className="relative z-10 h-16 w-full flex justify-between items-center"
         style={{ padding: '0 clamp(1rem, 4vw, 2rem)' }}
       >
         {/* Left: Aivory logo */}
@@ -87,13 +91,13 @@ export default function Navbar() {
               is what the metric actually lands on. It therefore gets explicit
               priority instead of queueing behind the rest of the page. */}
           <img
-            src="/Aivory_new_logo_white.svg"
+            src="/Aivory_logo_2_2026.svg?v=7f58ef01"
             alt="Aivory Logo"
-            width={1260}
-            height={512}
+            width={383}
+            height={79}
             fetchPriority="high"
             decoding="sync"
-            className="h-[52px] w-auto object-contain"
+            className="h-[26px] w-auto object-contain"
           />
         </Link>
 
@@ -218,11 +222,11 @@ export default function Navbar() {
         <div className="h-16 flex justify-between items-center px-4">
           <Link href="/" onClick={() => setIsMobileMenuOpen(false)}>
             <img
-              src="/Aivory_new_logo_white.svg"
+              src="/Aivory_logo_2_2026.svg?v=7f58ef01"
               alt="Aivory Logo"
-              width={1260}
-              height={512}
-              className="h-[52px] w-auto object-contain"
+              width={383}
+              height={79}
+              className="h-[26px] w-auto object-contain"
             />
           </Link>
           <button

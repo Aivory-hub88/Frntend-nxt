@@ -10,7 +10,7 @@ import PrivacySection from '@/components/home/PrivacySection';
 import PreFooterCTA from '@/components/home/PreFooterCTA';
 import Footer from '@/components/Footer';
 import ScrollRevealProvider from '@/components/home/ScrollRevealProvider';
-import { HalftoneWaveWrapper } from '@/components/ui/HalftoneWaveWrapper';
+import { AmbientBackground } from '@/components/ui/AmbientBackground';
 import { DarkSectionSpotlight } from '@/components/ui/DarkSectionSpotlight';
 import { JsonLd, buildHomePageGraph, siteUrlFromHeaders } from '@/lib/seo';
 
@@ -21,15 +21,10 @@ export default function HomePage() {
     <main className="relative">
       <JsonLd data={buildHomePageGraph(siteUrl)} />
       <ScrollRevealProvider />
-      <section style={{ padding: 0 }} className="relative z-[1] bg-background">
-        {/* Halftone flower — no separate gradient wash underneath it, so the
-            page still reads as pitch black wherever the flower's own
-            opacity crossfades to 0. */}
-        <div className="fixed inset-0 z-0 pointer-events-none">
-          <div className="w-full h-full">
-            <HalftoneWaveWrapper />
-          </div>
-        </div>
+      <section style={{ padding: 0 }} className="relative isolate z-[1] bg-[#03141b]">
+        {/* Site-wide ambient wash. The interactive flower is intentionally
+            mounted by Footer only, so the hero and content stay lightweight. */}
+        <AmbientBackground className="fixed inset-0 z-0" />
 
         <Navbar />
         <HeroSection />
@@ -70,7 +65,7 @@ export default function HomePage() {
           </div>
         </DarkSectionSpotlight>
 
-        <Footer />
+        <Footer landingAmbient />
       </section>
     </main>
   );

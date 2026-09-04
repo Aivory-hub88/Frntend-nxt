@@ -1013,3 +1013,42 @@ body,
     animation: none;
   }
 }
+
+/* ─── Landing ambient navy/teal background ─── */
+.aivory-ambient-blob {
+  will-change: transform, opacity;
+}
+
+.aivory-ambient-blob--left {
+  animation: aivory-ambient-drift-left 13s ease-in-out infinite;
+}
+
+.aivory-ambient-blob--right {
+  animation: aivory-ambient-drift-right 17s ease-in-out infinite;
+}
+
+.aivory-ambient-blob--center {
+  animation: aivory-ambient-breathe 11s ease-in-out infinite;
+}
+
+@keyframes aivory-ambient-drift-left {
+  0%, 100% { opacity: 0.72; transform: rotate(-18deg) translate3d(0, 7%, 0); }
+  50% { opacity: 0.92; transform: rotate(-10deg) translate3d(5%, -7%, 0); }
+}
+
+@keyframes aivory-ambient-drift-right {
+  0%, 100% { opacity: 0.62; transform: rotate(-24deg) translate3d(0, 8%, 0); }
+  50% { opacity: 0.82; transform: rotate(-16deg) translate3d(-6%, -8%, 0); }
+}
+
+@keyframes aivory-ambient-breathe {
+  0%, 100% { opacity: 0.45; transform: translate3d(0, 5%, 0) scale(0.96); }
+  50% { opacity: 0.68; transform: translate3d(2%, -5%, 0) scale(1.04); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .aivory-ambient-blob {
+    animation: none;
+    will-change: auto;
+  }
+}
