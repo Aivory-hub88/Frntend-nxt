@@ -21,8 +21,12 @@ export type TechnicalFrameButtonProps =
   | TechnicalFrameLinkProps
   | TechnicalFrameNativeButtonProps;
 
+// Transparent by default -- the corner-bracket frame carries the button's
+// identity, not a solid fill. Every consumer (nav CTAs, hero CTA, footer
+// CTAs, modal submit) inherits this in one place; a caller that still wants
+// a filled button passes `bg-*` in `className` to override.
 const baseClassName =
-  'group relative inline-flex items-center justify-center border border-white/20 bg-black font-mono font-medium uppercase text-white/85 transition-[border-color,color,box-shadow,transform] duration-300 active:scale-[0.97] active:duration-[160ms] hover:border-white/45 hover:bg-black hover:text-white hover:shadow-[0_0_24px_rgba(255,255,255,0.07)] focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-white/70 focus-visible:ring-offset-2 focus-visible:ring-offset-black disabled:cursor-not-allowed disabled:opacity-45';
+  'group relative inline-flex items-center justify-center border border-white/20 bg-transparent font-mono font-medium uppercase text-white/85 transition-[border-color,color,box-shadow,transform] duration-300 active:scale-[0.97] active:duration-[160ms] hover:border-white/45 hover:bg-white/[0.04] hover:text-white hover:shadow-[0_0_24px_rgba(255,255,255,0.07)] focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-white/70 focus-visible:ring-offset-2 focus-visible:ring-offset-black disabled:cursor-not-allowed disabled:opacity-45';
 
 const sizeClassNames = {
   default: 'min-h-[52px] px-8 py-3.5 text-[11px] tracking-[0.16em]',
@@ -52,7 +56,7 @@ export function TechnicalFrameButton(props: TechnicalFrameButtonProps) {
       <Link
         href={href}
         {...linkProps}
-        data-button-style="technical-frame-black"
+        data-button-style="technical-frame"
         className={`${baseClassName} ${sizeClassNames[size]} ${className}`.trim()}
       >
         <TechnicalFrameContent>{children}</TechnicalFrameContent>
@@ -66,7 +70,7 @@ export function TechnicalFrameButton(props: TechnicalFrameButtonProps) {
     <button
       {...buttonProps}
       type={type}
-      data-button-style="technical-frame-black"
+      data-button-style="technical-frame"
       className={`${baseClassName} ${sizeClassNames[size]} ${className}`.trim()}
     >
       <TechnicalFrameContent>{children}</TechnicalFrameContent>
