@@ -42,19 +42,10 @@ export default function AIReadySection() {
               doing implicitly, and it buys a left edge, an even measure, and a
               scannable sequence.
 
-              This column sits over the busiest part of the WebGL flower, so a
-              soft scrim sits behind it. Gradient only -- no backdrop blur:
-              blurring a live animating layer costs a re-composite every frame
-              (the trap already documented on the operations-stack cards). */}
+              No scrim here any more -- it was there to punch through the busy
+              WebGL flower background; against the current flat ambient
+              surface it just read as a dark patch. */}
           <div className="relative flex flex-col justify-start text-left md:col-span-6 md:col-start-7">
-            <div
-              aria-hidden="true"
-              className="pointer-events-none absolute -inset-x-8 -inset-y-10 -z-10"
-              style={{
-                background:
-                  'radial-gradient(ellipse at 42% 50%, rgba(9,8,7,0.8) 0%, rgba(9,8,7,0.5) 52%, rgba(9,8,7,0) 78%)',
-              }}
-            />
 
             <p className="max-w-[54ch] text-[14px] md:text-[16px] font-light leading-relaxed text-white/60">
               Most organisations deploy AI before understanding how work actually gets done.
