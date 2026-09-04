@@ -104,30 +104,35 @@ export default function HeroSection() {
           <span className="text-white/25">&middot;</span> No sales pitch
         </p>
 
-        {/* Trust bar — one line, same &middot;-divided rhythm as the
-            "Self-guided / One sitting / No sales pitch" tagline above it,
-            rather than a separate badge+copy row with its own layout. The
-            NVIDIA mark stays the official image lockup (shrunk to sit inline
-            with the text) rather than becoming plain text: it's the badge
-            that actually says "Inception Program", not a claim we make
-            ourselves. */}
+        {/* Trust bar — one line, pipe-divided, third item is the NVIDIA
+            badge image alone (no repeated "Inception Program" text next to
+            it — the lockup already says that).
+            no-word-split: this <p> would otherwise be swept up by
+            ScrollRevealProvider's global `h2, p` GSAP SplitType pass, same
+            as the subheadline above. That pass runs on a requestIdleCallback
+            well after first paint, which is why it doesn't show up in a
+            quick post-deploy check: it wraps every word in its own
+            block-level `.line`/`.word` layer, which both destroys this
+            row's flex/gap layout (the pipes end up glued to the next word,
+            and the badge gets forced onto its own line) and leaves the
+            later words permanently at opacity 0, since this element is
+            already in view on load and never crosses the reveal's scroll
+            trigger. The hero already animates this in via the parent's
+            animate-slide-up-1, so excluding it loses no behaviour. */}
         <div
           className="animate-slide-up-1 mt-12 md:mt-14 flex justify-center"
           style={{ animationDelay: ENTER_DELAYS[3] }}
         >
-          <p className="flex flex-wrap items-center justify-center gap-x-2.5 gap-y-2 max-w-xl text-center font-mono text-[11px] md:text-[12px] uppercase tracking-[0.16em] text-white/70 pointer-events-none select-none">
+          <p className="no-word-split flex flex-wrap items-center justify-center gap-x-3 gap-y-2 max-w-2xl text-center font-mono text-[11px] md:text-[12px] uppercase tracking-[0.16em] text-white/70 pointer-events-none select-none">
             <span>500+ businesses running on Aivory</span>
-            <span className="text-white/25" aria-hidden="true">&middot;</span>
+            <span className="text-white/25" aria-hidden="true">|</span>
             <span>Zero training on your data</span>
-            <span className="text-white/25" aria-hidden="true">&middot;</span>
-            <span className="inline-flex items-center gap-1.5">
-              <img
-                src="/images/nvidia-inception/nvidia-inception-program-badge-rgb-for-screen-negative.svg"
-                alt=""
-                className="h-[14px] md:h-[15px] w-auto shrink-0"
-              />
-              NVIDIA Inception 2026
-            </span>
+            <span className="text-white/25" aria-hidden="true">|</span>
+            <img
+              src="/images/nvidia-inception/nvidia-inception-program-badge-rgb-for-screen-negative.svg"
+              alt="NVIDIA Inception Program — Aivory AI is a member (2026 cohort)"
+              className="h-[22px] md:h-[24px] w-auto shrink-0"
+            />
           </p>
         </div>
       </div>
