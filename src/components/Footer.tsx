@@ -3,7 +3,6 @@
 import Link from 'next/link';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
 import { AmbientBackground } from '@/components/ui/AmbientBackground';
-import { HalftoneWaveWrapper } from '@/components/ui/HalftoneWaveWrapper';
 
 const productLinks = [
   { label: 'Deep Assessment', href: '/product' },
@@ -52,13 +51,6 @@ export default function Footer({ landingAmbient = false }: FooterProps) {
           variant="legacy-footer"
         />
       )}
-
-      {/* The flower remains footer-only and interactive on every route. The
-          homepage uses its original warm charcoal surface; other routes keep
-          the currently deployed ambient footer treatment. */}
-      <div className="absolute inset-0 z-[1]">
-        <HalftoneWaveWrapper />
-      </div>
 
       <div
         ref={ref}

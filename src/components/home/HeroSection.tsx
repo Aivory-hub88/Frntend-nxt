@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from 'react';
 import { TechnicalFrameButton } from '@/components/ui/TechnicalFrameButton';
+import { AivoryWorldGlobe } from '@/components/home/AivoryWorldGlobe';
 
 // Booking destination is shared with /contact and PreFooterCTA — a real Cal
 // instance, not Calendly's homepage (the bug that got the free-diagnostic
@@ -40,6 +41,7 @@ export default function HeroSection() {
       className="relative w-full min-h-screen flex flex-col items-center justify-center overflow-hidden pointer-events-none"
       style={{ background: 'transparent' }}
     >
+      <AivoryWorldGlobe />
       <div
         ref={contentRef}
         className="relative z-10 flex flex-col items-center justify-center text-center w-full max-w-4xl px-5 md:px-8 pt-16 pb-16 md:pt-24 md:pb-24"
