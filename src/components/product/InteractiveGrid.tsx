@@ -590,14 +590,12 @@ function IntegrationsMarquee() {
 
   return (
     <div className="w-full mt-20 md:mt-28 mb-0 relative">
-      {/* Unified readability scrim: A single smooth gradient covering both the text and the logo marquee to avoid horizontal cutoffs. */}
-      <div
-        aria-hidden
-        className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[150%] z-[-1]"
-        style={{
-          background: 'radial-gradient(ellipse at center, rgba(0,0,0,0.45) 0%, rgba(0,0,0,0.2) 50%, rgba(0,0,0,0) 80%)',
-        }}
-      />
+      {/* No readability scrim here. The black radial wash that used to sit
+          behind this block dated from the bright halftone-flower background;
+          against the current ambient surface it just punched a black hole
+          through the section. The heading, the rotating line and the marquee
+          labels each carry their own text-shadow, which is what actually
+          keeps them legible. */}
       <div className="text-center mb-10 md:mb-12 px-6 relative">
         <h3 className="relative text-[22px] md:text-[32px] font-light text-white mb-3 tracking-normal" style={{ fontFamily: "var(--font-manrope), 'Manrope', sans-serif", textShadow: '0 2px 12px rgba(0,0,0,0.6)' }}>
           Every Aivory agent speaks multiple languages. Literally.

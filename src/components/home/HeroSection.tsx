@@ -108,22 +108,17 @@ export default function HeroSection() {
           <span className="text-white/25">&middot;</span> No sales pitch
         </p>
 
-        {/* Credential bar. The NVIDIA lockup is supplied as an opaque white
-            panel and cannot be recoloured, so on this dark hero it always wins
-            the row on contrast: previously a 47px near-white block sat beside
-            13px text at 45% white, and the two read as unrelated objects
-            sharing a line rather than one statement.
-            The bar makes the white panel a deliberate cell instead of a stray
-            sticker — badge trimmed towards the type's weight, copy lifted to
-            70% and split into two cells against hairline rules, everything
-            bounded by one rounded surface in the site's own card language.
-            No backdrop blur here: this sits over the animated WebGL hero,
-            where blur costs a full re-composite every frame. */}
+        {/* Credential row — badge and copy, no surface. The translucent
+            rounded bar that used to bound them was there to stop the opaque
+            white NVIDIA lockup reading as a stray sticker against the old
+            bright hero; on the current dark ambient the badge no longer
+            outshouts the type, so the chrome was only adding weight. The
+            hairline rules went with it: the gap separates the two claims. */}
         <div
           className="animate-slide-up-1 mt-12 md:mt-14 flex justify-center"
           style={{ animationDelay: ENTER_DELAYS[3] }}
         >
-          <div className="flex flex-col items-center gap-3.5 rounded-[16px] border border-white/[0.12] bg-white/[0.04] p-3 sm:flex-row sm:gap-0 sm:p-2 sm:pr-6">
+          <div className="flex flex-col items-center gap-3.5 sm:flex-row sm:gap-7">
             {/* The official lockup already reads "NVIDIA Inception Program",
                 so the copy deliberately never repeats "inception member". */}
             <img
@@ -132,13 +127,9 @@ export default function HeroSection() {
               className="h-[25px] md:h-[27px] w-auto shrink-0"
             />
 
-            <span className="h-px w-full shrink-0 bg-white/[0.14] sm:mx-5 sm:h-[26px] sm:w-px" />
-
             <p className="font-mono text-[11px] md:text-[12px] uppercase tracking-[0.16em] text-white/70 pointer-events-none select-none">
               500+ businesses transforming
             </p>
-
-            <span className="h-px w-full shrink-0 bg-white/[0.14] sm:mx-5 sm:h-[26px] sm:w-px" />
 
             <p className="font-mono text-[11px] md:text-[12px] uppercase tracking-[0.16em] text-white/70 pointer-events-none select-none">
               Zero training on your data

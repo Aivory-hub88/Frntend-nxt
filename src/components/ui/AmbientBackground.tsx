@@ -22,10 +22,15 @@ export function AmbientBackground({
   // the hero, flattening the globe and the type against it.
   const baseGradient = legacyFooter
     ? 'linear-gradient(145deg, #020d13 0%, #041b23 48%, #06252b 72%, #03131a 100%)'
-    : 'linear-gradient(145deg, #020d13 0%, #03151b 48%, #04191f 72%, #020e13 100%)';
+    : 'linear-gradient(145deg, #08181e 0%, #03151b 48%, #04191f 72%, #020e13 100%)';
+  // The left blob covers the whole upper-left quadrant of the hero, so it is
+  // the layer that decides that quadrant's colour: held flat at #08181e
+  // across its body (the 105px blur still feathers the edge) rather than
+  // ramping, which used to leave the lower half of the quadrant reading
+  // darker than the corner.
   const leftGradient = legacyFooter
     ? 'linear-gradient(165deg, rgba(0, 13, 19, 0.95) 4%, rgba(5, 54, 65, 0.72) 58%, rgba(3, 20, 27, 0.2) 100%)'
-    : 'linear-gradient(165deg, rgba(0, 13, 19, 0.98) 4%, rgba(4, 40, 49, 0.7) 58%, rgba(2, 15, 21, 0.24) 100%)';
+    : 'linear-gradient(165deg, rgba(8, 24, 30, 1) 4%, rgba(8, 24, 30, 1) 72%, rgba(8, 24, 30, 0.35) 100%)';
   const rightGradient = legacyFooter
     ? 'linear-gradient(155deg, rgba(59, 109, 106, 0.52) 0%, rgba(15, 62, 67, 0.5) 42%, rgba(3, 22, 29, 0.08) 100%)'
     : 'linear-gradient(155deg, rgba(26, 56, 57, 0.5) 0%, rgba(9, 36, 41, 0.5) 42%, rgba(2, 16, 21, 0.1) 100%)';
