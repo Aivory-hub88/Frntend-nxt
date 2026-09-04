@@ -17,17 +17,21 @@ export function AmbientBackground({
 }: AmbientBackgroundProps) {
   const legacyFooter = variant === 'legacy-footer';
 
-  const baseGradient =
-    'linear-gradient(145deg, #020d13 0%, #041b23 48%, #06252b 72%, #03131a 100%)';
+  // Landing sits a stop darker through the middle than the legacy footer: the
+  // old #041b23 / #06252b mid stops laid a lit diagonal band straight across
+  // the hero, flattening the globe and the type against it.
+  const baseGradient = legacyFooter
+    ? 'linear-gradient(145deg, #020d13 0%, #041b23 48%, #06252b 72%, #03131a 100%)'
+    : 'linear-gradient(145deg, #020d13 0%, #03151b 48%, #04191f 72%, #020e13 100%)';
   const leftGradient = legacyFooter
     ? 'linear-gradient(165deg, rgba(0, 13, 19, 0.95) 4%, rgba(5, 54, 65, 0.72) 58%, rgba(3, 20, 27, 0.2) 100%)'
-    : 'linear-gradient(165deg, rgba(0, 13, 19, 0.98) 4%, rgba(5, 54, 65, 0.84) 58%, rgba(3, 20, 27, 0.28) 100%)';
+    : 'linear-gradient(165deg, rgba(0, 13, 19, 0.98) 4%, rgba(4, 40, 49, 0.7) 58%, rgba(2, 15, 21, 0.24) 100%)';
   const rightGradient = legacyFooter
     ? 'linear-gradient(155deg, rgba(59, 109, 106, 0.52) 0%, rgba(15, 62, 67, 0.5) 42%, rgba(3, 22, 29, 0.08) 100%)'
-    : 'linear-gradient(155deg, rgba(59, 109, 106, 0.7) 0%, rgba(15, 62, 67, 0.64) 42%, rgba(3, 22, 29, 0.12) 100%)';
+    : 'linear-gradient(155deg, rgba(26, 56, 57, 0.5) 0%, rgba(9, 36, 41, 0.5) 42%, rgba(2, 16, 21, 0.1) 100%)';
   const centerGradient = legacyFooter
     ? 'radial-gradient(ellipse at center, rgba(43, 91, 91, 0.24) 0%, rgba(8, 42, 49, 0.16) 48%, transparent 76%)'
-    : 'radial-gradient(ellipse at center, rgba(43, 91, 91, 0.12) 0%, rgba(8, 42, 49, 0.08) 48%, transparent 76%)';
+    : 'radial-gradient(ellipse at center, rgba(43, 91, 91, 0.05) 0%, rgba(8, 42, 49, 0.035) 48%, transparent 76%)';
   const lowerWash = legacyFooter
     ? 'radial-gradient(70% 58% at 54% 92%, rgba(76, 118, 113, 0.16) 0%, rgba(19, 61, 65, 0.08) 45%, transparent 76%)'
     : 'radial-gradient(70% 58% at 54% 92%, rgba(76, 118, 113, 0.16) 0%, rgba(19, 61, 65, 0.08) 45%, transparent 76%)';
