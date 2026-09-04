@@ -27,10 +27,10 @@ export function AmbientBackground({
     : 'linear-gradient(155deg, rgba(59, 109, 106, 0.7) 0%, rgba(15, 62, 67, 0.64) 42%, rgba(3, 22, 29, 0.12) 100%)';
   const centerGradient = legacyFooter
     ? 'radial-gradient(ellipse at center, rgba(43, 91, 91, 0.24) 0%, rgba(8, 42, 49, 0.16) 48%, transparent 76%)'
-    : 'radial-gradient(ellipse at center, rgba(43, 91, 91, 0.24) 0%, rgba(8, 42, 49, 0.16) 48%, transparent 76%)';
+    : 'radial-gradient(ellipse at center, rgba(43, 91, 91, 0.12) 0%, rgba(8, 42, 49, 0.08) 48%, transparent 76%)';
   const lowerWash = legacyFooter
     ? 'radial-gradient(70% 58% at 54% 92%, rgba(76, 118, 113, 0.16) 0%, rgba(19, 61, 65, 0.08) 45%, transparent 76%)'
-    : 'radial-gradient(70% 58% at 54% 92%, rgba(76, 118, 113, 0.28) 0%, rgba(19, 61, 65, 0.16) 45%, transparent 76%)';
+    : 'radial-gradient(70% 58% at 54% 92%, rgba(76, 118, 113, 0.16) 0%, rgba(19, 61, 65, 0.08) 45%, transparent 76%)';
 
   return (
     <div

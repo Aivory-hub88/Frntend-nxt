@@ -51,7 +51,7 @@ const OPERATING_PRINCIPLES = [
 ] as const;
 
 const ABOUT_HERO_BACKGROUND =
-  'linear-gradient(to bottom, #050505 0, #050505 64px, #efeee8 64px, #efeee8 100%)';
+  'linear-gradient(to bottom, #050505 0, #050505 64px, #E4E6E8 64px, #E4E6E8 100%)';
 
 function ArrowIcon() {
   return (

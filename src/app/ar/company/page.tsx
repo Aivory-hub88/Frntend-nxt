@@ -40,11 +40,11 @@ export default function CompanyPageArabic() {
       <LocaleSuggestionBanner currentLocale="ar" path="company" />
 
       <main
-        className="flex-1 bg-[#efeee8] text-[#11110f]"
+        className="flex-1 bg-[#E4E6E8] text-[#11110f]"
         style={{
           fontWeight: 300,
           background:
-            "linear-gradient(to bottom, #050505 0, #050505 64px, #efeee8 64px, #efeee8 100%)",
+            "linear-gradient(to bottom, #050505 0, #050505 64px, #E4E6E8 64px, #E4E6E8 100%)",
         }}
       >
         <CompanyHeroAr />

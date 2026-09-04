@@ -229,12 +229,12 @@ export default async function CareersPage() {
       <Navbar />
 
       <main
-        className="flex-1 bg-[#efeee8] text-[#11110f]"
+        className="flex-1 bg-[#E4E6E8] text-[#11110f]"
         style={{
           fontFamily: "var(--font-manrope), 'Manrope', sans-serif",
           fontWeight: 300,
           background:
-            "linear-gradient(to bottom, #050505 0, #050505 64px, #efeee8 64px, #efeee8 100%)",
+            "linear-gradient(to bottom, #050505 0, #050505 64px, #E4E6E8 64px, #E4E6E8 100%)",
         }}
       >
         <section className="mx-auto max-w-[1480px] px-6 pb-16 pt-40 md:px-12 lg:px-24 md:pb-24 md:pt-52">

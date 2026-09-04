@@ -2,7 +2,6 @@
 
 import Link from 'next/link';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
-import { AmbientBackground } from '@/components/ui/AmbientBackground';
 
 const productLinks = [
   { label: 'Deep Assessment', href: '/product' },
@@ -45,13 +44,6 @@ export default function Footer({ landingAmbient = false }: FooterProps) {
           : 'relative isolate w-full overflow-hidden bg-[#031116] text-white pt-24 pb-12 font-sans'
       }
     >
-      {!landingAmbient && (
-        <AmbientBackground
-          className="absolute inset-0 z-0"
-          variant="legacy-footer"
-        />
-      )}
-
       <div
         ref={ref}
         className={`relative z-10 animate-on-scroll ${isVisible ? 'is-visible' : ''}`}

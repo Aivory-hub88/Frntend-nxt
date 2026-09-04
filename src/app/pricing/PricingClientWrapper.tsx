@@ -17,7 +17,7 @@ export default function PricingClientWrapper({ withBackground = false }: { withB
   const activeCurrency = currency || 'USD';
 
   return (
-    <div id="pricing-section" className={`w-full pt-16 ${withBackground ? 'bg-[#efeee8]' : ''}`}>
+    <div id="pricing-section" className={`w-full pt-16 ${withBackground ? 'bg-[#E4E6E8]' : ''}`}>
       <div className="max-w-7xl mx-auto px-6">
         <div className="text-center mb-12">
           <h2 className="text-[26px] sm:text-[28px] md:text-[28px] lg:text-[32px] font-normal tracking-tight text-[#1a1a1a]" style={{ fontFamily: "var(--font-manrope), 'Manrope', sans-serif" }}>

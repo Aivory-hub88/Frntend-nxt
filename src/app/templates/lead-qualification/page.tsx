@@ -118,7 +118,7 @@ export default function LeadQualificationTemplatePage() {
   };
 
   return (
-    <main className="min-h-screen bg-[#F6F4EF] text-[#11110f]">
+    <main className="min-h-screen bg-[#E4E6E8] text-[#11110f]">
       <Navbar />
       <section className="mx-auto max-w-5xl px-6 pt-24 pb-12 md:pt-32">
         <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-black/45">

@@ -60,7 +60,7 @@ function ArrowIcon() {
 
 export function CompanyContentJa() {
   return (
-    <div className="bg-[#efeee8] text-[#11110f]">
+    <div className="bg-[#E4E6E8] text-[#11110f]">
       <section className="mx-auto max-w-[1480px] px-6 pb-24 md:px-12 lg:px-24 md:pb-36">
         <div className="grid border-t border-black/25 pt-8 lg:grid-cols-12 lg:gap-12">
           <div className="pb-10 lg:col-span-4 lg:pb-0">

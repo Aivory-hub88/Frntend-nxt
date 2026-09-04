@@ -2,6 +2,7 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { useLanguage } from '@/components/context/LanguageContext';
@@ -20,6 +21,7 @@ function ArrowIcon({ className = '' }: { className?: string }) {
 }
 
 export default function Navbar() {
+  const pathname = usePathname();
   const { language, setLanguage } = useLanguage();
   const [isSignInModalOpen, setIsSignInModalOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -27,6 +29,7 @@ export default function Navbar() {
   const [userName, setUserName] = useState('');
   const [accountType, setAccountType] = useState('free');
   const [mounted, setMounted] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
 
   // Fixed nav needs to escape whatever stacking context the host page wraps
   // it in — several pages nest it inside a `relative z-10` hero wrapper that
@@ -37,6 +40,13 @@ export default function Navbar() {
   // logo still lands in the initial HTML for LCP.
   useEffect(() => {
     setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    const updateScrollState = () => setIsScrolled(window.scrollY > 8);
+    updateScrollState();
+    window.addEventListener('scroll', updateScrollState, { passive: true });
+    return () => window.removeEventListener('scroll', updateScrollState);
   }, []);
 
   useEffect(() => {
@@ -74,11 +84,19 @@ export default function Navbar() {
     window.location.href = dashUrl;
   };
 
+  const lightFromTop =
+    pathname === '/ai-workflow-automation' || pathname.startsWith('/templates/');
+  const needsContrast = isScrolled || lightFromTop;
+
   const nav = (
     <nav className="fixed top-0 inset-x-0 z-[1000]">
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-[rgba(3,20,27,0.68)] via-[rgba(3,20,27,0.42)] to-transparent backdrop-blur-2xl backdrop-saturate-150 [mask-image:linear-gradient(to_bottom,black_0%,black_68%,transparent_100%)] [-webkit-mask-image:linear-gradient(to_bottom,black_0%,black_68%,transparent_100%)]"
+        className={`pointer-events-none absolute inset-x-0 top-0 h-16 transition-[background-color,backdrop-filter] duration-300 ease-out ${
+          needsContrast
+            ? 'bg-[rgba(5,5,5,0.78)] backdrop-blur-sm'
+            : 'bg-[rgba(5,5,5,0.10)] backdrop-blur-[2px]'
+        }`}
       />
       <div
         className="relative z-10 h-16 w-full flex justify-between items-center"
