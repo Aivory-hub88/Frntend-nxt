@@ -113,13 +113,13 @@ void main() {
   // field for stacked controls without suppressing the whole globe.
   float mobileMix = 1.0 - smoothstep(640.0, 860.0, uViewport.x);
   vec2 quietCenter = mix(vec2(0.50, 0.52), vec2(0.57, 0.54), mobileMix);
-  vec2 quietHalfSize = mix(vec2(0.21, 0.17), vec2(0.34, 0.255), mobileMix);
-  float quietRadius = mix(0.045, 0.065, mobileMix);
+  vec2 quietHalfSize = mix(vec2(0.18, 0.145), vec2(0.25, 0.19), mobileMix);
+  float quietRadius = mix(0.04, 0.05, mobileMix);
   vec2 quietShape = abs(screenUv - quietCenter) - quietHalfSize + quietRadius;
   float quietDistance = length(max(quietShape, 0.0))
     + min(max(quietShape.x, quietShape.y), 0.0)
     - quietRadius;
-  float quietInfluence = 1.0 - smoothstep(-0.012, 0.075, quietDistance);
+  float quietInfluence = 1.0 - smoothstep(-0.008, 0.055, quietDistance);
   vec2 quietDirection = normalize(
     (screenUv - quietCenter) / max(quietHalfSize, vec2(0.001)) + vec2(0.0001)
   );
@@ -127,7 +127,7 @@ void main() {
   float radius = min(uResolution.x, uResolution.y) * 0.455;
   vec2 point = (cellCenter - uResolution * 0.5) / radius;
   point += vec2(quietDirection.x, -quietDirection.y)
-    * quietInfluence * mix(0.028, 0.018, mobileMix);
+    * quietInfluence * mix(0.016, 0.008, mobileMix);
 
   vec2 pointerPoint = (uPointer - uResolution * 0.5) / radius;
   vec2 pointerDelta = point - pointerPoint;
@@ -174,12 +174,12 @@ void main() {
   }
 
   float edgeFade = 1.0 - smoothstep(0.88, 1.0, sqrt(radiusSquared));
-  float contentSafeFade = mix(0.24, 1.0, smoothstep(0.38, 0.82, screenUv.x));
-  float quietFloor = mix(0.11, 0.05, mobileMix);
+  float contentSafeFade = mix(0.45, 1.0, smoothstep(0.34, 0.72, screenUv.x));
+  float quietFloor = mix(0.18, 0.14, mobileMix);
   float quietFade = mix(
     quietFloor,
     1.0,
-    smoothstep(-0.012, 0.08, quietDistance)
+    smoothstep(-0.008, 0.06, quietDistance)
   );
   float verticalFade = smoothstep(0.02, 0.12, screenUv.y)
     * (1.0 - smoothstep(0.90, 0.995, screenUv.y));
@@ -317,19 +317,21 @@ function drawCanvasFallback(
       const mobileMix = 1 - Math.max(0, Math.min(1, (window.innerWidth - 640) / 220));
       const quietCenterX = 0.5 + 0.07 * mobileMix;
       const quietCenterY = 0.52 + 0.02 * mobileMix;
-      const quietHalfWidth = 0.21 + 0.13 * mobileMix;
-      const quietHalfHeight = 0.17 + 0.085 * mobileMix;
-      const quietRadius = 0.045 + 0.02 * mobileMix;
+      const quietHalfWidth = 0.18 + 0.07 * mobileMix;
+      const quietHalfHeight = 0.145 + 0.045 * mobileMix;
+      const quietRadius = 0.04 + 0.01 * mobileMix;
       const quietX = Math.abs(screenX - quietCenterX) - quietHalfWidth + quietRadius;
       const quietY = Math.abs(screenY - quietCenterY) - quietHalfHeight + quietRadius;
       const quietDistance = Math.hypot(Math.max(quietX, 0), Math.max(quietY, 0))
         + Math.min(Math.max(quietX, quietY), 0)
         - quietRadius;
-      const quietProgress = Math.max(0, Math.min(1, (quietDistance + 0.012) / 0.092));
+      const quietProgress = Math.max(0, Math.min(1, (quietDistance + 0.008) / 0.068));
       const quietSmooth = quietProgress * quietProgress * (3 - 2 * quietProgress);
-      const quietFloor = 0.11 - 0.06 * mobileMix;
+      const quietFloor = 0.18 - 0.04 * mobileMix;
       const quietFade = quietFloor + (1 - quietFloor) * quietSmooth;
-      const contentFade = 0.24 + 0.76 * Math.max(0, Math.min(1, (screenX - 0.38) / 0.44));
+      const contentProgress = Math.max(0, Math.min(1, (screenX - 0.34) / 0.38));
+      const contentSmooth = contentProgress * contentProgress * (3 - 2 * contentProgress);
+      const contentFade = 0.45 + 0.55 * contentSmooth;
       const alpha = (land > 0.3 ? 0.38 : 0.1) * edgeFade * contentFade * quietFade;
       context.fillStyle = land > 0.3
         ? `rgba(210, 231, 221, ${alpha})`
