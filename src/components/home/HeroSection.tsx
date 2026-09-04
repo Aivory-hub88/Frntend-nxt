@@ -52,7 +52,7 @@ export default function HeroSection() {
             className="silver-swipe-text text-[25px] md:text-[38px] font-light tracking-tight text-center leading-[1.15] text-balance pointer-events-none select-none"
             style={{ fontFamily: "var(--font-manrope), 'Manrope', sans-serif" }}
           >
-            Every operation runs on something.
+            Every operation runs on something
             <br className="hidden md:block" />{' '}
             Make it Aivory
           </h1>
