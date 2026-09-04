@@ -6,6 +6,17 @@ interface AmbientBackgroundProps {
 const GRAIN_TEXTURE =
   'url("data:image/svg+xml,%3Csvg viewBox=%220 0 200 200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noiseFilter%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.72%22 numOctaves=%223%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noiseFilter)%22/%3E%3C/svg%3E")';
 
+// Higher-contrast film-grain overlay for the landing hero: the plain
+// feTurbulence noise above renders as low-amplitude colour static, which
+// stays essentially invisible blended at low opacity over a dark surface.
+// This chain desaturates the turbulence to luminance, then a feComponentTransfer
+// linear ramp (slope 3 / intercept -1, i.e. anything below/above the 0.5
+// midpoint clips toward black/white) pushes it into distinct light and dark
+// speckles the way real photographic grain reads, so mix-blend-mode: overlay
+// has actual contrast to work with instead of a near-flat grey.
+const GRAIN_TEXTURE_STRONG =
+  'url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22g%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.85%22 numOctaves=%222%22 stitchTiles=%22stitch%22 result=%22t%22/%3E%3CfeColorMatrix in=%22t%22 type=%22matrix%22 values=%220.33 0.33 0.33 0 0 0.33 0.33 0.33 0 0 0.33 0.33 0.33 0 0 0 0 0 1 0%22 result=%22gray%22/%3E%3CfeComponentTransfer in=%22gray%22%3E%3CfeFuncR type=%22linear%22 slope=%223%22 intercept=%22-1%22/%3E%3CfeFuncG type=%22linear%22 slope=%223%22 intercept=%22-1%22/%3E%3CfeFuncB type=%22linear%22 slope=%223%22 intercept=%22-1%22/%3E%3CfeFuncA type=%22linear%22 slope=%220%22 intercept=%221%22/%3E%3C/feComponentTransfer%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23g)%22/%3E%3C/svg%3E")';
+
 /**
  * Grainy navy/teal ambient surface for the landing page and its footer.
  * Landing uses stronger teal washes and grain; legacy footer keeps the
@@ -64,16 +75,19 @@ export function AmbientBackground({
       />
 
       <div
-        className={`absolute inset-0 ${legacyFooter ? 'opacity-[0.055] mix-blend-soft-light' : 'opacity-[0.14] mix-blend-overlay'}`}
-        style={{
-          backgroundImage: GRAIN_TEXTURE,
-          backgroundSize: legacyFooter ? '200px 200px' : '160px 160px',
-        }}
-      />
-
-      <div
         className="absolute inset-0 opacity-40"
         style={{ background: lowerWash }}
+      />
+
+      {/* Grain sits last (painted over the blobs and the lower wash) so
+          nothing dilutes it. Landing gets the high-contrast texture above;
+          legacy-footer keeps the original subtle static untouched. */}
+      <div
+        className={`absolute inset-0 ${legacyFooter ? 'opacity-[0.055] mix-blend-soft-light' : 'opacity-[0.2] mix-blend-overlay'}`}
+        style={{
+          backgroundImage: legacyFooter ? GRAIN_TEXTURE : GRAIN_TEXTURE_STRONG,
+          backgroundSize: legacyFooter ? '200px 200px' : '150px 150px',
+        }}
       />
     </div>
   );
