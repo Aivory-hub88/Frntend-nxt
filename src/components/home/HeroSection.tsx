@@ -38,18 +38,18 @@ export default function HeroSection() {
 
   return (
     <div
-      className="relative w-full min-h-screen flex flex-col items-center justify-center overflow-hidden pointer-events-none"
+      className="relative w-full min-h-screen flex flex-col items-start justify-center overflow-hidden pointer-events-none"
       style={{ background: 'transparent' }}
     >
       <AivoryWorldGlobe />
       <div
         ref={contentRef}
-        className="relative z-10 flex flex-col items-center justify-center text-center w-full max-w-4xl px-5 md:px-8 pt-16 pb-16 md:pt-24 md:pb-24"
+        className="relative z-10 flex flex-col items-start justify-center text-left w-full max-w-2xl px-5 md:px-8 lg:px-20 pt-16 pb-16 md:pt-24 md:pb-24"
         style={{ willChange: 'transform' }}
       >
-        <div className="animate-slide-up-1" style={{ animationDelay: ENTER_DELAYS[0] }}>
+        <div className="animate-slide-up-1 w-full" style={{ animationDelay: ENTER_DELAYS[0] }}>
           <h1
-            className="silver-swipe-text text-[25px] md:text-[38px] font-light tracking-tight text-center leading-[1.15] text-balance pointer-events-none select-none"
+            className="silver-swipe-text text-[28px] md:text-[42px] font-light tracking-tight text-left leading-[1.15] text-balance pointer-events-none select-none"
             style={{ fontFamily: "var(--font-manrope), 'Manrope', sans-serif" }}
           >
             Every operation runs on something
@@ -65,7 +65,7 @@ export default function HeroSection() {
               other. The hero already animates this in on load via the
               parent's `animate-slide-up-1`, so no reveal behaviour is lost. */}
           <p
-            className="no-word-split silver-swipe-text mt-5 md:mt-6 text-[19px] md:text-[24px] font-light tracking-tight leading-[1.4] pointer-events-none select-none"
+            className="no-word-split silver-swipe-text mt-5 md:mt-6 text-[19px] md:text-[24px] font-light tracking-tight leading-[1.4] text-left pointer-events-none select-none"
             style={{ fontFamily: "var(--font-manrope), 'Manrope', sans-serif" }}
           >
             Map how your business actually works
@@ -74,9 +74,17 @@ export default function HeroSection() {
           </p>
         </div>
 
+        <p
+          className="animate-slide-up-1 w-full mt-5 md:mt-6 text-[17px] md:text-[19px] font-light tracking-tight text-white/55 pointer-events-none select-none"
+          style={{ fontFamily: "var(--font-manrope), 'Manrope', sans-serif", animationDelay: ENTER_DELAYS[1] }}
+        >
+          Self-guided <span className="text-white/25">&middot;</span> One sitting{' '}
+          <span className="text-white/25">&middot;</span> No sales pitch
+        </p>
+
         <div
-          className="animate-slide-up-1 mt-9 md:mt-11 flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4"
-          style={{ animationDelay: ENTER_DELAYS[1] }}
+          className="animate-slide-up-1 w-full mt-9 md:mt-11 flex flex-col sm:flex-row items-start sm:items-center justify-start gap-3 sm:gap-4"
+          style={{ animationDelay: ENTER_DELAYS[2] }}
         >
           <TechnicalFrameButton
             href="/free-diagnostic"
@@ -96,14 +104,6 @@ export default function HeroSection() {
           </TechnicalFrameButton>
         </div>
 
-        <p
-          className="animate-slide-up-1 mt-7 md:mt-8 text-[17px] md:text-[19px] font-light tracking-tight text-white/55 pointer-events-none select-none"
-          style={{ fontFamily: "var(--font-manrope), 'Manrope', sans-serif", animationDelay: ENTER_DELAYS[2] }}
-        >
-          Self-guided <span className="text-white/25">&middot;</span> One sitting{' '}
-          <span className="text-white/25">&middot;</span> No sales pitch
-        </p>
-
         {/* Trust bar — one line, pipe-divided, third item is the NVIDIA
             badge image alone (no repeated "Inception Program" text next to
             it — the lockup already says that).
@@ -120,10 +120,10 @@ export default function HeroSection() {
             trigger. The hero already animates this in via the parent's
             animate-slide-up-1, so excluding it loses no behaviour. */}
         <div
-          className="animate-slide-up-1 mt-12 md:mt-14 flex justify-center"
+          className="animate-slide-up-1 w-full mt-12 md:mt-14 flex justify-start"
           style={{ animationDelay: ENTER_DELAYS[3] }}
         >
-          <p className="no-word-split flex flex-wrap items-center justify-center gap-x-3 gap-y-2 max-w-2xl text-center font-mono text-[11px] md:text-[12px] uppercase tracking-[0.16em] text-white/70 pointer-events-none select-none">
+          <p className="no-word-split flex flex-wrap items-center justify-start gap-x-3 gap-y-2 max-w-2xl text-left font-mono text-[11px] md:text-[12px] uppercase tracking-[0.16em] text-white/70 pointer-events-none select-none">
             <span>500+ businesses running on Aivory</span>
             <span className="text-white/25" aria-hidden="true">|</span>
             <span>Zero training on your data</span>
