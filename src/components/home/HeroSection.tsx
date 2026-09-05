@@ -151,13 +151,11 @@ export default function HeroSection() {
             </span>
           </div>
 
-          <div className="pointer-events-auto flex items-center rounded-[4px] border border-white/25 px-4 py-3">
-            <img
-              src="/images/nvidia-inception/nvidia-inception-program-badge-rgb-for-screen-negative.svg"
-              alt="NVIDIA Inception Program — Aivory AI is a member (2026 cohort)"
-              className="h-[22px] md:h-[24px] w-auto shrink-0"
-            />
-          </div>
+          <img
+            src="/images/nvidia-inception/nvidia-inception-program-badge-rgb-for-screen-negative.svg"
+            alt="NVIDIA Inception Program — Aivory AI is a member (2026 cohort)"
+            className="h-[26px] md:h-[28px] w-auto shrink-0"
+          />
         </div>
       </div>
     </div>
