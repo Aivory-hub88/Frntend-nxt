@@ -43,13 +43,18 @@ const LITERATA = "var(--font-literata), Literata, serif";
 const BLOB_FILTER = 'saturate(1.5) brightness(0.86) contrast(1.06)';
 
 const CANVAS_WIDTH = 1440;
+// The lockup (labels, pill, pins, arrows) and its tagline are drawn at the
+// source's size, then taken down 15% as one group — which is also what buys
+// the composition its height back, since the top pin can only sit so close
+// to the fixed 64px nav row.
+const LOCKUP_SCALE = 0.85;
 // The fixed navbar sits inside this card's top strip. TOP_PAD is the only
 // clearance between the two, and it is negative because the artwork's own
 // box starts above its topmost element: the orange pin (design y=92) is the
 // real ceiling, and at this value it clears the 64px nav row by ~13px. The canvas ends shortly after the
 // tagline (which bottoms out at 679) so the CTAs below sit close.
-const TOP_PAD = -20;
-const CANVAS_HEIGHT = 700 + TOP_PAD;
+const TOP_PAD = -10;
+const CANVAS_HEIGHT = 600;
 
 function useCanvasScale(designWidth: number) {
   const ref = useRef<HTMLDivElement>(null);
@@ -258,7 +263,10 @@ export default function HeroDiagramGraphic() {
           visibility: scale ? 'visible' : 'hidden',
         }}
       >
-        <div className="absolute inset-x-0 bottom-0" style={{ top: TOP_PAD }}>
+        <div
+          className="absolute inset-x-0 bottom-0"
+          style={{ top: TOP_PAD, transform: `scale(${LOCKUP_SCALE})`, transformOrigin: '50% 0' }}
+        >
           <img src={imgSoftStar} alt="" className="absolute" style={{ left: 908, top: 136, width: 70, height: 75 }} />
           <img src={imgSoftStar} alt="" className="absolute" style={{ left: 551, top: 428, width: 70, height: 75 }} />
 
