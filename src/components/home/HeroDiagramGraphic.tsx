@@ -15,8 +15,6 @@ const imgFolder = '/images/hero-new/folder.png';
 const imgSmartwatchBot = '/images/hero-new/smartwatch-bot.png';
 const imgSoftStar = '/images/hero-new/soft-star.svg';
 const imgLines = '/images/hero-new/lines-bg.svg';
-const imgEclipse = '/images/hero-new/eclipse.svg';
-const imgEclipse2 = '/images/hero-new/eclipse2.svg';
 const imgBlobTopLeft = '/images/hero-new/group-35392.svg';
 const imgBlobTopLeft2 = '/images/hero-new/group-35393.svg';
 // Arrowheads, exported per-node from Figma with their rotation already
@@ -186,24 +184,6 @@ export function HeroCardBackdrop() {
             className="absolute"
             style={{ left: -334, top: -132, width: 967, height: 253, transform: 'rotate(-4.98deg)' }}
           />
-          <img
-            src={imgEclipse}
-            alt=""
-            className="absolute"
-            style={{ left: 797, top: 400, width: 964, height: 623, transform: 'rotate(-11.48deg)' }}
-          />
-          <div
-            className="absolute rounded-full blur-[100px]"
-            style={{
-              left: 1000,
-              top: 600,
-              width: 260,
-              height: 420,
-              transform: 'rotate(50deg)',
-              background: 'linear-gradient(to bottom, rgba(24,75,255,0), rgba(63,74,104,0.78))',
-            }}
-          />
-          <img src={imgEclipse2} alt="" className="absolute" style={{ left: 663, top: 540, width: 543, height: 432 }} />
         </div>
       </div>
 
