@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { Manrope, Doto } from 'next/font/google';
+import { Manrope, Doto, Literata } from 'next/font/google';
 import './globals.css';
 import {
   AIVORY_UK_URL,
@@ -22,6 +22,15 @@ const doto = Doto({
   subsets: ['latin'],
   weight: ['400', '600', '700', '900'],
   variable: '--font-doto',
+  display: 'swap',
+});
+
+// Serif face for the hero diagram lockup (BizOps / Workflows / Data /
+// AI Agent / One System), matching the Figma source.
+const literata = Literata({
+  subsets: ['latin'],
+  weight: ['400'],
+  variable: '--font-literata',
   display: 'swap',
 });
 
@@ -98,7 +107,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`${manrope.variable} ${doto.variable} antialiased scroll-smooth`}>
+    <html lang="en" className={`${manrope.variable} ${doto.variable} ${literata.variable} antialiased scroll-smooth`}>
       <head>
         <link rel="preload" as="image" href="/Aivory_logo_2_2026.svg" fetchPriority="high" />
         <script async src="https://www.googletagmanager.com/gtag/js?id=G-XYJ0EDEYS8" />

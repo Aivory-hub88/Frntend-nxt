@@ -88,14 +88,25 @@ export default function Navbar() {
     pathname === '/ai-workflow-automation' || pathname.startsWith('/templates/');
   const needsContrast = isScrolled || lightFromTop;
 
+  // The home hero is a light card whose top strip is the nav's own ground —
+  // the nav sits *inside* that strip rather than as a bar floating above it.
+  // So at rest on `/` the bar drops its dark wash, aligns its content to the
+  // card's 1200px column, and switches to black type. Scrolling past the hero
+  // hands it back to the standard dark treatment, which is what keeps the
+  // links readable over the dark sections below.
+  const onCard = pathname === '/' && !isScrolled;
+  const navLinkClass = `${onCard ? 'text-black' : 'text-white'} font-normal uppercase tracking-normal no-underline hover:underline transition-all duration-200`;
+
   const nav = (
     <nav className="fixed top-0 inset-x-0 z-[1000]">
       <div
         aria-hidden="true"
         className={`pointer-events-none absolute inset-x-0 top-0 h-16 transition-[background-color,backdrop-filter] duration-300 ease-out ${
-          needsContrast
-            ? 'bg-[rgba(5,5,5,0.78)] backdrop-blur-sm'
-            : 'bg-[rgba(5,5,5,0.10)] backdrop-blur-[2px]'
+          onCard
+            ? 'bg-transparent'
+            : needsContrast
+              ? 'bg-[rgba(5,5,5,0.78)] backdrop-blur-sm'
+              : 'bg-[rgba(5,5,5,0.10)] backdrop-blur-[2px]'
         }`}
       />
       <div
@@ -124,7 +135,7 @@ export default function Navbar() {
           <div className="flex items-center gap-2">
             <button
               onClick={() => setLanguage('en')}
-              className={`flex items-center gap-1.5 transition-all duration-300 ${
+              className={`flex items-center gap-1.5 transition-all duration-300 ${onCard ? 'text-black' : 'text-white'} ${
                 language === 'en' ? 'opacity-100 grayscale-0' : 'opacity-40 grayscale hover:opacity-70'
               }`}
               style={{ fontFamily: "var(--font-manrope), 'Manrope', sans-serif", fontSize: '10px' }}
@@ -132,10 +143,10 @@ export default function Navbar() {
               <Image src="/uk-flag.svg" alt="EN" width={14} height={10} className="rounded-[2px] object-cover h-[10px] w-[14px]" />
               EN
             </button>
-            <span className="text-white/30 text-[10px]">|</span>
+            <span className={`${onCard ? 'text-black/30' : 'text-white/30'} text-[10px]`}>|</span>
             <button
               onClick={() => setLanguage('id')}
-              className={`flex items-center gap-1.5 transition-all duration-300 ${
+              className={`flex items-center gap-1.5 transition-all duration-300 ${onCard ? 'text-black' : 'text-white'} ${
                 language === 'id' ? 'opacity-100 grayscale-0' : 'opacity-40 grayscale hover:opacity-70'
               }`}
               style={{ fontFamily: "var(--font-manrope), 'Manrope', sans-serif", fontSize: '10px' }}
@@ -146,47 +157,47 @@ export default function Navbar() {
           </div>
           <Link
             href="/product"
-            className="text-white font-normal uppercase tracking-normal no-underline hover:underline transition-all duration-200"
+            className={navLinkClass}
             style={{ fontFamily: "var(--font-manrope), 'Manrope', sans-serif", fontSize: '10px' }}
           >
             PRODUCT
           </Link>
           <Link
             href="/company"
-            className="text-white font-normal uppercase tracking-normal no-underline hover:underline transition-all duration-200"
+            className={navLinkClass}
             style={{ fontFamily: "var(--font-manrope), 'Manrope', sans-serif", fontSize: '10px' }}
           >
             COMPANY
           </Link>
           <Link
             href="/pricing"
-            className="text-white font-normal uppercase tracking-normal no-underline hover:underline transition-all duration-200"
+            className={navLinkClass}
             style={{ fontFamily: "var(--font-manrope), 'Manrope', sans-serif", fontSize: '10px' }}
           >
             PRICING
           </Link>
           <Link
             href="/blog"
-            className="text-white font-normal uppercase tracking-normal no-underline hover:underline transition-all duration-200"
+            className={navLinkClass}
             style={{ fontFamily: "var(--font-manrope), 'Manrope', sans-serif", fontSize: '10px' }}
           >
             BLOG
           </Link>
           <Link
             href="/careers"
-            className="text-white font-normal uppercase tracking-normal no-underline hover:underline transition-all duration-200"
+            className={navLinkClass}
             style={{ fontFamily: "var(--font-manrope), 'Manrope', sans-serif", fontSize: '10px' }}
           >
             CAREERS
           </Link>
           {authed ? (
             <>
-              <span className="text-white" style={{ fontFamily: "var(--font-manrope), 'Manrope', sans-serif", fontSize: '11px' }}>
+              <span className={onCard ? 'text-black' : 'text-white'} style={{ fontFamily: "var(--font-manrope), 'Manrope', sans-serif", fontSize: '11px' }}>
                 Welcome, {userName}
               </span>
               <button
                 onClick={() => logout()}
-                className="text-white font-normal uppercase tracking-normal no-underline hover:underline transition-all duration-200 bg-transparent border-none cursor-pointer"
+                className={`${navLinkClass} bg-transparent border-none cursor-pointer`}
                 style={{ fontFamily: "var(--font-manrope), 'Manrope', sans-serif", fontSize: '10px' }}
               >
                 SIGN OUT
@@ -195,7 +206,7 @@ export default function Navbar() {
           ) : (
             <button
               onClick={() => setIsSignInModalOpen(true)}
-              className="text-white font-normal uppercase tracking-normal no-underline hover:underline transition-all duration-200 bg-transparent border-none cursor-pointer"
+              className={`${navLinkClass} bg-transparent border-none cursor-pointer`}
               style={{ fontFamily: "var(--font-manrope), 'Manrope', sans-serif", fontSize: '10px' }}
             >
               SIGN IN
@@ -204,6 +215,7 @@ export default function Navbar() {
           <TechnicalFrameButton
             onClick={() => handleDashboard('user')}
             size="compact"
+            tone={onCard ? 'dark' : 'light'}
           >
             <ArrowIcon className="w-3 h-3 text-[#a3aa96]" />
             DASHBOARD
@@ -212,6 +224,7 @@ export default function Navbar() {
             <TechnicalFrameButton
               onClick={() => handleDashboard('admin')}
               size="compact"
+              tone={onCard ? 'dark' : 'light'}
             >
               <ArrowIcon className="w-3 h-3 text-[#a3aa96]" />
               ADMIN
@@ -225,8 +238,8 @@ export default function Navbar() {
           className="md:hidden flex flex-col items-center justify-center w-10 h-10 bg-transparent border-none cursor-pointer gap-[5px]"
           aria-label="Open menu"
         >
-          <span className="block w-5 h-[1px] bg-white" />
-          <span className="block w-5 h-[1px] bg-white" />
+          <span className={`block w-5 h-[1px] ${onCard ? 'bg-black' : 'bg-white'}`} />
+          <span className={`block w-5 h-[1px] ${onCard ? 'bg-black' : 'bg-white'}`} />
         </button>
       </div>
 
