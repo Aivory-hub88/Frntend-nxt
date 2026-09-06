@@ -36,6 +36,11 @@ const LITERATA = "var(--font-literata), Literata, serif";
 // useCanvasScale — rather than reflowed with breakpoints. It reads as one
 // illustration, so proportions matter more than the ability to rewrap any
 // single label.
+// How hard the ambient colour reads. The source blobs are pale washes; this
+// deepens them without shifting hue — one knob, tuned by eye against the
+// card's #ededed ground.
+const BLOB_FILTER = 'saturate(1.5) brightness(0.86) contrast(1.06)';
+
 const CANVAS_WIDTH = 1440;
 // The fixed navbar sits inside this card's top strip, so the artwork is
 // pushed down by TOP_PAD to keep the first pin clear of the nav row.
@@ -151,7 +156,7 @@ export function HeroCardBackdrop() {
           visibility: scale ? 'visible' : 'hidden',
         }}
       >
-        <div className="absolute inset-x-0 bottom-0" style={{ top: TOP_PAD }}>
+        <div className="absolute inset-x-0 bottom-0" style={{ top: TOP_PAD, filter: BLOB_FILTER }}>
           <img src={imgBlobTopLeft} alt="" className="absolute" style={{ left: -228, top: -91, width: 956, height: 233 }} />
           <img
             src={imgBlobTopLeft2}
