@@ -14,6 +14,7 @@ const imgSmartphone = '/images/hero-new/smartphone.png';
 const imgFolder = '/images/hero-new/folder.png';
 const imgSmartwatchBot = '/images/hero-new/smartwatch-bot.png';
 const imgSoftStar = '/images/hero-new/soft-star.svg';
+const imgLines = '/images/hero-new/lines-bg.svg';
 const imgEclipse = '/images/hero-new/eclipse.svg';
 const imgEclipse2 = '/images/hero-new/eclipse2.svg';
 const imgBlobTopLeft = '/images/hero-new/group-35392.svg';
@@ -42,10 +43,13 @@ const LITERATA = "var(--font-literata), Literata, serif";
 const BLOB_FILTER = 'saturate(1.5) brightness(0.86) contrast(1.06)';
 
 const CANVAS_WIDTH = 1440;
-// The fixed navbar sits inside this card's top strip, so the artwork is
-// pushed down by TOP_PAD to keep the first pin clear of the nav row.
-const TOP_PAD = 56;
-const CANVAS_HEIGHT = 750 + TOP_PAD;
+// The fixed navbar sits inside this card's top strip. TOP_PAD is the only
+// clearance between the two, and it is negative because the artwork's own
+// box starts above its topmost element: the orange pin (design y=92) is the
+// real ceiling, and at this value it clears the 64px nav row by ~13px. The canvas ends shortly after the
+// tagline (which bottoms out at 679) so the CTAs below sit close.
+const TOP_PAD = -20;
+const CANVAS_HEIGHT = 700 + TOP_PAD;
 
 function useCanvasScale(designWidth: number) {
   const ref = useRef<HTMLDivElement>(null);
@@ -54,11 +58,25 @@ function useCanvasScale(designWidth: number) {
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
-    const update = () => setScale(el.offsetWidth / designWidth);
+    let raf = 0;
+    // A width of 0 on the first layout pass would otherwise leave the whole
+    // graphic hidden until something resized the window, so retry on the next
+    // frame until the container has a real width.
+    const update = () => {
+      const w = el.getBoundingClientRect().width || el.offsetWidth;
+      if (w > 0) {
+        setScale(w / designWidth);
+      } else {
+        raf = requestAnimationFrame(update);
+      }
+    };
     update();
     const ro = new ResizeObserver(update);
     ro.observe(el);
-    return () => ro.disconnect();
+    return () => {
+      cancelAnimationFrame(raf);
+      ro.disconnect();
+    };
   }, [designWidth]);
 
   return { ref, scale };
@@ -110,11 +128,10 @@ function Pin({
       />
       <div className="absolute rounded-full" style={{ left: discX, top: discY, width: 64, height: 64, background: ring }} />
       <div
-        className="absolute overflow-hidden rounded-full"
+        className="absolute rounded-full"
         style={{ left: discX + 3.82, top: discY + 4, width: 56, height: 56, background: fill }}
-      >
-        {children}
-      </div>
+      />
+      {children}
     </div>
   );
 }
@@ -185,6 +202,30 @@ export function HeroCardBackdrop() {
         </div>
       </div>
 
+      {/* Concentric arcs (node 14:745) — a 1628px circle set rotated inside
+          its own 2223.889px box. Dropped from an earlier pass by mistake. */}
+      <div
+        className="absolute left-0 top-0 origin-top-left"
+        style={{
+          width: CANVAS_WIDTH,
+          height: CANVAS_HEIGHT,
+          transform: scale ? `scale(${scale})` : undefined,
+          visibility: scale ? 'visible' : 'hidden',
+        }}
+      >
+        <div
+          className="absolute flex items-center justify-center"
+          style={{ left: -398, top: -722 + TOP_PAD, width: 2223.889, height: 2223.889 }}
+        >
+          <img
+            src={imgLines}
+            alt=""
+            className="max-w-none"
+            style={{ width: 1628, height: 1628, transform: 'rotate(-60deg)' }}
+          />
+        </div>
+      </div>
+
       {/* grain, tiled across the entire card */}
       <div
         className="absolute inset-0 mix-blend-overlay"
@@ -245,22 +286,35 @@ export default function HeroDiagramGraphic() {
           <ArrowHead x={1039} y={273} src={imgHeadLeft} />
           <ArrowHead x={761} y={487} src={imgHeadRight} />
 
+          {/* Only the computer is clipped by its disc in the source; the rest
+              sit over theirs, which is why they read larger. */}
           <Pin left={692} top={92} height={141.125} ring="#ffb366" fill="#ffeddb" stemX={28.82}>
-            <img src={imgComputer} alt="" className="absolute" style={{ left: -3.18, top: -5.88, width: 64, height: 64 }} />
+            <div className="absolute overflow-hidden rounded-full" style={{ left: 3.82, top: 4, width: 56, height: 56 }}>
+              <img src={imgComputer} alt="" className="absolute max-w-none" style={{ left: -4, top: -5.88, width: 64, height: 64 }} />
+            </div>
           </Pin>
           <Pin left={997} top={173} height={141.125} ring="#9a139a" fill="#f5d2f5" stemX={28.82}>
-            <img src={imgSmartphone} alt="" className="absolute" style={{ left: -4, top: -4, width: 64, height: 64 }} />
+            <img src={imgSmartphone} alt="" className="absolute max-w-none" style={{ left: 0, top: 0, width: 64, height: 64 }} />
           </Pin>
           <Pin left={523} top={280} height={144.125} ring="#138e9a" fill="#d2ecf5" discX={1} discY={3} stemX={29.82}>
-            <img
-              src={imgFolder}
-              alt=""
-              className="absolute"
-              style={{ left: -0.5, top: 3.5, width: 55.374, height: 55.374, transform: 'rotate(-11.91deg)' }}
-            />
+            <div className="absolute flex items-center justify-center" style={{ left: 0, top: 0, width: 65.61, height: 65.61 }}>
+              <img
+                src={imgFolder}
+                alt=""
+                className="max-w-none"
+                style={{ width: 55.374, height: 55.374, transform: 'rotate(-11.91deg)' }}
+              />
+            </div>
           </Pin>
           <Pin left={1085} top={375} height={141.125} ring="#6495d4" fill="#d2ecf5" discX={6} discY={0} stemX={34.82}>
-            <img src={imgSmartwatchBot} alt="" className="absolute" style={{ left: -6, top: 5, width: 76, height: 52 }} />
+            <div className="absolute overflow-hidden" style={{ left: 0, top: 5, width: 76, height: 52 }}>
+              <img
+                src={imgSmartwatchBot}
+                alt=""
+                className="absolute max-w-none"
+                style={{ left: '-15.68%', top: '-21.89%', width: '124.52%', height: '121.74%' }}
+              />
+            </div>
           </Pin>
 
           <p
@@ -269,7 +323,7 @@ export default function HeroDiagramGraphic() {
           >
             Map how your operations actually run
             <br />
-            {' then deploy the AI agents that fit'}
+            {' then deploy the intelligence that fit'}
             <br />
             All in one system
           </p>
