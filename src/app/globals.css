@@ -822,13 +822,120 @@ body,
 /* ─── Hero diagram build-up ───
    The BizOps/Workflows/Data/AI Agent lockup pops in one connector-group at a
    time (see HeroDiagramGraphic) instead of all at once, so it reads as the
-   pieces of the system assembling rather than a single card fading in. */
-@keyframes heroPopIn {
-  from {
+   pieces of the system assembling rather than a single card fading in. The
+   whole sequence then repeats every 10s: each keyframe is one 10000ms loop
+   holding at opacity 0 until its group's turn, popping in over 420ms, then
+   holding fully visible until the loop wraps and every group resets at once.
+   Percentages below are that group's (delay, delay+420) window expressed as
+   a fraction of 10000ms — e.g. group 4 (780ms) is 7.8% / 12.0%. The
+   timing-function set on the "start" keyframe governs the segment into the
+   next one, per the CSS animation spec. */
+@keyframes heroPopLoop1 {
+  0% {
+    opacity: 0;
+    transform: scale(0.92);
+    animation-timing-function: cubic-bezier(0.23, 1, 0.32, 1);
+  }
+  4.2% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+@keyframes heroPopLoop2 {
+  0% {
     opacity: 0;
     transform: scale(0.92);
   }
-  to {
+  2.6% {
+    opacity: 0;
+    transform: scale(0.92);
+    animation-timing-function: cubic-bezier(0.23, 1, 0.32, 1);
+  }
+  6.8% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+@keyframes heroPopLoop3 {
+  0% {
+    opacity: 0;
+    transform: scale(0.92);
+  }
+  5.2% {
+    opacity: 0;
+    transform: scale(0.92);
+    animation-timing-function: cubic-bezier(0.23, 1, 0.32, 1);
+  }
+  9.4% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+@keyframes heroPopLoop4 {
+  0% {
+    opacity: 0;
+    transform: scale(0.92);
+  }
+  7.8% {
+    opacity: 0;
+    transform: scale(0.92);
+    animation-timing-function: cubic-bezier(0.23, 1, 0.32, 1);
+  }
+  12% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+@keyframes heroPopLoop5 {
+  0% {
+    opacity: 0;
+    transform: scale(0.92);
+  }
+  10.4% {
+    opacity: 0;
+    transform: scale(0.92);
+    animation-timing-function: cubic-bezier(0.23, 1, 0.32, 1);
+  }
+  14.6% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+@keyframes heroPopLoop6 {
+  0% {
+    opacity: 0;
+    transform: scale(0.92);
+  }
+  13.4% {
+    opacity: 0;
+    transform: scale(0.92);
+    animation-timing-function: cubic-bezier(0.23, 1, 0.32, 1);
+  }
+  17.6% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  100% {
     opacity: 1;
     transform: scale(1);
   }
@@ -836,26 +943,28 @@ body,
 
 .hero-pop {
   opacity: 0;
-  animation: heroPopIn 420ms cubic-bezier(0.23, 1, 0.32, 1) forwards;
+  animation-duration: 10s;
+  animation-iteration-count: infinite;
+  animation-timing-function: linear; /* per-keyframe easing overrides this on the pop segment only */
 }
 
 .hero-pop-1 {
-  animation-delay: 0ms;
+  animation-name: heroPopLoop1;
 }
 .hero-pop-2 {
-  animation-delay: 260ms;
+  animation-name: heroPopLoop2;
 }
 .hero-pop-3 {
-  animation-delay: 520ms;
+  animation-name: heroPopLoop3;
 }
 .hero-pop-4 {
-  animation-delay: 780ms;
+  animation-name: heroPopLoop4;
 }
 .hero-pop-5 {
-  animation-delay: 1040ms;
+  animation-name: heroPopLoop5;
 }
 .hero-pop-6 {
-  animation-delay: 1340ms;
+  animation-name: heroPopLoop6;
 }
 
 @media (prefers-reduced-motion: reduce) {
