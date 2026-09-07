@@ -1,7 +1,6 @@
 'use client';
 
 import { TechnicalFrameButton } from '@/components/ui/TechnicalFrameButton';
-import { AivoryWorldGlobe } from '@/components/home/AivoryWorldGlobe';
 import HeroDiagramGraphic, { HeroCardBackdrop } from '@/components/home/HeroDiagramGraphic';
 
 // Booking destination is shared with /contact and PreFooterCTA — a real Cal
@@ -24,8 +23,6 @@ const WALKTHROUGH_URL = 'https://book.aivory.uk/book/aivory-call';
 export default function HeroSection() {
   return (
     <div className="hero relative w-full pb-16 md:pb-24">
-      <AivoryWorldGlobe />
-
       <div className="relative z-10 w-full animate-slide-up-1">
         <div className="relative overflow-hidden bg-[#ededed] shadow-[0_40px_120px_-40px_rgba(0,0,0,0.65)]">
           <HeroCardBackdrop />
