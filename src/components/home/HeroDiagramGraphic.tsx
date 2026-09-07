@@ -56,9 +56,15 @@ const LOCKUP_SCALE = 0.85;
 // box starts above its topmost element: the orange pin (design y=92) is the
 // real ceiling, and at this value it clears the 64px nav row by ~13px.
 const TOP_PAD = -10;
-// Tall enough for the lowest trust card (26:783, canvas y=547.97 + its own
-// 176.18px) plus a little breathing room below it.
-const CANVAS_HEIGHT = 760;
+// Tall enough for the lowest trust card (26:783, local y=547.97 + its own
+// 176.18px = 724.15) once it's rendered — which is *after* LOCKUP_SCALE, not
+// before: that scale's origin is the lockup group's own top edge, so it
+// compresses everything toward TOP_PAD without changing the outer box this
+// constant sizes. Using the raw 724 here (as an earlier pass did) left the
+// outer box tall enough for unscaled content, i.e. ~150px of dead space
+// under the actually-rendered (0.85x) cards. TOP_PAD + 724 * LOCKUP_SCALE
+// (-10 + 615.4) plus a small margin.
+const CANVAS_HEIGHT = 640;
 
 const CARD_SHADOW =
   '0px 49px 37px rgba(0,0,0,0.02), 0px 32px 21.5px rgba(0,0,0,0.02), 0px 19px 12px rgba(0,0,0,0.02), 0px 10px 6px rgba(0,0,0,0.01), 0px 4px 3px rgba(0,0,0,0.01), 0px 1px 1.5px rgba(0,0,0,0.01)';
