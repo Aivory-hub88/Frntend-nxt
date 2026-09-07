@@ -941,6 +941,28 @@ body,
   }
 }
 
+/* Step 7: the trust cards, 260ms after the tagline (step 6) — same spacing
+   as every other step in the sequence. */
+@keyframes heroPopLoop7 {
+  0% {
+    opacity: 0;
+    transform: scale(0.92);
+  }
+  16% {
+    opacity: 0;
+    transform: scale(0.92);
+    animation-timing-function: cubic-bezier(0.23, 1, 0.32, 1);
+  }
+  20.2% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
 .hero-pop {
   opacity: 0;
   animation-duration: 10s;
@@ -965,6 +987,9 @@ body,
 }
 .hero-pop-6 {
   animation-name: heroPopLoop6;
+}
+.hero-pop-7 {
+  animation-name: heroPopLoop7;
 }
 
 @media (prefers-reduced-motion: reduce) {

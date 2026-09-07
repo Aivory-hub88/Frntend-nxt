@@ -56,46 +56,6 @@ export default function HeroSection() {
               <span className="text-black/25">&middot;</span> No sales pitch
             </p>
 
-            {/* Trust bar — the live wireframe stat layout, re-tuned for a
-                light surface: near-black figures, and the positive NVIDIA
-                lockup instead of the negative (white) one. */}
-            <div className="pointer-events-none flex select-none flex-wrap items-center justify-center gap-x-8 gap-y-5 border-t border-black/[0.08] pt-6 sm:gap-x-10">
-              <div className="flex items-center gap-2.5">
-                <span
-                  className="text-[28px] font-light leading-none text-black md:text-[34px]"
-                  style={{ fontFamily: "var(--font-manrope), 'Manrope', sans-serif" }}
-                >
-                  500+
-                </span>
-                <span className="font-mono text-[10px] uppercase leading-[1.3] tracking-[0.08em] text-black/60 md:text-[11px]">
-                  Businesses
-                  <br />
-                  running on
-                  <br />
-                  Aivory
-                </span>
-              </div>
-
-              <div className="flex items-center gap-2.5">
-                <span
-                  className="text-[28px] font-light leading-none text-black md:text-[34px]"
-                  style={{ fontFamily: "var(--font-manrope), 'Manrope', sans-serif" }}
-                >
-                  0
-                </span>
-                <span className="font-mono text-[10px] uppercase leading-[1.3] tracking-[0.08em] text-black/60 md:text-[11px]">
-                  Training on
-                  <br />
-                  your data
-                </span>
-              </div>
-
-              <img
-                src="/images/nvidia-inception/nvidia-inception-program-badge-rgb-for-screen.svg"
-                alt="NVIDIA Inception Program — Aivory AI is a member (2026 cohort)"
-                className="h-[26px] w-auto shrink-0 md:h-[28px]"
-              />
-            </div>
           </div>
         </div>
       </div>

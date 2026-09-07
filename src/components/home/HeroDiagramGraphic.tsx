@@ -27,6 +27,11 @@ const imgArrowData = '/images/hero-new/arrow-data.png';
 const imgArrowAiAgent = '/images/hero-new/arrow-aiagent.png';
 const imgArrowBizOps = '/images/hero-new/arrow-bizops.png';
 const imgArrowWorkflows = '/images/hero-new/arrow-workflows.png';
+// Trust-card illustrations (nodes 28:799 / 28:858) and the canonical NVIDIA
+// lockup (reused rather than Figma's own re-traced export of it).
+const imgKeynote = '/images/hero-new/trust-keynote.png';
+const imgHand = '/images/hero-new/trust-hand.png';
+const imgNvidiaBadge = '/images/nvidia-inception/nvidia-inception-program-badge-rgb-for-screen.svg';
 
 const LITERATA = "var(--font-literata), Literata, serif";
 
@@ -49,10 +54,60 @@ const LOCKUP_SCALE = 0.85;
 // The fixed navbar sits inside this card's top strip. TOP_PAD is the only
 // clearance between the two, and it is negative because the artwork's own
 // box starts above its topmost element: the orange pin (design y=92) is the
-// real ceiling, and at this value it clears the 64px nav row by ~13px. The canvas ends shortly after the
-// tagline (which bottoms out at 679) so the CTAs below sit close.
+// real ceiling, and at this value it clears the 64px nav row by ~13px.
 const TOP_PAD = -10;
-const CANVAS_HEIGHT = 600;
+// Tall enough for the lowest trust card (26:783, canvas y=547.97 + its own
+// 176.18px) plus a little breathing room below it.
+const CANVAS_HEIGHT = 760;
+
+const CARD_SHADOW =
+  '0px 49px 37px rgba(0,0,0,0.02), 0px 32px 21.5px rgba(0,0,0,0.02), 0px 19px 12px rgba(0,0,0,0.02), 0px 10px 6px rgba(0,0,0,0.01), 0px 4px 3px rgba(0,0,0,0.01), 0px 1px 1.5px rgba(0,0,0,0.01)';
+
+/**
+ * A trust "sticky note" (nodes 25:778 / 26:783 / 29:882): a rotated white
+ * card plus, for two of the three, an illustration that is a *separate*
+ * sibling node in the source overlapping up and over the card's own top
+ * edge — not a child clipped to its bounds. `left`/`top` are the card's own
+ * canvas position; the illustration's are relative to that same origin.
+ * Rotation wasn't in Figma's metadata for these nodes (only reachable per
+ * isolated node, which normalizes away the parent-applied tilt), so it was
+ * measured directly off each node's rendered screenshot — the angle of its
+ * straight left edge from vertical.
+ */
+function Note({
+  left,
+  top,
+  size,
+  rotate,
+  illustration,
+  children,
+}: {
+  left: number;
+  top: number;
+  size: number;
+  rotate: number;
+  illustration?: { src: string; width: number; height: number; left: number; top: number };
+  children: React.ReactNode;
+}) {
+  return (
+    <div className="absolute" style={{ left, top, width: size, height: size }}>
+      <div
+        className="absolute inset-0 rounded-[28px] bg-white"
+        style={{ boxShadow: CARD_SHADOW, transform: `rotate(${rotate}deg)` }}
+      >
+        {children}
+      </div>
+      {illustration && (
+        <img
+          src={illustration.src}
+          alt=""
+          className="pointer-events-none absolute select-none"
+          style={{ left: illustration.left, top: illustration.top, width: illustration.width, height: illustration.height }}
+        />
+      )}
+    </div>
+  );
+}
 
 function useCanvasScale(designWidth: number) {
   const ref = useRef<HTMLDivElement>(null);
@@ -337,6 +392,56 @@ export default function HeroDiagramGraphic() {
               <br />
               All in one system
             </p>
+          </div>
+
+          {/* Step 7 of the pop-in sequence — after the tagline (step 6), see
+              globals.css. transformOrigin is the bounding-box centre of all
+              three cards + their illustrations, so the group pops in place. */}
+          <div className="hero-pop hero-pop-7 absolute inset-0" style={{ transformOrigin: '789px 554px' }}>
+            <Note left={265.2} top={479} size={176.36} rotate={13} illustration={{ src: imgKeynote, width: 146, height: 147, left: 32, top: -95 }}>
+              <p
+                className="absolute m-0 whitespace-nowrap font-normal text-black"
+                style={{ left: 21, top: 46, transform: 'translateY(-50%)', fontFamily: LITERATA, fontSize: 51, lineHeight: '50px' }}
+              >
+                500+
+              </p>
+              <p
+                className="absolute m-0 font-normal text-black"
+                style={{ left: 27, top: 101, width: 123, transform: 'translateY(-50%)', fontFamily: LITERATA, fontSize: 17, lineHeight: '17px' }}
+              >
+                Business running
+                <br />
+                on Aivory
+              </p>
+            </Note>
+
+            <Note left={1136} top={547.97} size={176.18} rotate={-10} illustration={{ src: imgHand, width: 169, height: 169, left: -15, top: -70 }}>
+              <p
+                className="absolute m-0 font-normal text-black"
+                style={{ left: 19, top: 95, width: 123, transform: 'translateY(-50%)', fontFamily: LITERATA, fontSize: 17, lineHeight: '17px' }}
+              >
+                Zero training
+                <br />
+                on your data
+              </p>
+            </Note>
+
+            <Note left={1000} top={597.87} size={124.82} rotate={-4}>
+              <img
+                src={imgNvidiaBadge}
+                alt="NVIDIA Inception Program — Aivory AI is a member (2026 cohort)"
+                className="absolute"
+                style={{ left: 13, top: 15, width: 86, height: 32 }}
+              />
+              <p
+                className="absolute m-0 font-normal text-black"
+                style={{ left: 17, top: 75, width: 92, transform: 'translateY(-50%)', fontFamily: LITERATA, fontSize: 14, lineHeight: '14px' }}
+              >
+                NVIDIA
+                <br />
+                Inception member
+              </p>
+            </Note>
           </div>
         </div>
       </div>
