@@ -176,13 +176,16 @@ export function HeroCardBackdrop() {
           visibility: scale ? 'visible' : 'hidden',
         }}
       >
+        {/* BLOB_X_SHIFT: both blob centres pulled further left (source values
+            are -228/-334) so the deepest blue sits directly behind the
+            navbar logo instead of past it. */}
         <div className="absolute inset-x-0 bottom-0" style={{ top: TOP_PAD, filter: BLOB_FILTER }}>
-          <img src={imgBlobTopLeft} alt="" className="absolute" style={{ left: -228, top: -91, width: 956, height: 233 }} />
+          <img src={imgBlobTopLeft} alt="" className="absolute" style={{ left: -228 - 120, top: -91, width: 956, height: 233 }} />
           <img
             src={imgBlobTopLeft2}
             alt=""
             className="absolute"
-            style={{ left: -334, top: -132, width: 967, height: 253, transform: 'rotate(-4.98deg)' }}
+            style={{ left: -334 - 120, top: -132, width: 967, height: 253, transform: 'rotate(-4.98deg)' }}
           />
         </div>
       </div>
