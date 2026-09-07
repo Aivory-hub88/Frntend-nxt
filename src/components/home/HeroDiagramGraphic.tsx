@@ -247,74 +247,90 @@ export default function HeroDiagramGraphic() {
           className="absolute inset-x-0 bottom-0"
           style={{ top: TOP_PAD, transform: `scale(${LOCKUP_SCALE})`, transformOrigin: '50% 0' }}
         >
-          <img src={imgSoftStar} alt="" className="absolute" style={{ left: 908, top: 136, width: 70, height: 75 }} />
-          <img src={imgSoftStar} alt="" className="absolute" style={{ left: 551, top: 428, width: 70, height: 75 }} />
-
-          <Label left={444} top={194.5}>BizOps</Label>
-          <Label left={598} top={279.5}>Workflows</Label>
-          <Label left={365} top={381.5}>Data</Label>
-          <Label left={773} top={479.5}>AI Agent</Label>
-
-          <div
-            className="absolute flex items-center justify-center rounded-[30px]"
-            style={{ left: 598.32, top: 335, width: 443.32, height: 103.4, background: '#3434ff' }}
-          >
-            <span className="font-normal text-white" style={{ fontFamily: LITERATA, fontSize: 70, lineHeight: '50px' }}>
-              One System
-            </span>
+          {/* Build-up sequence: the pill first, then each connector group in
+              the order a viewer's eye would trace the arrows, tagline last.
+              transformOrigin is each group's own bounding-box centre so the
+              pop reads as that piece arriving in place, not the whole 1440px
+              canvas scaling from its centre. */}
+          <div className="hero-pop hero-pop-1 absolute inset-0" style={{ transformOrigin: '820px 387px' }}>
+            <div
+              className="absolute flex items-center justify-center rounded-[30px]"
+              style={{ left: 598.32, top: 335, width: 443.32, height: 103.4, background: '#3434ff' }}
+            >
+              <span className="font-normal text-white" style={{ fontFamily: LITERATA, fontSize: 70, lineHeight: '50px' }}>
+                One System
+              </span>
+            </div>
           </div>
 
-          <Connector x={566} y={388} w={32} h={8} src={imgArrowData} />
-          <Connector x={707} y={445} w={61} h={53} src={imgArrowAiAgent} />
-          <Connector x={743} y={202} w={179} h={61} src={imgArrowBizOps} />
-          <Connector x={1047} y={281} w={47} h={96} src={imgArrowWorkflows} />
+          <div className="hero-pop hero-pop-2 absolute inset-0" style={{ transformOrigin: '683px 178px' }}>
+            <Label left={444} top={194.5}>BizOps</Label>
+            <Connector x={743} y={202} w={179} h={61} src={imgArrowBizOps} />
+            <ArrowHead x={738} y={196} src={imgHeadLeft} />
+            <Pin left={692} top={92} height={141.125} ring="#ffb366" fill="#ffeddb" stemX={28.82}>
+              {/* Only the computer is clipped by its disc in the source; the
+                  rest sit over theirs, which is why they read larger. */}
+              <div className="absolute overflow-hidden rounded-full" style={{ left: 3.82, top: 4, width: 56, height: 56 }}>
+                <img src={imgComputer} alt="" className="absolute max-w-none" style={{ left: -4, top: -5.88, width: 64, height: 64 }} />
+              </div>
+            </Pin>
+          </div>
 
-          <ArrowHead x={559} y={385} src={imgHeadLeft} />
-          <ArrowHead x={738} y={196} src={imgHeadLeft} />
-          <ArrowHead x={1039} y={273} src={imgHeadLeft} />
-          <ArrowHead x={761} y={487} src={imgHeadRight} />
+          <div className="hero-pop hero-pop-3 absolute inset-0" style={{ transformOrigin: '846px 257px' }}>
+            <img src={imgSoftStar} alt="" className="absolute" style={{ left: 908, top: 136, width: 70, height: 75 }} />
+            <Label left={598} top={279.5}>Workflows</Label>
+            <Connector x={1047} y={281} w={47} h={96} src={imgArrowWorkflows} />
+            <ArrowHead x={1039} y={273} src={imgHeadLeft} />
+            <Pin left={997} top={173} height={141.125} ring="#9a139a" fill="#f5d2f5" stemX={28.82}>
+              <img src={imgSmartphone} alt="" className="absolute max-w-none" style={{ left: 0, top: 0, width: 64, height: 64 }} />
+            </Pin>
+          </div>
 
-          {/* Only the computer is clipped by its disc in the source; the rest
-              sit over theirs, which is why they read larger. */}
-          <Pin left={692} top={92} height={141.125} ring="#ffb366" fill="#ffeddb" stemX={28.82}>
-            <div className="absolute overflow-hidden rounded-full" style={{ left: 3.82, top: 4, width: 56, height: 56 }}>
-              <img src={imgComputer} alt="" className="absolute max-w-none" style={{ left: -4, top: -5.88, width: 64, height: 64 }} />
-            </div>
-          </Pin>
-          <Pin left={997} top={173} height={141.125} ring="#9a139a" fill="#f5d2f5" stemX={28.82}>
-            <img src={imgSmartphone} alt="" className="absolute max-w-none" style={{ left: 0, top: 0, width: 64, height: 64 }} />
-          </Pin>
-          <Pin left={523} top={280} height={144.125} ring="#138e9a" fill="#d2ecf5" discX={1} discY={3} stemX={29.82}>
-            <div className="absolute flex items-center justify-center" style={{ left: 0, top: 0, width: 65.61, height: 65.61 }}>
-              <img
-                src={imgFolder}
-                alt=""
-                className="max-w-none"
-                style={{ width: 55.374, height: 55.374, transform: 'rotate(-11.91deg)' }}
-              />
-            </div>
-          </Pin>
-          <Pin left={1085} top={375} height={141.125} ring="#6495d4" fill="#d2ecf5" discX={6} discY={0} stemX={34.82}>
-            <div className="absolute overflow-hidden" style={{ left: 0, top: 5, width: 76, height: 52 }}>
-              <img
-                src={imgSmartwatchBot}
-                alt=""
-                className="absolute max-w-none"
-                style={{ left: '-15.68%', top: '-21.89%', width: '124.52%', height: '121.74%' }}
-              />
-            </div>
-          </Pin>
+          <div className="hero-pop hero-pop-4 absolute inset-0" style={{ transformOrigin: '493px 391px' }}>
+            <Label left={365} top={381.5}>Data</Label>
+            <Connector x={566} y={388} w={32} h={8} src={imgArrowData} />
+            <ArrowHead x={559} y={385} src={imgHeadLeft} />
+            <Pin left={523} top={280} height={144.125} ring="#138e9a" fill="#d2ecf5" discX={1} discY={3} stemX={29.82}>
+              <div className="absolute flex items-center justify-center" style={{ left: 0, top: 0, width: 65.61, height: 65.61 }}>
+                <img
+                  src={imgFolder}
+                  alt=""
+                  className="max-w-none"
+                  style={{ width: 55.374, height: 55.374, transform: 'rotate(-11.91deg)' }}
+                />
+              </div>
+            </Pin>
+            <img src={imgSoftStar} alt="" className="absolute" style={{ left: 551, top: 428, width: 70, height: 75 }} />
+          </div>
 
-          <p
-            className="absolute m-0 text-center font-normal text-black"
-            style={{ left: 0, top: 559, width: CANVAS_WIDTH, fontFamily: LITERATA, fontSize: 25, lineHeight: '40px' }}
-          >
-            Map how your operations actually run
-            <br />
-            {' then deploy the intelligence that fit'}
-            <br />
-            All in one system
-          </p>
+          <div className="hero-pop hero-pop-5 absolute inset-0" style={{ transformOrigin: '934px 446px' }}>
+            <Label left={773} top={479.5}>AI Agent</Label>
+            <Connector x={707} y={445} w={61} h={53} src={imgArrowAiAgent} />
+            <ArrowHead x={761} y={487} src={imgHeadRight} />
+            <Pin left={1085} top={375} height={141.125} ring="#6495d4" fill="#d2ecf5" discX={6} discY={0} stemX={34.82}>
+              <div className="absolute overflow-hidden" style={{ left: 0, top: 5, width: 76, height: 52 }}>
+                <img
+                  src={imgSmartwatchBot}
+                  alt=""
+                  className="absolute max-w-none"
+                  style={{ left: '-15.68%', top: '-21.89%', width: '124.52%', height: '121.74%' }}
+                />
+              </div>
+            </Pin>
+          </div>
+
+          <div className="hero-pop hero-pop-6 absolute inset-0" style={{ transformOrigin: '720px 619px' }}>
+            <p
+              className="absolute m-0 text-center font-normal text-black"
+              style={{ left: 0, top: 559, width: CANVAS_WIDTH, fontFamily: LITERATA, fontSize: 25, lineHeight: '40px' }}
+            >
+              Map how your operations actually run
+              <br />
+              {' then deploy the intelligence that fit'}
+              <br />
+              All in one system
+            </p>
+          </div>
         </div>
       </div>
     </div>
