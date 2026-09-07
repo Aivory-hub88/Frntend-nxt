@@ -257,7 +257,11 @@ export default function HeroDiagramGraphic() {
               className="absolute flex items-center justify-center rounded-[30px]"
               style={{ left: 598.32, top: 335, width: 443.32, height: 103.4, background: '#3434ff' }}
             >
-              <span className="font-normal text-white" style={{ fontFamily: LITERATA, fontSize: 70, lineHeight: '50px' }}>
+              {/* line-height: 1 (not the 50px used elsewhere in the diagram)
+                  — this text is centred by the pill's flexbox, and a line box
+                  shorter than the 70px font size let Literata's descender
+                  push the glyphs down instead of centring them. */}
+              <span className="font-normal text-white" style={{ fontFamily: LITERATA, fontSize: 70, lineHeight: 1 }}>
                 One System
               </span>
             </div>
