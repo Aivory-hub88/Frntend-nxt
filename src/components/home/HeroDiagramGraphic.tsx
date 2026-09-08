@@ -32,6 +32,10 @@ const imgArrowWorkflows = '/images/hero-new/arrow-workflows.png';
 const imgKeynote = '/images/hero-new/trust-keynote.png';
 const imgHand = '/images/hero-new/trust-hand.png';
 const imgNvidiaBadge = '/images/nvidia-inception/nvidia-inception-program-badge-rgb-for-screen.svg';
+// Decorative astronaut + moon (nodes 40:888 / 40:928), added alongside the
+// trust-card reshuffle.
+const imgAstronaut = '/images/hero-new/trust-astronaut.png';
+const imgMoon = '/images/hero-new/trust-moon.png';
 
 const LITERATA = "var(--font-literata), Literata, serif";
 
@@ -408,7 +412,10 @@ export default function HeroDiagramGraphic() {
           {/* Step 7 of the pop-in sequence — after the tagline (step 6), see
               globals.css. transformOrigin is the bounding-box centre of all
               three cards + their illustrations, so the group pops in place. */}
-          <div className="hero-pop hero-pop-7 absolute inset-0" style={{ transformOrigin: '789px 554px' }}>
+          <div className="hero-pop hero-pop-7 absolute inset-0" style={{ transformOrigin: '796px 423px' }}>
+            <img src={imgMoon} alt="" className="pointer-events-none absolute select-none" style={{ left: 342.17, top: 219, width: 144.19, height: 144.19 }} />
+            <img src={imgAstronaut} alt="" className="pointer-events-none absolute select-none" style={{ left: 291.69, top: 123, width: 201.08, height: 203.38 }} />
+
             <Note left={265.2} top={479} size={176.36} rotate={13} scale={0.72} illustration={{ src: imgKeynote, width: 146, height: 147, left: 32, top: -95 }}>
               <p
                 className="absolute m-0 whitespace-nowrap font-normal text-black"
@@ -426,10 +433,10 @@ export default function HeroDiagramGraphic() {
               </p>
             </Note>
 
-            <Note left={1136} top={547.97} size={176.18} rotate={-10} scale={0.72} illustration={{ src: imgHand, width: 169, height: 169, left: -15, top: -70 }}>
+            <Note left={1129.11} top={366.57} size={196.906} rotate={-3} scale={0.72} illustration={{ src: imgHand, width: 109.81, height: 109.81, left: 30.83, top: -4.55 }}>
               <p
                 className="absolute m-0 font-normal text-black"
-                style={{ left: 19, top: 138, width: 123, transform: 'translateY(-50%)', fontFamily: LITERATA, fontSize: 17, lineHeight: '17px' }}
+                style={{ left: 22, top: 131, width: 135, transform: 'translateY(-50%)', fontFamily: LITERATA, fontSize: 17, lineHeight: '17px' }}
               >
                 Zero training
                 <br />
