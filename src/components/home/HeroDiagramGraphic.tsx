@@ -413,8 +413,11 @@ export default function HeroDiagramGraphic() {
               globals.css. transformOrigin is the bounding-box centre of all
               three cards + their illustrations, so the group pops in place. */}
           <div className="hero-pop hero-pop-7 absolute inset-0" style={{ transformOrigin: '796px 423px' }}>
-            <img src={imgMoon} alt="" className="pointer-events-none absolute select-none" style={{ left: 342.17, top: 219, width: 144.19, height: 144.19 }} />
-            <img src={imgAstronaut} alt="" className="pointer-events-none absolute select-none" style={{ left: 291.69, top: 123, width: 201.08, height: 203.38 }} />
+            {/* Shifted 73px left / 10px up from the Figma position: at the
+                source's own placement the astronaut's right edge (492.77)
+                overlapped BizOps (left: 444) by ~49px. */}
+            <img src={imgMoon} alt="" className="pointer-events-none absolute select-none" style={{ left: 269.4, top: 209, width: 144.19, height: 144.19 }} />
+            <img src={imgAstronaut} alt="" className="pointer-events-none absolute select-none" style={{ left: 219, top: 113, width: 201.08, height: 203.38 }} />
 
             <Note left={265.2} top={479} size={176.36} rotate={13} scale={0.72} illustration={{ src: imgKeynote, width: 146, height: 147, left: 32, top: -95 }}>
               <p
@@ -433,7 +436,13 @@ export default function HeroDiagramGraphic() {
               </p>
             </Note>
 
-            <Note left={1129.11} top={366.57} size={196.906} rotate={-3} scale={0.72} illustration={{ src: imgHand, width: 109.81, height: 109.81, left: 30.83, top: -4.55 }}>
+            {/* Shifted 90px right from the Figma position: at the source's
+                own placement (left: 1129.11) the card's left edge started
+                inside the AI Agent pin (977-1151) and its label (773-1105).
+                Our diagram doesn't share Figma's exact proportions here, so
+                the same raw coordinate collides where it didn't in the
+                source. */}
+            <Note left={1219} top={366.57} size={196.906} rotate={-3} scale={0.72} illustration={{ src: imgHand, width: 109.81, height: 109.81, left: 30.83, top: -4.55 }}>
               <p
                 className="absolute m-0 font-normal text-black"
                 style={{ left: 22, top: 131, width: 135, transform: 'translateY(-50%)', fontFamily: LITERATA, fontSize: 17, lineHeight: '17px' }}
