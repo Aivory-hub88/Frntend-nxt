@@ -409,7 +409,7 @@ export default function HeroDiagramGraphic() {
               globals.css. transformOrigin is the bounding-box centre of all
               three cards + their illustrations, so the group pops in place. */}
           <div className="hero-pop hero-pop-7 absolute inset-0" style={{ transformOrigin: '789px 554px' }}>
-            <Note left={265.2} top={479} size={176.36} rotate={13} scale={0.8} illustration={{ src: imgKeynote, width: 146, height: 147, left: 32, top: -95 }}>
+            <Note left={265.2} top={479} size={176.36} rotate={13} scale={0.72} illustration={{ src: imgKeynote, width: 146, height: 147, left: 32, top: -95 }}>
               <p
                 className="absolute m-0 whitespace-nowrap font-normal text-black"
                 style={{ left: 21, top: 46, transform: 'translateY(-50%)', fontFamily: LITERATA, fontSize: 51, lineHeight: '50px' }}
@@ -426,7 +426,7 @@ export default function HeroDiagramGraphic() {
               </p>
             </Note>
 
-            <Note left={1136} top={547.97} size={176.18} rotate={-10} scale={0.8} illustration={{ src: imgHand, width: 169, height: 169, left: -15, top: -70 }}>
+            <Note left={1136} top={547.97} size={176.18} rotate={-10} scale={0.72} illustration={{ src: imgHand, width: 169, height: 169, left: -15, top: -70 }}>
               <p
                 className="absolute m-0 font-normal text-black"
                 style={{ left: 19, top: 95, width: 123, transform: 'translateY(-50%)', fontFamily: LITERATA, fontSize: 17, lineHeight: '17px' }}
