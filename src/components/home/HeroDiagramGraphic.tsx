@@ -47,7 +47,7 @@ const LITERATA = "var(--font-literata), Literata, serif";
 // How hard the ambient colour reads. The source blobs are pale washes; this
 // deepens them without shifting hue — one knob, tuned by eye against the
 // card's #ededed ground.
-const BLOB_FILTER = 'saturate(1.5) brightness(0.86) contrast(1.06)';
+const BLOB_FILTER = 'saturate(2.2) brightness(0.68) contrast(1.15)';
 
 const CANVAS_WIDTH = 1440;
 // The lockup (labels, pill, pins, arrows) and its tagline are drawn at the
