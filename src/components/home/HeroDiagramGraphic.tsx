@@ -429,7 +429,7 @@ export default function HeroDiagramGraphic() {
             <Note left={1136} top={547.97} size={176.18} rotate={-10} scale={0.72} illustration={{ src: imgHand, width: 169, height: 169, left: -15, top: -70 }}>
               <p
                 className="absolute m-0 font-normal text-black"
-                style={{ left: 19, top: 95, width: 123, transform: 'translateY(-50%)', fontFamily: LITERATA, fontSize: 17, lineHeight: '17px' }}
+                style={{ left: 19, top: 138, width: 123, transform: 'translateY(-50%)', fontFamily: LITERATA, fontSize: 17, lineHeight: '17px' }}
               >
                 Zero training
                 <br />
