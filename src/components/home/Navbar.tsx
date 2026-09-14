@@ -126,7 +126,7 @@ export default function Navbar() {
             height={79}
             fetchPriority="high"
             decoding="sync"
-            className="h-[26px] w-auto object-contain"
+            className="h-[18px] w-auto object-contain"
           />
         </Link>
 
@@ -257,7 +257,7 @@ export default function Navbar() {
               alt="Aivory Logo"
               width={383}
               height={79}
-              className="h-[26px] w-auto object-contain"
+              className="h-[18px] w-auto object-contain"
             />
           </Link>
           <button

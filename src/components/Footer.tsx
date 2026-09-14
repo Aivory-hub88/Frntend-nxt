@@ -105,7 +105,7 @@ export default function Footer({ landingAmbient = false }: FooterProps) {
                 <img
                   src="/Aivory_new_logo_white_V2.svg"
                   alt="Aivory Logo"
-                  className="h-[29px] md:h-[37px] w-auto shrink-0 opacity-90"
+                  className="h-[20px] md:h-[26px] w-auto shrink-0 opacity-90"
                 />
                 <Link
                   href="/nvidia-inception"
