@@ -1,4 +1,0 @@
-User-agent: *
-Disallow: /api/internal/
-Disallow: /api/v2/config/
-Disallow: /api/admin/settings/

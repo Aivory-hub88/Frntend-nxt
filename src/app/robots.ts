@@ -57,11 +57,16 @@ const AI_TRAINING_BOTS = [
 // - /login, /payment, /checkout/* are private/auth flows behind a sign-in.
 //   Even though each page also emits `robots: { index: false }` via Next.js
 //   metadata, listing them here stops crawlers before the page is fetched.
-// - /api/ is internal only.
+// - /api/ is internal only. The three canary prefixes are listed explicitly
+//   too (belt and suspenders): they serve honeypot trap responses, and a
+//   compliant crawler must never follow the invisible bait links into them.
 // - /free-diagnostic/results is a results screen reached only after
 //   submitting the diagnostic, never linked publicly.
 const PRIVATE_PATHS = [
   "/api/",
+  "/api/internal/",
+  "/api/v2/config/",
+  "/api/admin/settings/",
   "/login",
   "/payment",
   "/checkout/",
