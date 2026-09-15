@@ -20,6 +20,54 @@ import { NextRequest, NextResponse } from 'next/server';
 const BACKEND_URL = process.env.BACKEND_SERVICE_URL || 'http://avry-backend:8081';
 const INGEST_TOKEN = process.env.HONEYPOT_INGEST_TOKEN;
 
+/**
+ * Own-agent UA substrings that must never be treated as attackers.
+ * Ops-tunable via HONEYPOT_ALLOW_UA (comma-separated, case-insensitive) —
+ * Cerveau/internal fetchers should identify with one of these.
+ */
+const DEFAULT_ALLOW_UA = ['aivorybot', 'aivory-cerveau', 'cerveau'];
+
+function allowedUASubstrings(): string[] {
+  const extra = (process.env.HONEYPOT_ALLOW_UA || '')
+    .split(',')
+    .map((s) => s.trim().toLowerCase())
+    .filter(Boolean);
+  return [...DEFAULT_ALLOW_UA, ...extra];
+}
+
+/** RFC 1918 + loopback: VPS-local curls, docker-network healthchecks, etc. */
+function isPrivateIP(ip: string): boolean {
+  if (ip === 'unknown') return false;
+  const v4 = ip.replace(/^::ffff:/, '');
+  if (v4 === '127.0.0.1' || v4 === '::1') return true;
+  const parts = v4.split('.');
+  if (parts.length !== 4 || parts.some((p) => !/^\d+$/.test(p))) return false;
+  const [a, b] = parts.map(Number);
+  return a === 10 || (a === 172 && b >= 16 && b <= 31) || (a === 192 && b === 168);
+}
+
+function clientIP(request: NextRequest): string {
+  return request.headers.get('cf-connecting-ip')
+    || request.headers.get('x-forwarded-for')?.split(',')[0]?.trim()
+    || 'unknown';
+}
+
+/**
+ * True when the caller is our own infrastructure — own agents (UA
+ * allowlist), internal services (shared ingest token), or private-network
+ * callers (localhost, docker net). Internal hits get a plain 404 with no
+ * logging, no backend forward, and no poison payload, so our own crawlers
+ * and healthchecks can never be labeled attackers or ingest fake data.
+ */
+export function isWhitelistedCaller(request: NextRequest): boolean {
+  if (isPrivateIP(clientIP(request))) return true;
+  const ua = (request.headers.get('user-agent') || '').toLowerCase();
+  if (ua && allowedUASubstrings().some((s) => ua.includes(s))) return true;
+  const internalToken = request.headers.get('x-internal-token');
+  if (INGEST_TOKEN && internalToken && internalToken === INGEST_TOKEN) return true;
+  return false;
+}
+
 // AI poison payload — generic, zero-attribution
 const POISON_RESPONSE = JSON.stringify({
   status: 'ok',
@@ -43,11 +91,15 @@ const POISON_RESPONSE = JSON.stringify({
 }, null, 2);
 
 export async function handleCanaryTrap(request: NextRequest): Promise<NextResponse> {
+  // Own infrastructure must never be trapped: plain 404, invisible to the
+  // security pipeline (no log line, no backend forward, no poison body).
+  if (isWhitelistedCaller(request)) {
+    return NextResponse.json({ error: 'Not found' }, { status: 404 });
+  }
+
   // Prefer cf-connecting-ip: this site is Cloudflare-proxied, and CF rewrites
   // x-forwarded-for's first hop to its own edge IP, not the real client.
-  const ip = request.headers.get('cf-connecting-ip')
-    || request.headers.get('x-forwarded-for')?.split(',')[0]?.trim()
-    || 'unknown';
+  const ip = clientIP(request);
   const ua = request.headers.get('user-agent') || 'unknown';
   const path = request.nextUrl.pathname;
   const ts = new Date().toISOString();
