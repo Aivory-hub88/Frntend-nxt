@@ -29,6 +29,14 @@
   font-size: 16px;
   line-height: 1.55;
   padding-block: 12px;
+  /* Pull up over the hero's transparent bottom padding (pb-16 md:pb-24) so the
+     dark ambient wash doesn't show as a strip between the hero and the bands. */
+  margin-top: -64px;
+}
+@media (min-width: 768px) {
+  .landing {
+    margin-top: -96px;
+  }
 }
 
 .landing h2,
@@ -1378,4 +1386,11 @@ th.me {
 @media (max-width: 440px) {
   .secList { grid-template-columns: 1fr; }
   .secList div { border-right: 0; border-bottom: 1px solid var(--rule); }
+}
+
+/* ScrollRevealProvider splits h2/p into SplitType lines and masks each line
+   with an inline overflow:hidden, which clips descenders (g/p/y) at our tight
+   1.1 line-height. Keep the word fade/slide, drop the mask. */
+.landing :global(.line) {
+  overflow: visible !important;
 }
