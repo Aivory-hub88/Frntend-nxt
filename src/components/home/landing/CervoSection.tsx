@@ -3,12 +3,14 @@ import s from './landing.module.css';
 
 const CERVO_ICON = '/landing/cervo-icon.svg';
 
-// 7 x 4 grid; the MCP tile sits in the middle row and is the lit one.
-const APP_ICONS: Array<{ name: string; src: string; wide?: boolean }> = [
+// 7 x 5 grid; the MCP tile sits mid-grid and is the lit one. `tint` colours
+// icons whose SVGs are white-only (drawn for dark backgrounds).
+const APP_ICONS: Array<{ name: string; src: string; wide?: boolean; tint?: string }> = [
+  { name: 'Aivory Mail', src: 'aivory-mail.svg' },
   { name: 'Slack', src: 'slack.svg' },
   { name: 'Gmail', src: 'gmail.svg' },
   { name: 'Odoo', src: 'odoo.svg', wide: true },
-  { name: 'HubSpot', src: 'hubspot-svgrepo-com.svg' },
+  { name: 'HubSpot', src: 'hubspot-svgrepo-com.svg', tint: '#ff7a59' },
   { name: 'Notion', src: 'notion.svg' },
   { name: 'GitHub', src: 'github.svg' },
   { name: 'Salesforce', src: 'salesforce.svg' },
@@ -20,19 +22,25 @@ const APP_ICONS: Array<{ name: string; src: string; wide?: boolean }> = [
   { name: 'Microsoft Teams', src: 'microsoft-teams.svg' },
   { name: 'Trello', src: 'trello.svg' },
   { name: 'Google Drive', src: 'google-drive.svg' },
-  { name: 'Zendesk', src: 'zendesk.svg' },
+  { name: 'Zendesk', src: 'zendesk.svg', tint: '#03363d' },
   { name: 'MCP', src: 'MCP' },
   { name: 'Outlook', src: 'outlook.svg' },
   { name: 'Shopify', src: 'shopify.svg' },
   { name: 'Dropbox', src: 'dropbox.svg' },
-  { name: 'OpenAI', src: 'openai.svg' },
+  { name: 'OpenAI', src: 'openai.svg', tint: '#000000' },
+  { name: 'Claude', src: 'claude.svg' },
+  { name: 'Gemini', src: 'gemini.svg' },
   { name: 'Airtable', src: 'airtable.svg' },
   { name: 'Intercom', src: 'intercom.svg' },
-  { name: 'Stripe', src: 'stripe-v2-svgrepo-com.svg' },
+  { name: 'Stripe', src: 'stripe-v2-svgrepo-com.svg', tint: '#635bff' },
   { name: 'Zoom', src: 'zoom.svg' },
   { name: 'Google Calendar', src: 'google-calendar.svg' },
   { name: 'Mailchimp', src: 'mailchimp.svg' },
   { name: 'Twilio', src: 'twilio.svg' },
+  { name: 'SendGrid', src: 'sendgrid.svg' },
+  { name: 'AWS', src: 'aws.svg' },
+  { name: 'Amazon S3', src: 'aws-s3.svg' },
+  { name: 'Tencent Cloud', src: 'tencent-cloud.svg' },
 ];
 
 const ROLES: Array<{ label: string; d: string; color: string }> = [
@@ -156,7 +164,20 @@ export default function CervoSection() {
                   <span key={app.name} className={`${s.icoT} ${s.icoHot}`}><img src="/landing/mcp.svg" alt="MCP" /></span>
                 ) : (
                   <span key={app.name} className={`${s.icoT} ${app.wide ? s.icoWide : ''}`}>
-                    <img src={`/integrations/icons/${app.src}`} alt={app.name} />
+                    {app.tint ? (
+                      <span
+                        className={s.icoTint}
+                        role="img"
+                        aria-label={app.name}
+                        style={{
+                          backgroundColor: app.tint,
+                          WebkitMaskImage: `url(/integrations/icons/${app.src})`,
+                          maskImage: `url(/integrations/icons/${app.src})`,
+                        }}
+                      />
+                    ) : (
+                      <img src={`/integrations/icons/${app.src}`} alt={app.name} />
+                    )}
                   </span>
                 ),
               )}
