@@ -50,7 +50,9 @@ export default function ComparisonSection() {
               <tr>
                 <th scope="col">Capabilities</th>
                 {COLUMNS.map((c, i) => (
-                  <th key={c} scope="col" className={i === 3 ? s.me : undefined}>{c}</th>
+                  <th key={c} scope="col" className={i === 3 ? s.me : undefined}>
+                    {i === 3 ? <span className={s.meLogo} role="img" aria-label="Aivory" /> : c}
+                  </th>
                 ))}
               </tr>
             </thead>

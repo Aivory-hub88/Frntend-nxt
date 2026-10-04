@@ -1233,6 +1233,15 @@
 th.me {
   color: var(--teal) !important;
 }
+.meLogo {
+  /* The AIVORY wordmark, tinted with the column's teal via a mask. */
+  display: block;
+  height: 13px;
+  aspect-ratio: 204.755 / 29.72;
+  background-color: var(--teal);
+  -webkit-mask: url('/aivory-wordmark.svg') no-repeat center / contain;
+  mask: url('/aivory-wordmark.svg') no-repeat center / contain;
+}
 
 /* ── Privacy (ruled panel) ── */
 .secGrid {
