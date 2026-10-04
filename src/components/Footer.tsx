@@ -103,7 +103,7 @@ export default function Footer({ landingAmbient = false }: FooterProps) {
             <div className="col-span-2 md:col-span-1 flex items-start mt-8 md:mt-0">
               <div className="flex flex-row items-center gap-4">
                 <img
-                  src="/Aivory_new_logo_white_V2.svg"
+                  src="/aivory-wordmark.svg"
                   alt="Aivory Logo"
                   className="h-[20px] md:h-[26px] w-auto shrink-0 opacity-90"
                 />
