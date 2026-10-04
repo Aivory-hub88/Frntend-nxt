@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import s from './landing.module.css';
 
 // Mirrors the user dashboard's workflow canvas: pill nodes tinted by category,
@@ -41,7 +42,7 @@ function Edge() {
 
 export default function WorkflowBuilderSection() {
   return (
-    <section id="workflow-builder" className={`${s.band} ${s.dark} ${s.glow}`}>
+    <section id="workflow-builder" className={`${s.band} ${s.light}`}>
       <div className={s.wrap}>
         <div className={s.head}>
           <span className={s.eyebrow}>Workflow builder</span>
@@ -57,33 +58,46 @@ export default function WorkflowBuilderSection() {
         </div>
 
         <div className={s.builder}>
-          <div className={s.wfp}>
-            <div className={s.wfpH}>
-              <span>Build with Aivory</span>
+          {/* Same look as the Aivory Copilot panel in the user dashboard
+              (components/workflow/CopilotTogglePanel.tsx). Illustration only. */}
+          <div className={s.cop} aria-label="Aivory Copilot conversation">
+            <div className={s.copH}>
+              <img src="/landing/aivory-logo-2026.svg" alt="Aivory" className={s.copLogo} />
+              <span className={s.copIcons} aria-hidden="true">
+                <svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6" /><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" /><path d="M10 11v6M14 11v6" /><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2" /></svg>
+                <svg viewBox="0 0 24 24"><polyline points="18 15 12 9 6 15" /></svg>
+              </span>
             </div>
-            <div className={s.wfpC}>
-              <div className={s.wfpCtx}>
-                <span className={s.wfpLabel}>Workspace</span>
-                <b>Finance Operations</b>
+            <div className={s.copBody}>
+              <div className={s.copUser}>
+                When an invoice email lands in Gmail, read the PDF and match it to the purchase order in Odoo. If the
+                amount is over $500, ask Finance to approve in Slack. Then post the bill to Odoo.
               </div>
-              <span className={s.wfpLabel}>Describe the workflow</span>
-              <div className={s.wfpBox}>
-                When an <mark>invoice email</mark> lands in Gmail, read the PDF and{' '}
-                <mark>match it to the purchase order</mark> in Odoo. If the amount is <mark>over $500</mark>, ask
-                Finance to approve in Slack. Then <mark>post the bill</mark> to Odoo.
-              </div>
-              <div className={s.wfpPre}>
-                <span>Invoice intake</span>
-                <span>Lead routing</span>
-                <span>Ticket triage</span>
-                <span>Weekly report</span>
-              </div>
-              <div className={s.wfpF}>
-                <small>English, Bahasa Indonesia and 9 more</small>
-                {/* Part of the illustration, not a control. */}
-                <span className={s.wfpBtn} aria-hidden="true">Generate workflow</span>
+              <div className={s.copAi}>
+                <img src="/landing/aivory-avatar.svg" alt="" className={s.copAvatar} />
+                <div>
+                  <p>Here&apos;s the workflow. It watches the Finance inbox, extracts the invoice fields and matches them to the PO in Odoo.</p>
+                  <p>Anything over <b>$500</b> goes to Finance in Slack for approval; the rest is approved and logged. Both paths post the vendor bill to Odoo.</p>
+                </div>
               </div>
             </div>
+            <div className={s.copApply}>
+              <div>
+                <b>Workflow ready — 6 steps</b>
+                <small>Validated. Setup items: 2</small>
+              </div>
+              <span className={s.copApplyBtn} aria-hidden="true">Apply to canvas</span>
+            </div>
+            <div className={s.copInputWrap}>
+              <div className={s.copInput}>
+                <span className={s.copPlaceholder}>Enter an idea or app name to get started</span>
+                <svg className={s.copClip} viewBox="0 0 24 24" aria-hidden="true"><path d="m21.44 11.05-9.19 9.19a6 6 0 0 1-8.49-8.49l8.57-8.57A4 4 0 1 1 18 8.84l-8.59 8.57a2 2 0 0 1-2.83-2.83l8.49-8.48" /></svg>
+                <span className={s.copSend} aria-hidden="true">
+                  <svg viewBox="0 0 24 24"><line x1="12" y1="19" x2="12" y2="5" /><polyline points="5 12 12 5 19 12" /></svg>
+                </span>
+              </div>
+            </div>
+            <div className={s.copGrip} aria-hidden="true"><i /></div>
           </div>
 
           <div className={s.wfc} aria-label="Generated workflow">
