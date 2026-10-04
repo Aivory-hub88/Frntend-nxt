@@ -5,7 +5,7 @@ import s from './landing.module.css';
 // FAQ_ENTITIES, and structured data has to match on-page content.
 export default function ClosingCTA() {
   return (
-    <section id="strategy-cta" className={`${s.band} ${s.dark} ${s.glow}`}>
+    <section id="strategy-cta" className={`${s.band} ${s.light}`}>
       <div className={s.wrap}>
         <div className={s.cta}>
           <h2 className={s.h2}>
