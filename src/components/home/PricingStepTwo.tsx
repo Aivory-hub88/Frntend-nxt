@@ -116,7 +116,9 @@ const plans: Plan[] = [
   },
 ];
 
-export default function PricingStepTwo({ currency }: { currency?: 'IDR' | 'USD' }) {
+export default function PricingStepTwo({ currency, variant = 'default' }: { currency?: 'IDR' | 'USD'; variant?: 'default' | 'landing' }) {
+  // 'landing' = the homepage band: same content and checkout, lighter card treatment.
+  const landing = variant === 'landing';
   const { ref, isVisible } = useScrollAnimation();
   const { language, exchangeRate } = useLanguage();
   const router = useRouter();
@@ -158,7 +160,7 @@ export default function PricingStepTwo({ currency }: { currency?: 'IDR' | 'USD' 
   };
 
   return (
-    <section ref={ref} onMouseMove={handleMouseMove} className={`animate-on-scroll ${isVisible ? 'is-visible' : ''} spotlight-section w-full bg-[#E4E6E8] text-[#494949] py-24 font-sans`}>
+    <section ref={ref} onMouseMove={handleMouseMove} className={`animate-on-scroll ${isVisible ? 'is-visible' : ''} spotlight-section w-full ${landing ? 'bg-transparent py-12 md:py-16' : 'bg-[#E4E6E8] py-24'} text-[#494949] font-sans`}>
       <div className="max-w-7xl mx-auto px-6 md:px-12 relative z-10">
         {/* Header */}
         <div className="mb-20 text-center md:text-left">
@@ -169,21 +171,23 @@ export default function PricingStepTwo({ currency }: { currency?: 'IDR' | 'USD' 
             </div>
             <div className="w-full h-[3px] bg-[#c4c9b8] mt-2 rounded-full" />
           </div>
-          <h2 className="text-[35px] sm:text-[37px] md:text-[37px] lg:text-[43px] font-normal tracking-tight mb-6">License the operational capability your organisation needs.</h2>
+          <h2 className={`text-[35px] sm:text-[37px] md:text-[37px] lg:text-[43px] ${landing ? 'font-light tracking-[-0.03em]' : 'font-normal tracking-tight'} mb-6`}>License the operational capability your organisation needs.</h2>
           <p className="text-xl text-[#494949] font-light leading-relaxed">
             Continue your transformation with Aivory's Operational Intelligence Platform. Modernise operations, orchestrate intelligent workflows, and deploy governed AI across your organisation.
           </p>
         </div>
 
         {/* Plans Grid */}
-        <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 mb-20 items-stretch gap-y-12 md:gap-x-8 md:gap-y-0">
+        <div className={`max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 items-stretch ${landing ? 'gap-5 mb-12' : 'mb-20 gap-y-12 md:gap-x-8 md:gap-y-0'}`}>
           {plans.map((plan, idx) => {
             const activeCurrency = currency || (language === 'id' ? 'IDR' : 'USD');
 
             return (
             <div 
               key={plan.name} 
-              className={`flex flex-col ${
+              className={landing
+                ? `flex flex-col rounded-[24px] border p-7 md:p-8 ${plan.mostPopular ? 'border-[#b8c0a6] bg-[#eef1e8] shadow-[0_12px_32px_rgba(26,26,26,0.06)]' : 'border-[#e4e9eb] bg-[#f5f7f8]'}`
+                : `flex flex-col ${
                 idx === 0 ? 'md:pr-10 pb-12 border-b border-[#b0b5b4] md:border-b-0 md:pb-0' : idx === 1 ? 'md:px-10 md:border-x border-[#b0b5b4] pb-12 border-b md:border-b-0 md:pb-0' : 'md:pl-10'
               }`}
             >
@@ -226,7 +230,7 @@ export default function PricingStepTwo({ currency }: { currency?: 'IDR' | 'USD' 
               )}
 
               {/* Features */}
-              <ul className="mt-14 space-y-2 text-[16px] md:text-[18px] font-medium leading-[1.35] text-[#494949]">
+              <ul className={`${landing ? 'mt-8 space-y-2 text-[15px] md:text-[16px]' : 'mt-14 space-y-2 text-[16px] md:text-[18px]'} font-medium leading-[1.35] text-[#494949]`}>
                 {plan.features.map((f) => (
                   <li key={f} className="flex gap-2">
                     <span className="shrink-0">•</span>
@@ -241,7 +245,9 @@ export default function PricingStepTwo({ currency }: { currency?: 'IDR' | 'USD' 
                 <button
                   type="button"
                   onClick={() => handleCtaClick(plan)}
-                  className="w-full bg-[#c4c9b8] text-[#494949] py-[18px] px-6 text-[17px] md:text-[19px] font-medium text-center transition-colors hover:bg-[#b0b5a4]"
+                  className={landing
+                    ? `w-full rounded-xl py-4 px-6 text-[16px] font-semibold text-center transition-colors ${plan.mostPopular ? 'bg-[#1a1a1a] text-white hover:bg-[#333]' : 'bg-[#c4c9b8] text-[#1a1a1a] hover:bg-[#b0b5a4]'}`
+                    : 'w-full bg-[#c4c9b8] text-[#494949] py-[18px] px-6 text-[17px] md:text-[19px] font-medium text-center transition-colors hover:bg-[#b0b5a4]'}
                 >
                   {plan.cta}
                 </button>
