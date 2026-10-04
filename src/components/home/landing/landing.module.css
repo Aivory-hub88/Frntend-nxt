@@ -114,14 +114,23 @@
   color: var(--snow-2);
 }
 .eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5em;
   font-size: 12px;
   font-weight: 500;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--teal);
+  color: #3d474c;
 }
-.dark .eyebrow {
-  color: var(--cyan);
+/* AIVORY wordmark inside an eyebrow: cap height of the 12px label, same colour. */
+.eyebrowLogo {
+  display: inline-block;
+  height: 8.6px;
+  aspect-ratio: 204.755 / 29.72;
+  background-color: currentColor;
+  -webkit-mask: url('/aivory-wordmark.svg') no-repeat center / contain;
+  mask: url('/aivory-wordmark.svg') no-repeat center / contain;
 }
 
 /* ── Buttons ── */

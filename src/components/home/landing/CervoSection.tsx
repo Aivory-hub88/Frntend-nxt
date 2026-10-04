@@ -86,7 +86,7 @@ export default function CervoSection() {
     <section id="cervo" className={`${s.band} ${s.light}`}>
       <div className={s.wrap}>
         <div className={s.head}>
-          <span className={s.eyebrow}>Aivory Cervo</span>
+          <span className={s.eyebrow}><span className={s.eyebrowLogo} role="img" aria-label="Aivory" />Cervo</span>
           <h2 className={s.h2}>
             Agents that work like teammates
             <br />
