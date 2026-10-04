@@ -35,16 +35,16 @@ const APP_ICONS: Array<{ name: string; src: string; wide?: boolean }> = [
   { name: 'Twilio', src: 'twilio.svg' },
 ];
 
-const ROLES: Array<{ label: string; d: string }> = [
-  { label: 'Finance', d: 'M12 3v18M16.5 7.5c0-1.7-2-3-4.5-3s-4.5 1.3-4.5 3 2 2.6 4.5 3 4.5 1.3 4.5 3-2 3-4.5 3-4.5-1.3-4.5-3' },
-  { label: 'Sales', d: 'M4 19l5-6 4 3 7-9M14 7h6v6' },
-  { label: 'Operations', d: 'M12 9a3 3 0 100 6 3 3 0 000-6zM12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1' },
-  { label: 'Support', d: 'M4 13a8 8 0 0116 0v4a2 2 0 01-2 2h-1v-6h3M4 13v4a2 2 0 002 2h1v-6H4' },
-  { label: 'People', d: 'M9 5a3 3 0 100 6 3 3 0 000-6zM3 20c0-3.3 2.7-6 6-6s6 2.7 6 6M16 11a3 3 0 100-6M21 20c0-2.6-1.6-4.8-4-5.6' },
-  { label: 'Procurement', d: 'M3 7h18v13H3zM8 7V4h8v3M3 12h18' },
-  { label: 'Legal', d: 'M12 3v18M5 7h14M5 7l-3 7a3 3 0 006 0zM19 7l-3 7a3 3 0 006 0z' },
-  { label: 'IT', d: 'M5 4h14a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2V6a2 2 0 012-2zM8 20h8M12 16v4' },
-  { label: 'Analytics', d: 'M5 20V10M12 20V4M19 20v-7' },
+const ROLES: Array<{ label: string; d: string; color: string }> = [
+  { label: 'Finance', d: 'M12 3v18M16.5 7.5c0-1.7-2-3-4.5-3s-4.5 1.3-4.5 3 2 2.6 4.5 3 4.5 1.3 4.5 3-2 3-4.5 3-4.5-1.3-4.5-3', color: '#34c759' },
+  { label: 'Sales', d: 'M4 19l5-6 4 3 7-9M14 7h6v6', color: '#007aff' },
+  { label: 'Operations', d: 'M12 9a3 3 0 100 6 3 3 0 000-6zM12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1', color: '#ff9500' },
+  { label: 'Support', d: 'M4 13a8 8 0 0116 0v4a2 2 0 01-2 2h-1v-6h3M4 13v4a2 2 0 002 2h1v-6H4', color: '#30b0c7' },
+  { label: 'People', d: 'M9 5a3 3 0 100 6 3 3 0 000-6zM3 20c0-3.3 2.7-6 6-6s6 2.7 6 6M16 11a3 3 0 100-6M21 20c0-2.6-1.6-4.8-4-5.6', color: '#af52de' },
+  { label: 'Procurement', d: 'M3 7h18v13H3zM8 7V4h8v3M3 12h18', color: '#a2845e' },
+  { label: 'Legal', d: 'M12 3v18M5 7h14M5 7l-3 7a3 3 0 006 0zM19 7l-3 7a3 3 0 006 0z', color: '#5856d6' },
+  { label: 'IT', d: 'M5 4h14a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2V6a2 2 0 012-2zM8 20h8M12 16v4', color: '#8e8e93' },
+  { label: 'Analytics', d: 'M5 20V10M12 20V4M19 20v-7', color: '#ff2d55' },
 ];
 
 function Line({ d }: { d: string }) {
@@ -168,7 +168,7 @@ export default function CervoSection() {
             <p className={s.igd}>Give each agent the reasoning model and toolkit its role needs. Finance thinks like finance, sales like sales.</p>
             <div className={`${s.igp} ${s.roles}`}>
               {ROLES.map((r) => (
-                <div key={r.label} className={s.role}><Line d={r.d} /><span>{r.label}</span></div>
+                <div key={r.label} className={s.role}><span className={s.roleIc} style={{ background: r.color }}><Line d={r.d} /></span><span>{r.label}</span></div>
               ))}
             </div>
           </article>
