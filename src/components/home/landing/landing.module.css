@@ -246,7 +246,10 @@
   margin-top: 52px;
 }
 .fbCervo {
-  height: 46.6cqw;
+  /* Banner + the team illustration, which overhangs it and sits flush on the
+     strip below. aspect-ratio, not cqw: an element's own size can't query
+     itself as the container. */
+  aspect-ratio: 100 / 45.9;
 }
 .fbBanner {
   position: absolute;
@@ -259,7 +262,7 @@
 .fbPeople {
   position: absolute;
   left: 31.1cqw;
-  top: 27.8cqw;
+  bottom: 0;
   width: 68.9cqw;
   height: auto;
 }
@@ -275,10 +278,11 @@
 
 /* ── Connectivity strip (Figma) ── */
 .caps {
+  position: relative;
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 12px;
-  margin-top: 14px;
+  margin-top: 0;
 }
 .cap {
   background: var(--paper-2);
@@ -720,7 +724,8 @@
   height: auto;
 }
 .stage {
-  margin-top: 28px;
+  position: relative;
+  margin-top: 0;
   background: var(--paper-2);
   border: 1px solid var(--rule);
   border-radius: 28px;
