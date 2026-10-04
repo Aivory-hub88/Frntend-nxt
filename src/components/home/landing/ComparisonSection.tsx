@@ -37,7 +37,7 @@ export default function ComparisonSection() {
     <section id="comparison" className={`${s.band} ${s.light}`}>
       <div className={s.wrap}>
         <div className={s.head}>
-          <span className={s.eyebrow}>Why Aivory</span>
+          <span className={s.eyebrow}>Why <span className={s.eyebrowLogo} role="img" aria-label="Aivory" /></span>
           <h2 className={s.h2}>
             One platform instead of
             <br />
