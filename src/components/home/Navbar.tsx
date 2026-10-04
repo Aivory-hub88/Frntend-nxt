@@ -86,7 +86,6 @@ export default function Navbar() {
 
   const lightFromTop =
     pathname === '/ai-workflow-automation' || pathname.startsWith('/templates/');
-  const needsContrast = isScrolled || lightFromTop;
 
   // The home hero is a light card whose top strip is the nav's own ground —
   // the nav sits *inside* that strip rather than as a bar floating above it.
@@ -94,31 +93,45 @@ export default function Navbar() {
   // card's 1200px column, and switches to black type. Scrolling past the hero
   // hands it back to the standard dark treatment, which is what keeps the
   // links readable over the dark sections below.
-  const onCard = pathname === '/' && !isScrolled;
-  const navLinkClass = `${onCard ? 'text-black' : 'text-white'} font-normal uppercase tracking-normal no-underline hover:underline transition-all duration-200`;
+  // Ignyte-style bar: logo left, plain sentence-case links centred, outlined
+  // "Sign in" + solid "Dashboard" on the right. Light pages (home, templates)
+  // get dark type and, once scrolled, a frosted white bar; dark pages keep
+  // white type over a dark wash.
+  const lightPage = pathname === '/' || lightFromTop;
+  const onCard = lightPage; // dark type (kept for the mobile hamburger below)
+  const ink = lightPage ? 'text-[#0f1f26]' : 'text-white';
+  const navLinkClass = `${ink} px-2.5 py-2 text-[14px] font-normal no-underline opacity-90 hover:opacity-100 transition-opacity duration-200`;
+  const outlineBtn = `${lightPage ? 'border-[#0f1f26] text-[#0f1f26] hover:bg-[#0f1f26]/[0.06]' : 'border-white/80 text-white hover:bg-white/10'} inline-flex items-center rounded-md border px-4 py-2 text-[14px] font-medium transition-colors duration-200 cursor-pointer bg-transparent`;
+  const solidBtn = `${lightPage ? 'bg-[#0f1f26] border-[#0f1f26] text-white hover:bg-[#23343b]' : 'bg-white border-white text-[#0f1f26] hover:bg-white/90'} inline-flex items-center rounded-md border px-4 py-2 text-[14px] font-medium transition-colors duration-200 cursor-pointer`;
+  const manrope = { fontFamily: "var(--font-manrope), 'Manrope', sans-serif" };
+
+  const NAV_LINKS = [
+    { href: '/product', label: 'Product' },
+    { href: '/company', label: 'Company' },
+    { href: '/pricing', label: 'Pricing' },
+    { href: '/blog', label: 'Blog' },
+    { href: '/careers', label: 'Careers' },
+  ];
 
   const nav = (
     <nav className="fixed top-0 inset-x-0 z-[1000]">
       <div
         aria-hidden="true"
-        className={`pointer-events-none absolute inset-x-0 top-0 h-16 transition-[background-color,backdrop-filter] duration-300 ease-out ${
-          onCard
+        className={`pointer-events-none absolute inset-x-0 top-0 h-20 transition-[background-color,backdrop-filter,box-shadow] duration-300 ease-out ${
+          !isScrolled && !lightFromTop
             ? 'bg-transparent'
-            : needsContrast
-              ? 'bg-[rgba(5,5,5,0.78)] backdrop-blur-sm'
-              : 'bg-[rgba(5,5,5,0.10)] backdrop-blur-[2px]'
+            : lightPage
+              ? 'bg-white/80 backdrop-blur-md shadow-[0_1px_0_rgba(15,31,38,0.08)]'
+              : 'bg-[rgba(5,5,5,0.78)] backdrop-blur-sm'
         }`}
       />
       <div
-        className="relative z-10 h-16 w-full flex justify-between items-center"
-        style={{ padding: '0 clamp(1rem, 4vw, 2rem)' }}
+        className="relative z-10 h-20 w-full flex justify-between items-center"
+        style={{ padding: '0 clamp(1rem, 4.4vw, 4rem)' }}
       >
         {/* Left: Aivory logo */}
-        <Link href="/" className="flex items-center">
-          {/* Measured as the page's LCP element — the hero headline paints via
-              a clipped gradient and the flower is a canvas, so this 1.4KB mark
-              is what the metric actually lands on. It therefore gets explicit
-              priority instead of queueing behind the rest of the page. */}
+        <Link href="/" className="flex items-center shrink-0">
+          {/* Measured as the page's LCP element, so it keeps explicit priority. */}
           <img
             src="/aivory-wordmark.svg"
             alt="Aivory Logo"
@@ -126,116 +139,68 @@ export default function Navbar() {
             height={30}
             fetchPriority="high"
             decoding="sync"
-            className="h-[18px] w-auto object-contain"
+            className={`h-[20px] w-auto object-contain ${lightPage ? 'brightness-0' : ''}`}
           />
         </Link>
 
-        {/* Desktop Navigation */}
-        <div className="hidden md:flex items-center gap-7">
-          <div className="flex items-center gap-2">
+        {/* Centre: links */}
+        <div className="hidden lg:flex flex-1 justify-center items-center gap-1 px-6" style={manrope}>
+          {NAV_LINKS.map((l) => (
+            <Link key={l.href} href={l.href} className={navLinkClass}>
+              {l.label}
+            </Link>
+          ))}
+        </div>
+
+        {/* Right: language, sign in / out, dashboard */}
+        <div className="hidden lg:flex items-center gap-3 shrink-0" style={manrope}>
+          <div className="flex items-center gap-2 mr-1">
             <button
               onClick={() => setLanguage('en')}
-              className={`flex items-center gap-1.5 transition-all duration-300 ${onCard ? 'text-black' : 'text-white'} ${
+              className={`flex items-center gap-1.5 text-[12px] transition-all duration-300 ${ink} ${
                 language === 'en' ? 'opacity-100 grayscale-0' : 'opacity-40 grayscale hover:opacity-70'
               }`}
-              style={{ fontFamily: "var(--font-manrope), 'Manrope', sans-serif", fontSize: '10px' }}
             >
               <Image src="/uk-flag.svg" alt="EN" width={14} height={10} className="rounded-[2px] object-cover h-[10px] w-[14px]" />
               EN
             </button>
-            <span className={`${onCard ? 'text-black/30' : 'text-white/30'} text-[10px]`}>|</span>
+            <span className={`${lightPage ? 'text-black/25' : 'text-white/30'} text-[12px]`}>|</span>
             <button
               onClick={() => setLanguage('id')}
-              className={`flex items-center gap-1.5 transition-all duration-300 ${onCard ? 'text-black' : 'text-white'} ${
+              className={`flex items-center gap-1.5 text-[12px] transition-all duration-300 ${ink} ${
                 language === 'id' ? 'opacity-100 grayscale-0' : 'opacity-40 grayscale hover:opacity-70'
               }`}
-              style={{ fontFamily: "var(--font-manrope), 'Manrope', sans-serif", fontSize: '10px' }}
             >
               <Image src="/id-flag.svg" alt="ID" width={14} height={10} className="rounded-[2px] object-cover h-[10px] w-[14px]" />
               ID
             </button>
           </div>
-          <Link
-            href="/product"
-            className={navLinkClass}
-            style={{ fontFamily: "var(--font-manrope), 'Manrope', sans-serif", fontSize: '10px' }}
-          >
-            PRODUCT
-          </Link>
-          <Link
-            href="/company"
-            className={navLinkClass}
-            style={{ fontFamily: "var(--font-manrope), 'Manrope', sans-serif", fontSize: '10px' }}
-          >
-            COMPANY
-          </Link>
-          <Link
-            href="/pricing"
-            className={navLinkClass}
-            style={{ fontFamily: "var(--font-manrope), 'Manrope', sans-serif", fontSize: '10px' }}
-          >
-            PRICING
-          </Link>
-          <Link
-            href="/blog"
-            className={navLinkClass}
-            style={{ fontFamily: "var(--font-manrope), 'Manrope', sans-serif", fontSize: '10px' }}
-          >
-            BLOG
-          </Link>
-          <Link
-            href="/careers"
-            className={navLinkClass}
-            style={{ fontFamily: "var(--font-manrope), 'Manrope', sans-serif", fontSize: '10px' }}
-          >
-            CAREERS
-          </Link>
           {authed ? (
             <>
-              <span className={onCard ? 'text-black' : 'text-white'} style={{ fontFamily: "var(--font-manrope), 'Manrope', sans-serif", fontSize: '11px' }}>
-                Welcome, {userName}
-              </span>
-              <button
-                onClick={() => logout()}
-                className={`${navLinkClass} bg-transparent border-none cursor-pointer`}
-                style={{ fontFamily: "var(--font-manrope), 'Manrope', sans-serif", fontSize: '10px' }}
-              >
-                SIGN OUT
+              <span className={`${ink} text-[13px] opacity-80`}>Welcome, {userName}</span>
+              <button onClick={() => logout()} className={outlineBtn}>
+                Sign out
               </button>
             </>
           ) : (
-            <button
-              onClick={() => setIsSignInModalOpen(true)}
-              className={`${navLinkClass} bg-transparent border-none cursor-pointer`}
-              style={{ fontFamily: "var(--font-manrope), 'Manrope', sans-serif", fontSize: '10px' }}
-            >
-              SIGN IN
+            <button onClick={() => setIsSignInModalOpen(true)} className={outlineBtn}>
+              Sign in
             </button>
           )}
-          <TechnicalFrameButton
-            onClick={() => handleDashboard('user')}
-            size="compact"
-            tone={onCard ? 'dark' : 'light'}
-          >
-            <ArrowIcon className="w-3 h-3 text-[#a3aa96]" />
-            DASHBOARD
-          </TechnicalFrameButton>
+          <button onClick={() => handleDashboard('user')} className={solidBtn}>
+            Dashboard
+          </button>
           {authed && (accountType === 'superadmin' || accountType === 'admin') && (
-            <TechnicalFrameButton
-              onClick={() => handleDashboard('admin')}
-              size="compact"
-              tone={onCard ? 'dark' : 'light'}
-            >
-              <ArrowIcon className="w-3 h-3 text-[#a3aa96]" />
-              ADMIN
-            </TechnicalFrameButton>
+            <button onClick={() => handleDashboard('admin')} className={outlineBtn}>
+              Admin
+            </button>
           )}
         </div>
 
         {/* Mobile Hamburger Button */}
         <button
           onClick={() => setIsMobileMenuOpen(true)}
-          className="md:hidden flex flex-col items-center justify-center w-10 h-10 bg-transparent border-none cursor-pointer gap-[5px]"
+          className="lg:hidden flex flex-col items-center justify-center w-10 h-10 bg-transparent border-none cursor-pointer gap-[5px]"
           aria-label="Open menu"
         >
           <span className={`block w-5 h-[1px] ${onCard ? 'bg-black' : 'bg-white'}`} />
@@ -245,7 +210,7 @@ export default function Navbar() {
 
       {/* Mobile Fullscreen Overlay Menu */}
       <div
-        className={`fixed inset-0 z-[9999] bg-background flex flex-col transition-all duration-300 md:hidden ${
+        className={`fixed inset-0 z-[9999] bg-background flex flex-col transition-all duration-300 lg:hidden ${
           isMobileMenuOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
         }`}
       >
