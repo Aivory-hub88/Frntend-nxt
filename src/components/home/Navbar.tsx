@@ -131,7 +131,8 @@ export default function Navbar() {
       >
         {/* Left: Aivory logo */}
         <Link href="/" className="flex items-center shrink-0">
-          {/* Measured as the page's LCP element, so it keeps explicit priority. */}
+          {/* Measured as the page's LCP element, so it keeps explicit priority.
+              White over the hero's blue wash; turns dark with the frosted bar. */}
           <img
             src="/aivory-wordmark.svg"
             alt="Aivory Logo"
@@ -139,7 +140,7 @@ export default function Navbar() {
             height={30}
             fetchPriority="high"
             decoding="sync"
-            className={`h-[20px] w-auto object-contain ${lightPage ? 'brightness-0' : ''}`}
+            className={`h-[20px] w-auto object-contain transition-[filter] duration-300 ${lightPage && isScrolled ? 'brightness-0' : ''}`}
           />
         </Link>
 
