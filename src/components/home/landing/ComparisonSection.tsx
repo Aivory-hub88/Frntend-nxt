@@ -19,7 +19,7 @@ const PATH: Record<Status, string> = {
   warn: 'M12 8v5M12 16.5h.01',
   no: 'M6 18L18 6M6 6l12 12',
 };
-const COLOR: Record<Status, string> = { yes: '#9fe3c4', warn: '#f2c46b', no: '#5f7882' };
+const COLOR: Record<Status, string> = { yes: '#0a8fa6', warn: '#b7791f', no: '#9aa7ad' };
 
 function Mark({ status }: { status: Status }) {
   return (
@@ -34,7 +34,7 @@ function Mark({ status }: { status: Status }) {
 
 export default function ComparisonSection() {
   return (
-    <section id="comparison" className={`${s.band} ${s.dark}`}>
+    <section id="comparison" className={`${s.band} ${s.light}`}>
       <div className={s.wrap}>
         <div className={s.head}>
           <span className={s.eyebrow}>Why Aivory</span>
@@ -57,7 +57,7 @@ export default function ComparisonSection() {
             <tbody>
               {ROWS.map((row) => (
                 <tr key={row.capability}>
-                  <th scope="row" style={{ textTransform: 'none', letterSpacing: 0, fontSize: 15, fontWeight: 400, color: 'var(--snow)' }}>
+                  <th scope="row" style={{ textTransform: 'none', letterSpacing: 0, fontSize: 15, fontWeight: 400, color: 'var(--ink)' }}>
                     {row.capability}
                   </th>
                   {row.values.map((v, i) => (
