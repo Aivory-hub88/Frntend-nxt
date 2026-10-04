@@ -33,18 +33,23 @@ export default function LandingPricing() {
             Every transformation begins with understanding how your organisation operates. Assess first, build your
             transformation strategy, then deploy AI with confidence.
           </p>
-          <div className={s.tabs} role="group" aria-label="Currency">
-            {(['IDR', 'USD'] as const).map((c) => (
-              <button
-                key={c}
-                type="button"
-                className={s.tab}
-                aria-pressed={activeCurrency === c}
-                onClick={() => setCurrency(c)}
-              >
-                {c}
-              </button>
-            ))}
+          {/* Same translucent, rounded, sticky toggle as /pricing. */}
+          <div className="sticky top-24 z-50 flex justify-center">
+            <div className="bg-white/60 p-1.5 rounded-full inline-flex border border-[#494949]/10 shadow-sm backdrop-blur-md" role="group" aria-label="Currency">
+              {(['IDR', 'USD'] as const).map((c) => (
+                <button
+                  key={c}
+                  type="button"
+                  aria-pressed={activeCurrency === c}
+                  onClick={() => setCurrency(c)}
+                  className={`px-6 py-2.5 rounded-full text-sm font-bold transition-all duration-300 ${
+                    activeCurrency === c ? 'bg-[#c4c9b8] text-[#1a1a1a] shadow-sm' : 'text-[#494949]/60 hover:text-[#494949]'
+                  }`}
+                >
+                  {c}
+                </button>
+              ))}
+            </div>
           </div>
           <PaymentMethods />
         </div>
