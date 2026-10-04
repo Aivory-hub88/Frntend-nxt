@@ -482,6 +482,12 @@
   height: 56%;
   object-fit: contain;
 }
+.icoTint {
+  width: 56%;
+  height: 56%;
+  -webkit-mask: no-repeat center / contain;
+  mask: no-repeat center / contain;
+}
 .icoWide img {
   width: 80%;
   height: 80%;
