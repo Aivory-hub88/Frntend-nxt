@@ -285,62 +285,64 @@
 .g2 { left: 50cqw; top: 33cqw; width: 22cqw; height: 12cqw; background: #b9d6ff; }
 .g3 { left: 80cqw; top: 26cqw; width: 20cqw; height: 16cqw; background: #e4ffb0; }
 
-/* ── Connectivity strip (Figma 13:8902) ── */
+/* ── Connectivity strip (Figma 13:8902), 60% scale ── */
 .caps {
   position: relative;
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 16px;
-  margin-top: 0;
+  gap: 10px;
+  margin: 0 auto;
+  width: 60%;
 }
 .cap {
   background: #f5f5f5;
-  border-radius: 14px;
-  padding: 16px 0 0;
+  border-radius: 10px;
+  padding: 10px 0 0;
   display: grid;
-  gap: 12px;
+  gap: 7px;
   justify-items: stretch;
   text-align: center;
-  font-size: 17px;
+  font-size: 12px;
   color: #1f1f1f;
 }
 .chip {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 10px;
-  min-height: 48px;
-  padding: 6px 16px;
+  gap: 6px;
+  min-height: 29px;
+  padding: 4px 10px;
   background: #eef3f3;
   border: 1px solid #b9c2c2;
   border-radius: 999px;
-  font-size: 17px;
+  font-size: 12px;
   font-weight: 500;
   color: #1f1f1f;
+  white-space: nowrap;
 }
 .chipIc {
-  width: 22px;
-  height: 22px;
+  width: 13px;
+  height: 13px;
 }
 .chipA2a {
-  width: 30px;
-  height: 30px;
+  width: 18px;
+  height: 18px;
 }
 .chipText {
-  height: 11px;
+  height: 7px;
   width: auto;
 }
 .stack {
   display: inline-flex;
-  padding-left: 6px;
+  padding-left: 4px;
 }
 .stack i {
-  width: 30px;
-  height: 30px;
-  margin-left: -9px;
+  width: 18px;
+  height: 18px;
+  margin-left: -5px;
   border-radius: 50%;
   background: #e4e4e4;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.18);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.18);
   display: grid;
   place-items: center;
 }
@@ -1435,6 +1437,7 @@ th.me {
 
 /* ── Responsive ── */
 @media (max-width: 960px) {
+  .caps { width: 100%; }
   .ig { grid-template-columns: 1fr 1fr; }
   .stage, .builder { grid-template-columns: 1fr; }
   .feats { grid-template-columns: 1fr; }
@@ -1448,6 +1451,7 @@ th.me {
 @media (max-width: 680px) {
   .band { margin: 0 8px 8px; border-radius: 26px; }
   .steps, .caps { grid-template-columns: 1fr; }
+  .caps { width: 100%; }
   .ig { grid-template-columns: 1fr; }
   .marks { grid-template-columns: 1fr 1fr; row-gap: 24px; }
 }
