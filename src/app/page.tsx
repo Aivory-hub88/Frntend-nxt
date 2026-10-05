@@ -27,7 +27,8 @@ export default function HomePage() {
             mounted by Footer only, so the hero and content stay lightweight. */}
         <AmbientBackground className="fixed inset-0 z-0" />
 
-        <Navbar />
+        {/* The whole page lives in this one isolated stack, so the nav needs no portal. */}
+        <Navbar inPlace />
         <HeroSection />
 
         {/* Everything between the hero and the footer: alternating light / dark

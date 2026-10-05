@@ -20,7 +20,13 @@ function ArrowIcon({ className = '' }: { className?: string }) {
   );
 }
 
-export default function Navbar() {
+/**
+ * `inPlace` skips the post-mount portal. The portal moves the server-rendered
+ * nav into <body>, which unmounts and remounts the whole bar ~1.5s after load
+ * (a visible flash). Pages whose nav already sits in a top stacking context,
+ * like the home page, can keep it where it was rendered.
+ */
+export default function Navbar({ inPlace = false }: { inPlace?: boolean } = {}) {
   const pathname = usePathname();
   const { language, setLanguage } = useLanguage();
   const [isSignInModalOpen, setIsSignInModalOpen] = useState(false);
@@ -347,5 +353,5 @@ export default function Navbar() {
     </nav>
   );
 
-  return mounted ? createPortal(nav, document.body) : nav;
+  return mounted && !inPlace ? createPortal(nav, document.body) : nav;
 }
