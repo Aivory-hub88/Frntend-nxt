@@ -1,17 +1,17 @@
 /* eslint-disable @next/next/no-img-element */
 import s from './landing.module.css';
 
-type Member = { name: string; avatar?: string; agent?: boolean };
+type Member = { name: string; avatar?: string; agent?: string };
 
 const MEMBERS: Member[] = [
   { name: 'Ben', avatar: 'ben' },
   { name: 'Rachel', avatar: 'rachel' },
-  { name: 'Lex', agent: true },
+  { name: 'Lex', agent: 'chief_of_staff' },
   { name: 'Leah', avatar: 'leah' },
   { name: 'Lee', avatar: 'lee' },
-  { name: 'Aira', agent: true },
+  { name: 'Aira', agent: 'finance_invoice_ops' },
   { name: 'Oliver', avatar: 'oliver' },
-  { name: 'Finn', agent: true },
+  { name: 'Finn', agent: 'customer_service' },
   { name: 'Ryan', avatar: 'ryan' },
   { name: 'Kevin', avatar: 'kevin' },
   { name: 'Daniel', avatar: 'daniel' },
@@ -20,12 +20,9 @@ const MEMBERS: Member[] = [
 
 const avatar = (slug: string) => `/landing/avatars/${slug}.webp`;
 
-function AgentAvatar() {
-  return (
-    <span className={s.bot}>
-      <img src="/landing/cervo-icon.svg" alt="" />
-    </span>
-  );
+// Same portraits the user dashboard uses for deployable agents (public/agents).
+function AgentAvatar({ type }: { type: string }) {
+  return <img className={s.agentPic} src={`/landing/agents/${type}.svg`} alt="" />;
 }
 
 export default function WorkspaceSection() {
@@ -56,7 +53,7 @@ export default function WorkspaceSection() {
             {MEMBERS.map((m) => (
               <span key={m.name} className={`${s.person} ${m.agent ? s.agent : ''}`}>
                 {m.name}
-                {m.agent ? <AgentAvatar /> : <img src={avatar(m.avatar as string)} alt="" />}
+                {m.agent ? <AgentAvatar type={m.agent} /> : <img src={avatar(m.avatar as string)} alt="" />}
               </span>
             ))}
           </div>
@@ -71,7 +68,7 @@ export default function WorkspaceSection() {
             <div className={s.popup} role="listbox" aria-label="Mention people or agent">
               <small>Mention people or agent</small>
               <div className={`${s.opt} ${s.optOn}`} role="option" aria-selected="true">
-                <AgentAvatar />Lex <span className={s.tagAg}>Agent</span><em>Insert</em>
+                <AgentAvatar type="chief_of_staff" />Lex <span className={s.tagAg}>Agent</span><em>Insert</em>
               </div>
               <div className={s.opt} role="option" aria-selected="false"><img src={avatar('leah')} alt="" />Leah</div>
               <div className={s.opt} role="option" aria-selected="false"><img src={avatar('lee')} alt="" />Lee</div>

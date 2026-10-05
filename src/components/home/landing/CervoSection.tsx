@@ -1,8 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 import s from './landing.module.css';
 
-const CERVO_ICON = '/landing/cervo-icon.svg';
-
 // 7 x 5 grid; the MCP tile sits mid-grid and is the lit one. `tint` colours
 // icons whose SVGs are white-only (drawn for dark backgrounds).
 const APP_ICONS: Array<{ name: string; src: string; wide?: boolean; tint?: string }> = [
@@ -63,12 +61,8 @@ function Line({ d }: { d: string }) {
   );
 }
 
-function CervoMark({ className }: { className?: string }) {
-  return (
-    <span className={className}>
-      <img src={CERVO_ICON} alt="" />
-    </span>
-  );
+function AgentPic({ type, className }: { type: string; className?: string }) {
+  return <img className={`${s.agentPic} ${className ?? ''}`} src={`/landing/agents/${type}.svg`} alt="" />;
 }
 
 function Task({ src, badge, tone, text, result, working }: {
@@ -114,24 +108,31 @@ export default function CervoSection() {
           <img className={s.fbPeople} src="/landing/cervo-team.webp" alt="" width={1400} height={368} />
         </div>
 
+        {/* Connectivity strip, as in Figma (node 13:8902). */}
         <div className={s.caps} aria-label="Connectivity">
           <div className={s.cap}>
             <span>30+ Apps Integrations</span>
             <span className={s.chip}>
+              <img className={s.chipIc} src="/landing/strip/puzzle.svg" alt="" />
               Integrations
-              <span className={s.dots} aria-hidden="true">
-                <i style={{ background: '#ea4335' }} /><i style={{ background: '#4285f4' }} />
-                <i style={{ background: '#34a853' }} /><i style={{ background: '#ff7a59' }} />
+              <span className={s.stack} aria-hidden="true">
+                <i><img src="/landing/strip/gmail.svg" alt="" /></i>
+                <i><img src="/integrations/icons/google-calendar.svg" alt="" /></i>
+                <i><img src="/landing/strip/salesforce.svg" alt="" /></i>
+                <i><img src="/landing/strip/hubspot.svg" alt="" /></i>
               </span>
             </span>
           </div>
           <div className={s.cap}>
             <span>MCP Connection</span>
-            <span className={s.chip}><img src="/landing/mcp.svg" alt="" />Model Context Protocol</span>
+            <span className={s.chip}><img className={s.chipIc} src="/landing/mcp.svg" alt="" />Model Context Protocol</span>
           </div>
           <div className={s.cap}>
             <span>A2A Protocol</span>
-            <span className={s.chip}>Agent2Agent</span>
+            <span className={s.chip}>
+              <img className={s.chipA2a} src="/landing/strip/a2a.svg" alt="" />
+              <img className={s.chipText} src="/landing/strip/agent2agent-text.svg" alt="Agent2Agent" />
+            </span>
           </div>
         </div>
 
@@ -141,7 +142,7 @@ export default function CervoSection() {
             <p className={s.igd}>Each agent remembers customers, vendors and past decisions, then applies them to the next task without being told twice.</p>
             <div className={`${s.igp} ${s.chatp}`}>
               <div className={s.chatH}>
-                <CervoMark className={s.cvm} />
+                <AgentPic type="finance_invoice_ops" className={s.cvm} />
                 <div><b>Finance agent</b><small>Memory</small></div>
                 <span className={s.pips} aria-hidden="true"><i /><i /><i /></span>
               </div>
@@ -218,9 +219,9 @@ export default function CervoSection() {
             <div className={`${s.igp} ${s.agentp}`}>
               <div className={s.st}><i />Active · A2A · Shared context</div>
               <div className={s.flow}>
-                <CervoMark className={`${s.bx} ${s.bxCervo}`} /><small className={s.fl}>Sales</small>
+                <AgentPic type="leads_qualifier" className={s.flowPic} /><small className={s.fl}>Sales</small>
                 <span className={s.arr}><Line d="M14 5l7 7-7 7M21 12H3" /></span>
-                <CervoMark className={`${s.bx} ${s.bxCervo}`} /><small className={s.fl}>Finance</small>
+                <AgentPic type="finance_invoice_ops" className={s.flowPic} /><small className={s.fl}>Finance</small>
                 <span className={`${s.bdg} ${s.ok} ${s.push}`}>Handed off</span>
               </div>
               <Task src="Sales → Finance" badge="Handed off" tone="ok" text='"Deal closed: Acme Ltd, 12 seats."' result="Invoice INV-0412 drafted with deal terms." />
