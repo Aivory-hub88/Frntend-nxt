@@ -11,6 +11,7 @@ import LandingPricing from '@/components/home/landing/LandingPricing';
 import ComparisonSection from '@/components/home/landing/ComparisonSection';
 import PrivacyPanel from '@/components/home/landing/PrivacyPanel';
 import ClosingCTA from '@/components/home/landing/ClosingCTA';
+import SectionReveal from '@/components/home/landing/SectionReveal';
 import styles from '@/components/home/landing/landing.module.css';
 import { JsonLd, buildHomePageGraph, siteUrlFromHeaders } from '@/lib/seo';
 
@@ -34,7 +35,8 @@ export default function HomePage() {
             `no-word-split` opts these sections out of ScrollRevealProvider's
             per-word reveal: it hid text again on scroll-up (reverse) and kept
             line breaks measured at load, so text re-wrapped badly on resize. */}
-        <div className={`${styles.landing} no-word-split`}>
+        <div id="landing-bands" className={`${styles.landing} no-word-split`}>
+          <SectionReveal rootId="landing-bands" />
           <HowItWorksSection />
           <CervoSection />
           <WorkspaceSection />
