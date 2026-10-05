@@ -18,21 +18,35 @@ export default function SectionReveal({ rootId }: { rootId: string }) {
     const pending = sections.filter((el) => el.getBoundingClientRect().top > window.innerHeight * 0.9);
     pending.forEach((el) => (el.dataset.reveal = 'pending'));
 
+    const reveal = (el: HTMLElement) => {
+      if (el.dataset.reveal !== 'pending') return;
+      io.unobserve(el);
+      el.dataset.reveal = 'in';
+      // Drop the transform once settled so it creates no lasting stacking context.
+      el.addEventListener('transitionend', () => (el.dataset.reveal = 'done'), { once: true });
+    };
     const io = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (!entry.isIntersecting) return;
-          const el = entry.target as HTMLElement;
-          io.unobserve(el);
-          el.dataset.reveal = 'in';
-          // Drop the transform once settled so it creates no lasting stacking context.
-          el.addEventListener('transitionend', () => (el.dataset.reveal = 'done'), { once: true });
-        });
-      },
+      (entries) => entries.forEach((e) => e.isIntersecting && reveal(e.target as HTMLElement)),
       { rootMargin: '0px 0px -12% 0px', threshold: 0.05 },
     );
     pending.forEach((el) => io.observe(el));
-    return () => io.disconnect();
+
+    // Safety net for fast scrolls / anchor jumps the observer can skip: anything
+    // whose top has reached the viewport is revealed on the next frame.
+    let raf = 0;
+    const onScroll = () => {
+      if (raf) return;
+      raf = requestAnimationFrame(() => {
+        raf = 0;
+        pending.forEach((el) => el.getBoundingClientRect().top < window.innerHeight && reveal(el));
+      });
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => {
+      io.disconnect();
+      window.removeEventListener('scroll', onScroll);
+      cancelAnimationFrame(raf);
+    };
   }, [rootId]);
 
   return null;
