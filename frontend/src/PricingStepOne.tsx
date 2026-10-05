@@ -55,7 +55,7 @@ interface PricingCard {
 const cards: PricingCard[] = [
   {
     title: 'Business Operations\nAssessment',
-    price: 39,
+    price: 20,
     frequency: 'One-time Engagement',
     description: 'Understand operations, identify bottlenecks, and pinpoint exactly where AI creates measurable business value.',
     features: [
