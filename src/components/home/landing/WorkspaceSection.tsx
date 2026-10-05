@@ -6,12 +6,12 @@ type Member = { name: string; avatar?: string; agent?: string };
 const MEMBERS: Member[] = [
   { name: 'Ben', avatar: 'ben' },
   { name: 'Rachel', avatar: 'rachel' },
-  { name: 'Lex', agent: 'chief_of_staff' },
+  { name: 'Lex', agent: 'leads_qualifier' },
   { name: 'Leah', avatar: 'leah' },
   { name: 'Lee', avatar: 'lee' },
-  { name: 'Aira', agent: 'finance_invoice_ops' },
+  { name: 'Aira', agent: 'chief_of_staff' },
   { name: 'Oliver', avatar: 'oliver' },
-  { name: 'Finn', agent: 'customer_service' },
+  { name: 'Finn', agent: 'finance_invoice_ops' },
   { name: 'Ryan', avatar: 'ryan' },
   { name: 'Kevin', avatar: 'kevin' },
   { name: 'Daniel', avatar: 'daniel' },
@@ -20,7 +20,8 @@ const MEMBERS: Member[] = [
 
 const avatar = (slug: string) => `/landing/avatars/${slug}.webp`;
 
-// Same portraits the user dashboard uses for deployable agents (public/agents).
+// Same portraits and names as the user dashboard roster (lib/agentRoster.generated.ts):
+// Lex = leads_qualifier, Aira = chief_of_staff, Finn = finance_invoice_ops.
 function AgentAvatar({ type }: { type: string }) {
   return <img className={s.agentPic} src={`/landing/agents/${type}.svg`} alt="" />;
 }
@@ -68,7 +69,7 @@ export default function WorkspaceSection() {
             <div className={s.popup} role="listbox" aria-label="Mention people or agent">
               <small>Mention people or agent</small>
               <div className={`${s.opt} ${s.optOn}`} role="option" aria-selected="true">
-                <AgentAvatar type="chief_of_staff" />Lex <span className={s.tagAg}>Agent</span><em>Insert</em>
+                <AgentAvatar type="leads_qualifier" />Lex <span className={s.tagAg}>Agent</span><em>Insert</em>
               </div>
               <div className={s.opt} role="option" aria-selected="false"><img src={avatar('leah')} alt="" />Leah</div>
               <div className={s.opt} role="option" aria-selected="false"><img src={avatar('lee')} alt="" />Lee</div>

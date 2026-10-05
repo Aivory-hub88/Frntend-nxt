@@ -143,13 +143,13 @@ export default function CervoSection() {
             <div className={`${s.igp} ${s.chatp}`}>
               <div className={s.chatH}>
                 <AgentPic type="finance_invoice_ops" className={s.cvm} />
-                <div><b>Finance agent</b><small>Memory</small></div>
+                <div><b>Finn</b><small>Finance &amp; Invoice Ops · Memory</small></div>
                 <span className={s.pips} aria-hidden="true"><i /><i /><i /></span>
               </div>
               <div className={s.chatB}>
                 <div className={`${s.bub} ${s.bubMe}`}>Send Acme Ltd their March invoice</div>
                 <div className={`${s.bub} ${s.bubAg}`}>
-                  <span className={s.agL}><i />Aivory agent</span>
+                  <span className={s.agL}><i />Finn</span>
                   Sent INV-0412 in GBP with net 30 terms, as Acme Ltd prefers. PO number attached.
                 </div>
               </div>
@@ -219,12 +219,12 @@ export default function CervoSection() {
             <div className={`${s.igp} ${s.agentp}`}>
               <div className={s.st}><i />Active · A2A · Shared context</div>
               <div className={s.flow}>
-                <AgentPic type="leads_qualifier" className={s.flowPic} /><small className={s.fl}>Sales</small>
+                <AgentPic type="leads_qualifier" className={s.flowPic} /><small className={s.fl}>Lex</small>
                 <span className={s.arr}><Line d="M14 5l7 7-7 7M21 12H3" /></span>
-                <AgentPic type="finance_invoice_ops" className={s.flowPic} /><small className={s.fl}>Finance</small>
+                <AgentPic type="finance_invoice_ops" className={s.flowPic} /><small className={s.fl}>Finn</small>
                 <span className={`${s.bdg} ${s.ok} ${s.push}`}>Handed off</span>
               </div>
-              <Task src="Sales → Finance" badge="Handed off" tone="ok" text='"Deal closed: Acme Ltd, 12 seats."' result="Invoice INV-0412 drafted with deal terms." />
+              <Task src="Lex (Sales) → Finn (Finance)" badge="Handed off" tone="ok" text='"Deal closed: Acme Ltd, 12 seats."' result="Invoice INV-0412 drafted with deal terms." />
               <Task src="Support → Operations" badge="Processing" tone="blue" text='"Replacement unit for order #9042."' result="Checking stock · Booking courier" working />
             </div>
           </article>
