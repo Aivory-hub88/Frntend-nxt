@@ -117,11 +117,11 @@ export default function Navbar() {
     <nav className="fixed top-0 inset-x-0 z-[1000]">
       <div
         aria-hidden="true"
-        className={`pointer-events-none absolute inset-x-0 top-0 h-20 transition-[background-color,backdrop-filter,box-shadow] duration-300 ease-out ${
+        className={`pointer-events-none absolute inset-x-0 top-0 h-20 transition-[background-color,backdrop-filter] duration-300 ease-out ${
           !isScrolled && !lightFromTop
             ? 'bg-transparent'
             : lightPage
-              ? 'bg-white/80 backdrop-blur-md shadow-[0_1px_0_rgba(15,31,38,0.08)]'
+              ? 'bg-white/80 backdrop-blur-md'
               : 'bg-[rgba(5,5,5,0.78)] backdrop-blur-sm'
         }`}
       />
