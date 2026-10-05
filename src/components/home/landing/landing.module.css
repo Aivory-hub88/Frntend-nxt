@@ -29,13 +29,16 @@
   font-size: 16px;
   line-height: 1.55;
   padding-block: 12px;
+  /* Everything below the hero renders at 85%, like a zoomed-out page. */
+  zoom: 0.85;
   /* Pull up over the hero's transparent bottom padding (pb-16 md:pb-24) so the
-     dark ambient wash doesn't show as a strip between the hero and the bands. */
-  margin-top: -64px;
+     dark ambient wash doesn't show as a strip between the hero and the bands.
+     Divided by the zoom so the on-screen overlap stays 64 / 96px. */
+  margin-top: calc(-64px / 0.85);
 }
 @media (min-width: 768px) {
   .landing {
-    margin-top: -96px;
+    margin-top: calc(-96px / 0.85);
   }
 }
 
