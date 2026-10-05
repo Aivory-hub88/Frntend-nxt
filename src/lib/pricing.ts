@@ -171,7 +171,7 @@ export const SUBSCRIPTION_PRODUCTS: SubscriptionProduct[] = [
   {
     id: PRODUCT_IDS.OPERATIONAL,
     name: 'Operational',
-    price: 39,
+    price: 20,
     currency: PRICING_CURRENCY,
     kind: 'subscription',
     interval: 'month',

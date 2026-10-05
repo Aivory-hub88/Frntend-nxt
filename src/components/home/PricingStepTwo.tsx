@@ -57,7 +57,7 @@ const plans: Plan[] = [
   {
     name: 'Operational',
     description: 'For organisations beginning their operational transformation journey.',
-    price: 39,
+    price: 20,
     frequency: '/month',
     billingNote: 'Billed annually',
     features: [

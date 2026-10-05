@@ -47,7 +47,7 @@ function requirePrice(id: string): number {
  * Every price and product id is sourced from the pricing single source of
  * truth (`pricing.ts`) rather than hard-coded here, so the payment module can
  * never silently diverge from the published homepage prices. The corrected
- * subscription prices (Operational $39, Business $99) and the Full Stack
+ * subscription prices (Operational $20, Business $99) and the Full Stack
  * product all flow in from `pricing.ts`. Enterprise is sales-assisted and has
  * no self-serve price, so it is not part of this config.
  */

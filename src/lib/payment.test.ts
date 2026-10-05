@@ -22,7 +22,7 @@ import {
 
 describe("PAYMENT_CONFIG sourced from pricing.ts", () => {
   it("uses the corrected subscription prices from pricing.ts (Req 8.2)", () => {
-    expect(PAYMENT_CONFIG.operationalPrice).toBe(39);
+    expect(PAYMENT_CONFIG.operationalPrice).toBe(20);
     expect(PAYMENT_CONFIG.businessPrice).toBe(99);
 
     expect(PAYMENT_CONFIG.operationalPrice).toBe(getProductPrice(PRODUCT_IDS.OPERATIONAL));
