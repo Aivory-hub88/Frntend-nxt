@@ -30,8 +30,11 @@ export default function HomePage() {
         <HeroSection />
 
         {/* Everything between the hero and the footer: alternating light / dark
-            bands on an opaque surface that covers the fixed ambient wash. */}
-        <div className={styles.landing}>
+            bands on an opaque surface that covers the fixed ambient wash.
+            `no-word-split` opts these sections out of ScrollRevealProvider's
+            per-word reveal: it hid text again on scroll-up (reverse) and kept
+            line breaks measured at load, so text re-wrapped badly on resize. */}
+        <div className={`${styles.landing} no-word-split`}>
           <HowItWorksSection />
           <CervoSection />
           <WorkspaceSection />

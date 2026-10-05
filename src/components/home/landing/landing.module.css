@@ -1460,9 +1460,3 @@ th.me {
   .secList div { border-right: 0; border-bottom: 1px solid var(--rule); }
 }
 
-/* ScrollRevealProvider splits h2/p into SplitType lines and masks each line
-   with an inline overflow:hidden, which clips descenders (g/p/y) at our tight
-   1.1 line-height. Keep the word fade/slide, drop the mask. */
-.landing :global(.line) {
-  overflow: visible !important;
-}
