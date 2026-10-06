@@ -95,6 +95,7 @@ const cards: PricingCard[] = [
       '• Transformation Roadmap',
       '• AI opportunity prioritisation',
       '• Executive implementation plan',
+      '• Includes 1 month of Business plan',
     ],
     cta: 'Start Transformation',
     productId: PRODUCT_IDS.FULL_STACK,
