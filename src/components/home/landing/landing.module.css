@@ -1474,3 +1474,19 @@ th.me {
   .secList div { border-right: 0; border-bottom: 1px solid var(--rule); }
 }
 
+
+/* ── Product film (PromoVideoSection) ── */
+.film {
+  margin: clamp(32px, 5vw, 52px) auto 0;
+  max-width: 1080px;
+  border-radius: clamp(18px, 2.4vw, 30px);
+  overflow: hidden;
+  background: #f4f5f8;
+  box-shadow: 0 40px 100px -40px rgba(15, 20, 36, 0.35), 0 0 0 1px rgba(15, 20, 36, 0.06);
+}
+.filmVideo {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 9;
+}
