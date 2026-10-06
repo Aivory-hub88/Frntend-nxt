@@ -3,6 +3,7 @@ import HeroSection from '@/components/home/HeroSection';
 import Footer from '@/components/Footer';
 import ScrollRevealProvider from '@/components/home/ScrollRevealProvider';
 import { AmbientBackground } from '@/components/ui/AmbientBackground';
+import PromoVideoSection from '@/components/home/landing/PromoVideoSection';
 import HowItWorksSection from '@/components/home/landing/HowItWorksSection';
 import CervoSection from '@/components/home/landing/CervoSection';
 import WorkspaceSection from '@/components/home/landing/WorkspaceSection';
@@ -38,6 +39,7 @@ export default function HomePage() {
             line breaks measured at load, so text re-wrapped badly on resize. */}
         <div id="landing-bands" className={`${styles.landing} no-word-split`}>
           <SectionReveal rootId="landing-bands" />
+          <PromoVideoSection />
           <HowItWorksSection />
           <CervoSection />
           <WorkspaceSection />
