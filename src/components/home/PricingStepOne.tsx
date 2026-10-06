@@ -103,6 +103,9 @@ const cards: PricingCard[] = [
   },
 ];
 
+// The bundle's bonus line, emphasised wherever it appears on the card.
+const BONUS_SUBTITLE = '1 Month Business Plan';
+
 export default function PricingStepOne({ currency, variant = 'default' }: { currency?: 'IDR' | 'USD'; variant?: 'default' | 'landing' }) {
   // 'landing' = the homepage band: same content and checkout, lighter card treatment.
   const landing = variant === 'landing';
@@ -179,7 +182,12 @@ export default function PricingStepOne({ currency, variant = 'default' }: { curr
                   </h3>
                   {card.subtitle && (
                     <p className="pt-9 text-[12px] md:text-[13px] font-bold leading-tight text-[#8a8f8d]">
-                      {card.subtitle}
+                      {card.subtitle.endsWith(BONUS_SUBTITLE) ? (
+                        <>
+                          {card.subtitle.slice(0, -BONUS_SUBTITLE.length)}
+                          <span className="font-extrabold text-[#494949]">{BONUS_SUBTITLE}</span>
+                        </>
+                      ) : card.subtitle}
                     </p>
                   )}
                 </div>
@@ -210,7 +218,7 @@ export default function PricingStepOne({ currency, variant = 'default' }: { curr
                   return (
                     <li key={f} className={isBullet ? "flex gap-2" : ""}>
                       {isBullet && <span className="shrink-0">•</span>}
-                      <span>{text}</span>
+                      <span className={text.startsWith('Includes 1 month') ? 'font-bold' : undefined}>{text}</span>
                     </li>
                   );
                 })}
