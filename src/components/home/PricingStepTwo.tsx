@@ -69,7 +69,7 @@ const plans: Plan[] = [
       'Telegram or Slack',
       'Multilingual',
     ],
-    cta: 'Request Licence',
+    cta: 'Start with Operational',
     productId: PRODUCT_IDS.OPERATIONAL,
   },
   {
@@ -88,7 +88,7 @@ const plans: Plan[] = [
       'Operational Orchestration',
       'Usage Analytics',
     ],
-    cta: 'Request Licence',
+    cta: 'Start with Business',
     productId: PRODUCT_IDS.BUSINESS,
     mostPopular: true,
   },
@@ -166,12 +166,12 @@ export default function PricingStepTwo({ currency, variant = 'default' }: { curr
         <div className="mb-20 text-center md:text-left">
           <div className="inline-block mb-6">
             <div className="flex items-center gap-2.5">
-              <span className="text-[22px] md:text-[26px] font-extrabold text-[#494949]">Step 2 — Platform Licensing</span>
+              <span className="text-[22px] md:text-[26px] font-extrabold text-[#494949]">Step 2 — Operating Plan</span>
               <StepIcon />
             </div>
             <div className="w-full h-[3px] bg-[#c4c9b8] mt-2 rounded-full" />
           </div>
-          <h2 className={`text-[35px] sm:text-[37px] md:text-[37px] lg:text-[43px] ${landing ? 'font-light tracking-[-0.03em]' : 'font-normal tracking-tight'} mb-6`}>License the operational capability your organisation needs.</h2>
+          <h2 className={`text-[35px] sm:text-[37px] md:text-[37px] lg:text-[43px] ${landing ? 'font-light tracking-[-0.03em]' : 'font-normal tracking-tight'} mb-6`}>Choose how your organisation runs on Aivory.</h2>
           <p className="text-xl text-[#494949] font-light leading-relaxed">
             Continue your transformation with Aivory's Operational Intelligence Platform. Modernise operations, orchestrate intelligent workflows, and deploy governed AI across your organisation.
           </p>
@@ -268,7 +268,7 @@ export default function PricingStepTwo({ currency, variant = 'default' }: { curr
         {/* Bottom note */}
         <div className="mt-16 text-center">
           <p className="text-[15px] md:text-[17px] font-medium leading-tight text-[#494949]">
-            Enterprise governance. Predictable licensing. Business operations transformation powered by AI.
+            Enterprise governance. Predictable pricing. Business operations transformation powered by AI.
           </p>
         </div>
       </div>

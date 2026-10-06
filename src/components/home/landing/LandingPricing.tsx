@@ -27,7 +27,7 @@ export default function LandingPricing() {
           <h2 className={s.h2}>
             Priced for progress.
             <br />
-            <span className={s.dim}>Assess first, then license the platform.</span>
+            <span className={s.dim}>Assess first, then choose how you operate.</span>
           </h2>
           <p className={s.lede}>
             Every transformation begins with understanding how your organisation operates. Assess first, build your
