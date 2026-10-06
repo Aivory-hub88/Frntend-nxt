@@ -46,6 +46,7 @@ const CHECKOUT_SERVICE_INFO: Record<string, CheckoutServiceInfo> = {
       'Transformation Roadmap',
       'AI opportunity prioritisation',
       'Executive implementation plan',
+      'Includes 1 month of Business plan',
     ],
   },
   [PRODUCT_IDS.OPERATIONAL]: {
