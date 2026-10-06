@@ -1254,6 +1254,7 @@ export default function FreeDiagnosticClient() {
                     <li>AI system blueprint and workflow architecture</li>
                     <li>Phased implementation roadmap</li>
                     <li>KPI targets and deployment priorities</li>
+                    <li>Includes 1 month of Business plan</li>
                   </ul>
                   <a
                     href="/#pricing-section"
