@@ -85,7 +85,7 @@ const cards: PricingCard[] = [
   },
   {
     title: 'Complete Transformation Package',
-    subtitle: 'Business Operations Assessment\n+\nTransformation Blueprint\n+\nTransformation Roadmap',
+    subtitle: 'Business Operations Assessment\n+\nTransformation Blueprint\n+\nTransformation Roadmap\n+\n1 Month Business Plan',
     price: 299,
     frequency: 'Per use',
     description: 'Everything required to move from operational assessment to a clear transformation strategy.',
@@ -166,7 +166,7 @@ export default function PricingStepOne({ currency, variant = 'default' }: { curr
             >
               {/* Title area */}
               <div className="flex-grow flex flex-col">
-                <div className="min-h-[170px] pb-4">
+                <div className="min-h-[200px] pb-4">
                   <div className="h-6 mb-3">
                     {card.mostPopular && (
                       <span className="inline-flex items-center px-3 py-1 text-[9px] font-bold uppercase tracking-[0.15em] text-[#494949] border border-[#494949] rounded-full">
@@ -178,7 +178,7 @@ export default function PricingStepOne({ currency, variant = 'default' }: { curr
                     {card.title}
                   </h3>
                   {card.subtitle && (
-                    <p className="mt-2 text-[12px] md:text-[13px] font-bold leading-tight text-[#8a8f8d]">
+                    <p className="mt-4 text-[12px] md:text-[13px] font-bold leading-tight text-[#8a8f8d]">
                       {card.subtitle}
                     </p>
                   )}
