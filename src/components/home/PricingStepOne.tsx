@@ -178,7 +178,7 @@ export default function PricingStepOne({ currency, variant = 'default' }: { curr
                     {card.title}
                   </h3>
                   {card.subtitle && (
-                    <p className="mt-4 text-[12px] md:text-[13px] font-bold leading-tight text-[#8a8f8d]">
+                    <p className="pt-5 text-[12px] md:text-[13px] font-bold leading-tight text-[#8a8f8d]">
                       {card.subtitle}
                     </p>
                   )}
