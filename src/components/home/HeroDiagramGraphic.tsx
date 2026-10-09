@@ -17,16 +17,6 @@ const imgSoftStar = '/images/hero-new/soft-star.svg';
 const imgLines = '/images/hero-new/lines-bg.svg';
 const imgBlobTopLeft = '/images/hero-new/group-35392.svg';
 const imgBlobTopLeft2 = '/images/hero-new/group-35393.svg';
-// Arrowheads, exported per-node from Figma with their rotation already
-// applied (14:757 / 14:758), so nothing here has to be re-derived.
-const imgHeadRight = '/images/hero-new/arrowhead-right.png';
-const imgHeadLeft = '/images/hero-new/arrowhead-left.png';
-// Connectors exported per-node from Figma (node ids 8:573 / 8:575 / 8:582 /
-// 8:576) so each one carries the rotation it actually has in the composition.
-const imgArrowData = '/images/hero-new/arrow-data.png';
-const imgArrowAiAgent = '/images/hero-new/arrow-aiagent.png';
-const imgArrowBizOps = '/images/hero-new/arrow-bizops.png';
-const imgArrowWorkflows = '/images/hero-new/arrow-workflows.png';
 // Trust-card illustrations (nodes 28:799 / 28:858) and the canonical NVIDIA
 // lockup (reused rather than Figma's own re-traced export of it).
 const imgKeynote = '/images/hero-new/trust-keynote.png';
@@ -90,6 +80,7 @@ function Note({
   size,
   rotate,
   scale = 1,
+  delay = 0,
   illustration,
   children,
 }: {
@@ -98,6 +89,8 @@ function Note({
   size: number;
   rotate: number;
   scale?: number;
+  /** Offset into the idle sway so the three notes don't move in lockstep. */
+  delay?: number;
   illustration?: { src: string; width: number; height: number; left: number; top: number };
   children: React.ReactNode;
 }) {
@@ -106,20 +99,24 @@ function Note({
       className="absolute"
       style={{ left, top, width: size, height: size, transform: scale !== 1 ? `scale(${scale})` : undefined, transformOrigin: '0 0' }}
     >
-      <div
-        className="absolute inset-0 rounded-[28px] bg-white"
-        style={{ boxShadow: CARD_SHADOW, transform: `rotate(${rotate}deg)` }}
-      >
-        {children}
+      <div className="hero-sway absolute inset-0" style={{ animationDelay: `${delay}s` }}>
+        <div className="hero-note-poke pointer-events-auto absolute inset-0">
+          <div
+            className="absolute inset-0 rounded-[28px] bg-white"
+            style={{ boxShadow: CARD_SHADOW, transform: `rotate(${rotate}deg)` }}
+          >
+            {children}
+          </div>
+          {illustration && (
+            <img
+              src={illustration.src}
+              alt=""
+              className="pointer-events-none absolute select-none"
+              style={{ left: illustration.left, top: illustration.top, width: illustration.width, height: illustration.height }}
+            />
+          )}
+        </div>
       </div>
-      {illustration && (
-        <img
-          src={illustration.src}
-          alt=""
-          className="pointer-events-none absolute select-none"
-          style={{ left: illustration.left, top: illustration.top, width: illustration.width, height: illustration.height }}
-        />
-      )}
     </div>
   );
 }
@@ -181,6 +178,7 @@ function Pin({
   discX = 0,
   discY = 0,
   stemX,
+  delay = 0,
   children,
 }: {
   left: number;
@@ -191,36 +189,111 @@ function Pin({
   discX?: number;
   discY?: number;
   stemX: number;
+  /** Offset into the idle bob/wiggle so the four pins don't move in lockstep. */
+  delay?: number;
   children: React.ReactNode;
 }) {
+  const discCentre = `${discX + 32}px ${discY + 32}px`;
   return (
-    <div className="absolute" style={{ left, top, width: 76, height }}>
-      <span
-        className="absolute rounded-[6px]"
-        style={{ left: stemX, top: height - 90, width: 6, height: 90, background: ring }}
-      />
-      <div className="absolute rounded-full" style={{ left: discX, top: discY, width: 64, height: 64, background: ring }} />
-      <div
-        className="absolute rounded-full"
-        style={{ left: discX + 3.82, top: discY + 4, width: 56, height: 56, background: fill }}
-      />
-      {children}
+    <div className="hero-bob absolute" style={{ left, top, width: 76, height, animationDelay: `${delay}s` }}>
+      <div className="hero-poke pointer-events-auto absolute inset-0" style={{ transformOrigin: discCentre }}>
+        <span
+          className="absolute rounded-[6px]"
+          style={{ left: stemX, top: height - 90, width: 6, height: 90, background: ring }}
+        />
+        <div className="absolute rounded-full" style={{ left: discX, top: discY, width: 64, height: 64, background: ring }} />
+        <div
+          className="absolute rounded-full"
+          style={{ left: discX + 3.82, top: discY + 4, width: 56, height: 56, background: fill }}
+        />
+        <div className="hero-wiggle absolute inset-0" style={{ transformOrigin: discCentre, animationDelay: `${delay * 1.7}s` }}>
+          {children}
+        </div>
+      </div>
     </div>
   );
 }
 
 /**
- * Connector lines, exported from Figma exactly as they are composed there
- * (some instances are rotated in the source, and the codegen drops that) and
- * placed at each node's own bounding box. The render carries ~1.5px of stroke
- * bleed on each side, hence the -1.5 / +3 on the box.
+ * The connectors, redrawn as SVG paths (they were flat PNG exports) so they
+ * can be animated: each one draws itself out of the One System pill — or, for
+ * BizOps, out of Workflows — with its arrowhead riding the tip, and only once
+ * the arrow arrives does its label pop in. After that the dashes keep
+ * marching outward, so the diagram reads as the pill feeding everything.
+ *
+ * Geometry is traced off the old PNG exports (same bounding boxes, same
+ * corner radii), in the lockup's 1440-wide design space. `line` stops a few
+ * px short of the arrow tip so the 3px stroke doesn't poke past the head;
+ * `head` runs on to the tip and is what the arrowhead travels along.
+ * The draw-in is a mask (a solid stroke whose dashoffset sweeps 1 → 0 over
+ * a normalised pathLength), because the visible path's own dasharray is
+ * already spoken for by the dashes.
  */
-function Connector({ x, y, w, h, src }: { x: number; y: number; w: number; h: number; src: string }) {
-  return <img src={src} alt="" className="absolute select-none" style={{ left: x, top: y, width: w, height: h }} />;
-}
+const FLOWS = [
+  {
+    key: 'workflows',
+    line: 'M 1042 375.5 H 1058 A 34 34 0 0 0 1092 341.5 V 316.5 A 34 34 0 0 0 1058 282.5 H 1046',
+    head: 'M 1042 375.5 H 1058 A 34 34 0 0 0 1092 341.5 V 316.5 A 34 34 0 0 0 1058 282.5 H 1041',
+  },
+  {
+    key: 'bizops',
+    line: 'M 920.5 263 V 228.5 A 25 25 0 0 0 895.5 203.5 H 744',
+    head: 'M 920.5 263 V 228.5 A 25 25 0 0 0 895.5 203.5 H 739',
+  },
+  {
+    key: 'data',
+    line: 'M 598 392 H 564',
+    head: 'M 598 392 H 559',
+  },
+  {
+    key: 'aiagent',
+    line: 'M 708.5 439 V 465.5 A 31 31 0 0 0 739.5 496.5 H 771',
+    head: 'M 708.5 439 V 465.5 A 31 31 0 0 0 739.5 496.5 H 776',
+  },
+] as const;
 
-function ArrowHead({ x, y, src }: { x: number; y: number; src: string }) {
-  return <img src={src} alt="" className="absolute select-none" style={{ left: x, top: y, width: 15, height: 17 }} />;
+function FlowLines() {
+  return (
+    <svg
+      aria-hidden="true"
+      className="hero-flow pointer-events-none absolute left-0 top-0 overflow-visible"
+      width={CANVAS_WIDTH}
+      height={800}
+    >
+      {FLOWS.map((f) => (
+        <g key={f.key}>
+          <mask id={`hero-flow-mask-${f.key}`} maskUnits="userSpaceOnUse" x={0} y={0} width={CANVAS_WIDTH} height={800}>
+            <path
+              d={f.line}
+              className={`hero-draw hero-draw-${f.key}`}
+              fill="none"
+              stroke="#fff"
+              strokeWidth={10}
+              pathLength={1}
+              strokeDasharray="1 1"
+            />
+          </mask>
+          <path
+            d={f.line}
+            mask={`url(#hero-flow-mask-${f.key})`}
+            className="hero-march"
+            fill="none"
+            stroke="#000"
+            strokeWidth={3}
+            strokeDasharray="8 5"
+          />
+          {/* Tip at (0,0) pointing along +x, so offset-rotate: auto aims it
+              down the path and its point lands exactly on the path end. */}
+          <path
+            d="M -11 -7 L 0 0 L -11 7 Z"
+            className={`hero-head hero-head-${f.key}`}
+            fill="#000"
+            style={{ offsetPath: `path('${f.head}')` }}
+          />
+        </g>
+      ))}
+    </svg>
+  );
 }
 
 /**
@@ -320,31 +393,39 @@ export default function HeroDiagramGraphic() {
           className="absolute inset-x-0 bottom-0"
           style={{ top: TOP_PAD, transform: `scale(${LOCKUP_SCALE})`, transformOrigin: '50% 0' }}
         >
-          {/* Build-up sequence: the pill first, then each connector group in
-              the order a viewer's eye would trace the arrows, tagline last.
-              transformOrigin is each group's own bounding-box centre so the
+          {/* Build-up sequence (timings in globals.css): the pill first,
+              then each arrow draws itself out of it (FlowLines) and its
+              label + pin pop in only when the arrowhead lands — Workflows,
+              BizOps (chained off Workflows), Data, AI Agent — then the
+              tagline and the trust cards. transformOrigin is each group's own bounding-box centre so the
               pop reads as that piece arriving in place, not the whole 1440px
               canvas scaling from its centre. */}
-          <div className="hero-pop hero-pop-1 absolute inset-0" style={{ transformOrigin: '820px 387px' }}>
+          <div className="hero-pop hero-pop-1 pointer-events-none absolute inset-0" style={{ transformOrigin: '820px 387px' }}>
             <div
-              className="absolute flex items-center justify-center rounded-[30px]"
-              style={{ left: 598.32, top: 335, width: 443.32, height: 103.4, background: '#3434ff' }}
+              className="hero-pill-poke pointer-events-auto absolute"
+              style={{ left: 598.32, top: 335, width: 443.32, height: 103.4 }}
             >
-              {/* line-height: 1 (not the 50px used elsewhere in the diagram)
-                  — this text is centred by the pill's flexbox, and a line box
-                  shorter than the 70px font size let Literata's descender
-                  push the glyphs down instead of centring them. */}
-              <span className="font-normal text-white" style={{ fontFamily: LITERATA, fontSize: 70, lineHeight: 1 }}>
-                One System
-              </span>
+              <div
+                className="hero-jelly absolute inset-0 flex items-center justify-center rounded-[30px]"
+                style={{ background: '#3434ff' }}
+              >
+                {/* line-height: 1 (not the 50px used elsewhere in the diagram)
+                    — this text is centred by the pill's flexbox, and a line box
+                    shorter than the 70px font size let Literata's descender
+                    push the glyphs down instead of centring them. */}
+                <span className="font-normal text-white" style={{ fontFamily: LITERATA, fontSize: 70, lineHeight: 1 }}>
+                  One System
+                </span>
+              </div>
             </div>
           </div>
 
-          <div className="hero-pop hero-pop-2 absolute inset-0" style={{ transformOrigin: '683px 178px' }}>
+          <FlowLines />
+
+          <div className="hero-pop hero-pop-2 pointer-events-none absolute inset-0" style={{ transformOrigin: '683px 178px' }}>
+            <img src={imgSoftStar} alt="" className="hero-twinkle absolute" style={{ animationDelay: '0.4s', left: 908, top: 136, width: 70, height: 75 }} />
             <Label left={444} top={194.5}>BizOps</Label>
-            <Connector x={743} y={202} w={179} h={61} src={imgArrowBizOps} />
-            <ArrowHead x={738} y={196} src={imgHeadLeft} />
-            <Pin left={692} top={92} height={141.125} ring="#ffb366" fill="#ffeddb" stemX={28.82}>
+            <Pin left={692} top={92} height={141.125} ring="#ffb366" fill="#ffeddb" stemX={28.82} delay={0}>
               {/* Only the computer is clipped by its disc in the source; the
                   rest sit over theirs, which is why they read larger. */}
               <div className="absolute overflow-hidden rounded-full" style={{ left: 3.82, top: 4, width: 56, height: 56 }}>
@@ -353,21 +434,16 @@ export default function HeroDiagramGraphic() {
             </Pin>
           </div>
 
-          <div className="hero-pop hero-pop-3 absolute inset-0" style={{ transformOrigin: '846px 257px' }}>
-            <img src={imgSoftStar} alt="" className="absolute" style={{ left: 908, top: 136, width: 70, height: 75 }} />
+          <div className="hero-pop hero-pop-3 pointer-events-none absolute inset-0" style={{ transformOrigin: '846px 257px' }}>
             <Label left={598} top={279.5}>Workflows</Label>
-            <Connector x={1047} y={281} w={47} h={96} src={imgArrowWorkflows} />
-            <ArrowHead x={1039} y={273} src={imgHeadLeft} />
-            <Pin left={997} top={173} height={141.125} ring="#9a139a" fill="#f5d2f5" stemX={28.82}>
+            <Pin left={997} top={173} height={141.125} ring="#9a139a" fill="#f5d2f5" stemX={28.82} delay={0.8}>
               <img src={imgSmartphone} alt="" className="absolute max-w-none" style={{ left: 0, top: 0, width: 64, height: 64 }} />
             </Pin>
           </div>
 
-          <div className="hero-pop hero-pop-4 absolute inset-0" style={{ transformOrigin: '493px 391px' }}>
+          <div className="hero-pop hero-pop-4 pointer-events-none absolute inset-0" style={{ transformOrigin: '493px 391px' }}>
             <Label left={365} top={381.5}>Data</Label>
-            <Connector x={566} y={388} w={32} h={8} src={imgArrowData} />
-            <ArrowHead x={559} y={385} src={imgHeadLeft} />
-            <Pin left={523} top={280} height={144.125} ring="#138e9a" fill="#d2ecf5" discX={1} discY={3} stemX={29.82}>
+            <Pin left={523} top={280} height={144.125} ring="#138e9a" fill="#d2ecf5" discX={1} discY={3} stemX={29.82} delay={1.6}>
               <div className="absolute flex items-center justify-center" style={{ left: 0, top: 0, width: 65.61, height: 65.61 }}>
                 <img
                   src={imgFolder}
@@ -377,14 +453,12 @@ export default function HeroDiagramGraphic() {
                 />
               </div>
             </Pin>
-            <img src={imgSoftStar} alt="" className="absolute" style={{ left: 551, top: 428, width: 70, height: 75 }} />
+            <img src={imgSoftStar} alt="" className="hero-twinkle absolute" style={{ animationDelay: '2.2s', left: 551, top: 428, width: 70, height: 75 }} />
           </div>
 
-          <div className="hero-pop hero-pop-5 absolute inset-0" style={{ transformOrigin: '934px 446px' }}>
+          <div className="hero-pop hero-pop-5 pointer-events-none absolute inset-0" style={{ transformOrigin: '934px 446px' }}>
             <Label left={773} top={479.5}>AI Agent</Label>
-            <Connector x={707} y={445} w={61} h={53} src={imgArrowAiAgent} />
-            <ArrowHead x={761} y={487} src={imgHeadRight} />
-            <Pin left={1085} top={375} height={141.125} ring="#6495d4" fill="#d2ecf5" discX={6} discY={0} stemX={34.82}>
+            <Pin left={1085} top={375} height={141.125} ring="#6495d4" fill="#d2ecf5" discX={6} discY={0} stemX={34.82} delay={2.4}>
               <div className="absolute overflow-hidden" style={{ left: 0, top: 5, width: 76, height: 52 }}>
                 <img
                   src={imgSmartwatchBot}
@@ -396,7 +470,7 @@ export default function HeroDiagramGraphic() {
             </Pin>
           </div>
 
-          <div className="hero-pop hero-pop-6 absolute inset-0" style={{ transformOrigin: '720px 619px' }}>
+          <div className="hero-pop hero-pop-6 pointer-events-none absolute inset-0" style={{ transformOrigin: '720px 619px' }}>
             <p
               className="absolute m-0 text-center font-normal text-black"
               style={{ left: 0, top: 559, width: CANVAS_WIDTH, fontFamily: LITERATA, fontSize: 25, lineHeight: '40px' }}
@@ -412,14 +486,14 @@ export default function HeroDiagramGraphic() {
           {/* Step 7 of the pop-in sequence — after the tagline (step 6), see
               globals.css. transformOrigin is the bounding-box centre of all
               three cards + their illustrations, so the group pops in place. */}
-          <div className="hero-pop hero-pop-7 absolute inset-0" style={{ transformOrigin: '796px 423px' }}>
+          <div className="hero-pop hero-pop-7 pointer-events-none absolute inset-0" style={{ transformOrigin: '796px 423px' }}>
             {/* Shifted 73px left / 10px up from the Figma position: at the
                 source's own placement the astronaut's right edge (492.77)
                 overlapped BizOps (left: 444) by ~49px. */}
-            <img src={imgMoon} alt="" className="pointer-events-none absolute select-none" style={{ left: 269.4, top: 209, width: 144.19, height: 144.19 }} />
-            <img src={imgAstronaut} alt="" className="pointer-events-none absolute select-none" style={{ left: 219, top: 113, width: 201.08, height: 203.38 }} />
+            <img src={imgMoon} alt="" className="hero-moon pointer-events-none absolute select-none" style={{ left: 269.4, top: 209, width: 144.19, height: 144.19 }} />
+            <img src={imgAstronaut} alt="" className="hero-float pointer-events-none absolute select-none" style={{ left: 219, top: 113, width: 201.08, height: 203.38 }} />
 
-            <Note left={265.2} top={479} size={176.36} rotate={13} scale={0.72} illustration={{ src: imgKeynote, width: 146, height: 147, left: 32, top: -95 }}>
+            <Note left={265.2} top={479} size={176.36} rotate={13} scale={0.72} delay={0} illustration={{ src: imgKeynote, width: 146, height: 147, left: 32, top: -95 }}>
               <p
                 className="absolute m-0 whitespace-nowrap font-normal text-black"
                 style={{ left: 21, top: 46, transform: 'translateY(-50%)', fontFamily: LITERATA, fontSize: 51, lineHeight: '50px' }}
@@ -442,7 +516,7 @@ export default function HeroDiagramGraphic() {
                 Our diagram doesn't share Figma's exact proportions here, so
                 the same raw coordinate collides where it didn't in the
                 source. */}
-            <Note left={1219} top={366.57} size={196.906} rotate={-3} scale={0.72} illustration={{ src: imgHand, width: 109.81, height: 109.81, left: 30.83, top: -4.55 }}>
+            <Note left={1219} top={366.57} size={196.906} rotate={-3} scale={0.72} delay={1.4} illustration={{ src: imgHand, width: 109.81, height: 109.81, left: 30.83, top: -4.55 }}>
               <p
                 className="absolute m-0 font-normal text-black"
                 style={{ left: 22, top: 131, width: 135, transform: 'translateY(-50%)', fontFamily: LITERATA, fontSize: 17, lineHeight: '17px' }}
@@ -453,7 +527,7 @@ export default function HeroDiagramGraphic() {
               </p>
             </Note>
 
-            <Note left={1000} top={597.87} size={124.82} rotate={-4}>
+            <Note left={1000} top={597.87} size={124.82} rotate={-4} delay={2.6}>
               <img
                 src={imgNvidiaBadge}
                 alt="NVIDIA Inception Program — Aivory AI is a member (2026 cohort)"
