@@ -852,14 +852,17 @@ body,
 }
 
 /* ─── Hero diagram build-up ───
-   The BizOps/Workflows/Data/AI Agent lockup pops in one connector-group at a
-   time (see HeroDiagramGraphic), so it reads as the pieces of the system
-   assembling rather than a single card fading in. Each group springs in —
-   overshoots, settles with a small wobble — holds, and then the whole lockup
-   shrinks away together just before the 10s loop wraps, instead of
-   blinking out. Percentages are each group's offset in a 10000ms loop; the
-   spring itself is ~620ms (0 → 6.2%). A keyframe's timing-function governs
-   the segment into the *next* keyframe, per the CSS animation spec. */
+   One 10s loop. The One System pill springs in, then each connector draws
+   itself out of it with its arrowhead riding the tip (HeroDiagramGraphic's
+   FlowLines), and the label + pin it points at pop in the moment the arrow
+   lands: Workflows, BizOps (chained off Workflows), Data, AI Agent. Then the
+   tagline and the trust cards. Everything holds until 95% and shrinks/fades
+   away together before the loop wraps. Percentages are ms / 10000; a
+   keyframe's timing-function governs the segment into the *next* keyframe.
+
+   Timeline (ms): pill 0 · workflows arrow 650–1100 · bizops arrow 1150–1650
+   · data arrow 1700–1950 · ai-agent arrow 2000–2400 · tagline 2750 ·
+   trust cards 3050. Each label pops at its arrow's end. */
 @keyframes heroPopLoop1 {
   0% {
     opacity: 0;
@@ -903,27 +906,27 @@ body,
     opacity: 0;
     transform: scale(0.4) rotate(5deg);
   }
-  2.6% {
+  16.5% {
     opacity: 0;
     transform: scale(0.4) rotate(5deg);
     animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
   }
-  5% {
+  18.9% {
     opacity: 1;
     transform: scale(1.08) rotate(-1.66667deg);
     animation-timing-function: ease-in-out;
   }
-  6.4% {
+  20.3% {
     opacity: 1;
     transform: scale(0.97) rotate(0.833333deg);
     animation-timing-function: ease-in-out;
   }
-  7.6% {
+  21.5% {
     opacity: 1;
     transform: scale(1.015) rotate(0deg);
     animation-timing-function: ease-out;
   }
-  8.8% {
+  22.7% {
     opacity: 1;
     transform: scale(1) rotate(0deg);
   }
@@ -946,27 +949,27 @@ body,
     opacity: 0;
     transform: scale(0.4) rotate(-5deg);
   }
-  5.2% {
+  11% {
     opacity: 0;
     transform: scale(0.4) rotate(-5deg);
     animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
   }
-  7.6% {
+  13.4% {
     opacity: 1;
     transform: scale(1.08) rotate(1.66667deg);
     animation-timing-function: ease-in-out;
   }
-  9% {
+  14.8% {
     opacity: 1;
     transform: scale(0.97) rotate(-0.833333deg);
     animation-timing-function: ease-in-out;
   }
-  10.2% {
+  16% {
     opacity: 1;
     transform: scale(1.015) rotate(0deg);
     animation-timing-function: ease-out;
   }
-  11.4% {
+  17.2% {
     opacity: 1;
     transform: scale(1) rotate(0deg);
   }
@@ -989,27 +992,27 @@ body,
     opacity: 0;
     transform: scale(0.4) rotate(5deg);
   }
-  7.8% {
+  19.5% {
     opacity: 0;
     transform: scale(0.4) rotate(5deg);
     animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
   }
-  10.2% {
+  21.9% {
     opacity: 1;
     transform: scale(1.08) rotate(-1.66667deg);
     animation-timing-function: ease-in-out;
   }
-  11.6% {
+  23.3% {
     opacity: 1;
     transform: scale(0.97) rotate(0.833333deg);
     animation-timing-function: ease-in-out;
   }
-  12.8% {
+  24.5% {
     opacity: 1;
     transform: scale(1.015) rotate(0deg);
     animation-timing-function: ease-out;
   }
-  14% {
+  25.7% {
     opacity: 1;
     transform: scale(1) rotate(0deg);
   }
@@ -1032,27 +1035,27 @@ body,
     opacity: 0;
     transform: scale(0.4) rotate(-5deg);
   }
-  10.4% {
+  24% {
     opacity: 0;
     transform: scale(0.4) rotate(-5deg);
     animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
   }
-  12.8% {
+  26.4% {
     opacity: 1;
     transform: scale(1.08) rotate(1.66667deg);
     animation-timing-function: ease-in-out;
   }
-  14.2% {
+  27.8% {
     opacity: 1;
     transform: scale(0.97) rotate(-0.833333deg);
     animation-timing-function: ease-in-out;
   }
-  15.4% {
+  29% {
     opacity: 1;
     transform: scale(1.015) rotate(0deg);
     animation-timing-function: ease-out;
   }
-  16.6% {
+  30.2% {
     opacity: 1;
     transform: scale(1) rotate(0deg);
   }
@@ -1075,27 +1078,27 @@ body,
     opacity: 0;
     transform: scale(0.4) rotate(0deg);
   }
-  13.4% {
+  27.5% {
     opacity: 0;
     transform: scale(0.4) rotate(0deg);
     animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
   }
-  15.8% {
+  29.9% {
     opacity: 1;
     transform: scale(1.08) rotate(0deg);
     animation-timing-function: ease-in-out;
   }
-  17.2% {
+  31.3% {
     opacity: 1;
     transform: scale(0.97) rotate(0deg);
     animation-timing-function: ease-in-out;
   }
-  18.4% {
+  32.5% {
     opacity: 1;
     transform: scale(1.015) rotate(0deg);
     animation-timing-function: ease-out;
   }
-  19.6% {
+  33.7% {
     opacity: 1;
     transform: scale(1) rotate(0deg);
   }
@@ -1118,27 +1121,27 @@ body,
     opacity: 0;
     transform: scale(0.4) rotate(-5deg);
   }
-  16% {
+  30.5% {
     opacity: 0;
     transform: scale(0.4) rotate(-5deg);
     animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
   }
-  18.4% {
+  32.9% {
     opacity: 1;
     transform: scale(1.08) rotate(1.66667deg);
     animation-timing-function: ease-in-out;
   }
-  19.8% {
+  34.3% {
     opacity: 1;
     transform: scale(0.97) rotate(-0.833333deg);
     animation-timing-function: ease-in-out;
   }
-  21% {
+  35.5% {
     opacity: 1;
     transform: scale(1.015) rotate(0deg);
     animation-timing-function: ease-out;
   }
-  22.2% {
+  36.7% {
     opacity: 1;
     transform: scale(1) rotate(0deg);
   }
@@ -1154,6 +1157,118 @@ body,
   100% {
     opacity: 0;
     transform: scale(0.6) rotate(5deg);
+  }
+}
+@keyframes heroDraw_workflows {
+  0%, 6.5% {
+    stroke-dashoffset: 1;
+    animation-timing-function: cubic-bezier(0.45, 0, 0.25, 1);
+  }
+  11%, 100% {
+    stroke-dashoffset: 0;
+  }
+}
+@keyframes heroHead_workflows {
+  0%, 6.49% {
+    opacity: 0;
+    offset-distance: 0%;
+  }
+  6.5% {
+    opacity: 1;
+    offset-distance: 0%;
+    animation-timing-function: cubic-bezier(0.45, 0, 0.25, 1);
+  }
+  11%, 100% {
+    opacity: 1;
+    offset-distance: 100%;
+  }
+}
+@keyframes heroDraw_bizops {
+  0%, 11.5% {
+    stroke-dashoffset: 1;
+    animation-timing-function: cubic-bezier(0.45, 0, 0.25, 1);
+  }
+  16.5%, 100% {
+    stroke-dashoffset: 0;
+  }
+}
+@keyframes heroHead_bizops {
+  0%, 11.49% {
+    opacity: 0;
+    offset-distance: 0%;
+  }
+  11.5% {
+    opacity: 1;
+    offset-distance: 0%;
+    animation-timing-function: cubic-bezier(0.45, 0, 0.25, 1);
+  }
+  16.5%, 100% {
+    opacity: 1;
+    offset-distance: 100%;
+  }
+}
+@keyframes heroDraw_data {
+  0%, 17% {
+    stroke-dashoffset: 1;
+    animation-timing-function: cubic-bezier(0.45, 0, 0.25, 1);
+  }
+  19.5%, 100% {
+    stroke-dashoffset: 0;
+  }
+}
+@keyframes heroHead_data {
+  0%, 16.99% {
+    opacity: 0;
+    offset-distance: 0%;
+  }
+  17% {
+    opacity: 1;
+    offset-distance: 0%;
+    animation-timing-function: cubic-bezier(0.45, 0, 0.25, 1);
+  }
+  19.5%, 100% {
+    opacity: 1;
+    offset-distance: 100%;
+  }
+}
+@keyframes heroDraw_aiagent {
+  0%, 20% {
+    stroke-dashoffset: 1;
+    animation-timing-function: cubic-bezier(0.45, 0, 0.25, 1);
+  }
+  24%, 100% {
+    stroke-dashoffset: 0;
+  }
+}
+@keyframes heroHead_aiagent {
+  0%, 19.99% {
+    opacity: 0;
+    offset-distance: 0%;
+  }
+  20% {
+    opacity: 1;
+    offset-distance: 0%;
+    animation-timing-function: cubic-bezier(0.45, 0, 0.25, 1);
+  }
+  24%, 100% {
+    opacity: 1;
+    offset-distance: 100%;
+  }
+}
+@keyframes heroFlowExit {
+  0%, 95% {
+    opacity: 1;
+    animation-timing-function: cubic-bezier(0.55, 0, 1, 0.45);
+  }
+  98.5%, 100% {
+    opacity: 0;
+  }
+}
+/* Once drawn, the dashes keep marching away from the pill. One period of
+   the 8/5 dash pattern per loop of this animation, so it repeats seamlessly. */
+@keyframes heroMarch {
+  to {
+    stroke-dashoffset: -13;
   }
 }
 
@@ -1183,6 +1298,72 @@ body,
 }
 .hero-pop-7 {
   animation-name: heroPopLoop7;
+}
+
+.hero-flow {
+  animation: heroFlowExit 10s linear infinite;
+}
+.hero-draw,
+.hero-head {
+  animation-duration: 10s;
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
+}
+.hero-draw {
+  stroke-dashoffset: 1;
+}
+.hero-head {
+  opacity: 0;
+  offset-rotate: auto;
+  offset-anchor: 0 0;
+}
+.hero-draw-workflows {
+  animation-name: heroDraw_workflows;
+}
+.hero-head-workflows {
+  animation-name: heroHead_workflows;
+}
+.hero-draw-bizops {
+  animation-name: heroDraw_bizops;
+}
+.hero-head-bizops {
+  animation-name: heroHead_bizops;
+}
+.hero-draw-data {
+  animation-name: heroDraw_data;
+}
+.hero-head-data {
+  animation-name: heroHead_data;
+}
+.hero-draw-aiagent {
+  animation-name: heroDraw_aiagent;
+}
+.hero-head-aiagent {
+  animation-name: heroHead_aiagent;
+}
+.hero-march {
+  animation: heroMarch 0.9s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-pop {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+  .hero-flow,
+  .hero-march {
+    animation: none;
+  }
+  .hero-draw {
+    animation: none;
+    stroke-dashoffset: 0;
+  }
+  .hero-head {
+    animation: none;
+    opacity: 1;
+    offset-distance: 100%;
+  }
 }
 
 /* ─── Hero idle motion ───
@@ -1262,11 +1443,6 @@ body,
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .hero-pop {
-    animation: none;
-    opacity: 1;
-    transform: none;
-  }
   .hero-bob,
   .hero-wiggle,
   .hero-twinkle,
