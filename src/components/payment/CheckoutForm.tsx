@@ -77,7 +77,10 @@ type Channel = 'credit_card' | 'gopay' | 'qris';
 export interface CheckoutFormProps {
   productId: string;
   productName: string;
+  /** What the customer will be charged — already net of any applied promo. */
   priceUsd: number;
+  /** Promo code applied in the order summary, forwarded with the payment. */
+  promoCode?: string;
   initialAuthed: boolean;
   onComplete: () => void;
 }
@@ -309,6 +312,7 @@ export function CheckoutForm({
   productId,
   productName,
   priceUsd,
+  promoCode,
   initialAuthed,
   onComplete,
 }: CheckoutFormProps) {
@@ -490,7 +494,7 @@ export function CheckoutForm({
       });
     }
 
-    const result = await createDirectCharge(productId, picked, cardTokenId);
+    const result = await createDirectCharge(productId, picked, cardTokenId, promoCode);
     if (result.fallback_to_snap || !result.success) {
       console.warn(
         '[checkout] Direct charge declined, falling back to Snap:',
@@ -543,7 +547,8 @@ export function CheckoutForm({
       // Snap opens on it rather than asking the customer to choose again.
       const result = await createPaymentTransaction(
         productId,
-        channel ? [channel] : undefined
+        channel ? [channel] : undefined,
+        promoCode
       );
       if (!result?.token) throw new Error('Failed to get payment token');
 

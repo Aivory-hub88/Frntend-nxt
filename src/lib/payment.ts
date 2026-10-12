@@ -296,6 +296,80 @@ function authHeaders(): Record<string, string> {
   };
 }
 
+/**
+ * A readable message from a payments error body.
+ *
+ * `detail` is a plain string for most failures, but a rejected promo code comes
+ * back as `{ error, promo_error }` so the checkout can tell it apart from a
+ * payment fault. Interpolating that object would print "[object Object]".
+ */
+function errorDetail(body: unknown, fallback: string): string {
+  const detail = (body as { detail?: unknown } | null)?.detail;
+  if (typeof detail === 'string' && detail) return detail;
+  const nested = (detail as { error?: unknown } | null)?.error;
+  return typeof nested === 'string' && nested ? nested : fallback;
+}
+
+export interface PromoQuote {
+  code: string;
+  listUsd: number;
+  discountUsd: number;
+  finalUsd: number;
+  finalIdr: number;
+}
+
+export type PromoCheck =
+  | { valid: true; quote: PromoQuote }
+  | { valid: false; error: string };
+
+/**
+ * Ask the payments service what a promo code is worth on `product`.
+ *
+ * Preview only: the discount is derived server-side again when the order is
+ * created, so the figures returned here are for display and can't be used to
+ * change what is charged.
+ */
+export async function validatePromoCode(
+  product: string | number,
+  code: string
+): Promise<PromoCheck> {
+  if (!isAuthenticated()) {
+    return { valid: false, error: 'Sign in first to apply a promo code.' };
+  }
+
+  const productId = typeof product === 'number' ? `credits_${product}` : product;
+
+  try {
+    const response = await fetch(`${API_BASE_URL}/api/v1/payments/promo/validate`, {
+      method: 'POST',
+      headers: authHeaders(),
+      body: JSON.stringify({ code, product: productId }),
+    });
+    const data = await response.json().catch(() => ({}));
+    if (!response.ok) {
+      return {
+        valid: false,
+        error: errorDetail(data, 'Could not check the promo code. Please try again.'),
+      };
+    }
+    if (!data.valid) {
+      return { valid: false, error: data.error || 'That promo code isn’t valid.' };
+    }
+    return {
+      valid: true,
+      quote: {
+        code: data.code,
+        listUsd: data.list_usd,
+        discountUsd: data.discount_usd,
+        finalUsd: data.final_usd,
+        finalIdr: data.final_idr,
+      },
+    };
+  } catch {
+    return { valid: false, error: 'Could not check the promo code. Please try again.' };
+  }
+}
+
 // ============================================================================
 // MIDTRANS SDK LOADING
 // ============================================================================
@@ -467,7 +541,9 @@ export async function createPaymentTransaction(
    * it does not recognise, so a stale value degrades to "show every channel"
    * rather than failing the transaction.
    */
-  enabledPayments?: string[]
+  enabledPayments?: string[],
+  /** Promo code the customer applied; the service derives the discount itself. */
+  promoCode?: string
 ) {
   if (!isAuthenticated()) {
     throw new Error('User not authenticated');
@@ -509,12 +585,13 @@ export async function createPaymentTransaction(
       customer_email: user.email,
       customer_first_name: user.email.split('@')[0],
       ...(enabledPayments?.length ? { enabled_payments: enabledPayments } : {}),
+      ...(promoCode ? { promo_code: promoCode } : {}),
     }),
   });
 
   if (!response.ok) {
-    const error = await response.json();
-    throw new Error(error.detail || 'Failed to create transaction');
+    const error = await response.json().catch(() => ({}));
+    throw new Error(errorDetail(error, 'Failed to create transaction'));
   }
 
   const result = await response.json();
@@ -563,6 +640,8 @@ export async function createDirectCharge(
   channel: string,
   /** Single-use card token from the browser. Required for `credit_card`. */
   cardTokenId?: string,
+  /** Promo code the customer applied; the service derives the discount itself. */
+  promoCode?: string,
 ): Promise<DirectChargeResult> {
   if (!isAuthenticated()) {
     throw new Error('User not authenticated');
@@ -592,12 +671,13 @@ export async function createDirectCharge(
       customer_email: user.email,
       customer_first_name: user.email.split('@')[0],
       ...(cardTokenId ? { card_token_id: cardTokenId } : {}),
+      ...(promoCode ? { promo_code: promoCode } : {}),
     }),
   });
 
   if (!response.ok) {
     const error = await response.json().catch(() => ({}));
-    throw new Error(error.detail || 'Failed to start the payment');
+    throw new Error(errorDetail(error, 'Failed to start the payment'));
   }
 
   return (await response.json()) as DirectChargeResult;

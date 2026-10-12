@@ -17,6 +17,7 @@ import { CheckoutForm } from '@/components/payment/CheckoutForm';
 import { OrderSummary } from '@/components/payment/OrderSummary';
 import { getProductById, isSubscription } from '@/lib/pricing';
 import { isAuthenticated } from '@/lib/auth';
+import type { PromoQuote } from '@/lib/payment';
 
 export default function CheckoutClient() {
   const params = useParams();
@@ -28,6 +29,8 @@ export default function CheckoutClient() {
   const [mounted, setMounted] = useState(false);
   const [authed, setAuthed] = useState(false);
   const [invoiceNumber, setInvoiceNumber] = useState('');
+  // Preview of an applied promo. The charge itself is re-derived server-side.
+  const [promo, setPromo] = useState<PromoQuote | null>(null);
 
   useEffect(() => {
     setMounted(true);
@@ -69,7 +72,8 @@ export default function CheckoutClient() {
           <CheckoutForm
             productId={product.id}
             productName={product.name}
-            priceUsd={product.price}
+            priceUsd={promo ? promo.finalUsd : product.price}
+            promoCode={promo?.code}
             initialAuthed={authed}
             onComplete={() => {}}
           />
@@ -81,6 +85,8 @@ export default function CheckoutClient() {
             priceUsd={product.price}
             invoiceNumber={invoiceNumber}
             recurring={isSubscription(product)}
+            promo={promo}
+            onPromoChange={setPromo}
           />
         </div>
       </div>
