@@ -776,6 +776,48 @@ export async function confirmPayment(
   }
 }
 
+export interface OrderConfirmation {
+  /** False when the call itself failed (network, 401, 403, 404). */
+  ok: boolean;
+  granted: boolean;
+  /** paid | pending | failed | paid_grant_failed | amount_mismatch | … */
+  status: string | null;
+  productName: string | null;
+  amountIdr: number | null;
+  promoCode: string | null;
+}
+
+/**
+ * Confirm an order and get back what it was for — the /checkout/success page's
+ * view of it. Same call as {@link confirmPayment} (re-verifies with Midtrans,
+ * grants at most once); this one also returns the order summary and status.
+ */
+export async function confirmOrder(orderId: string): Promise<OrderConfirmation> {
+  const empty: OrderConfirmation = {
+    ok: false, granted: false, status: null, productName: null, amountIdr: null, promoCode: null,
+  };
+  try {
+    const response = await fetch(`${API_BASE_URL}/api/v1/payments/confirm`, {
+      method: 'POST',
+      headers: authHeaders(),
+      body: JSON.stringify({ order_id: orderId }),
+    });
+    if (!response.ok) return empty;
+    const data = await response.json().catch(() => null);
+    if (!data) return empty;
+    return {
+      ok: true,
+      granted: Boolean(data.granted),
+      status: typeof data.status === 'string' ? data.status : null,
+      productName: typeof data.product_name === 'string' ? data.product_name : null,
+      amountIdr: typeof data.amount_idr === 'number' ? data.amount_idr : null,
+      promoCode: typeof data.promo_code === 'string' ? data.promo_code : null,
+    };
+  } catch {
+    return empty;
+  }
+}
+
 // ============================================================================
 // MIDTRANS PAYMENT
 // ============================================================================
