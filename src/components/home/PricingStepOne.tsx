@@ -56,9 +56,11 @@ const cards: PricingCard[] = [
   {
     title: 'Business Operations\nAssessment',
     price: 79,
-    frequency: 'Per use',
+    // Each purchase includes 3 runs (avry-backend feature_uses).
+    frequency: '3 uses',
     description: 'Gain a clear understanding of how your organisation operates before making AI decisions.',
     features: [
+      '• 3 assessments included',
       '• Operational maturity assessment',
       '• Business objective alignment',
       '• Operational bottleneck analysis',
@@ -71,9 +73,11 @@ const cards: PricingCard[] = [
   {
     title: 'Transformation\nBlueprint + Roadmap',
     price: 249,
-    frequency: 'Per use',
+    // Each purchase includes 3 runs (avry-backend feature_uses).
+    frequency: '3 uses',
     description: 'Transform operational insights into a practical blueprint for business transformation and governed AI deployment.',
     features: [
+      '• 3 blueprints + roadmaps included',
       '• Operational transformation blueprint',
       '• Future-state workflow architecture',
       '• AI deployment strategy',
@@ -87,15 +91,17 @@ const cards: PricingCard[] = [
     title: 'Complete Transformation Package',
     subtitle: 'Business Operations Assessment\n+\nTransformation Blueprint\n+\nTransformation Roadmap\n+\n1 Month Business Plan',
     price: 299,
-    frequency: 'Per use',
+    // Each purchase includes 3 runs (avry-backend feature_uses).
+    frequency: '3 uses',
     description: 'Everything required to move from operational assessment to a clear transformation strategy.',
     features: [
+      '• 3 full runs: Assessment → Blueprint → Roadmap',
       '• Business Operations Assessment',
       '• Transformation Blueprint',
       '• Transformation Roadmap',
       '• AI opportunity prioritisation',
       '• Executive implementation plan',
-      '• Includes 1 month of Business plan',
+      '• Includes 1 month of Business plan (once per purchase)',
     ],
     cta: 'Start Transformation',
     productId: PRODUCT_IDS.FULL_STACK,
@@ -199,7 +205,7 @@ export default function PricingStepOne({ currency, variant = 'default' }: { curr
                 </span>
                 <div className="flex flex-col pt-1">
                   <span className="text-[15px] sm:text-[16px] md:text-[18px] font-normal leading-none text-[#494949] mb-[6px]">
-                    {((currency || language) === 'IDR' || language === 'id' && !currency) ? card.frequency.replace('(month)', '(bulan)') : card.frequency}
+                    {((currency || language) === 'IDR' || language === 'id' && !currency) ? card.frequency.replace('(month)', '(bulan)').replace('3 uses', '3x pemakaian') : card.frequency}
                   </span>
                   <div className="w-full h-[5px] bg-[#c4c9b8]" />
                 </div>
