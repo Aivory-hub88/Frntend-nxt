@@ -493,24 +493,32 @@ export function CheckoutForm({
       }
       const clientKey = window.MIDTRANS_CLIENT_KEY;
       if (!clientKey) {
-        console.warn('[checkout] No Midtrans client key; falling back to Snap');
-        return false;
+        throw new Error('[client key] the payments service returned no Midtrans client key');
       }
 
-      await loadMidtrans3ds(clientKey, window.MIDTRANS_IS_PRODUCTION !== false);
-      cardTokenId = await getCardToken({
-        number: cardNumber,
-        expiry: cardExpiry,
-        cvv: cardCvv,
-      });
+      // Each stage is labelled so a failure says where it happened; on the
+      // `?card=direct` diagnostic path that label is shown on screen.
+      try {
+        await loadMidtrans3ds(clientKey, window.MIDTRANS_IS_PRODUCTION !== false);
+      } catch (e) {
+        throw new Error(`[card library] ${e instanceof Error ? e.message : String(e)}`);
+      }
+      try {
+        cardTokenId = await getCardToken({
+          number: cardNumber,
+          expiry: cardExpiry,
+          cvv: cardCvv,
+        });
+      } catch (e) {
+        throw new Error(`[tokenisation] ${e instanceof Error ? e.message : String(e)}`);
+      }
     }
 
     const result = await createDirectCharge(productId, picked, cardTokenId, promoCode);
     if (result.fallback_to_snap || !result.success) {
-      console.warn(
-        '[checkout] Direct charge declined, falling back to Snap:',
-        result.error || 'channel not served by Core API',
-      );
+      const reason = result.error || 'channel not served by Core API';
+      console.warn('[checkout] Direct charge declined, falling back to Snap:', reason);
+      if (picked === 'credit_card') throw new Error(`[charge] ${reason}`);
       return false;
     }
 
@@ -549,6 +557,14 @@ export function CheckoutForm({
           if (await runDirectCharge(channel)) return;
         } catch (directErr) {
           console.warn('Direct charge unavailable, falling back to Snap:', directErr);
+          // On the `?card=direct` diagnostic path, stop and show why instead of
+          // opening Snap: the reason is what decides how to fix this path.
+          if (directCardEnabled && channel === 'credit_card') {
+            const reason = directErr instanceof Error ? directErr.message : String(directErr);
+            setError(`Card payment on this page failed — ${reason}`);
+            setStep('details');
+            return;
+          }
           // A card already typed on this page must not be asked for again in
           // Snap without saying why.
           if (channel === 'credit_card') {
