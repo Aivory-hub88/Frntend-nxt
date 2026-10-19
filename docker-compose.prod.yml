@@ -244,6 +244,11 @@ services:
       - TELEGRAM_WEBHOOK_SECRET=${TELEGRAM_WEBHOOK_SECRET:-}
       - TELEGRAM_AGENT_GATEWAY_URL=${TELEGRAM_AGENT_GATEWAY_URL:-}
       - TELEGRAM_GATEWAY_TOKEN=${TELEGRAM_GATEWAY_TOKEN:-}
+      # Shared secret avry-payments sends as X-Internal-Token when it grants
+      # a paid order (/api/v1/entitlements/internal/grant). Without it the
+      # backend falls back to TELEGRAM_GATEWAY_TOKEN, which differs, and every
+      # paid order fails with 403 (paid_grant_failed). Fixed on prod 2026-10-19.
+      - INTERNAL_SERVICE_TOKEN=${INTERNAL_SERVICE_TOKEN:-}
       - TELEGRAM_BOT_TOKEN_CUSTOMER_SERVICE=${TELEGRAM_BOT_TOKEN_CUSTOMER_SERVICE:-}
       - TELEGRAM_BOT_USERNAME_CUSTOMER_SERVICE=${TELEGRAM_BOT_USERNAME_CUSTOMER_SERVICE:-}
       - TELEGRAM_BOT_TOKEN_LEADS_QUALIFIER=${TELEGRAM_BOT_TOKEN_LEADS_QUALIFIER:-}
