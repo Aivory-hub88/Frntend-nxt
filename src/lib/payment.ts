@@ -59,6 +59,8 @@ export const PAYMENT_CONFIG: PaymentConfig = {
   // Subscription prices — sourced from pricing.ts
   operationalPrice: requirePrice(PRODUCT_IDS.OPERATIONAL),
   businessPrice: requirePrice(PRODUCT_IDS.BUSINESS),
+  operationalAnnualPrice: requirePrice(PRODUCT_IDS.OPERATIONAL_ANNUAL),
+  businessAnnualPrice: requirePrice(PRODUCT_IDS.BUSINESS_ANNUAL),
   // Credit prices — derived from the pricing.ts credit packs
   creditPrices: CREDIT_PACKS.reduce<Record<number, number>>((map, pack) => {
     map[pack.credits] = pack.price;
@@ -72,6 +74,8 @@ export const PAYMENT_CONFIG: PaymentConfig = {
     FULL_STACK: PRODUCT_IDS.FULL_STACK,
     OPERATIONAL: PRODUCT_IDS.OPERATIONAL,
     BUSINESS: PRODUCT_IDS.BUSINESS,
+    OPERATIONAL_ANNUAL: PRODUCT_IDS.OPERATIONAL_ANNUAL,
+    BUSINESS_ANNUAL: PRODUCT_IDS.BUSINESS_ANNUAL,
   },
 
   // Credit products — derived from the pricing.ts credit packs
@@ -205,6 +209,8 @@ function getPaymentCatalogDefinitions(): CatalogProductDefinition[] {
     { id: PAYMENT_CONFIG.products.FULL_STACK, price: PAYMENT_CONFIG.fullStackPrice },
     { id: PAYMENT_CONFIG.products.OPERATIONAL, price: PAYMENT_CONFIG.operationalPrice },
     { id: PAYMENT_CONFIG.products.BUSINESS, price: PAYMENT_CONFIG.businessPrice },
+    { id: PAYMENT_CONFIG.products.OPERATIONAL_ANNUAL, price: PAYMENT_CONFIG.operationalAnnualPrice },
+    { id: PAYMENT_CONFIG.products.BUSINESS_ANNUAL, price: PAYMENT_CONFIG.businessAnnualPrice },
   ];
   for (const [credits, price] of Object.entries(PAYMENT_CONFIG.creditPrices)) {
     definitions.push({ id: `credits_${credits}`, price });
