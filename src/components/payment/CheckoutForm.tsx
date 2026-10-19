@@ -451,7 +451,18 @@ export function CheckoutForm({
   // on purpose: it needs Midtrans' browser tokenisation library first. DANA is
   // absent because Core API has no payment_type for it at all — both keep
   // running through Snap.
-  const DIRECT_CHANNELS = new Set(['gopay', 'qris', 'credit_card']);
+  //
+  // Card is drawn here only on request (`?card=direct`). In production the
+  // on-page card form never reached Midtrans — tokenisation failed in the
+  // browser — and the silent fallback then opened Snap, which asked for the
+  // card a second time. Until Core API card charging is confirmed working on
+  // the merchant account, a card goes straight to Snap and is typed once.
+  const directCardEnabled =
+    typeof window !== 'undefined' &&
+    new URLSearchParams(window.location.search).get('card') === 'direct';
+  const DIRECT_CHANNELS = new Set(
+    directCardEnabled ? ['gopay', 'qris', 'credit_card'] : ['gopay', 'qris'],
+  );
 
   // On by default. This was opt-in while the direct path was unproven, but the
   // opt-in was the reason nobody ever saw it — the flag has to be remembered on
@@ -538,6 +549,13 @@ export function CheckoutForm({
           if (await runDirectCharge(channel)) return;
         } catch (directErr) {
           console.warn('Direct charge unavailable, falling back to Snap:', directErr);
+          // A card already typed on this page must not be asked for again in
+          // Snap without saying why.
+          if (channel === 'credit_card') {
+            setError(
+              'We couldn\'t process the card here. Please enter it once more in the secure Midtrans window.',
+            );
+          }
         }
       }
 
@@ -684,7 +702,7 @@ export function CheckoutForm({
       // Everything else still goes straight through: e-wallets and QRIS need
       // no details from us, and a card on the Snap path must not be asked
       // twice.
-      const collectCardHere = directPayEnabled && channel === 'credit_card';
+      const collectCardHere = directPayEnabled && directCardEnabled && channel === 'credit_card';
       if (MOCK_PAYMENT || collectCardHere) {
         setStep('details');
       } else {
