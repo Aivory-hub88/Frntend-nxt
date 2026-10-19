@@ -166,6 +166,10 @@ export default function PaymentClient() {
         return 'Operational Plan';
       case paymentConfig.products.BUSINESS:
         return 'Business Plan';
+      case paymentConfig.products.OPERATIONAL_ANNUAL:
+        return 'Operational Plan (Annual)';
+      case paymentConfig.products.BUSINESS_ANNUAL:
+        return 'Business Plan (Annual)';
       default:
         return 'Product';
     }
@@ -185,6 +189,10 @@ export default function PaymentClient() {
         return 'Monthly Operational plan subscription';
       case paymentConfig.products.BUSINESS:
         return 'Monthly Business plan subscription';
+      case paymentConfig.products.OPERATIONAL_ANNUAL:
+        return 'Operational plan billed annually (12 months)';
+      case paymentConfig.products.BUSINESS_ANNUAL:
+        return 'Business plan billed annually (12 months)';
       default:
         return 'Product';
     }
@@ -204,6 +212,10 @@ export default function PaymentClient() {
         return paymentConfig.operationalPrice;
       case paymentConfig.products.BUSINESS:
         return paymentConfig.businessPrice;
+      case paymentConfig.products.OPERATIONAL_ANNUAL:
+        return paymentConfig.operationalAnnualPrice;
+      case paymentConfig.products.BUSINESS_ANNUAL:
+        return paymentConfig.businessAnnualPrice;
       default:
         return null;
     }

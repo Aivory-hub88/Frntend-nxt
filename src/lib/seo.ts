@@ -216,6 +216,8 @@ const OFFER_DESCRIPTIONS: Record<string, string> = {
   [PRODUCT_IDS.FULL_STACK]: 'Assessment, blueprint, and transformation roadmap',
   [PRODUCT_IDS.OPERATIONAL]: 'Monthly Operational plan — Operational Workspace and 1 AI Workforce',
   [PRODUCT_IDS.BUSINESS]: 'Monthly Business plan for expanded AI operations and automation',
+  [PRODUCT_IDS.OPERATIONAL_ANNUAL]: 'Operational plan billed annually — 12 months in one payment',
+  [PRODUCT_IDS.BUSINESS_ANNUAL]: 'Business plan billed annually — 12 months in one payment',
   // Enterprise is sales-assisted and not in the product catalogue, so it
   // publishes no Offer and needs no description here.
 };
@@ -231,12 +233,12 @@ function createOffer(siteUrl: PublicSiteUrl, product: Product) {
     description: OFFER_DESCRIPTIONS[product.id],
   };
 
-  if (product.interval === 'month') {
+  if (product.interval === 'month' || product.interval === 'year') {
     offer.priceSpecification = {
       '@type': 'UnitPriceSpecification',
       price: product.price,
       priceCurrency: product.currency,
-      billingDuration: 'P1M',
+      billingDuration: product.interval === 'year' ? 'P1Y' : 'P1M',
     };
   }
 

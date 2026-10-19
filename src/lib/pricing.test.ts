@@ -26,7 +26,16 @@
 
 import { describe, it, expect } from "vitest";
 import fc from "fast-check";
-import { formatUsd, CREDIT_PACKS } from "./pricing";
+import {
+  formatUsd,
+  CREDIT_PACKS,
+  ANNUAL_BILLING_MONTHS,
+  ANNUAL_PRODUCT_FOR,
+  PRODUCT_IDS,
+  getProductById,
+  getProductPrice,
+  intervalSuffix,
+} from "./pricing";
 
 // ---------------------------------------------------------------------------
 // Display-derivation model (mirrors the credit-marketplace section, task 9.1)
@@ -135,5 +144,24 @@ describe("Property 2: Pricing fidelity", () => {
       }));
       expect(derived).toEqual(source);
     });
+  });
+});
+
+describe('annual Operating Plan billing', () => {
+  it('prices annual plans at twelve times the monthly price', () => {
+    expect(getProductPrice(PRODUCT_IDS.OPERATIONAL_ANNUAL)).toBe(240);
+    expect(getProductPrice(PRODUCT_IDS.BUSINESS_ANNUAL)).toBe(1188);
+    expect(ANNUAL_BILLING_MONTHS).toBe(12);
+  });
+
+  it('maps each monthly plan to its annual product, billed per year', () => {
+    for (const [monthly, annual] of Object.entries(ANNUAL_PRODUCT_FOR)) {
+      const product = getProductById(annual)!;
+      expect(product.interval).toBe('year');
+      expect(product.price).toBe(getProductPrice(monthly)! * 12);
+      expect(intervalSuffix(product)).toBe('/year');
+      expect(intervalSuffix(product, 'id')).toBe('/tahun');
+    }
+    expect(intervalSuffix(getProductById(PRODUCT_IDS.OPERATIONAL)!)).toBe('/month');
   });
 });

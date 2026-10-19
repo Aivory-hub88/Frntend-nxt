@@ -85,6 +85,7 @@ export default function CheckoutClient() {
             priceUsd={product.price}
             invoiceNumber={invoiceNumber}
             recurring={isSubscription(product)}
+            interval={product.interval}
             promo={promo}
             onPromoChange={setPromo}
           />

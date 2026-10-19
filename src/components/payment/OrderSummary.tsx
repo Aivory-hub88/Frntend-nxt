@@ -11,8 +11,10 @@ export interface OrderSummaryProps {
   productName: string;
   priceUsd: number;
   invoiceNumber: string;
-  /** 'subscription' shows a `/month` suffix and recurring note. */
+  /** 'subscription' shows a `/month` (or `/year`) suffix and billing note. */
   recurring: boolean;
+  /** Billing period of a subscription; defaults to monthly. */
+  interval?: 'one-time' | 'month' | 'year';
   /** The applied promo, if any. A preview: the server re-derives the charge. */
   promo?: PromoQuote | null;
   onPromoChange?: (promo: PromoQuote | null) => void;
@@ -24,6 +26,7 @@ export function OrderSummary({
   priceUsd,
   invoiceNumber,
   recurring,
+  interval = 'month',
   promo = null,
   onPromoChange,
 }: OrderSummaryProps) {
@@ -67,7 +70,12 @@ export function OrderSummary({
     minute: '2-digit',
   });
 
-  const intervalSuffix = recurring ? (language === 'id' ? '/bulan' : '/month') : '';
+  const annual = recurring && interval === 'year';
+  const intervalSuffix = !recurring
+    ? ''
+    : annual
+      ? language === 'id' ? '/tahun' : '/year'
+      : language === 'id' ? '/bulan' : '/month';
 
   return (
     <div className="w-full bg-[#f8f9fa] min-h-screen p-8 lg:p-12 text-[#1a1a1a]">
@@ -196,7 +204,9 @@ export function OrderSummary({
 
       {recurring && (
         <p className="mt-3 text-xs text-gray-400 leading-relaxed">
-          Recurring monthly. You can cancel anytime from your dashboard.
+          {annual
+            ? 'Billed annually — 12 months of access in one payment.'
+            : 'Billed monthly. You can cancel anytime from your dashboard.'}
         </p>
       )}
     </div>

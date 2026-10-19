@@ -6,7 +6,9 @@ import { useScrollAnimation } from '@/hooks/useScrollAnimation';
 
 import { useLanguage } from '@/components/context/LanguageContext';
 import { PlanConfirmModal } from '@/components/payment/PlanConfirmModal';
-import { PRODUCT_IDS } from '@/lib/pricing';
+import { ANNUAL_PRODUCT_FOR, PRODUCT_IDS, getProductPrice } from '@/lib/pricing';
+
+type Billing = 'monthly' | 'annual';
 
 /* ─── Icons ─── */
 function ArrowUpRight({ className = '' }: { className?: string }) {
@@ -59,7 +61,7 @@ const plans: Plan[] = [
     description: 'For organisations beginning their operational transformation journey.',
     price: 20,
     frequency: '/month',
-    billingNote: 'Billed annually',
+    billingNote: 'Billed monthly',
     features: [
       'Operational Workspace',
       'Business Workflows',
@@ -77,7 +79,7 @@ const plans: Plan[] = [
     description: 'For growing organisations modernising multiple business functions.',
     price: 99,
     frequency: '/month',
-    billingNote: 'Billed annually',
+    billingNote: 'Billed monthly',
     features: [
       'Multi-team Workspace',
       'Advanced Business Workflows',
@@ -123,14 +125,31 @@ export default function PricingStepTwo({ currency, variant = 'default' }: { curr
   const { language, exchangeRate } = useLanguage();
   const router = useRouter();
   const [selectedProduct, setSelectedProduct] = useState<string | null>(null);
+  const [billing, setBilling] = useState<Billing>('monthly');
+
+  // What a card shows and checks out for the chosen billing period. Annual is
+  // a separate product (12 months up front), priced from the catalogue.
+  const offerFor = (plan: Plan) => {
+    if (!plan.productId || billing === 'monthly') {
+      return { productId: plan.productId, price: plan.price, frequency: plan.frequency, billingNote: plan.billingNote };
+    }
+    const productId = ANNUAL_PRODUCT_FOR[plan.productId];
+    return {
+      productId,
+      price: getProductPrice(productId) ?? plan.price * 12,
+      frequency: language === 'id' ? '/tahun' : '/year',
+      billingNote: `Billed annually — ${formatAmount(plan.price)}/month`,
+    };
+  };
 
   const handleCtaClick = (plan: Plan) => {
-    if (!plan.productId) {
+    const { productId } = offerFor(plan);
+    if (!productId) {
       router.push('/contact');
       return;
     }
     // Confirm the selection first; the modal's Continue opens checkout.
-    setSelectedProduct(plan.productId);
+    setSelectedProduct(productId);
   };
 
   const handleMouseMove = (e: React.MouseEvent<HTMLElement>) => {
@@ -142,13 +161,12 @@ export default function PricingStepTwo({ currency, variant = 'default' }: { curr
   };
 
   // Helper to format exactly or fallback
-  const getFormattedPrice = (plan: Plan) => {
-    if (plan.customPriceString) return plan.customPriceString;
+  function formatAmount(usd: number) {
     const activeCurrency = currency || (language === 'id' ? 'IDR' : 'USD');
-    if (activeCurrency === 'USD') return `$${plan.price}`;
-    
+    if (activeCurrency === 'USD') return `$${usd.toLocaleString('en-US')}`;
+
     // For IDR, use dynamic exchangeRate with 5% margin
-    const idrValue = plan.price * (exchangeRate * 1.05);
+    const idrValue = usd * (exchangeRate * 1.05);
     if (idrValue >= 1000000) {
       const juta = idrValue / 1000000;
       return `Rp ${parseFloat(juta.toFixed(2))} jt`;
@@ -157,7 +175,10 @@ export default function PricingStepTwo({ currency, variant = 'default' }: { curr
       return `Rp ${Math.round(ribu)} rb`;
     }
     return `Rp ${Math.round(idrValue)}`;
-  };
+  }
+
+  const getFormattedPrice = (plan: Plan) =>
+    plan.customPriceString ? plan.customPriceString : formatAmount(offerFor(plan).price);
 
   return (
     <section ref={ref} onMouseMove={handleMouseMove} className={`animate-on-scroll ${isVisible ? 'is-visible' : ''} spotlight-section w-full ${landing ? 'bg-transparent py-12 md:py-16' : 'bg-[#E4E6E8] py-24'} text-[#494949] font-sans`}>
@@ -175,6 +196,32 @@ export default function PricingStepTwo({ currency, variant = 'default' }: { curr
           <p className="text-xl text-[#494949] font-light leading-relaxed">
             Continue your transformation with Aivory's Operational Intelligence Platform. Modernise operations, orchestrate intelligent workflows, and deploy governed AI across your organisation.
           </p>
+        </div>
+
+        {/* Billing period */}
+        <div className="mb-10 flex justify-center md:justify-start">
+          <div
+            role="radiogroup"
+            aria-label="Billing period"
+            className="inline-flex rounded-full border border-[#b0b5b4] bg-white/60 p-1"
+          >
+            {(['monthly', 'annual'] as const).map((option) => (
+              <button
+                key={option}
+                type="button"
+                role="radio"
+                aria-checked={billing === option}
+                onClick={() => setBilling(option)}
+                className={`rounded-full px-5 py-2 text-[14px] font-semibold transition-colors ${
+                  billing === option ? 'bg-[#1a1a1a] text-white' : 'text-[#494949] hover:bg-[#e4e6e8]'
+                }`}
+              >
+                {option === 'monthly'
+                  ? language === 'id' ? 'Bulanan' : 'Monthly'
+                  : language === 'id' ? 'Tahunan' : 'Annually'}
+              </button>
+            ))}
+          </div>
         </div>
 
         {/* Plans Grid */}
@@ -216,16 +263,16 @@ export default function PricingStepTwo({ currency, variant = 'default' }: { curr
                 </span>
                 <div className="flex flex-col pt-1">
                   <span className="text-[14px] sm:text-[15px] md:text-[16px] font-normal leading-none text-[#494949] mb-[6px]">
-                    {plan.frequency}
+                    {offerFor(plan).frequency}
                   </span>
                   <div className="w-full h-[5px] bg-[#c4c9b8]" />
                 </div>
               </div>
 
               {/* Billing Note */}
-              {plan.billingNote && (
+              {offerFor(plan).billingNote && (
                 <div className="mt-4 text-[13px] font-semibold text-[#8a8f8d] transition-opacity duration-300">
-                  {plan.billingNote}
+                  {offerFor(plan).billingNote}
                 </div>
               )}
 

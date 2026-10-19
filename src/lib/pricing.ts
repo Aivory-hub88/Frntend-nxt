@@ -26,7 +26,7 @@ export type PricingCurrency = typeof PRICING_CURRENCY;
 // ============================================================================
 
 /** How often a product price is applied. */
-export type BillingInterval = 'one-time' | 'month';
+export type BillingInterval = 'one-time' | 'month' | 'year';
 
 /** Discriminates the kind of product in the catalog. */
 export type ProductKind = 'one-time' | 'subscription' | 'credit-pack';
@@ -53,10 +53,10 @@ export interface OneTimeProduct extends BaseProduct {
   interval: 'one-time';
 }
 
-/** A subscription product charged per month. */
+/** A subscription product, paid monthly or for a year up front. */
 export interface SubscriptionProduct extends BaseProduct {
   kind: 'subscription';
-  interval: 'month';
+  interval: 'month' | 'year';
 }
 
 /** An Intelligence Credit pack charged a single time. */
@@ -94,6 +94,10 @@ export const PRODUCT_IDS = {
   FULL_STACK: 'full_stack',
   OPERATIONAL: 'operational',
   BUSINESS: 'business',
+  // The same plans billed annually (12 months up front). avry-payments prices
+  // them and avry-backend grants 365 days of the matching tier.
+  OPERATIONAL_ANNUAL: 'operational_annual',
+  BUSINESS_ANNUAL: 'business_annual',
 } as const;
 
 /**
@@ -167,7 +171,7 @@ export const ONE_TIME_PRODUCTS: OneTimeProduct[] = [
 // "Custom / Talk to Sales" and publishes no figure, so listing it here would
 // give checkout a price no customer was ever shown. avry-payments drops it
 // from its catalogue for the same reason, and rejects it with a 400.
-export const SUBSCRIPTION_PRODUCTS: SubscriptionProduct[] = [
+const MONTHLY_SUBSCRIPTIONS: SubscriptionProduct[] = [
   {
     id: PRODUCT_IDS.OPERATIONAL,
     name: 'Operational',
@@ -184,6 +188,30 @@ export const SUBSCRIPTION_PRODUCTS: SubscriptionProduct[] = [
     kind: 'subscription',
     interval: 'month',
   },
+];
+
+/**
+ * Annual billing: twelve months paid up front at the monthly price times
+ * twelve, no annual discount. Must equal `ANNUAL_PRODUCTS` /
+ * `ANNUAL_BILLING_MONTHS` in avry-payments' `app/services/pricing.py`.
+ */
+export const ANNUAL_BILLING_MONTHS = 12;
+
+/** Monthly product id -> its annual counterpart. */
+export const ANNUAL_PRODUCT_FOR: Readonly<Record<string, string>> = Object.freeze({
+  [PRODUCT_IDS.OPERATIONAL]: PRODUCT_IDS.OPERATIONAL_ANNUAL,
+  [PRODUCT_IDS.BUSINESS]: PRODUCT_IDS.BUSINESS_ANNUAL,
+});
+
+export const SUBSCRIPTION_PRODUCTS: SubscriptionProduct[] = [
+  ...MONTHLY_SUBSCRIPTIONS,
+  ...MONTHLY_SUBSCRIPTIONS.map<SubscriptionProduct>((monthly) => ({
+    ...monthly,
+    id: ANNUAL_PRODUCT_FOR[monthly.id],
+    name: `${monthly.name} (Annual)`,
+    price: monthly.price * ANNUAL_BILLING_MONTHS,
+    interval: 'year',
+  })),
 ];
 
 // ============================================================================
@@ -306,6 +334,13 @@ export function getCreditPackByCredits(credits: number): CreditPackProduct | und
 /** Type guard: is the product a per-month subscription? */
 export function isSubscription(product: Product): product is SubscriptionProduct {
   return product.kind === 'subscription';
+}
+
+/** "/month", "/year" (or the Indonesian equivalent) for a recurring product, else "". */
+export function intervalSuffix(product: Product, language: string = 'en'): string {
+  if (product.interval === 'month') return language === 'id' ? '/bulan' : '/month';
+  if (product.interval === 'year') return language === 'id' ? '/tahun' : '/year';
+  return '';
 }
 
 /** Type guard: is the product an Intelligence Credit pack? */

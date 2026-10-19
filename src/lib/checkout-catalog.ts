@@ -94,6 +94,10 @@ const CHECKOUT_SERVICE_INFO: Record<string, CheckoutServiceInfo> = {
   },
 };
 
+// An annual plan includes exactly what its monthly plan does.
+CHECKOUT_SERVICE_INFO[PRODUCT_IDS.OPERATIONAL_ANNUAL] = CHECKOUT_SERVICE_INFO[PRODUCT_IDS.OPERATIONAL];
+CHECKOUT_SERVICE_INFO[PRODUCT_IDS.BUSINESS_ANNUAL] = CHECKOUT_SERVICE_INFO[PRODUCT_IDS.BUSINESS];
+
 /** Resolve service copy for a product id (handles `credits_<n>` packs too). */
 export function getServiceInfo(id: string): CheckoutServiceInfo | undefined {
   if (id?.startsWith('credits_')) {

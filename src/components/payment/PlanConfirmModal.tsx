@@ -15,7 +15,7 @@
 import { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useLanguage } from '@/components/context/LanguageContext';
-import { getProductById, isSubscription } from '@/lib/pricing';
+import { getProductById, intervalSuffix as suffixFor, isSubscription } from '@/lib/pricing';
 import { getServiceInfo } from '@/lib/checkout-catalog';
 import { formatCheckoutPrice, type CheckoutCurrency } from '@/lib/checkout-format';
 
@@ -40,7 +40,7 @@ export function PlanConfirmModal({ productId, currency, onClose }: PlanConfirmMo
     currency || (language === 'id' ? 'IDR' : 'USD');
   const priceLabel = formatCheckoutPrice(product.price, activeCurrency, exchangeRate);
   const recurring = isSubscription(product);
-  const intervalSuffix = recurring ? (language === 'id' ? '/bulan' : '/month') : '';
+  const intervalSuffix = suffixFor(product, language);
   const info = getServiceInfo(productId);
   const continueLabel = language === 'id' ? 'Lanjut ke Pembayaran' : 'Continue to Checkout';
 
