@@ -211,9 +211,9 @@ export function buildSiteGraph(siteUrl: PublicSiteUrl): Record<string, unknown> 
 }
 
 const OFFER_DESCRIPTIONS: Record<string, string> = {
-  [PRODUCT_IDS.DEEP_DIAGNOSTIC]: 'One-time operational maturity and AI opportunity assessment',
-  [PRODUCT_IDS.BLUEPRINT]: 'Operational transformation blueprint and AI deployment strategy',
-  [PRODUCT_IDS.FULL_STACK]: 'Assessment, blueprint, and transformation roadmap',
+  [PRODUCT_IDS.DEEP_DIAGNOSTIC]: 'Operational maturity and AI opportunity assessment, 3 uses included',
+  [PRODUCT_IDS.BLUEPRINT]: 'Operational transformation blueprint and AI deployment strategy, 3 uses included',
+  [PRODUCT_IDS.FULL_STACK]: 'Assessment, blueprint, and transformation roadmap: 3 full runs',
   [PRODUCT_IDS.OPERATIONAL]: 'Monthly Operational plan — Operational Workspace and 1 AI Workforce',
   [PRODUCT_IDS.BUSINESS]: 'Monthly Business plan for expanded AI operations and automation',
   [PRODUCT_IDS.OPERATIONAL_ANNUAL]: 'Operational plan billed annually — 12 months in one payment',

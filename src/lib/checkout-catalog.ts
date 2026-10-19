@@ -19,6 +19,7 @@ const CHECKOUT_SERVICE_INFO: Record<string, CheckoutServiceInfo> = {
     description:
       'Gain a clear understanding of how your organisation operates before making AI decisions.',
     features: [
+      '3 assessments included',
       'Operational maturity assessment',
       'Business objective alignment',
       'Operational bottleneck analysis',
@@ -30,6 +31,7 @@ const CHECKOUT_SERVICE_INFO: Record<string, CheckoutServiceInfo> = {
     description:
       'Transform operational insights into a practical blueprint for business transformation and governed AI deployment.',
     features: [
+      '3 blueprints + roadmaps included',
       'Operational transformation blueprint',
       'Future-state workflow architecture',
       'AI deployment strategy',
@@ -46,7 +48,8 @@ const CHECKOUT_SERVICE_INFO: Record<string, CheckoutServiceInfo> = {
       'Transformation Roadmap',
       'AI opportunity prioritisation',
       'Executive implementation plan',
-      'Includes 1 month of Business plan',
+      '3 full runs: Assessment → Blueprint → Roadmap',
+      'Includes 1 month of Business plan (once per purchase)',
     ],
   },
   [PRODUCT_IDS.OPERATIONAL]: {
