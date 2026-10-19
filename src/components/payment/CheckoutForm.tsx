@@ -72,7 +72,7 @@ type Step =
   | 'processing'
   | 'awaiting'
   | 'success';
-type Channel = 'credit_card' | 'gopay' | 'qris';
+type Channel = 'credit_card' | 'gopay' | 'qris' | 'bank_transfer';
 
 export interface CheckoutFormProps {
   productId: string;
@@ -124,6 +124,17 @@ const CHANNELS: { id: Channel; label: string; badge: React.ReactNode }[] = [
     id: 'qris',
     label: 'QRIS',
     badge: <ChannelMark src="/payments/qris.svg" alt="QRIS" height={14} />,
+  },
+  {
+    // avry-payments expands `bank_transfer` to every VA activated on the
+    // merchant account, so Snap opens on its bank picker.
+    id: 'bank_transfer',
+    label: 'Virtual Account / Bank Transfer',
+    badge: (
+      <span className="text-[11px] font-medium text-gray-500">
+        BNI · BRI · Mandiri · BSI · CIMB · Permata
+      </span>
+    ),
   },
 ];
 
@@ -464,16 +475,14 @@ export function CheckoutForm({
     directCardEnabled ? ['gopay', 'qris', 'credit_card'] : ['gopay', 'qris'],
   );
 
-  // On by default. This was opt-in while the direct path was unproven, but the
-  // opt-in was the reason nobody ever saw it — the flag has to be remembered on
-  // every visit, so the checkout simply stayed on Snap.
-  //
-  // Defaulting it on is safe because a direct charge that throws or comes back
-  // fallback_to_snap drops through to the Snap path below rather than stranding
-  // the customer. `?pay=snap` forces the old flow if the new one ever misbehaves.
+  // Off by default: every channel goes through Snap. Core API is not activated
+  // on the merchant account yet (every /v2/charge answers 402 "Payment channel
+  // is not activated"), so an on-page attempt could only fail before handing
+  // over to Snap. `?pay=direct` (or `?card=direct`) opts in for testing once
+  // Midtrans activates it.
   const directPayEnabled =
-    typeof window === 'undefined' ||
-    new URLSearchParams(window.location.search).get('pay') !== 'snap';
+    typeof window !== 'undefined' &&
+    (new URLSearchParams(window.location.search).get('pay') === 'direct' || directCardEnabled);
 
   const runDirectCharge = async (picked: Channel): Promise<boolean> => {
     let cardTokenId: string | undefined;
