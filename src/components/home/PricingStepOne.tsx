@@ -204,7 +204,7 @@ export default function PricingStepOne({ currency, variant = 'default' }: { curr
                   {getFormattedPrice(card.price)}
                 </span>
                 <div className="flex flex-col pt-1">
-                  <span className="text-[15px] sm:text-[16px] md:text-[18px] font-normal leading-none text-[#494949] mb-[6px]">
+                  <span className="text-[15px] sm:text-[16px] md:text-[18px] font-bold leading-none text-[#1a1a1a] mb-[6px]">
                     {((currency || language) === 'IDR' || language === 'id' && !currency) ? card.frequency.replace('(month)', '(bulan)').replace('3 uses', '3x pemakaian') : card.frequency}
                   </span>
                   <div className="w-full h-[5px] bg-[#c4c9b8]" />
