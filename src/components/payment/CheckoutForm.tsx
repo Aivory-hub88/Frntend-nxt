@@ -104,6 +104,20 @@ function ChannelMark({ src, alt, height }: { src: string; alt: string; height: n
   );
 }
 
+// Banks whose virtual account is activated on the merchant account for Core
+// API (probed 2026-10-26). BCA is not, so it is not offered. Mandiri is a bill
+// payment: a biller code plus a bill key instead of one VA number.
+// Logos are the banks' current marks from Wikimedia Commons; heights are tuned
+// per mark so wide wordmarks and stacked ones carry the same weight.
+const VA_BANKS: { id: string; label: string; logo: string; height: number }[] = [
+  { id: 'bni', label: 'BNI', logo: '/payments/banks/bni.svg', height: 15 },
+  { id: 'bri', label: 'BRI', logo: '/payments/banks/bri.svg', height: 17 },
+  { id: 'mandiri', label: 'Mandiri', logo: '/payments/banks/mandiri.svg', height: 16 },
+  { id: 'bsi', label: 'BSI', logo: '/payments/banks/bsi.svg', height: 18 },
+  { id: 'cimb', label: 'CIMB Niaga', logo: '/payments/banks/cimb.svg', height: 13 },
+  { id: 'permata', label: 'Permata', logo: '/payments/banks/permata.svg', height: 19 },
+];
+
 const CHANNELS: { id: Channel; label: string; badge: React.ReactNode }[] = [
   {
     id: 'credit_card',
@@ -131,25 +145,19 @@ const CHANNELS: { id: Channel; label: string; badge: React.ReactNode }[] = [
     // activated on the merchant account, so Snap opens on its bank picker.
     id: 'bank_transfer',
     label: 'Virtual Account / Bank Transfer',
+    // Six marks do not fit beside the label, so the row shows four and a
+    // count; every bank is in the picker that opens below.
     badge: (
-      <span className="text-[11px] font-medium text-gray-500">
-        BNI · BRI · Mandiri · BSI · CIMB · Permata
-      </span>
+      <div className="hidden items-center gap-2.5 sm:flex">
+        {VA_BANKS.slice(0, 4).map((b) => (
+          <ChannelMark key={b.id} src={b.logo} alt={b.label} height={Math.round(b.height * 0.72)} />
+        ))}
+        <span className="text-[11px] font-medium text-gray-500">+{VA_BANKS.length - 4}</span>
+      </div>
     ),
   },
 ];
 
-// Banks whose virtual account is activated on the merchant account for Core
-// API (probed 2026-10-26). BCA is not, so it is not offered. Mandiri is a bill
-// payment: a biller code plus a bill key instead of one VA number.
-const VA_BANKS: { id: string; label: string }[] = [
-  { id: 'bni', label: 'BNI' },
-  { id: 'bri', label: 'BRI' },
-  { id: 'mandiri', label: 'Mandiri' },
-  { id: 'permata', label: 'Permata' },
-  { id: 'cimb', label: 'CIMB Niaga' },
-  { id: 'bsi', label: 'BSI' },
-];
 
 // How often the awaiting step asks whether the payment has landed.
 const CONFIRM_POLL_MS = 5000;
@@ -1050,20 +1058,22 @@ export function CheckoutForm({
             {needsBank && (
               <div className="mt-4">
                 <p className="text-xs font-bold text-gray-500 tracking-wider mb-3">BANK</p>
-                <div className="grid grid-cols-3 gap-2">
+                <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
                   {VA_BANKS.map((b) => (
                     <button
                       key={b.id}
                       type="button"
                       onClick={() => setVaBank(b.id)}
                       aria-pressed={vaBank === b.id}
-                      className={`rounded-lg border px-3 py-2.5 text-sm font-medium transition-colors ${
+                      aria-label={b.label}
+                      title={b.label}
+                      className={`flex h-14 items-center justify-center rounded-lg border px-3 transition-colors ${
                         vaBank === b.id
-                          ? 'border-[#4a90e2] bg-blue-50 text-[#1a1a1a]'
-                          : 'border-gray-200 text-gray-600 hover:bg-gray-50'
+                          ? 'border-[#4a90e2] bg-blue-50 ring-1 ring-[#4a90e2]'
+                          : 'border-gray-200 bg-white hover:bg-gray-50'
                       }`}
                     >
-                      {b.label}
+                      <ChannelMark src={b.logo} alt="" height={b.height + 4} />
                     </button>
                   ))}
                 </div>
