@@ -34,7 +34,7 @@ import {
   loadMidtransSnap,
   fetchMidtransClientKey,
 } from '@/lib/payment';
-import { createDirectCharge, type DirectChargeResult } from '@/lib/payment';
+import { createDirectCharge, confirmOrder, type DirectChargeResult } from '@/lib/payment';
 import { loadMidtrans3ds, getCardToken, authenticate3ds } from '@/lib/midtrans-3ds';
 import {
   detectCardBrand,
@@ -126,8 +126,9 @@ const CHANNELS: { id: Channel; label: string; badge: React.ReactNode }[] = [
     badge: <ChannelMark src="/payments/qris.svg" alt="QRIS" height={14} />,
   },
   {
-    // avry-payments expands `bank_transfer` to every VA activated on the
-    // merchant account, so Snap opens on its bank picker.
+    // Drawn on this page with the bank the customer picks below (VA_BANKS).
+    // On the Snap fallback avry-payments expands `bank_transfer` to every VA
+    // activated on the merchant account, so Snap opens on its bank picker.
     id: 'bank_transfer',
     label: 'Virtual Account / Bank Transfer',
     badge: (
@@ -137,6 +138,21 @@ const CHANNELS: { id: Channel; label: string; badge: React.ReactNode }[] = [
     ),
   },
 ];
+
+// Banks whose virtual account is activated on the merchant account for Core
+// API (probed 2026-10-26). BCA is not, so it is not offered. Mandiri is a bill
+// payment: a biller code plus a bill key instead of one VA number.
+const VA_BANKS: { id: string; label: string }[] = [
+  { id: 'bni', label: 'BNI' },
+  { id: 'bri', label: 'BRI' },
+  { id: 'mandiri', label: 'Mandiri' },
+  { id: 'permata', label: 'Permata' },
+  { id: 'cimb', label: 'CIMB Niaga' },
+  { id: 'bsi', label: 'BSI' },
+];
+
+// How often the awaiting step asks whether the payment has landed.
+const CONFIRM_POLL_MS = 5000;
 
 // ---------------------------------------------------------------------------
 // Small presentational helpers
@@ -334,6 +350,7 @@ export function CheckoutForm({
 
   const [step, setStep] = useState<Step>(initialAuthed ? 'method' : 'auth');
   const [channel, setChannel] = useState<Channel | null>(null);
+  const [vaBank, setVaBank] = useState<string | null>(null);
   // Core API result for the channel the customer picked — the QR, deeplink or
   // VA number we draw ourselves instead of handing the screen to Snap.
   const [charge, setCharge] = useState<DirectChargeResult | null>(null);
@@ -450,6 +467,34 @@ export function CheckoutForm({
         ? phone.replace(/\D/g, '').length >= 8
         : true;
 
+  // The awaiting step used to promise "this page updates as soon as your
+  // payment is confirmed" without ever asking. Poll the same idempotent
+  // confirm the success page uses: it re-reads Midtrans and grants on paid.
+  useEffect(() => {
+    if (step !== 'awaiting' || !charge?.order_id) return;
+    const orderId = charge.order_id;
+    let stopped = false;
+    const check = async () => {
+      const c = await confirmOrder(orderId);
+      if (stopped || !c.ok) return;
+      if (c.granted) {
+        stopped = true;
+        trackEvent('purchase', { value: priceUsd, currency: 'USD', transaction_id: orderId });
+        setStep('success');
+      } else if (c.status === 'failed' || c.status === 'amount_mismatch') {
+        stopped = true;
+        setCharge(null);
+        setError('This payment expired or was declined. Please choose a payment method again.');
+        setStep('method');
+      }
+    };
+    const timer = setInterval(check, CONFIRM_POLL_MS);
+    return () => {
+      stopped = true;
+      clearInterval(timer);
+    };
+  }, [step, charge?.order_id, priceUsd]);
+
   // -- Payment execution --------------------------------------------------
 
   const runMockPayment = () => {
@@ -472,17 +517,19 @@ export function CheckoutForm({
     typeof window !== 'undefined' &&
     new URLSearchParams(window.location.search).get('card') === 'direct';
   const DIRECT_CHANNELS = new Set(
-    directCardEnabled ? ['gopay', 'qris', 'credit_card'] : ['gopay', 'qris'],
+    directCardEnabled
+      ? ['gopay', 'qris', 'bank_transfer', 'credit_card']
+      : ['gopay', 'qris', 'bank_transfer'],
   );
 
-  // Off by default: every channel goes through Snap. Core API is not activated
-  // on the merchant account yet (every /v2/charge answers 402 "Payment channel
-  // is not activated"), so an on-page attempt could only fail before handing
-  // over to Snap. `?pay=direct` (or `?card=direct`) opts in for testing once
-  // Midtrans activates it.
+  // On by default now that Midtrans has activated Core API: GoPay, QRIS and
+  // the VAs are drawn on this page. `?pay=snap` (the "Pay another way" link)
+  // sends everything through Snap instead, and a refused charge still falls
+  // back to Snap on its own.
   const directPayEnabled =
     typeof window !== 'undefined' &&
-    (new URLSearchParams(window.location.search).get('pay') === 'direct' || directCardEnabled);
+    new URLSearchParams(window.location.search).get('pay') !== 'snap';
+  const needsBank = directPayEnabled && channel === 'bank_transfer';
 
   const runDirectCharge = async (picked: Channel): Promise<boolean> => {
     let cardTokenId: string | undefined;
@@ -523,7 +570,13 @@ export function CheckoutForm({
       }
     }
 
-    const result = await createDirectCharge(productId, picked, cardTokenId, promoCode);
+    const result = await createDirectCharge(
+      productId,
+      picked,
+      cardTokenId,
+      promoCode,
+      picked === 'bank_transfer' ? vaBank ?? undefined : undefined,
+    );
     if (result.fallback_to_snap || !result.success) {
       const reason = result.error || 'channel not served by Core API';
       console.warn('[checkout] Direct charge declined, falling back to Snap:', reason);
@@ -985,6 +1038,29 @@ export function CheckoutForm({
               ))}
             </div>
 
+            {needsBank && (
+              <div className="mt-4">
+                <p className="text-xs font-bold text-gray-500 tracking-wider mb-3">BANK</p>
+                <div className="grid grid-cols-3 gap-2">
+                  {VA_BANKS.map((b) => (
+                    <button
+                      key={b.id}
+                      type="button"
+                      onClick={() => setVaBank(b.id)}
+                      aria-pressed={vaBank === b.id}
+                      className={`rounded-lg border px-3 py-2.5 text-sm font-medium transition-colors ${
+                        vaBank === b.id
+                          ? 'border-[#4a90e2] bg-blue-50 text-[#1a1a1a]'
+                          : 'border-gray-200 text-gray-600 hover:bg-gray-50'
+                      }`}
+                    >
+                      {b.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+
             {turnstileEnabled && (
               <div className="mt-6 flex justify-center">
                 <TurnstileWidget
@@ -1003,7 +1079,12 @@ export function CheckoutForm({
             <div className="mt-6 w-full">
               <SpotlightButton
                 type="button"
-                disabled={!channel || verifying || (turnstileEnabled && !turnstileToken)}
+                disabled={
+                  !channel ||
+                  (needsBank && !vaBank) ||
+                  verifying ||
+                  (turnstileEnabled && !turnstileToken)
+                }
                 onClick={handleMethodContinue}
                 className="w-full"
                 roundedClass="rounded-lg"
@@ -1354,9 +1435,25 @@ export function CheckoutForm({
 
             {charge.va_number && (
               <div className="mt-6 w-full max-w-sm rounded-xl border border-gray-200 bg-gray-50 p-4 text-left">
-                <p className="text-[12px] uppercase tracking-[0.1em] text-gray-500">
-                  {(charge.va_bank || 'bank').toUpperCase()} virtual account
-                </p>
+                {charge.biller_code ? (
+                  <>
+                    {/* Mandiri bill payment: pay via "Multipayment" with the
+                        company code, then the bill key. */}
+                    <p className="text-[12px] uppercase tracking-[0.1em] text-gray-500">
+                      Mandiri bill payment &middot; company code
+                    </p>
+                    <p className="mt-1 font-mono text-[20px] tracking-wide text-gray-900">
+                      {charge.biller_code}
+                    </p>
+                    <p className="mt-3 text-[12px] uppercase tracking-[0.1em] text-gray-500">
+                      Bill key
+                    </p>
+                  </>
+                ) : (
+                  <p className="text-[12px] uppercase tracking-[0.1em] text-gray-500">
+                    {(charge.va_bank || 'bank').toUpperCase()} virtual account
+                  </p>
+                )}
                 <p className="mt-1 font-mono text-[20px] tracking-wide text-gray-900">
                   {charge.va_number}
                 </p>
