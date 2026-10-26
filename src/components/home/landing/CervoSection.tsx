@@ -106,7 +106,7 @@ export default function CervoSection() {
           <i className={`${s.fbGlow} ${s.g2}`} />
           <i className={`${s.fbGlow} ${s.g3}`} />
           <GrainBanner
-            palette={PALETTES.citrus}
+            palette={PALETTES.ember}
             lockup="/landing/brand/cervo-lockup.webp"
             lockupWidth={38.5}
             lockupRatio={923 / 118}

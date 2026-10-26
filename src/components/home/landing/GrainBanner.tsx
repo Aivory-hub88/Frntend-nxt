@@ -13,15 +13,16 @@ export type GrainPalette = { angle: number; stops: string[]; blobs: string[]; gr
 
 // Three colours per banner, like the ElevenLabs launch films.
 export const PALETTES = {
-  // citrus: deep mint under the lockup and the copy, greenish-yellow light on the edges, a touch of light blue low right
-  citrus: {
-    angle: 112,
-    stops: ['#137a66', '#2aa88b', '#36ae96', '#2e8fa0', '#3577ad'],
-    blobs: ['#c6dd4c', '#7fe0bf', '#137a63', '#8fd0ff', '#d4e65a'],
-    grain: 0.4,
+  // ember (the user's 2026-10-26 reference): warm cream along the top, a muted teal band under the lockup,
+  // coral-orange through the copy, deepening to red-orange low right
+  ember: {
+    angle: 100,
+    stops: ['#6f9996', '#a8948a', '#df7848', '#e0603a', '#d23b18'],
+    blobs: ['#f2ede2', '#dcc0a6', '#5e9692', '#df2f0e', '#efa071'],
+    grain: 0.45,
     streaks: [
-      { y: 14, h: 12, rot: -5, c: '#e4f27a', o: 0.45 },
-      { y: 84, h: 6, rot: 2, c: '#c2e6ff', o: 0.6 },
+      { y: 8, h: 14, rot: -2, c: '#fff6e8', o: 0.4 },
+      { y: 30, h: 6, rot: -3, c: '#9cc3c0', o: 0.35 },
     ],
   },
   // iris: periwinkle under the lockup, pink-lavender light across the middle, magenta deepening under the copy
