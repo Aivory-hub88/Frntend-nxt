@@ -505,32 +505,20 @@ export function CheckoutForm({
     setTimeout(() => setStep('success'), 1600);
   };
 
-  // Core API channels that can be drawn entirely on this page. Card is absent
-  // on purpose: it needs Midtrans' browser tokenisation library first. DANA is
-  // absent because Core API has no payment_type for it at all — both keep
-  // running through Snap.
+  // Core API channels drawn entirely on this page. DANA is absent because
+  // Core API has no payment_type for it — it keeps running through Snap.
   //
-  // Card is drawn here only on request (`?card=direct`). In production the
-  // on-page card form never reached Midtrans — tokenisation failed in the
-  // browser — and the silent fallback then opened Snap, which asked for the
-  // card a second time. Until Core API card charging is confirmed working on
-  // the merchant account, a card goes straight to Snap and is typed once.
-  const directCardEnabled =
-    typeof window !== 'undefined' &&
-    new URLSearchParams(window.location.search).get('card') === 'direct';
-  const DIRECT_CHANNELS = new Set(
-    directCardEnabled
-      ? ['gopay', 'qris', 'bank_transfer', 'credit_card']
-      : ['gopay', 'qris', 'bank_transfer'],
-  );
-
-  // On by default now that Midtrans has activated Core API: GoPay, QRIS and
-  // the VAs are drawn on this page. `?pay=snap` (the "Pay another way" link)
-  // sends everything through Snap instead, and a refused charge still falls
-  // back to Snap on its own.
+  // On by default now that Midtrans has activated Core API. `?pay=snap` (the
+  // "Pay another way" link) sends everything through Snap instead.
   const directPayEnabled =
     typeof window !== 'undefined' &&
     new URLSearchParams(window.location.search).get('pay') !== 'snap';
+  // Card is tokenised in the browser by Midtrans' library and charged through
+  // Core API, confirmed end to end in production on 2026-10-26 (the on-page
+  // form had never worked before: the library could not find its own script
+  // tag, see lib/midtrans-3ds).
+  const directCardEnabled = directPayEnabled;
+  const DIRECT_CHANNELS = new Set(['gopay', 'qris', 'bank_transfer', 'credit_card']);
   const needsBank = directPayEnabled && channel === 'bank_transfer';
 
   const runDirectCharge = async (picked: Channel): Promise<boolean> => {
@@ -554,8 +542,8 @@ export function CheckoutForm({
         throw new Error('[client key] the payments service returned no Midtrans client key');
       }
 
-      // Each stage is labelled so a failure says where it happened; on the
-      // `?card=direct` diagnostic path that label is shown on screen.
+      // Each stage is labelled so a failure says where it happened in the
+      // console; the customer sees the reason without the label.
       try {
         await loadMidtrans3ds(clientKey, window.MIDTRANS_IS_PRODUCTION !== false);
       } catch (e) {
@@ -630,11 +618,11 @@ export function CheckoutForm({
           if (await runDirectCharge(channel)) return;
         } catch (directErr) {
           console.warn('Direct charge unavailable, falling back to Snap:', directErr);
-          // On the `?card=direct` diagnostic path, stop and show why instead of
-          // opening Snap: the reason is what decides how to fix this path.
+          // A card stays on this page and says why it failed (a decline, a
+          // mistyped number), rather than opening Snap to ask for it again.
           if (directCardEnabled && channel === 'credit_card') {
             const reason = directErr instanceof Error ? directErr.message : String(directErr);
-            setError(`Card payment on this page failed — ${reason}`);
+            setError(`We couldn't process this card: ${reason.replace(/^\[[^\]]+\]\s*/, '')}`);
             setStep('details');
             return;
           }
