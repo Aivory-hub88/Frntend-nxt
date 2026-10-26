@@ -171,11 +171,11 @@ function HeaderWash() {
   return (
     <div
       aria-hidden="true"
-      className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-56 overflow-hidden"
+      className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-64 overflow-hidden"
       style={{
         background: '#ededed',
-        WebkitMaskImage: 'linear-gradient(180deg, #000 55%, transparent 100%)',
-        maskImage: 'linear-gradient(180deg, #000 55%, transparent 100%)',
+        WebkitMaskImage: 'linear-gradient(180deg, #000 60%, transparent 100%)',
+        maskImage: 'linear-gradient(180deg, #000 60%, transparent 100%)',
       }}
     >
       <div
@@ -186,13 +186,13 @@ function HeaderWash() {
           src="/images/hero-new/group-35392.svg"
           alt=""
           className="absolute max-w-none"
-          style={{ left: -250, top: -80, width: 956, height: 233 }}
+          style={{ left: -250, top: -40, width: 956, height: 233 }}
         />
         <img
           src="/images/hero-new/group-35393.svg"
           alt=""
           className="absolute max-w-none"
-          style={{ left: -356, top: -121, width: 967, height: 253, transform: 'rotate(-4.98deg)' }}
+          style={{ left: -356, top: -81, width: 967, height: 253, transform: 'rotate(-4.98deg)' }}
         />
       </div>
       <div
