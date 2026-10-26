@@ -135,10 +135,15 @@ export default function CervoSection() {
             <span className={s.chip}><img className={s.chipIc} src="/landing/mcp.svg" alt="" />Model Context Protocol</span>
           </div>
           <div className={s.cap}>
-            <span>A2A Protocol</span>
+            <span>Deploy Anywhere</span>
             <span className={s.chip}>
-              <img className={s.chipA2a} src="/landing/strip/a2a.svg" alt="" />
-              <img className={s.chipText} src="/landing/strip/agent2agent-text.svg" alt="Agent2Agent" />
+              Channels
+              <span className={s.stack} aria-hidden="true">
+                <i><img src="/integrations/icons/slack.svg" alt="" /></i>
+                <i><img src="/integrations/icons/telegram.svg" alt="" /></i>
+                <i><img src="/integrations/icons/discord.svg" alt="" /></i>
+                <i><img src="/integrations/icons/odoo.svg" alt="" /></i>
+              </span>
             </span>
           </div>
         </div>
@@ -221,10 +226,10 @@ export default function CervoSection() {
           </article>
 
           <article className={s.igc}>
-            <h4>Agent2Agent Handoff</h4>
-            <p className={s.igd}>Agents pass work to each other, and to agents outside Aivory, with the full context attached.</p>
+            <h4>Agent-to-Agent Handoff</h4>
+            <p className={s.igd}>Agents pass work to each other with the full context attached, and track it until it is done.</p>
             <div className={`${s.igp} ${s.agentp}`}>
-              <div className={s.st}><i />Active · A2A · Shared context</div>
+              <div className={s.st}><i />Active · Handoff · Shared context</div>
               <div className={s.flow}>
                 <AgentPic type="leads_qualifier" className={s.flowPic} /><small className={s.fl}>Lex</small>
                 <span className={s.arr}><Line d="M14 5l7 7-7 7M21 12H3" /></span>
