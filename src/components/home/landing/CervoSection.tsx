@@ -221,7 +221,7 @@ export default function CervoSection() {
           </article>
 
           <article className={s.igc}>
-            <h4>Agent2Agent Handoff</h4>
+            <h4>Agents That Work as a Team</h4>
             <p className={s.igd}>Built on the full A2A protocol, agents talk to each other and work as a team, inside Aivory and beyond.</p>
             <div className={`${s.igp} ${s.agentp}`}>
               <div className={s.st}><i />Active · A2A · Shared context</div>
