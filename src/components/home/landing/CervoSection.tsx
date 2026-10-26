@@ -224,15 +224,15 @@ export default function CervoSection() {
             <h4>Agents That Work as a Team</h4>
             <p className={s.igd}>Built on the full A2A protocol, agents talk to each other and work as a team, inside Aivory and beyond.</p>
             <div className={`${s.igp} ${s.agentp}`}>
-              <div className={s.st}><i />Active · A2A · Shared context</div>
+              <div className={s.st}><i />Active · A2A · Team chat</div>
               <div className={s.flow}>
                 <AgentPic type="leads_qualifier" className={s.flowPic} /><small className={s.fl}>Lex</small>
-                <span className={s.arr}><Line d="M14 5l7 7-7 7M21 12H3" /></span>
+                <span className={s.arr}><Line d="M16 3l4 4-4 4M20 7H4M8 21l-4-4 4-4M4 17h16" /></span>
                 <AgentPic type="finance_invoice_ops" className={s.flowPic} /><small className={s.fl}>Finn</small>
-                <span className={`${s.bdg} ${s.ok} ${s.push}`}>Handed off</span>
+                <span className={`${s.bdg} ${s.ok} ${s.push}`}>In sync</span>
               </div>
-              <Task src="Lex (Sales) → Finn (Finance)" badge="Handed off" tone="ok" text='"Deal closed: Acme Ltd, 12 seats."' result="Invoice INV-0412 drafted with deal terms." />
-              <Task src="Support → Operations" badge="Processing" tone="blue" text='"Replacement unit for order #9042."' result="Checking stock · Booking courier" working />
+              <Task src="Lex (Sales) ↔ Finn (Finance)" badge="Agreed" tone="ok" text='"Acme Ltd closed, 12 seats. Net 30?"' result="Finn: Yes. INV-0412 drafted with deal terms." />
+              <Task src="Support ↔ Operations" badge="Working" tone="blue" text='"Replacement unit for order #9042."' result="Checking stock · Booking courier" working />
             </div>
           </article>
 
