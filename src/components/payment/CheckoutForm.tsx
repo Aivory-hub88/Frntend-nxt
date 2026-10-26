@@ -162,6 +162,51 @@ const CHANNELS: { id: Channel; label: string; badge: React.ReactNode }[] = [
 // How often the awaiting step asks whether the payment has landed.
 const CONFIRM_POLL_MS = 5000;
 
+/**
+ * The landing hero's grainy blue-purple wash behind the header: the same two
+ * blobs, filter and grain tile as HeroCardBackdrop, fading out into the white
+ * page so the form below stays on a plain ground.
+ */
+function HeaderWash() {
+  return (
+    <div
+      aria-hidden="true"
+      className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-56 overflow-hidden"
+      style={{
+        background: '#ededed',
+        WebkitMaskImage: 'linear-gradient(180deg, #000 55%, transparent 100%)',
+        maskImage: 'linear-gradient(180deg, #000 55%, transparent 100%)',
+      }}
+    >
+      <div
+        className="absolute inset-0"
+        style={{ filter: 'saturate(2.2) brightness(0.68) contrast(1.15)' }}
+      >
+        <img
+          src="/images/hero-new/group-35392.svg"
+          alt=""
+          className="absolute max-w-none"
+          style={{ left: -250, top: -80, width: 956, height: 233 }}
+        />
+        <img
+          src="/images/hero-new/group-35393.svg"
+          alt=""
+          className="absolute max-w-none"
+          style={{ left: -356, top: -121, width: 967, height: 253, transform: 'rotate(-4.98deg)' }}
+        />
+      </div>
+      <div
+        className="absolute inset-0 mix-blend-overlay"
+        style={{
+          backgroundImage: "url('/images/hero-new/texture.png')",
+          backgroundSize: '134px 134px',
+          opacity: 0.35,
+        }}
+      />
+    </div>
+  );
+}
+
 // ---------------------------------------------------------------------------
 // Small presentational helpers
 // ---------------------------------------------------------------------------
@@ -838,21 +883,17 @@ export function CheckoutForm({
   // -- Render -------------------------------------------------------------
 
   return (
-    <div className="w-full bg-white min-h-screen p-8 lg:p-12 text-[#1a1a1a] flex flex-col">
+    <div className="relative isolate w-full bg-white min-h-screen p-8 lg:p-12 text-[#1a1a1a] flex flex-col overflow-hidden">
+      <HeaderWash />
       {/* Header */}
       <div className="flex justify-between items-center mb-12">
-        {/* The landing page's 2026 wordmark, used as a mask so it can carry
-            the checkout's bluish-purple to orange colour. */}
-        <span
-          role="img"
-          aria-label="Aivory"
-          className="block h-6"
-          style={{
-            aspectRatio: '204.755 / 29.72',
-            backgroundImage: 'linear-gradient(100deg, #5b5fd9 0%, #7c5ce8 42%, #f2701f 100%)',
-            WebkitMask: "url('/aivory-wordmark.svg') no-repeat center / contain",
-            mask: "url('/aivory-wordmark.svg') no-repeat center / contain",
-          }}
+        {/* The landing page's 2026 wordmark, white on the hero wash. */}
+        <img
+          src="/aivory-wordmark.svg"
+          alt="Aivory"
+          width={205}
+          height={30}
+          className="relative h-6 w-auto"
         />
         <div className="relative">
           <button
