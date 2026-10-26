@@ -5,6 +5,7 @@ import { useLanguage } from '@/components/context/LanguageContext';
 import { formatCheckoutPrice, type CheckoutCurrency } from '@/lib/checkout-format';
 import { getServiceInfo } from '@/lib/checkout-catalog';
 import { validatePromoCode, type PromoQuote } from '@/lib/payment';
+import { GrainGradient } from '@/components/ui/GrainGradient';
 
 export interface OrderSummaryProps {
   productId: string;
@@ -19,21 +20,6 @@ export interface OrderSummaryProps {
   promo?: PromoQuote | null;
   onPromoChange?: (promo: PromoQuote | null) => void;
 }
-
-// Film grain for the gradient panel: fractal noise, desaturated, tiled. Inline
-// so the panel needs no extra request and the grain stays crisp at any size.
-const GRAIN =
-  "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E\")";
-
-// Three-colour field — deep navy, Aivory blue, warm orange — blended with soft
-// radial pools rather than a straight linear ramp, so it reads as light.
-const FIELD = [
-  'radial-gradient(120% 70% at 15% 0%, #0a1f4d 0%, rgba(10,31,77,0) 70%)',
-  'radial-gradient(90% 60% at 85% 35%, #2b63c6 0%, rgba(43,99,198,0) 75%)',
-  'radial-gradient(110% 60% at 30% 100%, #f2601d 0%, rgba(242,96,29,0) 70%)',
-  'radial-gradient(80% 50% at 95% 95%, #f59a3c 0%, rgba(245,154,60,0) 70%)',
-  'linear-gradient(180deg, #0d2a63 0%, #1f4f9f 48%, #c8662f 100%)',
-].join(', ');
 
 export function OrderSummary({
   productId,
@@ -93,15 +79,7 @@ export function OrderSummary({
       : language === 'id' ? '/bulan' : '/month';
 
   return (
-    <div
-      className="relative isolate w-full min-h-screen overflow-hidden p-8 lg:p-12 text-white"
-      style={{ backgroundImage: FIELD, backgroundColor: '#0d2a63' }}
-    >
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-0 -z-10 opacity-[0.45] mix-blend-overlay"
-        style={{ backgroundImage: GRAIN, backgroundSize: '220px 220px' }}
-      />
+    <GrainGradient className="w-full min-h-screen p-8 lg:p-12 text-white">
       <h2 className="text-2xl font-semibold mb-2">Order Summary</h2>
       <p className="text-sm text-white/60 mb-8">Invoice #: {invoiceNumber}</p>
 
@@ -234,6 +212,6 @@ export function OrderSummary({
             : 'Billed monthly. You can cancel anytime from your dashboard.'}
         </p>
       )}
-    </div>
+    </GrainGradient>
   );
 }
