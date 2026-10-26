@@ -164,53 +164,34 @@ const CHANNELS: { id: Channel; label: string; badge: React.ReactNode }[] = [
 const CONFIRM_POLL_MS = 5000;
 
 /**
- * The grainy clouds behind the header: the same GrainGradient surface, grain
- * and silver-blue colours as the order summary, so the two halves read as one
- * page. Like the landing hero's wash behind the logo, each is a soft band laid
- * diagonally across a top corner (-45deg on the left behind the white
- * wordmark, +45deg on the right behind the language picker), so the corners
- * are filled and the middle of the header stays white.
+ * The header carries the grainy gradient inside the wordmark and the language
+ * button rather than behind them: the same GrainGradient surface and
+ * silver-blue-to-orange colours as the order summary, read left to right, on
+ * a plain white header.
  */
-const HEADER_WASH: GrainPalette = {
-  base: 'linear-gradient(180deg, #2a58a8 0%, #3f69ad 55%, #a3b3ca 100%)',
-  blobs: ['#1b3f86', '#a3b3ca', '#2b63c6', '#7f97bd', '#f2701f'],
+const HEADER_GRADIENT: GrainPalette = {
+  base: 'linear-gradient(90deg, #1b3f86 0%, #2a58a8 40%, #5d77a3 70%, #e46a24 100%)',
+  blobs: ['#1b3f86', '#7f97bd', '#2b63c6', '#a8582f', '#2a58a8'],
 };
 
-// A long soft ellipse with a few lumps along it. Every ellipse fades out
-// inside the box; one that reached the edge left a hard cut there.
-const CLOUD_MASK = [
-  'radial-gradient(ellipse 50% 50% at 50% 50%, #000 55%, transparent 100%)',
-  'radial-gradient(ellipse 24% 42% at 30% 42%, #000 30%, transparent 100%)',
-  'radial-gradient(ellipse 22% 40% at 68% 58%, #000 30%, transparent 100%)',
-].join(', ');
+const WORDMARK_MASK = 'url(/aivory-wordmark.svg) center / contain no-repeat';
 
-function HeaderCloud({ className, angle }: { className: string; angle: number }) {
+/** The 2026 wordmark, filled with the grainy gradient through its own shape. */
+function GradientWordmark() {
   return (
     <div
-      aria-hidden="true"
-      className={`absolute h-[440px] w-[640px] ${className}`}
-      style={{ WebkitMaskImage: CLOUD_MASK, maskImage: CLOUD_MASK, transform: `rotate(${angle}deg)` }}
+      role="img"
+      aria-label="Aivory"
+      className="relative aspect-[205/30] h-6"
+      style={{ WebkitMask: WORDMARK_MASK, mask: WORDMARK_MASK }}
     >
-      <GrainGradient palette={HEADER_WASH} hover={false} patternOpacity={0.1} className="h-full w-full" />
-    </div>
-  );
-}
-
-function HeaderWash() {
-  // Each band is centred just inside its corner, near the logo / picker. The
-  // wrapper fades them out above the first line of content (the "Pay before"
-  // line or the sign-in heading) so no grey text sits on blue.
-  return (
-    <div
-      aria-hidden="true"
-      className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-28 overflow-hidden lg:h-36"
-      style={{
-        WebkitMaskImage: 'linear-gradient(180deg, #000 45%, transparent 100%)',
-        maskImage: 'linear-gradient(180deg, #000 45%, transparent 100%)',
-      }}
-    >
-      <HeaderCloud angle={-45} className="-left-[250px] -top-[175px] lg:-left-[230px] lg:-top-[160px]" />
-      <HeaderCloud angle={45} className="-right-[250px] -top-[175px] lg:-right-[230px] lg:-top-[160px]" />
+      <GrainGradient
+        palette={HEADER_GRADIENT}
+        contours={false}
+        hover={false}
+        blur={8}
+        className="h-full w-full"
+      />
     </div>
   );
 }
@@ -892,32 +873,32 @@ export function CheckoutForm({
 
   return (
     <div className="relative isolate w-full bg-white min-h-screen p-8 lg:p-12 text-[#1a1a1a] flex flex-col overflow-hidden">
-      <HeaderWash />
       {/* Header */}
       <div className="flex justify-between items-center mb-12">
-        {/* The landing page's 2026 wordmark, white on the hero wash. */}
-        <img
-          src="/aivory-wordmark.svg"
-          alt="Aivory"
-          width={205}
-          height={30}
-          className="relative h-6 w-auto"
-        />
+        {/* The landing page's 2026 wordmark, filled with the grainy gradient. */}
+        <GradientWordmark />
         <div className="relative">
           <button
             type="button"
             onClick={() => setLangOpen((v) => !v)}
-            className="flex items-center gap-1 text-sm bg-gray-100 hover:bg-gray-200 px-3 py-1.5 rounded-md transition-colors"
+            className="block overflow-hidden rounded-md shadow-sm"
           >
-            {language === 'id' ? 'Bahasa Indonesia' : 'English'}
-            <svg
-              className="w-4 h-4 text-gray-500"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
+            <GrainGradient
+              palette={HEADER_GRADIENT}
+              contours={false}
+              blur={12}
+              className="flex items-center gap-1 px-3 py-1.5 text-sm font-medium text-white"
             >
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-            </svg>
+              {language === 'id' ? 'Bahasa Indonesia' : 'English'}
+              <svg
+                className="w-4 h-4 text-white/85"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+              </svg>
+            </GrainGradient>
           </button>
           {langOpen && (
             <div className="absolute right-0 mt-1 w-44 bg-white border border-gray-200 rounded-md shadow-lg z-10 overflow-hidden">
