@@ -20,6 +20,21 @@ export interface OrderSummaryProps {
   onPromoChange?: (promo: PromoQuote | null) => void;
 }
 
+// Film grain for the gradient panel: fractal noise, desaturated, tiled. Inline
+// so the panel needs no extra request and the grain stays crisp at any size.
+const GRAIN =
+  "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E\")";
+
+// Three-colour field — deep navy, Aivory blue, warm orange — blended with soft
+// radial pools rather than a straight linear ramp, so it reads as light.
+const FIELD = [
+  'radial-gradient(120% 70% at 15% 0%, #0a1f4d 0%, rgba(10,31,77,0) 70%)',
+  'radial-gradient(90% 60% at 85% 35%, #2b63c6 0%, rgba(43,99,198,0) 75%)',
+  'radial-gradient(110% 60% at 30% 100%, #f2601d 0%, rgba(242,96,29,0) 70%)',
+  'radial-gradient(80% 50% at 95% 95%, #f59a3c 0%, rgba(245,154,60,0) 70%)',
+  'linear-gradient(180deg, #0d2a63 0%, #1f4f9f 48%, #c8662f 100%)',
+].join(', ');
+
 export function OrderSummary({
   productId,
   productName,
@@ -78,11 +93,19 @@ export function OrderSummary({
       : language === 'id' ? '/bulan' : '/month';
 
   return (
-    <div className="w-full bg-[#f8f9fa] min-h-screen p-8 lg:p-12 text-[#1a1a1a]">
+    <div
+      className="relative isolate w-full min-h-screen overflow-hidden p-8 lg:p-12 text-white"
+      style={{ backgroundImage: FIELD, backgroundColor: '#0d2a63' }}
+    >
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 -z-10 opacity-[0.45] mix-blend-overlay"
+        style={{ backgroundImage: GRAIN, backgroundSize: '220px 220px' }}
+      />
       <h2 className="text-2xl font-semibold mb-2">Order Summary</h2>
-      <p className="text-sm text-gray-500 mb-8">Invoice #: {invoiceNumber}</p>
+      <p className="text-sm text-white/60 mb-8">Invoice #: {invoiceNumber}</p>
 
-      <div className="flex items-center gap-2 text-sm text-gray-600 mb-8 pb-8 border-b border-gray-200">
+      <div className="flex items-center gap-2 text-sm text-white/75 mb-8 pb-8 border-b border-white/15">
         <svg
           className="w-4 h-4 shrink-0"
           fill="none"
@@ -102,26 +125,26 @@ export function OrderSummary({
       <div className="flex justify-between items-start mb-2">
         <div className="pr-4">
           <span className="font-medium block">{productName}</span>
-          <span className="text-xs uppercase tracking-wide text-gray-400">
+          <span className="text-xs uppercase tracking-wide text-white/50">
             {recurring ? 'Subscription' : 'One-time purchase'}
           </span>
         </div>
         <span className="font-semibold whitespace-nowrap">
           {priceLabel}
           {intervalSuffix && (
-            <span className="text-xs font-normal text-gray-400">{intervalSuffix}</span>
+            <span className="text-xs font-normal text-white/50">{intervalSuffix}</span>
           )}
         </span>
       </div>
 
       {info && (
         <>
-          <p className="text-sm text-gray-500 leading-relaxed mb-4">{info.description}</p>
+          <p className="text-sm text-white/70 leading-relaxed mb-4">{info.description}</p>
           <ul className="space-y-1.5 mb-6">
             {info.features.map((f) => (
-              <li key={f} className="flex items-start gap-2 text-sm text-gray-600">
+              <li key={f} className="flex items-start gap-2 text-sm text-white/85">
                 <svg
-                  className="w-4 h-4 mt-0.5 text-green-500 shrink-0"
+                  className="w-4 h-4 mt-0.5 text-white shrink-0"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -138,14 +161,14 @@ export function OrderSummary({
       {onPromoChange && (
         <div className="mb-6">
           {promo ? (
-            <div className="flex items-center justify-between rounded-lg border border-green-200 bg-green-50 px-3 py-2.5 text-sm">
-              <span className="text-green-800">
+            <div className="flex items-center justify-between rounded-lg border border-white/25 bg-white/10 px-3 py-2.5 text-sm backdrop-blur-md">
+              <span className="text-white">
                 <span className="font-mono font-semibold">{promo.code}</span> applied
               </span>
               <button
                 type="button"
                 onClick={() => onPromoChange(null)}
-                className="text-xs text-gray-500 underline-offset-2 hover:text-[#1a1a1a] hover:underline"
+                className="text-xs text-white/70 underline-offset-2 hover:text-white hover:underline"
               >
                 Remove
               </button>
@@ -168,42 +191,44 @@ export function OrderSummary({
                   placeholder="Promo code"
                   aria-label="Promo code"
                   maxLength={32}
-                  className="min-w-0 flex-1 rounded-lg border border-gray-300 bg-white px-3 py-2.5 font-mono text-sm text-[#1a1a1a] placeholder:font-sans placeholder:text-gray-400 focus:border-[#4a90e2] focus:outline-none focus:ring-1 focus:ring-[#4a90e2]"
+                  className="min-w-0 flex-1 rounded-lg border border-white/25 bg-white/10 px-3 py-2.5 font-mono text-sm text-white backdrop-blur-md placeholder:font-sans placeholder:text-white/55 focus:border-white/60 focus:outline-none focus:ring-1 focus:ring-white/60"
                 />
                 <button
                   type="button"
                   onClick={() => void applyPromo()}
                   disabled={checking || !codeDraft.trim()}
-                  className="rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm font-semibold text-[#1a1a1a] transition hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50"
+                  className="rounded-lg bg-white px-4 py-2.5 text-sm font-semibold text-[#0d2a63] transition hover:bg-white/90 disabled:cursor-not-allowed disabled:opacity-50"
                 >
                   {checking ? '…' : 'Apply'}
                 </button>
               </div>
-              {promoError && <p className="mt-2 text-xs text-red-600">{promoError}</p>}
+              {promoError && (
+                <p className="mt-2 rounded-md bg-black/25 px-2 py-1 text-xs text-white">{promoError}</p>
+              )}
             </>
           )}
         </div>
       )}
 
       {promo && (
-        <div className="mb-4 flex justify-between text-sm text-green-700">
+        <div className="mb-4 flex justify-between text-sm text-white/90">
           <span>Promo {promo.code}</span>
           <span className="whitespace-nowrap">−{discountLabel}</span>
         </div>
       )}
 
-      <div className="flex justify-between items-center pt-6 border-t border-gray-200">
-        <span className="font-semibold text-gray-700">Total Amount Due</span>
+      <div className="flex justify-between items-center pt-6 border-t border-white/20">
+        <span className="font-semibold text-white/90">Total Amount Due</span>
         <span className="text-xl font-bold whitespace-nowrap">
           {totalLabel}
           {intervalSuffix && (
-            <span className="text-sm font-normal text-gray-400">{intervalSuffix}</span>
+            <span className="text-sm font-normal text-white/55">{intervalSuffix}</span>
           )}
         </span>
       </div>
 
       {recurring && (
-        <p className="mt-3 text-xs text-gray-400 leading-relaxed">
+        <p className="mt-3 text-xs text-white/60 leading-relaxed">
           {annual
             ? 'Billed annually — 12 months of access in one payment.'
             : 'Billed monthly. You can cancel anytime from your dashboard.'}

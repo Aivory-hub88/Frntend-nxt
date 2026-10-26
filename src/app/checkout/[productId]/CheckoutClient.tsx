@@ -78,7 +78,7 @@ export default function CheckoutClient() {
             onComplete={() => {}}
           />
         </div>
-        <div className="lg:col-span-4 bg-[#f8f9fa]">
+        <div className="lg:col-span-4 bg-[#0d2a63]">
           <OrderSummary
             productId={product.id}
             productName={product.name}
