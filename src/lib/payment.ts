@@ -592,7 +592,6 @@ export async function createPaymentTransaction(
       customer_first_name: user.email.split('@')[0],
       ...(enabledPayments?.length ? { enabled_payments: enabledPayments } : {}),
       ...(promoCode ? { promo_code: promoCode } : {}),
-      ...(bank ? { bank } : {}),
     }),
   });
 
@@ -603,6 +602,10 @@ export async function createPaymentTransaction(
 
   const result = await response.json();
 
+  // A 100% promo: the order was granted on the spot and there is no Snap token.
+  if (result.success && result.free) {
+    return result;
+  }
   if (!result.success || !result.token) {
     throw new Error('Failed to get payment token');
   }
@@ -628,6 +631,8 @@ export interface DirectChargeResult {
   error?: string;
   /** Core API has no payment_type for this channel (DANA) — use Snap. */
   fallback_to_snap?: boolean;
+  /** A 100% promo: granted on the spot, nothing to pay. */
+  free?: boolean;
 }
 
 /**
@@ -682,6 +687,7 @@ export async function createDirectCharge(
       customer_first_name: user.email.split('@')[0],
       ...(cardTokenId ? { card_token_id: cardTokenId } : {}),
       ...(promoCode ? { promo_code: promoCode } : {}),
+      ...(bank ? { bank } : {}),
     }),
   });
 

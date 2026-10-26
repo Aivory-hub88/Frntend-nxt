@@ -453,6 +453,8 @@ export function CheckoutForm({
 
   const isEwallet = channel === 'gopay';
   const channelLabel = CHANNELS.find((c) => c.id === channel)?.label ?? '';
+  // A promo that covers the whole price: nothing to pay, so no payment method.
+  const isFree = priceUsd <= 0;
 
   const detailsValid =
     channel === 'credit_card'
@@ -612,6 +614,15 @@ export function CheckoutForm({
     setStep('processing');
     setError(null);
     try {
+      // The payments service grants a free order on the spot and answers
+      // `free` instead of a Snap token; nothing goes to Midtrans.
+      if (isFree) {
+        const result = await createPaymentTransaction(productId, undefined, promoCode);
+        if (!result?.free) throw new Error('This order is no longer free. Please reload the page.');
+        setStep('success');
+        return;
+      }
+
       // Draw the payment ourselves where we can. A refusal falls through to
       // Snap rather than stranding the customer.
       if (directPayEnabled && channel && DIRECT_CHANNELS.has(channel)) {
@@ -749,7 +760,9 @@ export function CheckoutForm({
    */
   const handleMethodContinue = async () => {
     if (!turnstileEnabled) {
-      setStep('details');
+      // A free order has no details to collect.
+      if (isFree) await runRealPayment();
+      else setStep('details');
       return;
     }
     if (!turnstileToken) {
@@ -1012,6 +1025,12 @@ export function CheckoutForm({
               {priceLabel}
             </h1>
 
+            {isFree ? (
+              <p className="rounded-lg border border-gray-200 bg-gray-50 p-4 text-center text-sm text-gray-600">
+                Your promo code covers the full price &mdash; there is nothing to pay.
+              </p>
+            ) : (
+            <>
             <p className="text-xs font-bold text-gray-500 tracking-wider mb-4">
               PAYMENT METHOD
             </p>
@@ -1060,6 +1079,8 @@ export function CheckoutForm({
                 </div>
               </div>
             )}
+            </>
+            )}
 
             {turnstileEnabled && (
               <div className="mt-6 flex justify-center">
@@ -1080,7 +1101,7 @@ export function CheckoutForm({
               <SpotlightButton
                 type="button"
                 disabled={
-                  !channel ||
+                  (!channel && !isFree) ||
                   (needsBank && !vaBank) ||
                   verifying ||
                   (turnstileEnabled && !turnstileToken)
@@ -1089,7 +1110,7 @@ export function CheckoutForm({
                 className="w-full"
                 roundedClass="rounded-lg"
               >
-                {verifying ? 'Verifying…' : 'Continue'}
+                {verifying ? 'Verifying…' : isFree ? 'Activate' : 'Continue'}
               </SpotlightButton>
             </div>
             <div className="mt-12 flex justify-center">
@@ -1499,9 +1520,11 @@ export function CheckoutForm({
                 <path d="M5 13l4 4L19 7" />
               </svg>
             </div>
-            <h1 className="mt-6 text-2xl font-semibold">Payment successful</h1>
+            <h1 className="mt-6 text-2xl font-semibold">
+              {isFree ? 'Activated' : 'Payment successful'}
+            </h1>
             <p className="mt-2 text-sm text-gray-500 max-w-xs">
-              {productName} · {priceLabel} via {channelLabel}
+              {isFree ? `${productName} · free with your promo code` : `${productName} · ${priceLabel} via ${channelLabel}`}
             </p>
             {currentUser?.email && (
               <p className="mt-1 text-xs text-gray-400">Signed in as {currentUser.email}</p>
