@@ -299,6 +299,87 @@
 .g2 { left: 50cqw; top: 33cqw; width: 22cqw; height: 12cqw; background: #b9d6ff; }
 .g3 { left: 80cqw; top: 26cqw; width: 20cqw; height: 16cqw; background: #e4ffb0; }
 
+/* ── Grainy gradient banner (GrainBanner.tsx), the films' Orbit recipe ── */
+.gb {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  aspect-ratio: 2400 / 742;
+  border-radius: 2.4cqw;
+  overflow: hidden;
+  isolation: isolate;
+  color: #fff;
+}
+.gbBlob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(1.8cqw);
+  animation: gbDrift 24s ease-in-out infinite alternate;
+  will-change: transform;
+}
+/* five blobs on the edges: top-left, top-right, mid-left, lower-right, below the bottom */
+.gbB1 { left: -27%; top: -47.5%; width: 70%; height: 95%; animation-duration: 22s; }
+.gbB2 { left: 57%; top: -43.5%; width: 70%; height: 95%; animation-duration: 26s; animation-delay: -7s; }
+.gbB3 { left: -30%; top: 3.5%; width: 60%; height: 105%; animation-duration: 28s; animation-delay: -13s; }
+.gbB4 { left: 69%; top: 17.5%; width: 62%; height: 105%; animation-duration: 20s; animation-delay: -4s; }
+.gbB5 { left: -9%; top: 73%; width: 110%; height: 70%; animation-duration: 24s; animation-delay: -10s; }
+@keyframes gbDrift {
+  0% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(3%, -2.5%) scale(1.06); }
+  100% { transform: translate(-2.5%, 3%) scale(0.96); }
+}
+/* long soft streaks of motion-blurred light */
+.gbStreak {
+  position: absolute;
+  left: -30%;
+  width: 160%;
+  border-radius: 50%;
+  filter: blur(1.4cqw);
+  mix-blend-mode: screen;
+  transform: rotate(var(--rot)) translateX(-3%);
+  animation: gbStreak 18s ease-in-out infinite alternate;
+}
+@keyframes gbStreak {
+  to { transform: rotate(var(--rot)) translateX(3%); }
+}
+/* grain: a 128 px noise tile, one noise pixel per screen pixel (never scaled up) */
+.gbGrain {
+  position: absolute;
+  inset: 0;
+  background: url('/landing/noise-128.png') 0 0 / 128px 128px repeat;
+  image-rendering: pixelated;
+  mix-blend-mode: overlay;
+  pointer-events: none;
+}
+@media (min-resolution: 2dppx) {
+  .gbGrain { background-size: 64px 64px; }
+}
+@media (min-resolution: 3dppx) {
+  .gbGrain { background-size: 42.667px 42.667px; }
+}
+.gbLockup {
+  position: absolute;
+  left: 5cqw;
+  top: 51.5%;
+  height: auto;
+  transform: translateY(-50%);
+}
+.gbCopy {
+  position: absolute;
+  left: 55cqw;
+  top: 51.5%;
+  margin: 0;
+  transform: translateY(-50%);
+  font: 300 3.3cqw/1.28 var(--font-manrope), 'Manrope', sans-serif;
+  letter-spacing: -0.01em;
+  color: #fff;
+}
+@media (prefers-reduced-motion: reduce) {
+  .gbBlob,
+  .gbStreak { animation: none; }
+}
+
 /* ── Connectivity strip (Figma 13:8902), 60% scale ── */
 .caps {
   position: relative;
