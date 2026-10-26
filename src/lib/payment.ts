@@ -592,7 +592,6 @@ export async function createPaymentTransaction(
       customer_first_name: user.email.split('@')[0],
       ...(enabledPayments?.length ? { enabled_payments: enabledPayments } : {}),
       ...(promoCode ? { promo_code: promoCode } : {}),
-      ...(bank ? { bank } : {}),
     }),
   });
 
@@ -682,6 +681,7 @@ export async function createDirectCharge(
       customer_first_name: user.email.split('@')[0],
       ...(cardTokenId ? { card_token_id: cardTokenId } : {}),
       ...(promoCode ? { promo_code: promoCode } : {}),
+      ...(bank ? { bank } : {}),
     }),
   });
 
