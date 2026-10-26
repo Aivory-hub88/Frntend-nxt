@@ -1,4 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
+import GrainBanner, { PALETTES } from './GrainBanner';
 import s from './landing.module.css';
 
 type Member = { name: string; avatar?: string; agent?: string };
@@ -43,7 +44,13 @@ export default function WorkspaceSection() {
           <div className={s.wshIn}>
             <i className={`${s.wshGlow} ${s.wg1}`} />
             <i className={`${s.wshGlow} ${s.wg2}`} />
-            <img className={s.fbBanner} src="/landing/workspace-banner.webp" alt="" width={2400} height={742} />
+            <GrainBanner
+              palette={PALETTES.iris}
+              lockup="/landing/brand/workspace-lockup.webp"
+              lockupWidth={42.4}
+              lockupRatio={1018 / 123}
+                copy={<>Where teams and AI<br />agents work together,<br />literally</>}
+            />
             <img className={s.wshIll} src="/landing/workspace-illustrated.webp" alt="" width={900} height={486} />
             <img className={s.wshReal} src="/landing/workspace-people.webp" alt="" width={900} height={469} />
           </div>

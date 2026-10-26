@@ -1,4 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
+import GrainBanner, { PALETTES } from './GrainBanner';
 import s from './landing.module.css';
 
 // 7 x 5 grid; the MCP tile sits mid-grid and is the lit one. `tint` colours
@@ -104,7 +105,13 @@ export default function CervoSection() {
           <i className={`${s.fbGlow} ${s.g1}`} />
           <i className={`${s.fbGlow} ${s.g2}`} />
           <i className={`${s.fbGlow} ${s.g3}`} />
-          <img className={s.fbBanner} src="/landing/cervo-banner.webp" alt="" width={2400} height={742} />
+          <GrainBanner
+            palette={PALETTES.ember}
+            lockup="/landing/brand/cervo-lockup.webp"
+            lockupWidth={38.5}
+            lockupRatio={923 / 118}
+            copy={<>A team of AI agents,<br />each with its own brain,<br />memory and computer</>}
+          />
           <img className={s.fbPeople} src="/landing/cervo-team.webp" alt="" width={1400} height={368} />
         </div>
 
