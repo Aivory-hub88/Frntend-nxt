@@ -833,12 +833,14 @@ export function CheckoutForm({
     <div className="w-full bg-white min-h-screen p-8 lg:p-12 text-[#1a1a1a] flex flex-col">
       {/* Header */}
       <div className="flex justify-between items-center mb-12">
+        {/* The 2026 wordmark the landing page uses; drawn white, inverted
+            for this light page. */}
         <img
-          src="/Aivory_logo_2_2026.svg"
+          src="/aivory-wordmark.svg"
           alt="Aivory"
-          width={383}
-          height={79}
-          className="h-8 w-auto filter invert"
+          width={205}
+          height={30}
+          className="h-6 w-auto invert"
         />
         <div className="relative">
           <button
