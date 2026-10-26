@@ -48,6 +48,7 @@ import {
 } from '@/lib/card-brand';
 import { formatCheckoutPrice, type CheckoutCurrency } from '@/lib/checkout-format';
 import { SpotlightButton } from '@/components/ui/SpotlightButton';
+import { GrainGradient, type GrainPalette } from '@/components/ui/GrainGradient';
 import TurnstileWidget from '@/components/payment/TurnstileWidget';
 import { trackEvent } from '@/lib/analytics';
 
@@ -163,46 +164,27 @@ const CHANNELS: { id: Channel; label: string; badge: React.ReactNode }[] = [
 const CONFIRM_POLL_MS = 5000;
 
 /**
- * The landing hero's grainy blue-purple wash behind the header: the same two
- * blobs, filter and grain tile as HeroCardBackdrop, fading out into the white
- * page so the form below stays on a plain ground.
+ * The grainy wash behind the header: the same GrainGradient surface, grain and
+ * silver-blue colours as the order summary, so the two halves read as one
+ * page. The deepest blue sits behind the white wordmark; it fades out into the
+ * white form below.
  */
+const HEADER_WASH: GrainPalette = {
+  base: 'linear-gradient(180deg, #2a58a8 0%, #3f69ad 55%, #a3b3ca 100%)',
+  blobs: ['#1b3f86', '#a3b3ca', '#2b63c6', '#7f97bd', '#f2701f'],
+};
+
 function HeaderWash() {
   return (
     <div
       aria-hidden="true"
-      className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-64 overflow-hidden"
+      className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-64"
       style={{
-        background: '#ededed',
-        WebkitMaskImage: 'linear-gradient(180deg, #000 60%, transparent 100%)',
-        maskImage: 'linear-gradient(180deg, #000 60%, transparent 100%)',
+        WebkitMaskImage: 'linear-gradient(180deg, #000 50%, transparent 100%)',
+        maskImage: 'linear-gradient(180deg, #000 50%, transparent 100%)',
       }}
     >
-      <div
-        className="absolute inset-0"
-        style={{ filter: 'saturate(2.2) brightness(0.68) contrast(1.15)' }}
-      >
-        <img
-          src="/images/hero-new/group-35392.svg"
-          alt=""
-          className="absolute max-w-none"
-          style={{ left: -250, top: -40, width: 956, height: 233 }}
-        />
-        <img
-          src="/images/hero-new/group-35393.svg"
-          alt=""
-          className="absolute max-w-none"
-          style={{ left: -356, top: -81, width: 967, height: 253, transform: 'rotate(-4.98deg)' }}
-        />
-      </div>
-      <div
-        className="absolute inset-0 mix-blend-overlay"
-        style={{
-          backgroundImage: "url('/images/hero-new/texture.png')",
-          backgroundSize: '134px 134px',
-          opacity: 0.35,
-        }}
-      />
+      <GrainGradient palette={HEADER_WASH} hover={false} patternOpacity={0.1} className="h-full w-full" />
     </div>
   );
 }
