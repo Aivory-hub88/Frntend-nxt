@@ -592,6 +592,7 @@ export async function createPaymentTransaction(
       customer_first_name: user.email.split('@')[0],
       ...(enabledPayments?.length ? { enabled_payments: enabledPayments } : {}),
       ...(promoCode ? { promo_code: promoCode } : {}),
+      ...(bank ? { bank } : {}),
     }),
   });
 
@@ -639,7 +640,8 @@ export interface DirectChargeResult {
  * for it rather than showing an error.
  *
  * Card is not routed here: it needs Midtrans' browser tokenisation library
- * first, which is a separate step.
+ * first, which is a separate step. A virtual account names its bank; Mandiri
+ * comes back as a bill payment (`biller_code` + bill key in `va_number`).
  */
 export async function createDirectCharge(
   product: string | number,
@@ -648,6 +650,8 @@ export async function createDirectCharge(
   cardTokenId?: string,
   /** Promo code the customer applied; the service derives the discount itself. */
   promoCode?: string,
+  /** Bank for a `bank_transfer` virtual account (bni, bri, mandiri, permata, cimb, bsi). */
+  bank?: string,
 ): Promise<DirectChargeResult> {
   if (!isAuthenticated()) {
     throw new Error('User not authenticated');
