@@ -81,9 +81,9 @@ export function OrderSummary({
   return (
     <GrainGradient className="w-full min-h-screen p-8 lg:p-12 text-white">
       <h2 className="text-2xl font-semibold mb-2">Order Summary</h2>
-      <p className="text-sm text-white/60 mb-8">Invoice #: {invoiceNumber}</p>
+      <p className="text-sm font-semibold text-white/80 mb-8">Invoice #: {invoiceNumber}</p>
 
-      <div className="flex items-center gap-2 text-sm text-white/75 mb-8 pb-8 border-b border-white/15">
+      <div className="flex items-center gap-2 text-sm font-semibold text-white/90 mb-8 pb-8 border-b border-white/15">
         <svg
           className="w-4 h-4 shrink-0"
           fill="none"
@@ -103,14 +103,14 @@ export function OrderSummary({
       <div className="flex justify-between items-start mb-2">
         <div className="pr-4">
           <span className="font-medium block">{productName}</span>
-          <span className="text-xs uppercase tracking-wide text-white/50">
+          <span className="text-xs font-semibold uppercase tracking-wide text-white/75">
             {recurring ? 'Subscription' : 'One-time purchase'}
           </span>
         </div>
         <span className="font-semibold whitespace-nowrap">
           {priceLabel}
           {intervalSuffix && (
-            <span className="text-xs font-normal text-white/50">{intervalSuffix}</span>
+            <span className="text-xs font-semibold text-white/75">{intervalSuffix}</span>
           )}
         </span>
       </div>
