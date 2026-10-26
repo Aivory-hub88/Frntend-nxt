@@ -166,29 +166,30 @@ const CONFIRM_POLL_MS = 5000;
 /**
  * The grainy clouds behind the header: the same GrainGradient surface, grain
  * and silver-blue colours as the order summary, so the two halves read as one
- * page. Like the landing hero's wash behind the logo, they are soft clouds
- * rather than a full-width band: one behind the white wordmark (deepest blue
- * there), a smaller one behind the language picker, white page in between.
+ * page. Like the landing hero's wash behind the logo, each is a soft band laid
+ * diagonally across a top corner (-45deg on the left behind the white
+ * wordmark, +45deg on the right behind the language picker), so the corners
+ * are filled and the middle of the header stays white.
  */
 const HEADER_WASH: GrainPalette = {
   base: 'linear-gradient(180deg, #2a58a8 0%, #3f69ad 55%, #a3b3ca 100%)',
   blobs: ['#1b3f86', '#a3b3ca', '#2b63c6', '#7f97bd', '#f2701f'],
 };
 
-// Overlapping soft ellipses give the cloud its lumpy, feathered edge. Each one
-// fades out inside the box; one that reached the edge left a hard cut there.
+// A long soft ellipse with a few lumps along it. Every ellipse fades out
+// inside the box; one that reached the edge left a hard cut there.
 const CLOUD_MASK = [
-  'radial-gradient(ellipse 40% 42% at 40% 50%, #000 30%, transparent 100%)',
-  'radial-gradient(ellipse 30% 38% at 62% 44%, #000 25%, transparent 100%)',
-  'radial-gradient(ellipse 24% 28% at 72% 60%, #000 15%, transparent 100%)',
+  'radial-gradient(ellipse 50% 50% at 50% 50%, #000 55%, transparent 100%)',
+  'radial-gradient(ellipse 24% 42% at 30% 42%, #000 30%, transparent 100%)',
+  'radial-gradient(ellipse 22% 40% at 68% 58%, #000 30%, transparent 100%)',
 ].join(', ');
 
-function HeaderCloud({ className }: { className: string }) {
+function HeaderCloud({ className, angle }: { className: string; angle: number }) {
   return (
     <div
       aria-hidden="true"
-      className={`pointer-events-none absolute -z-10 ${className}`}
-      style={{ WebkitMaskImage: CLOUD_MASK, maskImage: CLOUD_MASK }}
+      className={`absolute h-[440px] w-[640px] ${className}`}
+      style={{ WebkitMaskImage: CLOUD_MASK, maskImage: CLOUD_MASK, transform: `rotate(${angle}deg)` }}
     >
       <GrainGradient palette={HEADER_WASH} hover={false} patternOpacity={0.1} className="h-full w-full" />
     </div>
@@ -196,13 +197,21 @@ function HeaderCloud({ className }: { className: string }) {
 }
 
 function HeaderWash() {
-  // Both clouds end above the first line of content (the "Pay before" line or
-  // the sign-in heading) so no grey text sits on blue.
+  // Each band is centred just inside its corner, near the logo / picker. The
+  // wrapper fades them out above the first line of content (the "Pay before"
+  // line or the sign-in heading) so no grey text sits on blue.
   return (
-    <>
-      <HeaderCloud className="-left-28 -top-16 h-48 w-[28rem] lg:-left-24 lg:-top-14 lg:h-52 lg:w-[34rem]" />
-      <HeaderCloud className="-right-24 -top-14 h-40 w-80 -scale-x-100 lg:-right-20 lg:-top-12 lg:h-44 lg:w-96" />
-    </>
+    <div
+      aria-hidden="true"
+      className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-28 overflow-hidden lg:h-36"
+      style={{
+        WebkitMaskImage: 'linear-gradient(180deg, #000 45%, transparent 100%)',
+        maskImage: 'linear-gradient(180deg, #000 45%, transparent 100%)',
+      }}
+    >
+      <HeaderCloud angle={-45} className="-left-[250px] -top-[175px] lg:-left-[230px] lg:-top-[160px]" />
+      <HeaderCloud angle={45} className="-right-[250px] -top-[175px] lg:-right-[230px] lg:-top-[160px]" />
+    </div>
   );
 }
 
