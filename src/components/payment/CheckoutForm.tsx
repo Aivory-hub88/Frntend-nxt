@@ -178,10 +178,12 @@ function HeaderWash() {
   return (
     <div
       aria-hidden="true"
-      className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-64"
+      // Ends before the first line of content (the "Pay before" line or the
+      // sign-in heading): at h-64 it ran behind that grey text and hid it.
+      className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-32 lg:h-36"
       style={{
-        WebkitMaskImage: 'linear-gradient(180deg, #000 50%, transparent 100%)',
-        maskImage: 'linear-gradient(180deg, #000 50%, transparent 100%)',
+        WebkitMaskImage: 'linear-gradient(180deg, #000 60%, transparent 100%)',
+        maskImage: 'linear-gradient(180deg, #000 60%, transparent 100%)',
       }}
     >
       <GrainGradient palette={HEADER_WASH} hover={false} patternOpacity={0.1} className="h-full w-full" />
