@@ -841,14 +841,18 @@ export function CheckoutForm({
     <div className="w-full bg-white min-h-screen p-8 lg:p-12 text-[#1a1a1a] flex flex-col">
       {/* Header */}
       <div className="flex justify-between items-center mb-12">
-        {/* The 2026 wordmark the landing page uses; drawn white, inverted
-            for this light page. */}
-        <img
-          src="/aivory-wordmark.svg"
-          alt="Aivory"
-          width={205}
-          height={30}
-          className="h-6 w-auto invert"
+        {/* The landing page's 2026 wordmark, used as a mask so it can carry
+            the checkout's bluish-purple to orange colour. */}
+        <span
+          role="img"
+          aria-label="Aivory"
+          className="block h-6"
+          style={{
+            aspectRatio: '204.755 / 29.72',
+            backgroundImage: 'linear-gradient(100deg, #5b5fd9 0%, #7c5ce8 42%, #f2701f 100%)',
+            WebkitMask: "url('/aivory-wordmark.svg') no-repeat center / contain",
+            mask: "url('/aivory-wordmark.svg') no-repeat center / contain",
+          }}
         />
         <div className="relative">
           <button
