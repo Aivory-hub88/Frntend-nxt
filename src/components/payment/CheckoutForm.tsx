@@ -164,30 +164,45 @@ const CHANNELS: { id: Channel; label: string; badge: React.ReactNode }[] = [
 const CONFIRM_POLL_MS = 5000;
 
 /**
- * The grainy wash behind the header: the same GrainGradient surface, grain and
- * silver-blue colours as the order summary, so the two halves read as one
- * page. The deepest blue sits behind the white wordmark; it fades out into the
- * white form below.
+ * The grainy clouds behind the header: the same GrainGradient surface, grain
+ * and silver-blue colours as the order summary, so the two halves read as one
+ * page. Like the landing hero's wash behind the logo, they are soft clouds
+ * rather than a full-width band: one behind the white wordmark (deepest blue
+ * there), a smaller one behind the language picker, white page in between.
  */
 const HEADER_WASH: GrainPalette = {
   base: 'linear-gradient(180deg, #2a58a8 0%, #3f69ad 55%, #a3b3ca 100%)',
   blobs: ['#1b3f86', '#a3b3ca', '#2b63c6', '#7f97bd', '#f2701f'],
 };
 
-function HeaderWash() {
+// Overlapping soft ellipses give the cloud its lumpy, feathered edge. Each one
+// fades out inside the box; one that reached the edge left a hard cut there.
+const CLOUD_MASK = [
+  'radial-gradient(ellipse 40% 42% at 40% 50%, #000 30%, transparent 100%)',
+  'radial-gradient(ellipse 30% 38% at 62% 44%, #000 25%, transparent 100%)',
+  'radial-gradient(ellipse 24% 28% at 72% 60%, #000 15%, transparent 100%)',
+].join(', ');
+
+function HeaderCloud({ className }: { className: string }) {
   return (
     <div
       aria-hidden="true"
-      // Ends before the first line of content (the "Pay before" line or the
-      // sign-in heading): at h-64 it ran behind that grey text and hid it.
-      className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-32 lg:h-36"
-      style={{
-        WebkitMaskImage: 'linear-gradient(180deg, #000 60%, transparent 100%)',
-        maskImage: 'linear-gradient(180deg, #000 60%, transparent 100%)',
-      }}
+      className={`pointer-events-none absolute -z-10 ${className}`}
+      style={{ WebkitMaskImage: CLOUD_MASK, maskImage: CLOUD_MASK }}
     >
       <GrainGradient palette={HEADER_WASH} hover={false} patternOpacity={0.1} className="h-full w-full" />
     </div>
+  );
+}
+
+function HeaderWash() {
+  // Both clouds end above the first line of content (the "Pay before" line or
+  // the sign-in heading) so no grey text sits on blue.
+  return (
+    <>
+      <HeaderCloud className="-left-28 -top-16 h-48 w-[28rem] lg:-left-24 lg:-top-14 lg:h-52 lg:w-[34rem]" />
+      <HeaderCloud className="-right-24 -top-14 h-40 w-80 -scale-x-100 lg:-right-20 lg:-top-12 lg:h-44 lg:w-96" />
+    </>
   );
 }
 
