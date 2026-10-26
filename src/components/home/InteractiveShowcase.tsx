@@ -7,7 +7,7 @@ import { SpotlightButton } from "@/components/ui/SpotlightButton";
 import { SHOWCASE_ACCENT, SHOWCASE_ACCENT_RGB } from "@/lib/theme-colors";
 
 const LabFlaskCanvas = dynamic(
-  () => import("./LabFlask3D").then((mod) => mod.LabFlaskCanvas),
+  () => import("@/components/product/LabFlask3D").then((mod) => mod.LabFlaskCanvas),
   { ssr: false },
 );
 

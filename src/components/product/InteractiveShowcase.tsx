@@ -446,7 +446,7 @@ export function DiagnosticAnimation() {
                   {currentStep.phase}
                 </span>
                 <span className="text-xs text-white/90">
-                  {currentStep.question}
+                  {currentStep.q}
                 </span>
               </div>
 
@@ -2729,7 +2729,7 @@ export function InteractiveShowcase({
                       return (
                         <>
                           {words.join(" ")}
-                          {product.breakTitle ? <br /> : " "}
+                          {"breakTitle" in product && product.breakTitle ? <br /> : " "}
                           <span style={{ color: "#e4effd" }}>
                             {lastWord}
                           </span>

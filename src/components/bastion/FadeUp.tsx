@@ -1,6 +1,6 @@
 'use client';
 
-import { motion, useInView } from 'framer-motion';
+import { motion, useInView, type Variants } from 'framer-motion';
 import { useRef } from 'react';
 
 interface FadeUpProps {
@@ -14,7 +14,7 @@ export function FadeUp({ children, delay = 0, className = '', staggerChildren = 
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: '-10% 0px' });
 
-  const containerVariants = {
+  const containerVariants: Variants = {
     hidden: { opacity: 0, y: 24 },
     visible: {
       opacity: 1,
@@ -43,7 +43,7 @@ export function FadeUp({ children, delay = 0, className = '', staggerChildren = 
 }
 
 export function FadeUpChild({ children, className = '' }: { children: React.ReactNode; className?: string }) {
-  const childVariants = {
+  const childVariants: Variants = {
     hidden: { opacity: 0, y: 24 },
     visible: {
       opacity: 1,
