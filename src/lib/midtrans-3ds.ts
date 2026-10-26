@@ -35,7 +35,11 @@ declare global {
   }
 }
 
-const SCRIPT_ID = 'midtrans-new-3ds';
+// The library finds its own tag by this exact id to read data-client-key and
+// data-environment (getElementById("midtrans-script") in midtrans-new-3ds.js).
+// Any other id leaves it reading null, and getCardToken throws "Cannot read
+// properties of null (reading 'getAttribute')".
+const SCRIPT_ID = 'midtrans-script';
 
 /**
  * Inject the library once and resolve when it is usable.
