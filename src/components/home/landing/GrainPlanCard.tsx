@@ -32,7 +32,9 @@ const tri = (
     is dark enough for white copy (4.8:1); the old silver survives only as the thin sheen. */
 const AIVORY_BLUE = ['#0a1838', '#1d4a9a', '#5a6fb0', '#e46a24', '#9aaedc'] as const;
 const INDIGO_ORCHID_PEACH = ['#160f40', '#3a3aa8', '#b05ad0', '#f2a07a', '#f0d0f0'] as const;
-const GRAPHITE_STEEL_COPPER = ['#08090c', '#1c1e26', '#4a5e86', '#d06a3a', '#c8ccd8'] as const;
+/** Dusty teal sky and burnt orange with an amber glow: the "for Government" dusk crossed with the
+    Cervo banner's teal and coral, so Enterprise reads apart from Operational's blue. */
+const TEAL_EMBER_AMBER = ['#0f1a1c', '#4f6f7a', '#c4562a', '#e8a850', '#f2ede2'] as const;
 
 // Step 1 keeps its own colour scenes; Step 2 uses the tri scenes. Both sit in a window,
 // and every card carries one Chladni figure, each a different one within its row.
@@ -57,7 +59,7 @@ export const WORLD_PLATINUM: PlanWorld = {
 export const STEP_TWO_WORLDS = [
   tri(...AIVORY_BLUE, 1.3, { n: 2, m: 3, cells: 1.5, level: 0.5, opacity: 0.5 }),
   tri(...INDIGO_ORCHID_PEACH, 2.7, { n: 1, m: 2, cells: 2, level: 0.6, opacity: 0.45 }),
-  tri(...GRAPHITE_STEEL_COPPER, 4.1, { n: 2, m: 5, cells: 0.8, level: 0.3, opacity: 0.45 }),
+  tri(...TEAL_EMBER_AMBER, 4.1, { n: 2, m: 5, cells: 0.8, level: 0.3, opacity: 0.45 }),
 ];
 
 function CheckCircle() {
@@ -136,7 +138,7 @@ export function GrainPlanCard({
           </span>
           <span className={`text-[17px] ${priceSuffixStrong ? 'font-bold text-white' : 'text-white/75'}`}>{priceSuffix}</span>
         </div>
-        {note && <p className="mt-2 text-[13px] font-medium text-white/65">{note}</p>}
+        {note && <p className="mt-2 text-[13px] font-bold text-white/85">{note}</p>}
       </div>
     </>
   );
