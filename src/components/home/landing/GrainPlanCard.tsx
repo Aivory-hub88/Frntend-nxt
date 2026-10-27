@@ -23,9 +23,9 @@ export const WORLD_DUSK: PlanWorld = {
   chladni: { n: 1, m: 2, cells: 1.2, level: 0.6, opacity: 0.45 },
 };
 
-/** Sunset: plum and deep reds into vermilion, a lavender cloud, a peach light leak. */
-export const WORLD_SUNSET: PlanWorld = {
-  scene: { colors: ['#561230', '#b3201f', '#d4321f', '#e45a28', '#8a6aa8', '#ef9a5c'], mode: 'field', scale: 0.85, seed: 1.7, light: 0.15, shadow: 0.45, exposure: 0.92 },
+/** Platinum: deep violet into light purple, platinum light, a touch of red-orange. */
+export const WORLD_PLATINUM: PlanWorld = {
+  scene: { colors: ['#221a44', '#4a3e86', '#7866b2', '#a7a3bd', '#dc5634', '#e4e3ec'], mode: 'field', scale: 0.85, seed: 1.7, light: 0.42, shadow: 0.45, exposure: 0.86 },
   chladni: { n: 2, m: 3, cells: 1, level: 0.5, opacity: 0.6 },
 };
 
