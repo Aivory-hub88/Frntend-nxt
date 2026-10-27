@@ -15,8 +15,17 @@ export interface PlanWorld {
 }
 
 /** colours: seam, dominant (60), secondary (30), accent (10), sheen. */
-const tri = (seam: string, dominant: string, secondary: string, accent: string, sheen: string, seed: number): PlanWorld => ({
+const tri = (
+  seam: string,
+  dominant: string,
+  secondary: string,
+  accent: string,
+  sheen: string,
+  seed: number,
+  chladni?: ChladniFigure,
+): PlanWorld => ({
   scene: { colors: [seam, dominant, secondary, accent, sheen, sheen], mode: 'tri', scale: 0.55, seed, light: 0.35, shadow: 0.55 },
+  chladni,
 });
 
 /** Aivory's own trio: deep blue field, silver-periwinkle light, a warm orange glow. */
@@ -24,10 +33,12 @@ const AIVORY_BLUE = ['#0a1838', '#1d4a9a', '#9aaedc', '#e46a24', '#e4ebf6'] as c
 const INDIGO_ORCHID_PEACH = ['#160f40', '#3a3aa8', '#b05ad0', '#f2a07a', '#f0d0f0'] as const;
 const GRAPHITE_STEEL_COPPER = ['#08090c', '#1c1e26', '#4a5e86', '#d06a3a', '#c8ccd8'] as const;
 
-// Step 1 keeps its own colour scenes; Step 2 uses the tri scenes. Both sit in a window.
+// Step 1 keeps its own colour scenes; Step 2 uses the tri scenes. Both sit in a window,
+// and every card carries one Chladni figure, each a different one within its row.
 /** Fresh: deep emerald and jade under a clear sky blue, a cool mint glint. */
 export const WORLD_FRESH: PlanWorld = {
   scene: { colors: ['#032a22', '#05624a', '#0a9468', '#1fae78', '#1a8fc0', '#8fe0c0'], mode: 'field', scale: 0.8, seed: 3.1, light: 0.15, shadow: 0.5, exposure: 0.92 },
+  chladni: { n: 2, m: 5, cells: 1, level: 0.3, opacity: 0.45 },
 };
 
 /** Dusk: navy sky over a slate haze, an orange horizon below. */
@@ -42,7 +53,11 @@ export const WORLD_PLATINUM: PlanWorld = {
   chladni: { n: 2, m: 3, cells: 1, level: 0.5, opacity: 0.6 },
 };
 
-export const STEP_TWO_WORLDS = [tri(...AIVORY_BLUE, 1.3), tri(...INDIGO_ORCHID_PEACH, 2.7), tri(...GRAPHITE_STEEL_COPPER, 4.1)];
+export const STEP_TWO_WORLDS = [
+  tri(...AIVORY_BLUE, 1.3, { n: 2, m: 3, cells: 1.5, level: 0.5, opacity: 0.5 }),
+  tri(...INDIGO_ORCHID_PEACH, 2.7, { n: 1, m: 2, cells: 2, level: 0.6, opacity: 0.45 }),
+  tri(...GRAPHITE_STEEL_COPPER, 4.1, { n: 2, m: 5, cells: 0.8, level: 0.3, opacity: 0.45 }),
+];
 
 function CheckCircle() {
   return (
