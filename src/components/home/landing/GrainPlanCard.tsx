@@ -1,27 +1,48 @@
 'use client';
 
 import type { ReactNode } from 'react';
-import { GrainGradient, type GrainPalette } from '@/components/ui/GrainGradient';
+import { BokehGradient, type BokehScene, type ChladniFigure } from '@/components/ui/BokehGradient';
 
-/* Card worlds for the landing pricing band. No contours: the colour field and
-   grain carry the card, the way the reference plan cards do. */
+/* One scene per card, each a different defocused "photograph": its own shape
+   (field, horizon, curtain, aurora), its own six colours from shadow to
+   highlight, and on some cards a Chladni figure in white hairlines. */
 
-/** Indigo field, a warm ember rising in the bottom-right corner. */
-export const PLAN_INDIGO: GrainPalette = {
-  base: 'linear-gradient(160deg, #4450c4 0%, #4f5fd0 40%, #2e3394 78%, #b8442c 100%)',
-  blobs: ['#7282e4', '#3b3fa6', '#5d6ad8', '#25288a', '#e0582c'],
+export interface PlanWorld {
+  scene: BokehScene;
+  chladni?: ChladniFigure;
+}
+
+/** Deep sea: midnight water, ocean blue and teal, a pale sky glint. */
+export const WORLD_DEEP_SEA: PlanWorld = {
+  scene: { colors: ['#06152d', '#0e3670', '#1c5aa6', '#14706e', '#2f8a78', '#6fa4d0'], mode: 'field', scale: 0.8, seed: 3.1, light: 0.2, shadow: 0.6, exposure: 0.9 },
 };
 
-/** Sky blue on the left breaking into deep red and orange. */
-export const PLAN_SKY_EMBER: GrainPalette = {
-  base: 'linear-gradient(120deg, #4a8ee0 0%, #3f7fd6 32%, #c23a22 58%, #a5281a 82%, #e8742a 100%)',
-  blobs: ['#5c9ee9', '#c8341c', '#4a86d8', '#9e2418', '#ee7a2c'],
+/** Dusk: navy sky over a slate haze, an orange horizon below. */
+export const WORLD_DUSK: PlanWorld = {
+  scene: { colors: ['#06132b', '#0f3a78', '#2c5ea8', '#6f7f9e', '#de621e', '#f29a45'], mode: 'horizon', scale: 0.7, seed: 7.4, light: 0.15, shadow: 0.35 },
+  chladni: { n: 1, m: 2, cells: 2, level: 0.6, opacity: 0.35 },
 };
 
-/** Indigo and plum along the top, red, orange and amber below. */
-export const PLAN_EMBER: GrainPalette = {
-  base: 'linear-gradient(170deg, #3d43a4 0%, #8c2f5a 28%, #d0402a 52%, #b8241f 72%, #f29a1f 100%)',
-  blobs: ['#4a4fb8', '#2a1e44', '#e2452a', '#f0a21f', '#a51d1d'],
+/** Sunset: plum, red and amber with lavender cloud and a cream light leak. */
+export const WORLD_SUNSET: PlanWorld = {
+  scene: { colors: ['#5e1a36', '#c22f2a', '#e4552a', '#f0952c', '#8f89bd', '#e9cdb4'], mode: 'field', scale: 0.85, seed: 1.7, light: 0.25, shadow: 0.4, exposure: 0.9 },
+  chladni: { n: 2, m: 3, cells: 1.5, level: 0.5, opacity: 0.55 },
+};
+
+/** Curtain: folds of red, orange, lilac-grey and pink. */
+export const WORLD_CURTAIN: PlanWorld = {
+  scene: { colors: ['#7a1c36', '#d63a2a', '#e8703a', '#7f80a6', '#c9506f', '#eea062'], mode: 'bands', scale: 0.8, seed: 4.2, light: 0.15, shadow: 0.4, exposure: 0.86 },
+};
+
+/** Aurora: midnight indigo with violet and pink light streaks. */
+export const WORLD_AURORA: PlanWorld = {
+  scene: { colors: ['#12143f', '#262c86', '#5a46b8', '#8f74dc', '#de78b6', '#eec4e2'], mode: 'aurora', scale: 0.8, seed: 2.6, light: 0.15, shadow: 0.45 },
+};
+
+/** Ember night: near-black navy and violet with red embers and an amber glow. */
+export const WORLD_EMBER: PlanWorld = {
+  scene: { colors: ['#07071a', '#141a4a', '#222c74', '#3b2a80', '#b8301f', '#ef7a2a'], mode: 'field', scale: 0.9, seed: 9.3, light: 0.15, shadow: 0.6, exposure: 0.92 },
+  chladni: { n: 2, m: 5, cells: 1, level: 0.3, opacity: 0.4 },
 };
 
 function CheckCircle() {
@@ -39,7 +60,7 @@ export interface GrainPlanFeature {
 }
 
 export function GrainPlanCard({
-  palette,
+  world,
   badge,
   title,
   subtitle,
@@ -52,7 +73,7 @@ export function GrainPlanCard({
   cta,
   onCta,
 }: {
-  palette: GrainPalette;
+  world: PlanWorld;
   badge?: string;
   title: string;
   subtitle?: ReactNode;
@@ -67,10 +88,9 @@ export function GrainPlanCard({
   onCta: () => void;
 }) {
   return (
-    <GrainGradient
-      palette={palette}
-      contours={false}
-      blur={48}
+    <BokehGradient
+      scene={world.scene}
+      chladni={world.chladni}
       className="flex flex-col rounded-[28px] p-7 text-white shadow-[0_18px_44px_rgba(20,24,60,0.18)] md:p-8"
     >
       <div className="flex flex-col items-start md:min-h-[132px]">
@@ -111,7 +131,7 @@ export function GrainPlanCard({
       >
         {cta}
       </button>
-    </GrainGradient>
+    </BokehGradient>
   );
 }
 
