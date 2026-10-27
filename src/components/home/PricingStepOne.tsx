@@ -6,7 +6,7 @@ import { useScrollAnimation } from '@/hooks/useScrollAnimation';
 import { useLanguage } from '@/components/context/LanguageContext';
 import { PlanConfirmModal } from '@/components/payment/PlanConfirmModal';
 import { PRODUCT_IDS } from '@/lib/pricing';
-import { GrainPlanCard, WORLD_DUSK, WORLD_DEEP_SEA, WORLD_SUNSET } from '@/components/home/landing/GrainPlanCard';
+import { GrainPlanCard, WORLD_DUSK, WORLD_FRESH, WORLD_SUNSET } from '@/components/home/landing/GrainPlanCard';
 
 /* ─── Arrow Icon (reused) ─── */
 function ArrowUpRight({ className = '' }: { className?: string }) {
@@ -170,7 +170,7 @@ export default function PricingStepOne({ currency, variant = 'default' }: { curr
           {cards.map((card, idx) => landing ? (
             <GrainPlanCard
               key={card.title}
-              world={[WORLD_DEEP_SEA, WORLD_DUSK, WORLD_SUNSET][idx]}
+              world={[WORLD_FRESH, WORLD_DUSK, WORLD_SUNSET][idx]}
               badge={card.mostPopular ? 'Best value' : undefined}
               title={card.title}
               subtitle={card.subtitle && (

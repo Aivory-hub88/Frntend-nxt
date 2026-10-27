@@ -12,9 +12,9 @@ export interface PlanWorld {
   chladni?: ChladniFigure;
 }
 
-/** Deep sea: midnight water, ocean blue and teal, a pale sky glint. */
-export const WORLD_DEEP_SEA: PlanWorld = {
-  scene: { colors: ['#06152d', '#0e3670', '#1c5aa6', '#14706e', '#2f8a78', '#6fa4d0'], mode: 'field', scale: 0.8, seed: 3.1, light: 0.2, shadow: 0.6, exposure: 0.9 },
+/** Fresh: deep emerald and jade under a clear sky blue, a cool mint glint. */
+export const WORLD_FRESH: PlanWorld = {
+  scene: { colors: ['#032a22', '#05624a', '#0a9468', '#1fae78', '#1a8fc0', '#8fe0c0'], mode: 'field', scale: 0.8, seed: 3.1, light: 0.15, shadow: 0.5, exposure: 0.92 },
 };
 
 /** Dusk: navy sky over a slate haze, an orange horizon below. */
@@ -23,9 +23,9 @@ export const WORLD_DUSK: PlanWorld = {
   chladni: { n: 1, m: 2, cells: 2, level: 0.6, opacity: 0.35 },
 };
 
-/** Sunset: plum, red and amber with lavender cloud and a cream light leak. */
+/** Sunset: plum and deep reds into vermilion, a lavender cloud, a peach light leak. */
 export const WORLD_SUNSET: PlanWorld = {
-  scene: { colors: ['#5e1a36', '#c22f2a', '#e4552a', '#f0952c', '#8f89bd', '#e9cdb4'], mode: 'field', scale: 0.85, seed: 1.7, light: 0.25, shadow: 0.4, exposure: 0.9 },
+  scene: { colors: ['#561230', '#b3201f', '#d4321f', '#e45a28', '#8a6aa8', '#ef9a5c'], mode: 'field', scale: 0.85, seed: 1.7, light: 0.15, shadow: 0.45, exposure: 0.92 },
   chladni: { n: 2, m: 3, cells: 1.5, level: 0.5, opacity: 0.55 },
 };
 
