@@ -1,7 +1,34 @@
 'use client';
 
 import Link from 'next/link';
+import { useEffect, useState } from 'react';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
+import { VibrationField, type LightPoint, type VibrationLines } from '@/components/ui/VibrationField';
+
+// Footer surface: the Enterprise card's teal · ember · amber world as a lit dusk
+// (dusty teal sky, amber from the left, burnt orange low, night in the corners)
+// with the dome lattice (interlocking cells on crossing log spirals, after the
+// Isfahan domes) centred behind the logo, in 1px lines.
+const FOOTER_LIGHT: LightPoint[] = [
+  { x: 0.78, y: 0.05, color: '#6e8d99', r: 0.75 },
+  { x: 0.25, y: 0.02, color: '#8f9a96', r: 0.5 },
+  { x: 0.02, y: 0.45, color: '#e9a650', r: 0.42 },
+  { x: 0.45, y: 0.72, color: '#c4562a', r: 0.5 },
+  { x: 0.9, y: 0.82, color: '#9c3a1c', r: 0.45 },
+  { x: 0.05, y: 1.02, color: '#1a0d0a', r: 0.45 },
+  { x: 0.7, y: 0.45, color: '#5b3a35', r: 0.28 },
+];
+const FOOTER_LINES: VibrationLines = {
+  kind: 'dome',
+  dome: 'weave',
+  count: 1,
+  cells: 14,
+  center: { x: 0.86, y: 0.32 },
+  opacity: 0.55,
+  clear: { x: 0.36, y: 0.42, rx: 0.34, ry: 0.42 },
+};
+// On a phone the links fill the whole footer, so the figure steps back.
+const FOOTER_LINES_NARROW: VibrationLines = { ...FOOTER_LINES, center: { x: 0.9, y: 0.12 }, opacity: 0.3, clear: { x: 0.5, y: 0.5, rx: 0.0001, ry: 0.0001 } };
 
 const productLinks = [
   { label: 'Deep Assessment', href: '/product' },
@@ -35,15 +62,24 @@ interface FooterProps {
 
 export default function Footer({ landingAmbient = false }: FooterProps) {
   const { ref, isVisible } = useScrollAnimation();
+  const [narrow, setNarrow] = useState(false);
+  useEffect(() => {
+    const mq = window.matchMedia('(max-width: 767px)');
+    const on = () => setNarrow(mq.matches);
+    on();
+    mq.addEventListener('change', on);
+    return () => mq.removeEventListener('change', on);
+  }, []);
 
   return (
-    <footer
-      className={
-        landingAmbient
-          ? 'relative isolate w-full overflow-hidden bg-[#031116] text-white pt-24 pb-12 font-sans'
-          : 'relative isolate w-full overflow-hidden bg-[#031116] text-white pt-24 pb-12 font-sans'
-      }
-    >
+    <footer data-landing-ambient={landingAmbient || undefined} className="relative w-full font-sans">
+      <VibrationField
+        base="#4a3a36"
+        points={FOOTER_LIGHT}
+        lines={narrow ? FOOTER_LINES_NARROW : FOOTER_LINES}
+        vignette={0.5}
+        className="w-full pt-24 pb-12 text-white"
+      >
       <div
         ref={ref}
         className={`relative z-10 animate-on-scroll ${isVisible ? 'is-visible' : ''}`}
@@ -172,6 +208,7 @@ export default function Footer({ landingAmbient = false }: FooterProps) {
           </a>
         </div>
       </div>
+      </VibrationField>
     </footer>
   );
 }
