@@ -28,8 +28,9 @@ const tri = (
   chladni,
 });
 
-/** Aivory's own trio: deep blue field, silver-periwinkle light, a warm orange glow. */
-const AIVORY_BLUE = ['#0a1838', '#1d4a9a', '#9aaedc', '#e46a24', '#e4ebf6'] as const;
+/** Aivory's own trio: deep blue field, a periwinkle-steel shape, a warm orange glow. The shape
+    is dark enough for white copy (4.8:1); the old silver survives only as the thin sheen. */
+const AIVORY_BLUE = ['#0a1838', '#1d4a9a', '#5a6fb0', '#e46a24', '#9aaedc'] as const;
 const INDIGO_ORCHID_PEACH = ['#160f40', '#3a3aa8', '#b05ad0', '#f2a07a', '#f0d0f0'] as const;
 const GRAPHITE_STEEL_COPPER = ['#08090c', '#1c1e26', '#4a5e86', '#d06a3a', '#c8ccd8'] as const;
 
