@@ -64,6 +64,7 @@ const plans: Plan[] = [
     frequency: '/month',
     billingNote: 'Billed monthly',
     features: [
+      '1 seat',
       'Operational Workspace',
       'Business Workflows',
       '1 AI Workforce',
@@ -82,6 +83,7 @@ const plans: Plan[] = [
     frequency: '/month',
     billingNote: 'Billed monthly',
     features: [
+      '5 seats',
       'Multi-team Workspace',
       'Advanced Business Workflows',
       '3 AI Workforce Units',
@@ -103,6 +105,7 @@ const plans: Plan[] = [
     frequency: 'Contact Sales',
     billingNote: 'Custom scope & deployment',
     features: [
+      'Custom seats (15+)',
       'Unlimited Operational Workspaces',
       'Unlimited AI Workforce',
       'Unlimited Business Workflows',
