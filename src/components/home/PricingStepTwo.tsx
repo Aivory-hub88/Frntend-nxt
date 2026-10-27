@@ -105,7 +105,7 @@ const plans: Plan[] = [
     frequency: 'Contact Sales',
     billingNote: 'Custom scope & deployment',
     features: [
-      'Unlimited seats',
+      'Custom seats (15+)',
       'Unlimited Operational Workspaces',
       'Unlimited AI Workforce',
       'Unlimited Business Workflows',
