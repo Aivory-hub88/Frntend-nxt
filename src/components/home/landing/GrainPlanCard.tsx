@@ -20,13 +20,13 @@ export const WORLD_FRESH: PlanWorld = {
 /** Dusk: navy sky over a slate haze, an orange horizon below. */
 export const WORLD_DUSK: PlanWorld = {
   scene: { colors: ['#06132b', '#0f3a78', '#2c5ea8', '#6f7f9e', '#de621e', '#f29a45'], mode: 'horizon', scale: 0.7, seed: 7.4, light: 0.15, shadow: 0.35 },
-  chladni: { n: 1, m: 2, cells: 2, level: 0.6, opacity: 0.35 },
+  chladni: { n: 1, m: 2, cells: 1.2, level: 0.6, opacity: 0.45 },
 };
 
 /** Sunset: plum and deep reds into vermilion, a lavender cloud, a peach light leak. */
 export const WORLD_SUNSET: PlanWorld = {
   scene: { colors: ['#561230', '#b3201f', '#d4321f', '#e45a28', '#8a6aa8', '#ef9a5c'], mode: 'field', scale: 0.85, seed: 1.7, light: 0.15, shadow: 0.45, exposure: 0.92 },
-  chladni: { n: 2, m: 3, cells: 1.5, level: 0.5, opacity: 0.55 },
+  chladni: { n: 2, m: 3, cells: 1, level: 0.5, opacity: 0.6 },
 };
 
 /** Curtain: folds of red, orange, lilac-grey and pink. */
@@ -42,7 +42,7 @@ export const WORLD_AURORA: PlanWorld = {
 /** Ember night: near-black navy and violet with red embers and an amber glow. */
 export const WORLD_EMBER: PlanWorld = {
   scene: { colors: ['#07071a', '#141a4a', '#222c74', '#3b2a80', '#b8301f', '#ef7a2a'], mode: 'field', scale: 0.9, seed: 9.3, light: 0.15, shadow: 0.6, exposure: 0.92 },
-  chladni: { n: 2, m: 5, cells: 1, level: 0.3, opacity: 0.4 },
+  chladni: { n: 2, m: 5, cells: 0.8, level: 0.3, opacity: 0.5 },
 };
 
 function CheckCircle() {
@@ -68,6 +68,7 @@ export function GrainPlanCard({
   price,
   priceSuffix,
   priceSmall = false,
+  priceSuffixStrong = false,
   note,
   features,
   cta,
@@ -82,38 +83,49 @@ export function GrainPlanCard({
   priceSuffix: string;
   /** Long prices (IDR) step the size down so they stay on one line. */
   priceSmall?: boolean;
+  /** Bold suffix, for a count that matters to the buyer ("3 uses"). */
+  priceSuffixStrong?: boolean;
   note?: string;
   features: GrainPlanFeature[];
   cta: string;
   onCta: () => void;
 }) {
+  // Six rows on a subgrid of the cards' grid, so title, sub-headline, price,
+  // description, features and CTA line up across every card in the row. The
+  // parent grid must leave rows to auto-placement; each card spans six.
   return (
     <BokehGradient
       scene={world.scene}
       chladni={world.chladni}
-      className="flex flex-col rounded-[28px] p-7 text-white shadow-[0_18px_44px_rgba(20,24,60,0.18)] md:p-8"
+      className="row-span-6 grid grid-cols-[minmax(0,1fr)] grid-rows-subgrid gap-y-0 rounded-[28px] p-7 text-white shadow-[0_18px_44px_rgba(20,24,60,0.18)] md:p-8"
     >
-      <div className="flex flex-col items-start md:min-h-[132px]">
-        <h3 className="whitespace-pre-line text-[28px] font-normal leading-[1.08] tracking-[-0.02em] md:text-[30px]">{title}</h3>
-        {subtitle && <div className="mt-3 text-[13px] font-medium leading-[1.35] text-white/70">{subtitle}</div>}
+      {/* The badge sits in the corner so every title starts on the same line. */}
+      <div className="relative">
         {badge && (
-          <span className="mt-4 inline-flex items-center rounded-full border border-white/80 px-3.5 py-1 text-[13px] font-medium">
+          <span className="absolute right-0 top-0.5 inline-flex items-center whitespace-nowrap rounded-full border border-white/80 px-3 py-[3px] text-[12px] font-medium">
             {badge}
           </span>
         )}
+        <h3 className={`whitespace-pre-line text-[28px] font-normal leading-[1.08] tracking-[-0.02em] md:text-[30px] ${badge ? 'pr-[6.5rem]' : ''}`}>
+          {title}
+        </h3>
       </div>
 
-      <div className="mt-8 flex items-baseline gap-2 whitespace-nowrap">
-        <span className={`${priceSmall ? 'text-[34px] md:text-[38px]' : 'text-[46px] md:text-[52px]'} font-normal leading-none tracking-[-0.02em]`}>
-          {price}
-        </span>
-        <span className="text-[17px] text-white/75">{priceSuffix}</span>
+      <div>{subtitle && <div className="mt-3 max-w-[300px] text-[14px] leading-[1.4] text-white/75">{subtitle}</div>}</div>
+
+      <div className="pt-9">
+        <div className="flex items-baseline gap-2 whitespace-nowrap">
+          <span className={`${priceSmall ? 'text-[34px] md:text-[38px]' : 'text-[46px] md:text-[52px]'} font-normal leading-none tracking-[-0.02em]`}>
+            {price}
+          </span>
+          <span className={`text-[17px] ${priceSuffixStrong ? 'font-bold text-white' : 'text-white/75'}`}>{priceSuffix}</span>
+        </div>
+        {note && <p className="mt-2 text-[13px] font-medium text-white/65">{note}</p>}
       </div>
-      {note && <p className="mt-2 text-[13px] font-medium text-white/65">{note}</p>}
 
-      {description && <p className="mt-7 text-[15px] leading-[1.45] text-white/85">{description}</p>}
+      <div>{description && <p className="pt-4 text-[15px] leading-[1.5] text-white/80">{description}</p>}</div>
 
-      <ul className="mt-7 flex-grow space-y-3 text-[15px] leading-[1.4]">
+      <ul className="mt-7 space-y-3 border-t border-white/20 pt-6 text-[15px] leading-[1.4]">
         {features.map((f) => (
           <li key={f.text} className={`flex gap-3 ${f.strong ? 'font-semibold text-white' : 'text-white/85'}`}>
             <span className="text-white/70">
@@ -124,13 +136,15 @@ export function GrainPlanCard({
         ))}
       </ul>
 
-      <button
-        type="button"
-        onClick={onCta}
-        className="mt-10 w-full rounded-2xl bg-white px-6 py-4 text-center text-[16px] font-medium text-[#0f1b3d] transition-[background-color,transform] duration-150 hover:bg-white/90 active:scale-[0.98]"
-      >
-        {cta}
-      </button>
+      <div className="flex items-end pt-10">
+        <button
+          type="button"
+          onClick={onCta}
+          className="w-full rounded-2xl bg-white px-6 py-4 text-center text-[16px] font-medium text-[#0f1b3d] transition-[background-color,transform] duration-150 hover:bg-white/90 active:scale-[0.98]"
+        >
+          {cta}
+        </button>
+      </div>
     </BokehGradient>
   );
 }

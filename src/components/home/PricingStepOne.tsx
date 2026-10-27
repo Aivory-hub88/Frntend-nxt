@@ -173,19 +173,10 @@ export default function PricingStepOne({ currency, variant = 'default' }: { curr
               world={[WORLD_FRESH, WORLD_DUSK, WORLD_SUNSET][idx]}
               badge={card.mostPopular ? 'Best value' : undefined}
               title={card.title}
-              subtitle={card.subtitle && (
-                <p>
-                  {card.subtitle.endsWith(BONUS_SUBTITLE) ? (
-                    <>
-                      {card.subtitle.slice(0, -BONUS_SUBTITLE.length).replace(/\n\+\n/g, ' + ')}
-                      <span className="font-bold text-white">{BONUS_SUBTITLE}</span>
-                    </>
-                  ) : card.subtitle}
-                </p>
-              )}
               price={getFormattedPrice(card.price)}
               priceSuffix={isIdr ? card.frequency.replace('3 uses', '3x pemakaian') : card.frequency}
               priceSmall={isIdr}
+              priceSuffixStrong
               description={card.description}
               features={card.features.map((f) => {
                 const text = f.replace(/^• /, '');

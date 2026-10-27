@@ -42,6 +42,8 @@ export interface ChladniFigure {
   /** Contour level; 0 is the classic nodal line, 0.3–0.6 opens it into tiled cells. */
   level?: number;
   opacity?: number;
+  /** CSS mask over the figure; by default it lives on the right edge and fades out before the copy. */
+  fade?: string;
 }
 
 const MODE_INDEX: Record<BokehMode, number> = { field: 0, horizon: 1, bands: 2, aurora: 3 };
@@ -50,6 +52,7 @@ const DEFOCUS_PX = 22; // optical blur over the field, so shapes read as an out-
 const FRAME_MS = 1000 / 30;
 const GRAIN_AMPLITUDE = 78;
 const GRAIN_OPACITY = 0.42;
+const CHLADNI_FADE = 'linear-gradient(to left, #000 0%, rgba(0,0,0,0.75) 22%, transparent 62%)';
 
 const VERT = `#version 300 es
 in vec2 a;
@@ -372,7 +375,11 @@ export function BokehGradient({
           aria-hidden="true"
           viewBox={`0 0 ${size.w} ${size.h}`}
           className="pointer-events-none absolute inset-0 -z-10 h-full w-full"
-          style={{ opacity: chladni?.opacity ?? 0.5 }}
+          style={{
+            opacity: chladni?.opacity ?? 0.5,
+            WebkitMaskImage: chladni?.fade ?? CHLADNI_FADE,
+            maskImage: chladni?.fade ?? CHLADNI_FADE,
+          }}
         >
           <path d={figure} fill="none" stroke="#fff" strokeWidth={0.9} strokeLinecap="round" vectorEffect="non-scaling-stroke" />
         </svg>
