@@ -7,6 +7,7 @@ import { useScrollAnimation } from '@/hooks/useScrollAnimation';
 import { useLanguage } from '@/components/context/LanguageContext';
 import { PlanConfirmModal } from '@/components/payment/PlanConfirmModal';
 import { ANNUAL_PRODUCT_FOR, PRODUCT_IDS, getProductPrice } from '@/lib/pricing';
+import { GrainPlanCard, WORLD_AURORA, WORLD_CURTAIN, WORLD_EMBER } from '@/components/home/landing/GrainPlanCard';
 
 type Billing = 'monthly' | 'annual';
 
@@ -229,12 +230,30 @@ export default function PricingStepTwo({ currency, variant = 'default' }: { curr
           {plans.map((plan, idx) => {
             const activeCurrency = currency || (language === 'id' ? 'IDR' : 'USD');
 
+            if (landing) {
+              const offer = offerFor(plan);
+              return (
+                <GrainPlanCard
+                  key={plan.name}
+                  world={[WORLD_CURTAIN, WORLD_AURORA, WORLD_EMBER][idx]}
+                  badge={plan.mostPopular ? 'Most popular' : undefined}
+                  title={plan.name}
+                  subtitle={plan.description}
+                  price={getFormattedPrice(plan)}
+                  priceSuffix={plan.customPriceString ? '' : offer.frequency.replace(/^\//, 'per ')}
+                  priceSmall={activeCurrency === 'IDR' && !plan.customPriceString}
+                  note={offer.billingNote}
+                  features={plan.features.map((text) => ({ text }))}
+                  cta={plan.cta}
+                  onCta={() => handleCtaClick(plan)}
+                />
+              );
+            }
+
             return (
             <div 
               key={plan.name} 
-              className={landing
-                ? `flex flex-col rounded-[24px] border p-7 md:p-8 ${plan.mostPopular ? 'border-[#b8c0a6] bg-[#eef1e8] shadow-[0_12px_32px_rgba(26,26,26,0.06)]' : 'border-[#e4e9eb] bg-[#f5f7f8]'}`
-                : `flex flex-col ${
+              className={`flex flex-col ${
                 idx === 0 ? 'md:pr-10 pb-12 border-b border-[#b0b5b4] md:border-b-0 md:pb-0' : idx === 1 ? 'md:px-10 md:border-x border-[#b0b5b4] pb-12 border-b md:border-b-0 md:pb-0' : 'md:pl-10'
               }`}
             >
@@ -277,7 +296,7 @@ export default function PricingStepTwo({ currency, variant = 'default' }: { curr
               )}
 
               {/* Features */}
-              <ul className={`${landing ? 'mt-8 space-y-2 text-[15px] md:text-[16px]' : 'mt-14 space-y-2 text-[16px] md:text-[18px]'} font-medium leading-[1.35] text-[#494949]`}>
+              <ul className={`mt-14 space-y-2 text-[16px] md:text-[18px] font-medium leading-[1.35] text-[#494949]`}>
                 {plan.features.map((f) => (
                   <li key={f} className="flex gap-2">
                     <span className="shrink-0">•</span>
@@ -292,9 +311,7 @@ export default function PricingStepTwo({ currency, variant = 'default' }: { curr
                 <button
                   type="button"
                   onClick={() => handleCtaClick(plan)}
-                  className={landing
-                    ? `w-full rounded-xl py-4 px-6 text-[16px] font-semibold text-center transition-colors ${plan.mostPopular ? 'bg-[#1a1a1a] text-white hover:bg-[#333]' : 'bg-[#c4c9b8] text-[#1a1a1a] hover:bg-[#b0b5a4]'}`
-                    : 'w-full bg-[#c4c9b8] text-[#494949] py-[18px] px-6 text-[17px] md:text-[19px] font-medium text-center transition-colors hover:bg-[#b0b5a4]'}
+                  className="w-full bg-[#c4c9b8] text-[#494949] py-[18px] px-6 text-[17px] md:text-[19px] font-medium text-center transition-colors hover:bg-[#b0b5a4]"
                 >
                   {plan.cta}
                 </button>

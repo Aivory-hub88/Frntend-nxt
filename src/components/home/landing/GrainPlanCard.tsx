@@ -1,0 +1,152 @@
+'use client';
+
+import type { ReactNode } from 'react';
+import { BokehGradient, type BokehScene, type ChladniFigure } from '@/components/ui/BokehGradient';
+
+/* One scene per card, each a different defocused "photograph": its own shape
+   (field, horizon, curtain, aurora), its own six colours from shadow to
+   highlight, and on some cards a Chladni figure in white hairlines. */
+
+export interface PlanWorld {
+  scene: BokehScene;
+  chladni?: ChladniFigure;
+}
+
+/** Fresh: deep emerald and jade under a clear sky blue, a cool mint glint. */
+export const WORLD_FRESH: PlanWorld = {
+  scene: { colors: ['#032a22', '#05624a', '#0a9468', '#1fae78', '#1a8fc0', '#8fe0c0'], mode: 'field', scale: 0.8, seed: 3.1, light: 0.15, shadow: 0.5, exposure: 0.92 },
+};
+
+/** Dusk: navy sky over a slate haze, an orange horizon below. */
+export const WORLD_DUSK: PlanWorld = {
+  scene: { colors: ['#06132b', '#0f3a78', '#2c5ea8', '#6f7f9e', '#de621e', '#f29a45'], mode: 'horizon', scale: 0.7, seed: 7.4, light: 0.15, shadow: 0.35 },
+  chladni: { n: 1, m: 2, cells: 1.2, level: 0.6, opacity: 0.45 },
+};
+
+/** Platinum: deep violet into light purple, platinum light, a touch of red-orange. */
+export const WORLD_PLATINUM: PlanWorld = {
+  scene: { colors: ['#221a44', '#4a3e86', '#7866b2', '#a7a3bd', '#dc5634', '#e4e3ec'], mode: 'field', scale: 0.85, seed: 1.7, light: 0.42, shadow: 0.45, exposure: 0.86 },
+  chladni: { n: 2, m: 3, cells: 1, level: 0.5, opacity: 0.6 },
+};
+
+/** Curtain: folds of red, orange, lilac-grey and pink. */
+export const WORLD_CURTAIN: PlanWorld = {
+  scene: { colors: ['#7a1c36', '#d63a2a', '#e8703a', '#7f80a6', '#c9506f', '#eea062'], mode: 'bands', scale: 0.8, seed: 4.2, light: 0.15, shadow: 0.4, exposure: 0.86 },
+};
+
+/** Aurora: midnight indigo with violet and pink light streaks. */
+export const WORLD_AURORA: PlanWorld = {
+  scene: { colors: ['#12143f', '#262c86', '#5a46b8', '#8f74dc', '#de78b6', '#eec4e2'], mode: 'aurora', scale: 0.8, seed: 2.6, light: 0.15, shadow: 0.45 },
+};
+
+/** Ember night: near-black navy and violet with red embers and an amber glow. */
+export const WORLD_EMBER: PlanWorld = {
+  scene: { colors: ['#07071a', '#141a4a', '#222c74', '#3b2a80', '#b8301f', '#ef7a2a'], mode: 'field', scale: 0.9, seed: 9.3, light: 0.15, shadow: 0.6, exposure: 0.92 },
+  chladni: { n: 2, m: 5, cells: 0.8, level: 0.3, opacity: 0.5 },
+};
+
+function CheckCircle() {
+  return (
+    <svg className="mt-[3px] h-[18px] w-[18px] shrink-0" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.4" aria-hidden="true">
+      <circle cx="10" cy="10" r="8.3" />
+      <path d="M6.6 10.2l2.3 2.3 4.6-4.8" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
+export interface GrainPlanFeature {
+  text: string;
+  strong?: boolean;
+}
+
+export function GrainPlanCard({
+  world,
+  badge,
+  title,
+  subtitle,
+  description,
+  price,
+  priceSuffix,
+  priceSmall = false,
+  priceSuffixStrong = false,
+  note,
+  features,
+  cta,
+  onCta,
+}: {
+  world: PlanWorld;
+  badge?: string;
+  title: string;
+  subtitle?: ReactNode;
+  description?: string;
+  price: string;
+  priceSuffix: string;
+  /** Long prices (IDR) step the size down so they stay on one line. */
+  priceSmall?: boolean;
+  /** Bold suffix, for a count that matters to the buyer ("3 uses"). */
+  priceSuffixStrong?: boolean;
+  note?: string;
+  features: GrainPlanFeature[];
+  cta: string;
+  onCta: () => void;
+}) {
+  // Six rows on a subgrid of the cards' grid, so title, sub-headline, price,
+  // description, features and CTA line up across every card in the row. The
+  // parent grid must leave rows to auto-placement; each card spans six.
+  return (
+    <BokehGradient
+      scene={world.scene}
+      chladni={world.chladni}
+      className="row-span-6 grid grid-cols-[minmax(0,1fr)] grid-rows-subgrid gap-y-0 rounded-[28px] p-7 text-white shadow-[0_18px_44px_rgba(20,24,60,0.18)] md:p-8"
+    >
+      {/* The badge sits in the corner so every title starts on the same line. */}
+      <div className="relative">
+        {badge && (
+          <span className="absolute right-0 top-0.5 inline-flex items-center whitespace-nowrap rounded-full border border-white/80 px-3 py-[3px] text-[12px] font-medium">
+            {badge}
+          </span>
+        )}
+        <h3 className={`whitespace-pre-line text-[28px] font-normal leading-[1.08] tracking-[-0.02em] md:text-[30px] ${badge ? 'pr-[6.5rem]' : ''}`}>
+          {title}
+        </h3>
+      </div>
+
+      <div>{subtitle && <div className="mt-3 max-w-[300px] text-[14px] leading-[1.4] text-white/75">{subtitle}</div>}</div>
+
+      <div className="pt-9">
+        <div className="flex items-baseline gap-2 whitespace-nowrap">
+          <span className={`${priceSmall ? 'text-[34px] md:text-[38px]' : 'text-[46px] md:text-[52px]'} font-normal leading-none tracking-[-0.02em]`}>
+            {price}
+          </span>
+          <span className={`text-[17px] ${priceSuffixStrong ? 'font-bold text-white' : 'text-white/75'}`}>{priceSuffix}</span>
+        </div>
+        {note && <p className="mt-2 text-[13px] font-medium text-white/65">{note}</p>}
+      </div>
+
+      <div>{description && <p className="pt-4 text-[15px] leading-[1.5] text-white/80">{description}</p>}</div>
+
+      <ul className="mt-7 space-y-3 border-t border-white/20 pt-6 text-[15px] leading-[1.4]">
+        {features.map((f) => (
+          <li key={f.text} className={`flex gap-3 ${f.strong ? 'font-semibold text-white' : 'text-white/85'}`}>
+            <span className="text-white/70">
+              <CheckCircle />
+            </span>
+            <span>{f.text}</span>
+          </li>
+        ))}
+      </ul>
+
+      <div className="flex items-end pt-10">
+        <button
+          type="button"
+          onClick={onCta}
+          className="w-full rounded-2xl bg-white px-6 py-4 text-center text-[16px] font-medium text-[#0f1b3d] transition-[background-color,transform] duration-150 hover:bg-white/90 active:scale-[0.98]"
+        >
+          {cta}
+        </button>
+      </div>
+    </BokehGradient>
+  );
+}
+
+export default GrainPlanCard;
