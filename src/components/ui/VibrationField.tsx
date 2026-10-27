@@ -43,6 +43,10 @@ export interface VibrationLines {
   /** Ellipse (0–1 coordinates) where the lines fade out to keep copy clean. */
   clear?: { x: number; y: number; rx: number; ry: number };
   crosshair?: boolean;
+  /** Line weight in CSS px (default 1). */
+  weight?: number;
+  /** Ellipse where the lines drop to `level` of their opacity, e.g. behind a logo. */
+  quiet?: { x: number; y: number; rx: number; ry: number; level: number };
   /** 'rings' = rounded-square contours; 'plate' = a true Chladni figure (nodal sand lines). */
   kind?: 'rings' | 'plate' | 'dome';
   /** Plate only: second mode mixed in, sign of the mode pair, plate size in short sides. */
@@ -173,6 +177,9 @@ uniform float uDpr;
 uniform vec3 uDome;
 uniform vec2 uDomeC;
 uniform float uDomeStyle;
+uniform float uWeight;
+uniform vec4 uQuiet;
+uniform float uQuietLevel;
 out vec4 o;
 float lhash(vec2 p) { p = fract(p * vec2(123.34, 456.21)); p += dot(p, p + 45.32); return fract(p.x * p.y); }
 float lnoise(vec2 p) {
@@ -190,6 +197,7 @@ void main() {
   vec2 p = (uv - 0.5) * 2.0;
   vec2 cq0 = (uv - uClear.xy) / uClear.zw;
   float keep0 = smoothstep(0.75, 1.25, length(cq0));
+  keep0 *= mix(uQuietLevel, 1.0, smoothstep(0.7, 1.2, length((uv - uQuiet.xy) / uQuiet.zw)));
   if (uKind > 1.5) {
     // Dome lattice (Isfahan): two families of logarithmic spirals crossing at right angles in
     // log-polar space, so the almond cells keep their shape and shrink toward the centre.
@@ -214,8 +222,8 @@ void main() {
     }
     float a1 = 0.0, a2 = 0.0;
     float fw1 = max(fwidth(g1), 1e-5), fw2 = max(fwidth(g2), 1e-5);
-    a1 = 1.0 - clamp(abs(fract(g1 - 0.5) - 0.5) / fw1 - 0.5 * uDpr + 0.5, 0.0, 1.0);
-    a2 = 1.0 - clamp(abs(fract(g2 - 0.5) - 0.5) / fw2 - 0.5 * uDpr + 0.5, 0.0, 1.0);
+    a1 = 1.0 - clamp(abs(fract(g1 - 0.5) - 0.5) / fw1 - 0.5 * uDpr * uWeight + 0.5, 0.0, 1.0);
+    a2 = 1.0 - clamp(abs(fract(g2 - 0.5) - 0.5) / fw2 - 0.5 * uDpr * uWeight + 0.5, 0.0, 1.0);
     // Where cells get smaller than a few pixels the lattice turns to noise: let it dissolve.
     float dense = 1.0 - smoothstep(0.06, 0.16, max(fw1, fw2));
     float a = max(a1, a2) * dense * keep0 * uOpacity;
@@ -234,7 +242,7 @@ void main() {
     if (uMix > 0.0) f = mix(f, modeF(q, uNM2, uSign), uMix);
     // Exactly one CSS pixel wide (uDpr device pixels), anti-aliased over one device pixel.
     float d = abs(f) / max(fwidth(f), 1e-4);
-    float line = 1.0 - clamp(d - 0.5 * uDpr + 0.5, 0.0, 1.0);
+    float line = 1.0 - clamp(d - 0.5 * uDpr * uWeight + 0.5, 0.0, 1.0);
     float halo = uSand > 0.0 ? exp(-pow(abs(f) / 0.09, 2.0)) * uSand : 0.0;
     float a = max(line, halo) * keep0 * uOpacity;
     o = vec4(vec3(a), a);
@@ -386,6 +394,10 @@ export function VibrationField({ base, points, lines, vignette = 0.45, className
     lgl.uniform1f(lu('uOpacity'), lines.opacity ?? 0.5);
     lgl.uniform1f(lu('uKind'), lines.kind === 'dome' ? 2 : lines.kind === 'plate' ? 1 : 0);
     lgl.uniform3f(lu('uDome'), lines.cells ?? 28, lines.ogee ?? (lines.dome === 'ogee' ? 0.5 : 0.13), lines.twist ?? 0);
+    lgl.uniform1f(lu('uWeight'), lines.weight ?? 1);
+    const qz = lines.quiet ?? { x: 0.5, y: 0.5, rx: 0.0001, ry: 0.0001, level: 1 };
+    lgl.uniform4f(lu('uQuiet'), qz.x, qz.y, qz.rx, qz.ry);
+    lgl.uniform1f(lu('uQuietLevel'), qz.level);
     lgl.uniform1f(lu('uDomeStyle'), lines.dome === 'ogee' ? 1 : 0);
     lgl.uniform2f(lu('uDomeC'), lines.center?.x ?? 0.5, lines.center?.y ?? 0.5);
     lgl.uniform2f(lu('uNM2'), lines.n2 ?? 0, lines.m2 ?? 0);
