@@ -44,7 +44,7 @@ export interface VibrationLines {
   clear?: { x: number; y: number; rx: number; ry: number };
   crosshair?: boolean;
   /** 'rings' = rounded-square contours; 'plate' = a true Chladni figure (nodal sand lines). */
-  kind?: 'rings' | 'plate';
+  kind?: 'rings' | 'plate' | 'dome';
   /** Plate only: second mode mixed in, sign of the mode pair, plate size in short sides. */
   n2?: number;
   m2?: number;
@@ -57,6 +57,15 @@ export interface VibrationLines {
   warp?: number;
   /** Plate only: noise seed, so two surfaces never bend the same way. */
   seed?: number;
+  /** Dome only: cells around one full turn, ogee wave (0 = straight lozenges, ~0.12 = almond),
+      and the centre in 0–1 surface coordinates (may sit off the surface). */
+  cells?: number;
+  ogee?: number;
+  /** Dome only: how much the radial rows spiral (0 = straight spokes). */
+  twist?: number;
+  /** Dome only: 'weave' = interlocking cells on crossing spirals; 'ogee' = almond cells on radial rows. */
+  dome?: 'weave' | 'ogee';
+  center?: { x: number; y: number };
 }
 
 export interface VibrationFieldProps {
@@ -161,6 +170,9 @@ uniform float uSand;
 uniform float uWarp;
 uniform float uSeed;
 uniform float uDpr;
+uniform vec3 uDome;
+uniform vec2 uDomeC;
+uniform float uDomeStyle;
 out vec4 o;
 float lhash(vec2 p) { p = fract(p * vec2(123.34, 456.21)); p += dot(p, p + 45.32); return fract(p.x * p.y); }
 float lnoise(vec2 p) {
@@ -178,6 +190,38 @@ void main() {
   vec2 p = (uv - 0.5) * 2.0;
   vec2 cq0 = (uv - uClear.xy) / uClear.zw;
   float keep0 = smoothstep(0.75, 1.25, length(cq0));
+  if (uKind > 1.5) {
+    // Dome lattice (Isfahan): two families of logarithmic spirals crossing at right angles in
+    // log-polar space, so the almond cells keep their shape and shrink toward the centre.
+    float sh = min(asp, 1.0);
+    vec2 c = (vec2(uv.x * asp, uv.y) - vec2(uDomeC.x * asp, uDomeC.y)) / sh;
+    float rr = max(length(c), 1e-4);
+    float N = uDome.x;
+    float u = log(rr) * N / 6.2831853 - uTime * 0.006;
+    float v = atan(c.y, c.x) * N / 6.2831853;
+    float w = uDome.y;
+    // Ogee lattice: two mirrored sine families along each radial row. Where they cross they pinch
+    // into points, so every cell is an almond pointing at the centre, rows offset like the dome.
+    float g1, g2;
+    if (uDomeStyle > 0.5) {
+      float a0 = v + uDome.z * u;
+      g1 = a0 + w * sin(6.2831853 * u);
+      g2 = a0 - w * sin(6.2831853 * u);
+    } else {
+      // Weave: spirals in both directions, each rippling along the other, so cells interlock.
+      g1 = u + v + w * sin(6.2831853 * (u - v));
+      g2 = u - v + w * sin(6.2831853 * (u + v));
+    }
+    float a1 = 0.0, a2 = 0.0;
+    float fw1 = max(fwidth(g1), 1e-5), fw2 = max(fwidth(g2), 1e-5);
+    a1 = 1.0 - clamp(abs(fract(g1 - 0.5) - 0.5) / fw1 - 0.5 * uDpr + 0.5, 0.0, 1.0);
+    a2 = 1.0 - clamp(abs(fract(g2 - 0.5) - 0.5) / fw2 - 0.5 * uDpr + 0.5, 0.0, 1.0);
+    // Where cells get smaller than a few pixels the lattice turns to noise: let it dissolve.
+    float dense = 1.0 - smoothstep(0.06, 0.16, max(fw1, fw2));
+    float a = max(a1, a2) * dense * keep0 * uOpacity;
+    o = vec4(vec3(a), a);
+    return;
+  }
   if (uKind > 0.5) {
     // True Chladni plate: centred, square in screen space, sized in short sides.
     float sh = min(asp, 1.0);
@@ -340,7 +384,10 @@ export function VibrationField({ base, points, lines, vignette = 0.45, className
     lgl.uniform4f(lu('uClear'), cl.x, cl.y, cl.rx, cl.ry);
     lgl.uniform1f(lu('uCross'), lines.crosshair === false ? 0 : 1);
     lgl.uniform1f(lu('uOpacity'), lines.opacity ?? 0.5);
-    lgl.uniform1f(lu('uKind'), lines.kind === 'plate' ? 1 : 0);
+    lgl.uniform1f(lu('uKind'), lines.kind === 'dome' ? 2 : lines.kind === 'plate' ? 1 : 0);
+    lgl.uniform3f(lu('uDome'), lines.cells ?? 28, lines.ogee ?? (lines.dome === 'ogee' ? 0.5 : 0.13), lines.twist ?? 0);
+    lgl.uniform1f(lu('uDomeStyle'), lines.dome === 'ogee' ? 1 : 0);
+    lgl.uniform2f(lu('uDomeC'), lines.center?.x ?? 0.5, lines.center?.y ?? 0.5);
     lgl.uniform2f(lu('uNM2'), lines.n2 ?? 0, lines.m2 ?? 0);
     lgl.uniform1f(lu('uMix'), lines.mix ?? 0);
     lgl.uniform1f(lu('uSign'), lines.sign ?? -1);

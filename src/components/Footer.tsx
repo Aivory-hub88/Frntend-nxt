@@ -7,7 +7,8 @@ import { VibrationField, type LightPoint, type VibrationLines } from '@/componen
 
 // Footer surface: the Enterprise card's teal · ember · amber world as a lit dusk
 // (dusty teal sky, amber from the left, burnt orange low, night in the corners)
-// with one fluid Chladni figure (1·6 + 6·1, bent by slow noise) in 1px lines.
+// with the dome lattice (interlocking cells on crossing log spirals, after the
+// Isfahan domes) centred behind the logo, in 1px lines.
 const FOOTER_LIGHT: LightPoint[] = [
   { x: 0.78, y: 0.05, color: '#6e8d99', r: 0.75 },
   { x: 0.25, y: 0.02, color: '#8f9a96', r: 0.5 },
@@ -18,19 +19,16 @@ const FOOTER_LIGHT: LightPoint[] = [
   { x: 0.7, y: 0.45, color: '#5b3a35', r: 0.28 },
 ];
 const FOOTER_LINES: VibrationLines = {
-  kind: 'plate',
+  kind: 'dome',
+  dome: 'weave',
   count: 1,
-  n: 1,
-  m: 6,
-  sign: 1,
-  plate: 1.6,
-  warp: 0.13,
-  seed: 7.1,
-  opacity: 0.7,
-  clear: { x: 0.4, y: 0.42, rx: 0.36, ry: 0.4 },
+  cells: 14,
+  center: { x: 0.86, y: 0.32 },
+  opacity: 0.55,
+  clear: { x: 0.36, y: 0.42, rx: 0.34, ry: 0.42 },
 };
 // On a phone the links fill the whole footer, so the figure steps back.
-const FOOTER_LINES_NARROW: VibrationLines = { ...FOOTER_LINES, plate: 1.1, opacity: 0.3, clear: { x: 0.5, y: 0.5, rx: 0.0001, ry: 0.0001 } };
+const FOOTER_LINES_NARROW: VibrationLines = { ...FOOTER_LINES, center: { x: 0.9, y: 0.12 }, opacity: 0.3, clear: { x: 0.5, y: 0.5, rx: 0.0001, ry: 0.0001 } };
 
 const productLinks = [
   { label: 'Deep Assessment', href: '/product' },
