@@ -18,7 +18,7 @@
 
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 
-export type BokehMode = 'field' | 'horizon' | 'bands' | 'aurora';
+export type BokehMode = 'field' | 'horizon' | 'bands' | 'aurora' | 'tri';
 
 export interface BokehScene {
   /** Six colours: [0] is the shadow tone, [5] the highlight; the mode walks through them in order. */
@@ -44,14 +44,18 @@ export interface ChladniFigure {
   opacity?: number;
   /** CSS mask over the figure; by default it lives on the right edge and fades out before the copy. */
   fade?: string;
+  /** How far the contour level swings over time, so the figure slowly re-forms like a plate changing pitch. 0 = still. */
+  morph?: number;
 }
 
-const MODE_INDEX: Record<BokehMode, number> = { field: 0, horizon: 1, bands: 2, aurora: 3 };
+const MODE_INDEX: Record<BokehMode, number> = { field: 0, horizon: 1, bands: 2, aurora: 3, tri: 4 };
 const FIELD_SCALE = 0.25; // colour field resolution relative to CSS pixels
 const DEFOCUS_PX = 22; // optical blur over the field, so shapes read as an out-of-focus photo
 const FRAME_MS = 1000 / 30;
 const GRAIN_AMPLITUDE = 78;
 const GRAIN_OPACITY = 0.42;
+const MORPH_FRAME_MS = 1000 / 12;
+const MORPH_SPEED = 0.35; // radians per second
 const CHLADNI_FADE = 'linear-gradient(to left, #000 0%, rgba(0,0,0,0.75) 22%, transparent 62%)';
 
 const VERT = `#version 300 es
@@ -94,6 +98,27 @@ vec3 pal(float h) {
   return mix(uC[k], uC[k + 1], smoothstep(0.0, 1.0, fract(h)));
 }
 
+// Oklab, so two hues meet through a clean in-between instead of grey.
+vec3 toOk(vec3 c) {
+  c = pow(c, vec3(2.2));
+  float l = pow(0.4122214708 * c.r + 0.5363325363 * c.g + 0.0514459929 * c.b, 1.0 / 3.0);
+  float m = pow(0.2119034982 * c.r + 0.6806995451 * c.g + 0.1073969566 * c.b, 1.0 / 3.0);
+  float s = pow(0.0883024619 * c.r + 0.2817188376 * c.g + 0.6299787005 * c.b, 1.0 / 3.0);
+  return vec3(0.2104542553 * l + 0.7936177850 * m - 0.0040720468 * s,
+              1.9779984951 * l - 2.4285922050 * m + 0.4505937099 * s,
+              0.0259040371 * l + 0.7827717662 * m - 0.8086757660 * s);
+}
+vec3 fromOk(vec3 c) {
+  float l = c.x + 0.3963377774 * c.y + 0.2158037573 * c.z;
+  float m = c.x - 0.1055613458 * c.y - 0.0638541728 * c.z;
+  float s = c.x - 0.0894841775 * c.y - 1.2914855480 * c.z;
+  l = l * l * l; m = m * m * m; s = s * s * s;
+  vec3 lin = vec3(4.0767416621 * l - 3.3077115913 * m + 0.2309699292 * s,
+                  -1.2684380046 * l + 2.6097574011 * m - 0.3413193965 * s,
+                  -0.0041960863 * l - 0.7034186147 * m + 1.7076147010 * s);
+  return pow(clamp(lin, 0.0, 1.0), vec3(1.0 / 2.2));
+}
+
 void main() {
   vec2 uv = gl_FragCoord.xy / uRes;
   uv.y = 1.0 - uv.y;
@@ -106,6 +131,32 @@ void main() {
   vec2 r = vec2(fbm(p + 1.4 * q + vec2(1.7, 9.2) + mo + t * 0.7), fbm(p + 1.4 * q + vec2(8.3, 2.8) - t * 0.5));
   float f = fbm(p + 1.3 * r);
   float fn = (f - 0.25) / 0.42;
+
+  if (uMode > 3.5) {
+    // Tri: three colours in 60/30/10. [1] fills the card, [2] is one large
+    // soft shape, [3] a glow in the opposite corner; [0] darkens the seam where
+    // [1] and [2] meet (a value step, not grey); [4] is a thin sheen on that edge.
+    // Measured in the card's short side, so shapes keep their share on tall cards too.
+    vec2 ext = vec2(asp, 1.0) / min(asp, 1.0);
+    vec2 a = uv * ext;
+    vec2 w = (r - 0.5) * 0.5;
+    float h1 = fract(sin(uSeed * 12.9898) * 43758.5453);
+    float h2 = fract(sin(uSeed * 78.233) * 43758.5453);
+    vec2 c2 = vec2(ext.x * (0.15 + 0.45 * h1), 0.18 + 0.22 * h2) + vec2(sin(t * 3.0), cos(t * 2.3)) * 0.05 + mo * 0.25;
+    float d2 = length((a - c2 + w) * vec2(1.0, 0.8));
+    float s2 = 1.0 - smoothstep(0.42, 0.78, d2);
+    vec2 c3 = vec2(ext.x * (0.95 - 0.5 * h1), ext.y + 0.02) + vec2(cos(t * 2.0), sin(t * 2.7)) * 0.05 - mo * 0.2;
+    float d3 = length((a - c3 + w * 0.8) * vec2(0.9, 1.25));
+    float s3 = pow(1.0 - smoothstep(0.0, 0.75, d3), 1.5);
+    vec3 col = toOk(uC[1]);
+    col = mix(col, toOk(uC[2]), s2);
+    col = mix(col, toOk(uC[0]), 4.0 * s2 * (1.0 - s2) * uShadow);
+    col = mix(col, toOk(uC[3]), s3);
+    float sheen = smoothstep(0.5, 0.0, abs(d2 - 0.36)) * smoothstep(0.55, 0.75, fbm(p * 1.5 + r + 7.0));
+    col = mix(col, toOk(uC[4]), sheen * uLight);
+    o = vec4(fromOk(col) * uExposure, 1.0);
+    return;
+  }
 
   float h;
   if (uMode < 0.5) {
@@ -158,14 +209,13 @@ function getNoiseTile(): HTMLCanvasElement {
 }
 
 /** Marching squares over a Chladni plate sized w × h; returns one SVG path. */
-function chladniPath(w: number, h: number, { n, m, cells = 1, level = 0 }: ChladniFigure): string {
+function chladniPath(w: number, h: number, { n, m, cells = 1 }: ChladniFigure, level: number, step = 2): string {
   const size = w / cells; // square cells: the figure repeats down a tall card
   const f = (x: number, y: number) => {
     const X = x / size;
     const Y = y / size;
     return Math.cos(n * Math.PI * X) * Math.cos(m * Math.PI * Y) + Math.cos(m * Math.PI * X) * Math.cos(n * Math.PI * Y) - level;
   };
-  const step = 2;
   const cols = Math.ceil(w / step);
   const rows = Math.ceil(h / step);
   const v: number[] = new Array((cols + 1) * (rows + 1));
@@ -260,6 +310,7 @@ export function BokehGradient({
       const s = gl.createShader(type)!;
       gl.shaderSource(s, src);
       gl.compileShader(s);
+      if (!gl.getShaderParameter(s, gl.COMPILE_STATUS)) console.error('BokehGradient shader:', gl.getShaderInfoLog(s));
       return s;
     };
     const prog = gl.createProgram()!;
@@ -353,7 +404,39 @@ export function BokehGradient({
     };
   }, [size, scene]);
 
-  const figure = useMemo(() => (chladni && size ? chladniPath(size.w, size.h, chladni) : ''), [chladni, size]);
+  // Chladni figure: drawn once, or re-formed ~12 times a second while on screen
+  // when it morphs. The path is written straight to the DOM, not through state.
+  const figureRef = useRef<SVGPathElement>(null);
+  useEffect(() => {
+    const path = figureRef.current;
+    const root = rootRef.current;
+    if (!chladni || !size || !path || !root) return;
+    const base = chladni.level ?? 0;
+    const draw = (level: number, step: number) => path.setAttribute('d', chladniPath(size.w, size.h, chladni, level, step));
+    draw(base, 2);
+    const morph = chladni.morph ?? 0;
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
+    if (!morph || reduce.matches) return;
+    let raf = 0;
+    let last = 0;
+    let visible = false;
+    const phase = (scene.seed ?? 0) * 2.1;
+    const tick = (now: number) => {
+      raf = visible ? requestAnimationFrame(tick) : 0;
+      if (now - last < MORPH_FRAME_MS) return;
+      last = now;
+      draw(base + morph * Math.sin(now / 1000 * MORPH_SPEED + phase), 3);
+    };
+    const io = new IntersectionObserver(([entry]) => {
+      visible = entry.isIntersecting;
+      if (visible && !raf) raf = requestAnimationFrame(tick);
+    });
+    io.observe(root);
+    return () => {
+      cancelAnimationFrame(raf);
+      io.disconnect();
+    };
+  }, [chladni, size, scene.seed]);
 
   return (
     <div
@@ -370,7 +453,7 @@ export function BokehGradient({
           style={{ filter: `blur(${DEFOCUS_PX}px)` }}
         />
       )}
-      {figure && size && (
+      {chladni && size && (
         <svg
           aria-hidden="true"
           viewBox={`0 0 ${size.w} ${size.h}`}
@@ -381,7 +464,7 @@ export function BokehGradient({
             maskImage: chladni?.fade ?? CHLADNI_FADE,
           }}
         >
-          <path d={figure} fill="none" stroke="#fff" strokeWidth={0.9} strokeLinecap="round" vectorEffect="non-scaling-stroke" />
+          <path ref={figureRef} fill="none" stroke="#fff" strokeWidth={0.9} strokeLinecap="round" vectorEffect="non-scaling-stroke" />
         </svg>
       )}
       <canvas
