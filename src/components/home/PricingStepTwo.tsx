@@ -246,6 +246,7 @@ export default function PricingStepTwo({ currency, variant = 'default' }: { curr
                   price={getFormattedPrice(plan)}
                   priceSuffix={plan.customPriceString ? '' : offer.frequency.replace(/^\//, 'per ')}
                   priceSmall={activeCurrency === 'IDR' && !plan.customPriceString}
+                  priceSuffixStrong
                   note={offer.billingNote}
                   features={plan.features.map((text) => ({ text }))}
                   cta={plan.cta}
