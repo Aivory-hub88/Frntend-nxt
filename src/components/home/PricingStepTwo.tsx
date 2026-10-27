@@ -7,7 +7,7 @@ import { useScrollAnimation } from '@/hooks/useScrollAnimation';
 import { useLanguage } from '@/components/context/LanguageContext';
 import { PlanConfirmModal } from '@/components/payment/PlanConfirmModal';
 import { ANNUAL_PRODUCT_FOR, PRODUCT_IDS, getProductPrice } from '@/lib/pricing';
-import { GrainPlanCard, WORLD_AURORA, WORLD_CURTAIN, WORLD_EMBER } from '@/components/home/landing/GrainPlanCard';
+import { GrainPlanCard, STEP_TWO_WORLDS } from '@/components/home/landing/GrainPlanCard';
 
 type Billing = 'monthly' | 'annual';
 
@@ -235,7 +235,8 @@ export default function PricingStepTwo({ currency, variant = 'default' }: { curr
               return (
                 <GrainPlanCard
                   key={plan.name}
-                  world={[WORLD_CURTAIN, WORLD_AURORA, WORLD_EMBER][idx]}
+                  world={STEP_TWO_WORLDS[idx]}
+              surface="window"
                   badge={plan.mostPopular ? 'Most popular' : undefined}
                   title={plan.name}
                   subtitle={plan.description}
