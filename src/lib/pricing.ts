@@ -228,20 +228,20 @@ export const SUBSCRIPTION_PRODUCTS: SubscriptionProduct[] = [
  * dashboard's `components/settings/SettingsModal.tsx`, which is where customers
  * pick a pack before being handed to this checkout.
  *
- * The previous values here (and on the server) sat 17-36% above what the
- * dashboard advertised, which nobody had hit only because the dashboard's
- * purchase button was still a mock alert. The curve declines with volume:
- * $0.100/credit at the smallest pack down to $0.055 at the largest.
+ * A credit is a slice of LLM spend (about 13k tokens at peak, 26k off-peak on
+ * DeepSeek V4.1 Flash), not a message. Every pack keeps at least a 65% margin
+ * over that spend; the per-credit price falls from $0.0150 at the smallest
+ * pack to $0.0132 at the largest.
  */
 const CREDIT_PACK_DEFINITIONS: ReadonlyArray<readonly [credits: number, price: number]> = [
-  [50, 5],
-  [100, 9],
-  [250, 20],
-  [500, 38],
-  [1000, 70],
-  [2500, 165],
-  [5000, 300],
-  [10000, 550],
+  [1000, 15],
+  [1700, 25],
+  [3500, 50],
+  [7200, 100],
+  [11000, 150],
+  [18500, 250],
+  [37500, 500],
+  [76000, 1000],
 ];
 
 export const CREDIT_PACKS: CreditPackProduct[] = CREDIT_PACK_DEFINITIONS.map(

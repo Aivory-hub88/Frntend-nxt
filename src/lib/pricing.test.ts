@@ -15,7 +15,7 @@
  *
  * 2. CREDIT-PACK MULTISET / ORDER EQUALITY (Req 2.4): the `{credits, price}`
  *    pairs a section derives for display (by splitting `CREDIT_PACKS` into the
- *    starter group `credits ≤ 1000` and the scale group `credits ≥ 2500`,
+ *    starter group `credits ≤ 3500` and the scale group `credits ≥ 7200`,
  *    preserving published order, then rendering each price via `formatUsd`)
  *    equal `CREDIT_PACKS` exactly — no pack is added, dropped, or re-priced, and
  *    the published order is preserved.
@@ -42,9 +42,9 @@ import {
 // ---------------------------------------------------------------------------
 
 /** Starter packs are the small bundles (credits ≤ this bound). */
-const STARTER_MAX_CREDITS = 1000;
+const STARTER_MAX_CREDITS = 3500;
 /** Scale packs are the large bundles (credits ≥ this bound). */
-const SCALE_MIN_CREDITS = 2500;
+const SCALE_MIN_CREDITS = 7200;
 
 /** A `{credits, price}` pair as derived for display, with its rendered label. */
 interface DisplayPack {
@@ -55,7 +55,7 @@ interface DisplayPack {
 
 /**
  * Reproduce the credit-marketplace display derivation: partition the packs into
- * the starter (`credits ≤ 1000`) and scale (`credits ≥ 2500`) groups while
+ * the starter (`credits ≤ 3500`) and scale (`credits ≥ 7200`) groups while
  * preserving published order, then concatenate them back in group order and
  * render each price through `formatUsd`. If the derivation is faithful, this
  * sequence must equal `CREDIT_PACKS` pair-for-pair in order.
