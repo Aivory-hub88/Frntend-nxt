@@ -8,8 +8,8 @@
  * aurora streaks, with real shadow pockets and soft highlights. Each scene
  * maps that field through six colours ordered from shadow to highlight.
  *
- * On top: an optional leaf figure (Chladni plate lines pinched into leaf points,
- * or a rosette of leaf outlines) as white hairlines, and film grain drawn at
+ * On top: an optional figure (Chladni plate lines pinched into leaf points, or the
+ * footer's dome weave opened up) as white hairlines, and film grain drawn at
  * device-pixel resolution.
  *
  * The colour field renders at a fraction of the element size (it is blurred
@@ -38,16 +38,21 @@ export interface BokehScene {
  * Aivory's ornament: Chladni plate lines crossed with leaf outlines, main outline only.
  * - `leaf`: one level line of a 1·3 plate, cos(πx)cos(3πy) − cos(3πx)cos(πy); its loops pinch into leaf points at the saddles.
  * - `bent`: a 1·2 plate bent by a slow current, so the loops read organic and asymmetric.
- * - `rosette`: five leaf outlines (vesicas) round one point, like a circular plate mode.
+ * - `weave`: the footer's dome lattice (two crossing log spirals, each rippling along the other) with
+ *   only a few cells round its centre and bent by slow noise, so the cells are wide and none repeat.
  */
 export interface LeafFigure {
-  kind: 'leaf' | 'bent' | 'rosette';
+  kind: 'leaf' | 'bent' | 'weave';
   /** Centre of the figure as a fraction of the card's width and height; it usually sits on or past the right edge. */
   origin: [number, number];
   /** Plate cells per card height (leaf, bent). */
   scale?: number;
   /** Contour level (leaf, bent). */
   level?: number;
+  /** Cells round the centre (weave, even so the lattice closes; default 4). */
+  cells?: number;
+  /** How far slow noise bends the weave, in card heights (default 0.3). */
+  warp?: number;
   /** Rotation in radians. */
   rot?: number;
   seed?: number;
@@ -266,23 +271,26 @@ function leafPath(w: number, h: number, fig: LeafFigure): string {
   const s = Math.sin(rot);
   const ox = origin[0] * w;
   const oy = origin[1] * h;
-  if (kind === 'rosette') {
-    // Five vesicas: two circle arcs meeting in points, laid round the origin.
-    const L = 0.4;
-    const W = 0.14;
-    const R = (L * L + W * W) / (2 * W);
-    const at = (qx: number, qy: number, a: number) => {
-      const ca = Math.cos(a);
-      const sa = Math.sin(a);
-      return `${(ox + (ca * qx - sa * qy) * h).toFixed(1)} ${(oy + (sa * qx + ca * qy) * h).toFixed(1)}`;
-    };
-    let d = '';
-    for (let k = 0; k < 5; k++) {
-      const a = (k * 2 * Math.PI) / 5 + seed + Math.PI / 2 + rot;
-      const r = (R * h).toFixed(1);
-      d += `M${at(-L, 0.42, a)}A${r} ${r} 0 0 1 ${at(L, 0.42, a)}A${r} ${r} 0 0 1 ${at(-L, 0.42, a)}`;
-    }
-    return d;
+  if (kind === 'weave') {
+    const { cells = 4, warp = 0.3 } = fig;
+    const tau = 2 * Math.PI;
+    const ogee = 0.15;
+    return contourPath(w, h, (x, y) => {
+      let px = (x - ox) / h;
+      let py = (y - oy) / h;
+      // Two octaves of slow noise bend the lattice, so no two cells share a shape.
+      const nx = px * 0.8 + seed;
+      const ny = py * 0.8 + seed;
+      px += (valueNoise(nx, ny) - 0.5) * 2 * warp + (valueNoise(nx * 2.3 + 4, ny * 2.3 + 1) - 0.5) * warp * 0.5;
+      py += (valueNoise(nx + 7.3, ny + 3.1) - 0.5) * 2 * warp + (valueNoise(nx * 2.3 + 9, ny * 2.3 + 6) - 0.5) * warp * 0.5;
+      const r = Math.hypot(px, py);
+      if (r < 0.07) return 1; // the cells there would be smaller than the line
+      const u = (Math.log(r) * cells) / tau;
+      const v = (Math.atan2(py, px) * cells) / tau;
+      const g1 = u + v + ogee * Math.sin(tau * (u - v));
+      const g2 = u - v + ogee * Math.sin(tau * (u + v));
+      return Math.sin(Math.PI * g1) * Math.sin(Math.PI * g2);
+    });
   }
   return contourPath(w, h, (x, y) => {
     const px = (x - ox) / h;
