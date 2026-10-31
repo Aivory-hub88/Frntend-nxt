@@ -8,8 +8,8 @@
  * aurora streaks, with real shadow pockets and soft highlights. Each scene
  * maps that field through six colours ordered from shadow to highlight.
  *
- * On top: an optional figure (Chladni plate lines pinched into leaf points, or the
- * footer's dome weave opened up) as white hairlines, and film grain drawn at
+ * On top: an optional figure (Fibonacci circles touching one point, or Chladni plate
+ * lines pinched into leaf points) as white hairlines, and film grain drawn at
  * device-pixel resolution.
  *
  * The colour field renders at a fraction of the element size (it is blurred
@@ -35,25 +35,25 @@ export interface BokehScene {
 }
 
 /**
- * Aivory's ornament: Chladni plate lines crossed with leaf outlines, main outline only.
+ * Aivory's ornament, as white hairlines on the card.
+ * - `fibonacci` (the brand ornament): circles with radii 2·3·5·8·13·21… units, all touching one point
+ *   on the card's edge, like a nautilus cross-section. Tight at the point, opening out across the card.
  * - `leaf`: one level line of a 1·3 plate, cos(πx)cos(3πy) − cos(3πx)cos(πy); its loops pinch into leaf points at the saddles.
  * - `bent`: a 1·2 plate bent by a slow current, so the loops read organic and asymmetric.
- * - `weave`: the footer's dome lattice (two crossing log spirals, each rippling along the other) with
- *   only a few cells round its centre and bent by slow noise, so the cells are wide and none repeat.
+ * Alternates, Chladni lines crossed with leaf outlines:
  */
 export interface LeafFigure {
-  kind: 'leaf' | 'bent' | 'weave';
-  /** Centre of the figure as a fraction of the card's width and height; it usually sits on or past the right edge. */
+  kind: 'fibonacci' | 'leaf' | 'bent';
+  /** Centre of the figure (fibonacci: the point every circle touches) as a fraction of the card's width and height; it usually sits on or past the right edge. */
   origin: [number, number];
   /** Plate cells per card height (leaf, bent). */
   scale?: number;
   /** Contour level (leaf, bent). */
   level?: number;
-  /** Cells round the centre (weave, even so the lattice closes; default 4). */
-  cells?: number;
-  /** How far slow noise bends the weave, in card heights (default 0.3). */
-  warp?: number;
-  /** Rotation in radians. */
+  /** Fibonacci: the first radius in card heights (default 0.035) and how many circles (default 6). */
+  unit?: number;
+  count?: number;
+  /** Rotation in radians (fibonacci: the direction the circles open toward; default π, leftward). */
   rot?: number;
   seed?: number;
   opacity?: number;
@@ -271,26 +271,19 @@ function leafPath(w: number, h: number, fig: LeafFigure): string {
   const s = Math.sin(rot);
   const ox = origin[0] * w;
   const oy = origin[1] * h;
-  if (kind === 'weave') {
-    const { cells = 4, warp = 0.3 } = fig;
-    const tau = 2 * Math.PI;
-    const ogee = 0.15;
-    return contourPath(w, h, (x, y) => {
-      let px = (x - ox) / h;
-      let py = (y - oy) / h;
-      // Two octaves of slow noise bend the lattice, so no two cells share a shape.
-      const nx = px * 0.8 + seed;
-      const ny = py * 0.8 + seed;
-      px += (valueNoise(nx, ny) - 0.5) * 2 * warp + (valueNoise(nx * 2.3 + 4, ny * 2.3 + 1) - 0.5) * warp * 0.5;
-      py += (valueNoise(nx + 7.3, ny + 3.1) - 0.5) * 2 * warp + (valueNoise(nx * 2.3 + 9, ny * 2.3 + 6) - 0.5) * warp * 0.5;
-      const r = Math.hypot(px, py);
-      if (r < 0.07) return 1; // the cells there would be smaller than the line
-      const u = (Math.log(r) * cells) / tau;
-      const v = (Math.atan2(py, px) * cells) / tau;
-      const g1 = u + v + ogee * Math.sin(tau * (u - v));
-      const g2 = u - v + ogee * Math.sin(tau * (u + v));
-      return Math.sin(Math.PI * g1) * Math.sin(Math.PI * g2);
-    });
+  if (kind === 'fibonacci') {
+    const { unit = 0.035, count = 6 } = fig;
+    const dir = fig.rot ?? Math.PI;
+    const dx = Math.cos(dir);
+    const dy = Math.sin(dir);
+    let d = '';
+    for (let i = 0, a = 2, b = 3; i < count; i++, [a, b] = [b, a + b]) {
+      const r = a * unit * h;
+      const cx = ox + dx * r;
+      const cy = oy + dy * r;
+      d += `M${(cx - r).toFixed(1)} ${cy.toFixed(1)}a${r.toFixed(1)} ${r.toFixed(1)} 0 1 0 ${(2 * r).toFixed(1)} 0a${r.toFixed(1)} ${r.toFixed(1)} 0 1 0 ${(-2 * r).toFixed(1)} 0`;
+    }
+    return d;
   }
   return contourPath(w, h, (x, y) => {
     const px = (x - ox) / h;

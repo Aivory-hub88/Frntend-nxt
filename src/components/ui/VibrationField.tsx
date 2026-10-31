@@ -47,8 +47,9 @@ export interface VibrationLines {
   weight?: number;
   /** Ellipse where the lines drop to `level` of their opacity, e.g. behind a logo. */
   quiet?: { x: number; y: number; rx: number; ry: number; level: number };
-  /** 'rings' = rounded-square contours; 'plate' = a true Chladni figure (nodal sand lines). */
-  kind?: 'rings' | 'plate' | 'dome';
+  /** 'rings' = rounded-square contours; 'plate' = a true Chladni figure (nodal sand lines);
+      'fibonacci' = circles with Fibonacci radii all touching `center`. */
+  kind?: 'rings' | 'plate' | 'dome' | 'fibonacci';
   /** Plate only: second mode mixed in, sign of the mode pair, plate size in short sides. */
   n2?: number;
   m2?: number;
@@ -70,6 +71,10 @@ export interface VibrationLines {
   /** Dome only: 'weave' = interlocking cells on crossing spirals; 'ogee' = almond cells on radial rows. */
   dome?: 'weave' | 'ogee';
   center?: { x: number; y: number };
+  /** Fibonacci only: first radius in short sides, how many circles, and the direction they open toward (radians, default π = leftward). */
+  unit?: number;
+  circles?: number;
+  angle?: number;
 }
 
 export interface VibrationFieldProps {
@@ -180,6 +185,7 @@ uniform float uDomeStyle;
 uniform float uWeight;
 uniform vec4 uQuiet;
 uniform float uQuietLevel;
+uniform vec3 uFib;
 out vec4 o;
 float lhash(vec2 p) { p = fract(p * vec2(123.34, 456.21)); p += dot(p, p + 45.32); return fract(p.x * p.y); }
 float lnoise(vec2 p) {
@@ -198,6 +204,24 @@ void main() {
   vec2 cq0 = (uv - uClear.xy) / uClear.zw;
   float keep0 = smoothstep(0.75, 1.25, length(cq0));
   keep0 *= mix(uQuietLevel, 1.0, smoothstep(0.7, 1.2, length((uv - uQuiet.xy) / uQuiet.zw)));
+  if (uKind > 2.5) {
+    // Fibonacci circles: radii 2·3·5·8·13… × unit, every one touching the point uDomeC.
+    float sh = min(asp, 1.0);
+    vec2 q = (vec2(uv.x * asp, uv.y) - vec2(uDomeC.x * asp, uDomeC.y)) / sh;
+    vec2 dir = vec2(cos(uFib.y), sin(uFib.y));
+    float px = min(uRes.x, uRes.y); // device pixels per short side
+    float a = 0.0, fa = 2.0, fb = 3.0;
+    for (int i = 0; i < 12; i++) {
+      if (float(i) >= uFib.z) break;
+      float r = fa * uFib.x;
+      float d = abs(length(q - dir * r) - r) * px;
+      a = max(a, 1.0 - clamp(d - 0.5 * uDpr * uWeight + 0.5, 0.0, 1.0));
+      float t = fa + fb; fa = fb; fb = t;
+    }
+    a *= keep0 * uOpacity;
+    o = vec4(vec3(a), a);
+    return;
+  }
   if (uKind > 1.5) {
     // Dome lattice (Isfahan): two families of logarithmic spirals crossing at right angles in
     // log-polar space, so the almond cells keep their shape and shrink toward the centre.
@@ -397,7 +421,8 @@ export function VibrationField({ base, points, lines, vignette = 0.45, className
     lgl.uniform4f(lu('uClear'), cl.x, cl.y, cl.rx, cl.ry);
     lgl.uniform1f(lu('uCross'), lines.crosshair === false ? 0 : 1);
     lgl.uniform1f(lu('uOpacity'), lines.opacity ?? 0.5);
-    lgl.uniform1f(lu('uKind'), lines.kind === 'dome' ? 2 : lines.kind === 'plate' ? 1 : 0);
+    lgl.uniform1f(lu('uKind'), lines.kind === 'fibonacci' ? 3 : lines.kind === 'dome' ? 2 : lines.kind === 'plate' ? 1 : 0);
+    lgl.uniform3f(lu('uFib'), lines.unit ?? 0.03, lines.angle ?? Math.PI, lines.circles ?? 9);
     lgl.uniform3f(lu('uDome'), lines.cells ?? 28, lines.ogee ?? (lines.dome === 'ogee' ? 0.5 : 0.13), lines.twist ?? 0);
     lgl.uniform1f(lu('uWeight'), lines.weight ?? 1);
     const qz = lines.quiet ?? { x: 0.5, y: 0.5, rx: 0.0001, ry: 0.0001, level: 1 };
