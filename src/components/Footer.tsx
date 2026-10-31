@@ -6,14 +6,15 @@ import { useScrollAnimation } from '@/hooks/useScrollAnimation';
 import { VibrationField, type LightPoint, type VibrationLines } from '@/components/ui/VibrationField';
 
 // Footer surface: the Enterprise card's teal · ember world as a lit dusk (dusty teal
-// sky, burnt orange low, night in the corners),
+// sky, burnt orange low, a pale deep-teal corner bottom-left),
 // with a round Chladni plate in extreme close-up at the bottom-right, in 1px lines.
 const FOOTER_LIGHT: LightPoint[] = [
   { x: 0.78, y: 0.05, color: '#6e8d99', r: 0.75 },
   { x: 0.25, y: 0.02, color: '#8f9a96', r: 0.5 },
+  { x: 0.02, y: 0.5, color: '#3a5866', r: 0.42 },
   { x: 0.45, y: 0.72, color: '#c4562a', r: 0.5 },
   { x: 0.9, y: 0.82, color: '#9c3a1c', r: 0.45 },
-  { x: 0.05, y: 1.02, color: '#1a0d0a', r: 0.45 },
+  { x: 0.05, y: 1.02, color: '#2f4a58', r: 0.45 },
   { x: 0.7, y: 0.45, color: '#5b3a35', r: 0.28 },
 ];
 const FOOTER_LINES: VibrationLines = {
@@ -79,7 +80,7 @@ export default function Footer({ landingAmbient = false }: FooterProps) {
   return (
     <footer data-landing-ambient={landingAmbient || undefined} className="relative w-full font-sans">
       <VibrationField
-        base="#4a3a36"
+        base="#3a5260"
         points={FOOTER_LIGHT}
         lines={narrow ? FOOTER_LINES_NARROW : FOOTER_LINES}
         vignette={0.5}
