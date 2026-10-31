@@ -48,8 +48,9 @@ export interface VibrationLines {
   /** Ellipse where the lines drop to `level` of their opacity, e.g. behind a logo. */
   quiet?: { x: number; y: number; rx: number; ry: number; level: number };
   /** 'rings' = rounded-square contours; 'plate' = a true Chladni figure (nodal sand lines);
-      'fibonacci' = circles with Fibonacci radii all touching `center`. */
-  kind?: 'rings' | 'plate' | 'dome' | 'fibonacci';
+      'fibonacci' = circles with Fibonacci radii all touching `center`;
+      'round' = a round Chladni plate centred on `center`, drawn huge so the surface edge crops it. */
+  kind?: 'rings' | 'plate' | 'dome' | 'fibonacci' | 'round';
   /** Plate only: second mode mixed in, sign of the mode pair, plate size in short sides. */
   n2?: number;
   m2?: number;
@@ -75,6 +76,10 @@ export interface VibrationLines {
   unit?: number;
   circles?: number;
   angle?: number;
+  /** Round only: plate radius in short sides, radial waves across it, and level lines per nodal bundle (few = widely spaced). `n` = angular mode (default 6). */
+  radius?: number;
+  waves?: number;
+  levels?: number;
 }
 
 export interface VibrationFieldProps {
@@ -186,6 +191,7 @@ uniform float uWeight;
 uniform vec4 uQuiet;
 uniform float uQuietLevel;
 uniform vec3 uFib;
+uniform vec4 uRound;
 out vec4 o;
 float lhash(vec2 p) { p = fract(p * vec2(123.34, 456.21)); p += dot(p, p + 45.32); return fract(p.x * p.y); }
 float lnoise(vec2 p) {
@@ -204,6 +210,32 @@ void main() {
   vec2 cq0 = (uv - uClear.xy) / uClear.zw;
   float keep0 = smoothstep(0.75, 1.25, length(cq0));
   keep0 *= mix(uQuietLevel, 1.0, smoothstep(0.7, 1.2, length((uv - uQuiet.xy) / uQuiet.zw)));
+  if (uKind > 3.5) {
+    // Round Chladni plate: Bessel-like radial waves × an angular mode, drawn as a few widely
+    // spaced level lines, clipped to the plate, with the rim and the centre hole.
+    float sh = min(asp, 1.0);
+    vec2 q = (vec2(uv.x * asp, uv.y) - vec2(uDomeC.x * asp, uDomeC.y)) / sh;
+    float R = uRound.x, n = uRound.y, kr = uRound.z * 3.14159265 / R, L = uRound.w;
+    float r = length(q), th = atan(q.y, q.x);
+    float e = min(1.0, r / (R * 0.35));
+    float f = e * (cos(n * th) * cos(kr * r - n * 1.5707963 - 0.7853982) + 0.5 * cos((n + 3.0) * th + 1.0) * cos(kr * 1.55 * r));
+    float fw = max(fwidth(f), 1e-4);
+    float px = min(uRes.x, uRes.y); // device pixels per short side
+    float hw = 0.5 * uDpr * uWeight - 0.5;
+    float a = 0.0;
+    for (int i = 0; i < 8; i++) {
+      if (float(i) >= L) break;
+      float lv = L > 1.0 ? (float(i) / (L - 1.0) - 0.5) * 0.8 : 0.0;
+      a = max(a, 1.0 - clamp(abs(f - lv) / fw - hw, 0.0, 1.0));
+    }
+    float hole = R * 0.13;
+    a *= (1.0 - smoothstep(R - 1.0 / px, R + 1.0 / px, r)) * smoothstep(hole, hole + 2.0 / px, r);
+    a = max(a, 1.0 - clamp(abs(r - R) * px - hw, 0.0, 1.0));
+    a = max(a, 1.0 - clamp(abs(r - hole) * px - hw, 0.0, 1.0));
+    a *= keep0 * uOpacity;
+    o = vec4(vec3(a), a);
+    return;
+  }
   if (uKind > 2.5) {
     // Fibonacci circles: radii 2·3·5·8·13… × unit, every one touching the point uDomeC.
     float sh = min(asp, 1.0);
@@ -421,7 +453,8 @@ export function VibrationField({ base, points, lines, vignette = 0.45, className
     lgl.uniform4f(lu('uClear'), cl.x, cl.y, cl.rx, cl.ry);
     lgl.uniform1f(lu('uCross'), lines.crosshair === false ? 0 : 1);
     lgl.uniform1f(lu('uOpacity'), lines.opacity ?? 0.5);
-    lgl.uniform1f(lu('uKind'), lines.kind === 'fibonacci' ? 3 : lines.kind === 'dome' ? 2 : lines.kind === 'plate' ? 1 : 0);
+    lgl.uniform1f(lu('uKind'), lines.kind === 'round' ? 4 : lines.kind === 'fibonacci' ? 3 : lines.kind === 'dome' ? 2 : lines.kind === 'plate' ? 1 : 0);
+    lgl.uniform4f(lu('uRound'), lines.radius ?? 1.3, lines.n ?? 6, lines.waves ?? 6, lines.levels ?? 4);
     lgl.uniform3f(lu('uFib'), lines.unit ?? 0.03, lines.angle ?? Math.PI, lines.circles ?? 9);
     lgl.uniform3f(lu('uDome'), lines.cells ?? 28, lines.ogee ?? (lines.dome === 'ogee' ? 0.5 : 0.13), lines.twist ?? 0);
     lgl.uniform1f(lu('uWeight'), lines.weight ?? 1);
