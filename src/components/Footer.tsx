@@ -5,14 +5,13 @@ import { useEffect, useState } from 'react';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
 import { VibrationField, type LightPoint, type VibrationLines } from '@/components/ui/VibrationField';
 
-// Footer surface: the Enterprise card's teal · ember · amber world as a lit dusk
-// (dusty teal sky, amber from the left, burnt orange low, night in the corners)
-// with the dome lattice (interlocking cells on crossing log spirals, after the
-// Isfahan domes) centred behind the logo, in 1px lines.
+// Footer surface: the Enterprise card's teal · ember world as a lit dusk (dusty teal
+// sky, orange-yellow light from the left, burnt orange low, night in the corners),
+// with a round Chladni plate in extreme close-up at the bottom-right, in 1px lines.
 const FOOTER_LIGHT: LightPoint[] = [
   { x: 0.78, y: 0.05, color: '#6e8d99', r: 0.75 },
   { x: 0.25, y: 0.02, color: '#8f9a96', r: 0.5 },
-  { x: 0.02, y: 0.45, color: '#e9a650', r: 0.42 },
+  { x: 0.02, y: 0.45, color: '#f5951c', r: 0.42 },
   { x: 0.45, y: 0.72, color: '#c4562a', r: 0.5 },
   { x: 0.9, y: 0.82, color: '#9c3a1c', r: 0.45 },
   { x: 0.05, y: 1.02, color: '#1a0d0a', r: 0.45 },
