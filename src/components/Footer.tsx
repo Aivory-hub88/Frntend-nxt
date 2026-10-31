@@ -19,12 +19,15 @@ const FOOTER_LIGHT: LightPoint[] = [
   { x: 0.7, y: 0.45, color: '#5b3a35', r: 0.28 },
 ];
 const FOOTER_LINES: VibrationLines = {
-  // The brand ornament: Fibonacci circles touching one point on the right edge, opening left.
-  kind: 'fibonacci',
+  // Round Chladni plate in extreme close-up: centred past the bottom-right corner, so only a
+  // slice of its few, widely spaced nodal lines crosses the footer.
+  kind: 'round',
   count: 1,
-  unit: 0.03,
-  circles: 9,
-  center: { x: 1.0, y: 0.55 },
+  radius: 1.3,
+  n: 6,
+  waves: 6,
+  levels: 4,
+  center: { x: 1.04, y: 1.0 },
   opacity: 0.5,
   weight: 0.75,
   clear: { x: 0.36, y: 0.42, rx: 0.34, ry: 0.42 },
@@ -32,7 +35,7 @@ const FOOTER_LINES: VibrationLines = {
   quiet: { x: 0.86, y: 0.2, rx: 0.17, ry: 0.2, level: 0.25 },
 };
 // On a phone the links fill the whole footer, so the figure steps back.
-const FOOTER_LINES_NARROW: VibrationLines = { ...FOOTER_LINES, center: { x: 1.0, y: 0.3 }, opacity: 0.3, clear: { x: 0.5, y: 0.5, rx: 0.0001, ry: 0.0001 } };
+const FOOTER_LINES_NARROW: VibrationLines = { ...FOOTER_LINES, center: { x: 1.15, y: 0.35 }, opacity: 0.3, clear: { x: 0.5, y: 0.5, rx: 0.0001, ry: 0.0001 } };
 
 const productLinks = [
   { label: 'Deep Assessment', href: '/product' },
