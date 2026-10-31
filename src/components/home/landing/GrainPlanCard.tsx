@@ -58,8 +58,8 @@ export const WORLD_PLATINUM: PlanWorld = {
 
 export const STEP_TWO_WORLDS = [
   tri(...AIVORY_BLUE, 1.3, { kind: 'nautilus', focus: 'eye', origin: [0.8, 0.42], size: 1.05, turn: Math.PI }),
-  tri(...INDIGO_ORCHID_PEACH, 2.7, { kind: 'vortex', origin: [1.02, 0.5], size: 0.95, rot: Math.PI * 0.8 }),
-  tri(...TEAL_EMBER_AMBER, 4.1, { kind: 'fractal', focus: [0.464, 0.268], origin: [0.92, 0.42], size: 1.7, depth: 3 }),
+  tri(...INDIGO_ORCHID_PEACH, 2.7, { kind: 'fractal', focus: [0.464, 0.268], origin: [0.78, 0.5], size: 4.2, depth: 3 }),
+  tri(...TEAL_EMBER_AMBER, 4.1, { kind: 'cymatic', origin: [1.3, 1.2], size: 2.3, n: 6, waves: 6, levels: 4, opacity: 0.5 }),
 ];
 
 function CheckCircle() {
