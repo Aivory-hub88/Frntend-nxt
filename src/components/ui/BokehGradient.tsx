@@ -8,9 +8,9 @@
  * aurora streaks, with real shadow pockets and soft highlights. Each scene
  * maps that field through six colours ordered from shadow to highlight.
  *
- * On top: optional Chladni figures (the nodal lines of a vibrating plate,
- * cos(nπx)cos(mπy) + cos(mπx)cos(nπy) = level) as white hairlines, and film grain
- * drawn at device-pixel resolution.
+ * On top: an optional figure (Chladni plate lines pinched into leaf points, or the
+ * footer's dome weave opened up) as white hairlines, and film grain drawn at
+ * device-pixel resolution.
  *
  * The colour field renders at a fraction of the element size (it is blurred
  * anyway) and only animates while on screen; prefers-reduced-motion freezes it.
@@ -34,18 +34,31 @@ export interface BokehScene {
   exposure?: number;
 }
 
-export interface ChladniFigure {
-  n: number;
-  m: number;
-  /** Plate cells across the card width. */
-  cells?: number;
-  /** Contour level; 0 is the classic nodal line, 0.3–0.6 opens it into tiled cells. */
+/**
+ * Aivory's ornament: Chladni plate lines crossed with leaf outlines, main outline only.
+ * - `leaf`: one level line of a 1·3 plate, cos(πx)cos(3πy) − cos(3πx)cos(πy); its loops pinch into leaf points at the saddles.
+ * - `bent`: a 1·2 plate bent by a slow current, so the loops read organic and asymmetric.
+ * - `weave`: the footer's dome lattice (two crossing log spirals, each rippling along the other) with
+ *   only a few cells round its centre and bent by slow noise, so the cells are wide and none repeat.
+ */
+export interface LeafFigure {
+  kind: 'leaf' | 'bent' | 'weave';
+  /** Centre of the figure as a fraction of the card's width and height; it usually sits on or past the right edge. */
+  origin: [number, number];
+  /** Plate cells per card height (leaf, bent). */
+  scale?: number;
+  /** Contour level (leaf, bent). */
   level?: number;
+  /** Cells round the centre (weave, even so the lattice closes; default 4). */
+  cells?: number;
+  /** How far slow noise bends the weave, in card heights (default 0.3). */
+  warp?: number;
+  /** Rotation in radians. */
+  rot?: number;
+  seed?: number;
   opacity?: number;
   /** CSS mask over the figure; by default it lives on the right edge and fades out before the copy. */
   fade?: string;
-  /** How far the contour level swings over time, so the figure slowly re-forms like a plate changing pitch. 0 = still. */
-  morph?: number;
 }
 
 const MODE_INDEX: Record<BokehMode, number> = { field: 0, horizon: 1, bands: 2, aurora: 3, tri: 4 };
@@ -54,9 +67,7 @@ const DEFOCUS_PX = 22; // optical blur over the field, so shapes read as an out-
 const FRAME_MS = 1000 / 30;
 const GRAIN_AMPLITUDE = 78;
 const GRAIN_OPACITY = 0.42;
-const MORPH_FRAME_MS = 1000 / 12;
-const MORPH_SPEED = 0.35; // radians per second
-const CHLADNI_FADE = 'linear-gradient(to left, #000 0%, rgba(0,0,0,0.75) 22%, transparent 62%)';
+const FIGURE_FADE = 'linear-gradient(to left, #000 0%, rgba(0,0,0,0.85) 30%, transparent 70%)';
 
 const VERT = `#version 300 es
 in vec2 a;
@@ -208,14 +219,8 @@ function getNoiseTile(): HTMLCanvasElement {
   return tile;
 }
 
-/** Marching squares over a Chladni plate sized w × h; returns one SVG path. */
-function chladniPath(w: number, h: number, { n, m, cells = 1 }: ChladniFigure, level: number, step = 2): string {
-  const size = w / cells; // square cells: the figure repeats down a tall card
-  const f = (x: number, y: number) => {
-    const X = x / size;
-    const Y = y / size;
-    return Math.cos(n * Math.PI * X) * Math.cos(m * Math.PI * Y) + Math.cos(m * Math.PI * X) * Math.cos(n * Math.PI * Y) - level;
-  };
+/** Marching squares over f on a w × h grid; returns one SVG path of its zero line. */
+function contourPath(w: number, h: number, f: (x: number, y: number) => number, step = 2): string {
   const cols = Math.ceil(w / step);
   const rows = Math.ceil(h / step);
   const v: number[] = new Array((cols + 1) * (rows + 1));
@@ -243,15 +248,75 @@ function chladniPath(w: number, h: number, { n, m, cells = 1 }: ChladniFigure, l
   return d;
 }
 
+const hash = (x: number, y: number) => {
+  const v = Math.sin(x * 127.1 + y * 311.7) * 43758.5453;
+  return v - Math.floor(v);
+};
+function valueNoise(x: number, y: number): number {
+  const ix = Math.floor(x);
+  const iy = Math.floor(y);
+  const fx = x - ix;
+  const fy = y - iy;
+  const ux = fx * fx * (3 - 2 * fx);
+  const uy = fy * fy * (3 - 2 * fy);
+  const top = hash(ix, iy) + (hash(ix + 1, iy) - hash(ix, iy)) * ux;
+  const bottom = hash(ix, iy + 1) + (hash(ix + 1, iy + 1) - hash(ix, iy + 1)) * ux;
+  return top + (bottom - top) * uy;
+}
+
+/** The figure as one SVG path, in card pixels. Lengths are measured in card heights. */
+function leafPath(w: number, h: number, fig: LeafFigure): string {
+  const { kind, origin, scale = 1, level = 0, rot = 0, seed = 0 } = fig;
+  const c = Math.cos(rot);
+  const s = Math.sin(rot);
+  const ox = origin[0] * w;
+  const oy = origin[1] * h;
+  if (kind === 'weave') {
+    const { cells = 4, warp = 0.3 } = fig;
+    const tau = 2 * Math.PI;
+    const ogee = 0.15;
+    return contourPath(w, h, (x, y) => {
+      let px = (x - ox) / h;
+      let py = (y - oy) / h;
+      // Two octaves of slow noise bend the lattice, so no two cells share a shape.
+      const nx = px * 0.8 + seed;
+      const ny = py * 0.8 + seed;
+      px += (valueNoise(nx, ny) - 0.5) * 2 * warp + (valueNoise(nx * 2.3 + 4, ny * 2.3 + 1) - 0.5) * warp * 0.5;
+      py += (valueNoise(nx + 7.3, ny + 3.1) - 0.5) * 2 * warp + (valueNoise(nx * 2.3 + 9, ny * 2.3 + 6) - 0.5) * warp * 0.5;
+      const r = Math.hypot(px, py);
+      if (r < 0.07) return 1; // the cells there would be smaller than the line
+      const u = (Math.log(r) * cells) / tau;
+      const v = (Math.atan2(py, px) * cells) / tau;
+      const g1 = u + v + ogee * Math.sin(tau * (u - v));
+      const g2 = u - v + ogee * Math.sin(tau * (u + v));
+      return Math.sin(Math.PI * g1) * Math.sin(Math.PI * g2);
+    });
+  }
+  return contourPath(w, h, (x, y) => {
+    const px = (x - ox) / h;
+    const py = (y - oy) / h;
+    let qx = (c * px + s * py) * scale;
+    let qy = (-s * px + c * py) * scale;
+    if (kind === 'bent') {
+      const nx = valueNoise(qx * 0.6 + seed, qy * 0.6 + seed);
+      const ny = valueNoise(qx * 0.6 + 9 + seed, qy * 0.6 + 9 + seed);
+      qx += (nx - 0.5) * 0.5;
+      qy += (ny - 0.5) * 0.5;
+      return Math.cos(Math.PI * qx) * Math.cos(2 * Math.PI * qy) + Math.cos(2 * Math.PI * qx) * Math.cos(Math.PI * qy) - level;
+    }
+    return Math.cos(Math.PI * qx) * Math.cos(3 * Math.PI * qy) - Math.cos(3 * Math.PI * qx) * Math.cos(Math.PI * qy) - level;
+  });
+}
+
 export function BokehGradient({
   scene,
-  chladni,
+  figure,
   className = '',
   style,
   children,
 }: {
   scene: BokehScene;
-  chladni?: ChladniFigure;
+  figure?: LeafFigure;
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
@@ -263,7 +328,7 @@ export function BokehGradient({
   const [webgl, setWebgl] = useState(true);
   const fallback = useMemo(() => `linear-gradient(170deg, ${scene.colors.slice(1).join(', ')})`, [scene.colors]);
 
-  // Track size for the grain canvas, the field resolution and the Chladni figure.
+  // Track size for the grain canvas, the field resolution and the figure.
   useEffect(() => {
     const el = rootRef.current;
     if (!el) return;
@@ -404,39 +469,8 @@ export function BokehGradient({
     };
   }, [size, scene]);
 
-  // Chladni figure: drawn once, or re-formed ~12 times a second while on screen
-  // when it morphs. The path is written straight to the DOM, not through state.
-  const figureRef = useRef<SVGPathElement>(null);
-  useEffect(() => {
-    const path = figureRef.current;
-    const root = rootRef.current;
-    if (!chladni || !size || !path || !root) return;
-    const base = chladni.level ?? 0;
-    const draw = (level: number, step: number) => path.setAttribute('d', chladniPath(size.w, size.h, chladni, level, step));
-    draw(base, 2);
-    const morph = chladni.morph ?? 0;
-    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
-    if (!morph || reduce.matches) return;
-    let raf = 0;
-    let last = 0;
-    let visible = false;
-    const phase = (scene.seed ?? 0) * 2.1;
-    const tick = (now: number) => {
-      raf = visible ? requestAnimationFrame(tick) : 0;
-      if (now - last < MORPH_FRAME_MS) return;
-      last = now;
-      draw(base + morph * Math.sin(now / 1000 * MORPH_SPEED + phase), 3);
-    };
-    const io = new IntersectionObserver(([entry]) => {
-      visible = entry.isIntersecting;
-      if (visible && !raf) raf = requestAnimationFrame(tick);
-    });
-    io.observe(root);
-    return () => {
-      cancelAnimationFrame(raf);
-      io.disconnect();
-    };
-  }, [chladni, size, scene.seed]);
+  // The figure is still: drawn once per size.
+  const figurePath = useMemo(() => (figure && size ? leafPath(size.w, size.h, figure) : ''), [figure, size]);
 
   return (
     <div
@@ -453,18 +487,18 @@ export function BokehGradient({
           style={{ filter: `blur(${DEFOCUS_PX}px)` }}
         />
       )}
-      {chladni && size && (
+      {figure && size && (
         <svg
           aria-hidden="true"
           viewBox={`0 0 ${size.w} ${size.h}`}
           className="pointer-events-none absolute inset-0 -z-10 h-full w-full"
           style={{
-            opacity: chladni?.opacity ?? 0.5,
-            WebkitMaskImage: chladni?.fade ?? CHLADNI_FADE,
-            maskImage: chladni?.fade ?? CHLADNI_FADE,
+            opacity: figure.opacity ?? 0.55,
+            WebkitMaskImage: figure.fade ?? FIGURE_FADE,
+            maskImage: figure.fade ?? FIGURE_FADE,
           }}
         >
-          <path ref={figureRef} fill="none" stroke="#fff" strokeWidth={0.9} strokeLinecap="round" vectorEffect="non-scaling-stroke" />
+          <path d={figurePath} fill="none" stroke="#fff" strokeWidth={1} strokeLinecap="round" vectorEffect="non-scaling-stroke" />
         </svg>
       )}
       <canvas
