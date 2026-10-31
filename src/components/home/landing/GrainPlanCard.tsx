@@ -1,7 +1,7 @@
 'use client';
 
 import type { ReactNode } from 'react';
-import { BokehGradient, type BokehScene, type ChladniFigure } from '@/components/ui/BokehGradient';
+import { BokehGradient, type BokehScene, type LeafFigure } from '@/components/ui/BokehGradient';
 
 /* One "tri" scene per card (see BokehGradient): three colours in 60/30/10 —
    a dominant field, one large soft shape, a small glow in the far corner —
@@ -11,7 +11,7 @@ import { BokehGradient, type BokehScene, type ChladniFigure } from '@/components
 
 export interface PlanWorld {
   scene: BokehScene;
-  chladni?: ChladniFigure;
+  figure?: LeafFigure;
 }
 
 /** colours: seam, dominant (60), secondary (30), accent (10), sheen. */
@@ -22,10 +22,10 @@ const tri = (
   accent: string,
   sheen: string,
   seed: number,
-  chladni?: ChladniFigure,
+  figure?: LeafFigure,
 ): PlanWorld => ({
   scene: { colors: [seam, dominant, secondary, accent, sheen, sheen], mode: 'tri', scale: 0.55, seed, light: 0.35, shadow: 0.55 },
-  chladni,
+  figure,
 });
 
 /** Aivory's own trio: deep blue field, a periwinkle-steel shape, a warm orange glow. The shape
@@ -37,29 +37,29 @@ const INDIGO_ORCHID_PEACH = ['#160f40', '#3a3aa8', '#b05ad0', '#f2a07a', '#f0d0f
 const TEAL_EMBER_AMBER = ['#0f1a1c', '#4f6f7a', '#c4562a', '#e8a850', '#f2ede2'] as const;
 
 // Step 1 keeps its own colour scenes; Step 2 uses the tri scenes. Both sit in a window,
-// and every card carries one Chladni figure, each a different one within its row.
+// and every card carries one leaf figure, a different kind within each row.
 /** Fresh: deep emerald and jade under a clear sky blue, a cool mint glint. */
 export const WORLD_FRESH: PlanWorld = {
   scene: { colors: ['#032a22', '#05624a', '#0a9468', '#1fae78', '#1a8fc0', '#8fe0c0'], mode: 'field', scale: 0.8, seed: 3.1, light: 0.15, shadow: 0.5, exposure: 0.92 },
-  chladni: { n: 2, m: 5, cells: 1, level: 0.3, opacity: 0.45 },
+  figure: { kind: 'leaf', origin: [1, 0.5], scale: 1.25, level: 0.3 },
 };
 
 /** Dusk: navy sky over a slate haze, an orange horizon below. */
 export const WORLD_DUSK: PlanWorld = {
   scene: { colors: ['#06132b', '#0f3a78', '#2c5ea8', '#6f7f9e', '#de621e', '#f29a45'], mode: 'horizon', scale: 0.7, seed: 7.4, light: 0.15, shadow: 0.35 },
-  chladni: { n: 1, m: 2, cells: 1.2, level: 0.6, opacity: 0.45 },
+  figure: { kind: 'rosette', origin: [1.02, 0.95], seed: 1 },
 };
 
 /** Platinum: deep violet into light purple, platinum light, a touch of red-orange. */
 export const WORLD_PLATINUM: PlanWorld = {
   scene: { colors: ['#221a44', '#4a3e86', '#7866b2', '#a7a3bd', '#dc5634', '#e4e3ec'], mode: 'field', scale: 0.85, seed: 1.7, light: 0.42, shadow: 0.45, exposure: 0.86 },
-  chladni: { n: 2, m: 3, cells: 1, level: 0.5, opacity: 0.6 },
+  figure: { kind: 'bent', origin: [1, 0.4], scale: 1.4, level: 0.4, seed: 5 },
 };
 
 export const STEP_TWO_WORLDS = [
-  tri(...AIVORY_BLUE, 1.3, { n: 2, m: 3, cells: 1.5, level: 0.5, opacity: 0.5 }),
-  tri(...INDIGO_ORCHID_PEACH, 2.7, { n: 1, m: 2, cells: 2, level: 0.6, opacity: 0.45 }),
-  tri(...TEAL_EMBER_AMBER, 4.1, { n: 2, m: 5, cells: 0.8, level: 0.3, opacity: 0.45 }),
+  tri(...AIVORY_BLUE, 1.3, { kind: 'bent', origin: [1, 0.4], scale: 1.4, level: 0.4, seed: 3 }),
+  tri(...INDIGO_ORCHID_PEACH, 2.7, { kind: 'leaf', origin: [1, 0.5], scale: 1.25, level: 0.5, rot: 0.4 }),
+  tri(...TEAL_EMBER_AMBER, 4.1, { kind: 'rosette', origin: [1.02, 0.95], seed: 2 }),
 ];
 
 function CheckCircle() {
@@ -180,7 +180,7 @@ export function GrainPlanCard({
       <div className="row-span-6 grid-cols-[minmax(0,1fr)] grid-rows-subgrid gap-y-0 rounded-[28px] bg-[#f0efed] p-2 pb-8" style={SUBGRID}>
         <BokehGradient
           scene={world.scene}
-          chladni={world.chladni}
+          figure={world.figure}
           className="row-span-3 grid-rows-subgrid gap-y-0 rounded-[22px] p-6 pb-7 text-white md:p-7"
           style={SUBGRID}
         >
@@ -194,7 +194,7 @@ export function GrainPlanCard({
   return (
     <BokehGradient
       scene={world.scene}
-      chladni={world.chladni}
+      figure={world.figure}
       className="row-span-6 grid-cols-[minmax(0,1fr)] grid-rows-subgrid gap-y-0 rounded-[28px] p-7 text-white shadow-[0_18px_44px_rgba(20,24,60,0.18)] md:p-8"
       style={SUBGRID}
     >
