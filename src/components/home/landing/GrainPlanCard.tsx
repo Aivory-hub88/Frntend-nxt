@@ -37,29 +37,29 @@ const INDIGO_ORCHID_PEACH = ['#160f40', '#3a3aa8', '#b05ad0', '#f2a07a', '#f0d0f
 const TEAL_EMBER_AMBER = ['#0f1a1c', '#4f6f7a', '#c4562a', '#e8a850', '#f2ede2'] as const;
 
 // Step 1 keeps its own colour scenes; Step 2 uses the tri scenes. Both sit in a window,
-// and every card carries the weave figure, its centre and bend different on each card.
+// and every card carries the Fibonacci figure, its touch point a little different on each card.
 /** Fresh: deep emerald and jade under a clear sky blue, a cool mint glint. */
 export const WORLD_FRESH: PlanWorld = {
   scene: { colors: ['#032a22', '#05624a', '#0a9468', '#1fae78', '#1a8fc0', '#8fe0c0'], mode: 'field', scale: 0.8, seed: 3.1, light: 0.15, shadow: 0.5, exposure: 0.92 },
-  figure: { kind: 'weave', origin: [1.2, 0.2], seed: 2 },
+  figure: { kind: 'fibonacci', origin: [1.02, 0.3] },
 };
 
 /** Dusk: navy sky over a slate haze, an orange horizon below. */
 export const WORLD_DUSK: PlanWorld = {
   scene: { colors: ['#06132b', '#0f3a78', '#2c5ea8', '#6f7f9e', '#de621e', '#f29a45'], mode: 'horizon', scale: 0.7, seed: 7.4, light: 0.15, shadow: 0.35 },
-  figure: { kind: 'weave', origin: [1.2, 0.6], seed: 3 },
+  figure: { kind: 'fibonacci', origin: [1.02, 0.6], rot: Math.PI * 0.95 },
 };
 
 /** Platinum: deep violet into light purple, platinum light, a touch of red-orange. */
 export const WORLD_PLATINUM: PlanWorld = {
   scene: { colors: ['#221a44', '#4a3e86', '#7866b2', '#a7a3bd', '#dc5634', '#e4e3ec'], mode: 'field', scale: 0.85, seed: 1.7, light: 0.42, shadow: 0.45, exposure: 0.86 },
-  figure: { kind: 'weave', origin: [1.2, 0.1], seed: 4 },
+  figure: { kind: 'fibonacci', origin: [1.02, 0.25], rot: Math.PI * 1.05 },
 };
 
 export const STEP_TWO_WORLDS = [
-  tri(...AIVORY_BLUE, 1.3, { kind: 'weave', origin: [1.05, 0.3], seed: 5 }),
-  tri(...INDIGO_ORCHID_PEACH, 2.7, { kind: 'weave', origin: [1.05, 0.75], seed: 6 }),
-  tri(...TEAL_EMBER_AMBER, 4.1, { kind: 'weave', origin: [1.05, 0.2], seed: 7 }),
+  tri(...AIVORY_BLUE, 1.3, { kind: 'fibonacci', origin: [1.02, 0.3] }),
+  tri(...INDIGO_ORCHID_PEACH, 2.7, { kind: 'fibonacci', origin: [1.02, 0.6], rot: Math.PI * 0.95 }),
+  tri(...TEAL_EMBER_AMBER, 4.1, { kind: 'fibonacci', origin: [1.02, 0.25], rot: Math.PI * 1.05 }),
 ];
 
 function CheckCircle() {

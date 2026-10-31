@@ -19,22 +19,20 @@ const FOOTER_LIGHT: LightPoint[] = [
   { x: 0.7, y: 0.45, color: '#5b3a35', r: 0.28 },
 ];
 const FOOTER_LINES: VibrationLines = {
-  kind: 'dome',
-  dome: 'weave',
+  // The brand ornament: Fibonacci circles touching one point on the right edge, opening left.
+  kind: 'fibonacci',
   count: 1,
-  // Few, wide cells bent by slow noise: the same weave as the plan cards' figure.
-  cells: 6,
-  warp: 0.25,
-  seed: 1.7,
-  center: { x: 0.86, y: 0.32 },
+  unit: 0.03,
+  circles: 9,
+  center: { x: 1.0, y: 0.55 },
   opacity: 0.5,
   weight: 0.75,
   clear: { x: 0.36, y: 0.42, rx: 0.34, ry: 0.42 },
-  // Behind the wordmark and the NVIDIA badge the lattice steps back so both stay crisp.
+  // Behind the wordmark and the NVIDIA badge the lines step back so both stay crisp.
   quiet: { x: 0.86, y: 0.2, rx: 0.17, ry: 0.2, level: 0.25 },
 };
 // On a phone the links fill the whole footer, so the figure steps back.
-const FOOTER_LINES_NARROW: VibrationLines = { ...FOOTER_LINES, center: { x: 0.9, y: 0.12 }, opacity: 0.3, clear: { x: 0.5, y: 0.5, rx: 0.0001, ry: 0.0001 } };
+const FOOTER_LINES_NARROW: VibrationLines = { ...FOOTER_LINES, center: { x: 1.0, y: 0.3 }, opacity: 0.3, clear: { x: 0.5, y: 0.5, rx: 0.0001, ry: 0.0001 } };
 
 const productLinks = [
   { label: 'Deep Assessment', href: '/product' },
