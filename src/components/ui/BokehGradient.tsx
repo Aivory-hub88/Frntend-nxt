@@ -8,8 +8,9 @@
  * aurora streaks, with real shadow pockets and soft highlights. Each scene
  * maps that field through six colours ordered from shadow to highlight.
  *
- * On top: an optional figure (Fibonacci circles touching one point, or Chladni plate
- * lines pinched into leaf points) as white hairlines, and film grain drawn at
+ * On top: an optional figure as white hairlines (edge figures after Fibonacci,
+ * guilloche, fractal geometry and Chladni plates, drawn huge and cropped by the card
+ * edge; or the older Fibonacci circles and leaf lines), and film grain drawn at
  * device-pixel resolution.
  *
  * The colour field renders at a fraction of the element size (it is blurred
@@ -40,10 +41,15 @@ export interface BokehScene {
  *   on the card's edge, like a nautilus cross-section. Tight at the point, opening out across the card.
  * - `leaf`: one level line of a 1·3 plate, cos(πx)cos(3πy) − cos(3πx)cos(πy); its loops pinch into leaf points at the saddles.
  * - `bent`: a 1·2 plate bent by a slow current, so the loops read organic and asymmetric.
- * Alternates, Chladni lines crossed with leaf outlines:
+ * Alternates, Chladni lines crossed with leaf outlines.
+ * Edge figures (the current brand ornament), drawn far larger than the card so its edge crops them:
+ * - `nautilus`: golden spiral of circles, each 1/φ of the last and touching it from inside, faint crosshairs.
+ * - `vortex`: guilloche tunnel, shrinking circles sliding along a turning arc into one crescent.
+ * - `fractal`: every circle holds three touching circles, a sixth turned per generation; keep `depth` low (3) so only large circles show.
+ * - `cymatic`: a round Chladni plate, a few widely spaced level lines clipped to the plate.
  */
 export interface LeafFigure {
-  kind: 'fibonacci' | 'leaf' | 'bent';
+  kind: 'fibonacci' | 'leaf' | 'bent' | 'nautilus' | 'vortex' | 'fractal' | 'cymatic';
   /** Centre of the figure (fibonacci: the point every circle touches) as a fraction of the card's width and height; it usually sits on or past the right edge. */
   origin: [number, number];
   /** Plate cells per card height (leaf, bent). */
@@ -56,6 +62,18 @@ export interface LeafFigure {
   /** Rotation in radians (fibonacci: the direction the circles open toward; default π, leftward). */
   rot?: number;
   seed?: number;
+  /** Edge figures: radius in card heights (~1 big close-up, 2.4+ extreme close-up). */
+  size?: number;
+  /** Edge figures: the point (in units of `size`) that lands on `origin`; 'eye' = the nautilus' centre. */
+  focus?: [number, number] | 'eye';
+  /** Nautilus: direction of the first step inward (radians). */
+  turn?: number;
+  /** Fractal: generations (default 3). */
+  depth?: number;
+  /** Cymatic: angular mode, radial waves, level lines per bundle. */
+  n?: number;
+  waves?: number;
+  levels?: number;
   opacity?: number;
   /** CSS mask over the figure; by default it lives on the right edge and fades out before the copy. */
   fade?: string;
@@ -264,6 +282,115 @@ function valueNoise(x: number, y: number): number {
   return top + (bottom - top) * uy;
 }
 
+const PHI = (1 + Math.sqrt(5)) / 2;
+const TAU = Math.PI * 2;
+const EDGE_KINDS = new Set(['nautilus', 'vortex', 'fractal', 'cymatic']);
+const circle = (cx: number, cy: number, r: number) =>
+  `M${(cx - r).toFixed(1)} ${cy.toFixed(1)}a${r.toFixed(1)} ${r.toFixed(1)} 0 1 0 ${(2 * r).toFixed(1)} 0a${r.toFixed(1)} ${r.toFixed(1)} 0 1 0 ${(-2 * r).toFixed(1)} 0`;
+
+interface FigurePaths {
+  d: string;
+  /** Faint construction lines (nautilus). */
+  guide?: string;
+  /** Plate outline the lines are clipped to, and its centre hole (cymatic). */
+  clip?: { cx: number; cy: number; r: number; hole: number };
+}
+
+/** Edge figures as SVG paths, in card pixels. Circles the card can't show are skipped. */
+function edgePaths(w: number, h: number, fig: LeafFigure): FigurePaths {
+  const R = (fig.size ?? 0.8) * h;
+  const rc = Math.cos(fig.rot ?? 0);
+  const rs = Math.sin(fig.rot ?? 0);
+  let fx = 0;
+  let fy = 0;
+  if (fig.focus === 'eye' && fig.kind === 'nautilus') {
+    for (let i = 0, r = 1, a = fig.turn ?? 0; i < 40; i++, a += Math.PI / 2) {
+      const nr = r / PHI;
+      fx += Math.cos(a) * (r - nr);
+      fy += Math.sin(a) * (r - nr);
+      r = nr;
+    }
+  } else if (Array.isArray(fig.focus)) {
+    [fx, fy] = fig.focus;
+  }
+  // origin is where the focus point lands
+  const ox = fig.origin[0] * w - (fx * rc - fy * rs) * R;
+  const oy = fig.origin[1] * h - (fx * rs + fy * rc) * R;
+  const P = (x: number, y: number): [number, number] => [ox + x * rc - y * rs, oy + x * rs + y * rc];
+  const pad = 24;
+  const half = Math.hypot(w, h) / 2;
+  let d = '';
+  let guide = '';
+  const ring = (x: number, y: number, r: number) => {
+    const [cx, cy] = P(x, y);
+    const outside = cx + r < -pad || cx - r > w + pad || cy + r < -pad || cy - r > h + pad;
+    const enclosing = Math.hypot(cx - w / 2, cy - h / 2) + half < r;
+    if (!outside && !enclosing && r > 1.2) d += circle(cx, cy, r);
+  };
+
+  if (fig.kind === 'nautilus') {
+    for (let i = 0, r = R, x = 0, y = 0, a = fig.turn ?? 0; i < 16; i++, a += Math.PI / 2) {
+      ring(x, y, r);
+      const [x1, y1] = P(x - r, y);
+      const [x2, y2] = P(x + r, y);
+      const [x3, y3] = P(x, y - r);
+      const [x4, y4] = P(x, y + r);
+      guide += `M${x1.toFixed(1)} ${y1.toFixed(1)}L${x2.toFixed(1)} ${y2.toFixed(1)}M${x3.toFixed(1)} ${y3.toFixed(1)}L${x4.toFixed(1)} ${y4.toFixed(1)}`;
+      const nr = r / PHI;
+      x += Math.cos(a) * (r - nr);
+      y += Math.sin(a) * (r - nr);
+      r = nr;
+    }
+    return { d, guide };
+  }
+  if (fig.kind === 'vortex') {
+    const n = 60;
+    for (let j = 0; j < n; j++) {
+      const t = j / (n - 1);
+      const r = R * (0.05 + 0.95 * Math.pow(1 - t, 1.3));
+      const an = t * Math.PI * 2.3;
+      const m = (R - r) * 0.97;
+      ring(Math.cos(an) * m, Math.sin(an) * m, r);
+    }
+    return { d };
+  }
+  if (fig.kind === 'fractal') {
+    const k = 1 / (1 + 2 / Math.sqrt(3));
+    const rec = (x: number, y: number, r: number, depth: number, a: number) => {
+      ring(x, y, r);
+      if (!depth || r < 3) return;
+      const ri = r * k;
+      for (let q = 0; q < 3; q++) {
+        const t = a + (q * TAU) / 3;
+        rec(x + Math.cos(t) * (r - ri), y + Math.sin(t) * (r - ri), ri, depth - 1, a + Math.PI / 3);
+      }
+    };
+    rec(0, 0, R, fig.depth ?? 3, -Math.PI / 2);
+    return { d };
+  }
+  // cymatic: Bessel-like radial waves × an angular mode, as a few widely spaced level lines
+  const n = fig.n ?? 6;
+  const kr = ((fig.waves ?? 6) * Math.PI) / R;
+  const nl = Math.max(2, fig.levels ?? 4);
+  const field = (x: number, y: number) => {
+    const px = x - ox;
+    const py = y - oy;
+    const qx = px * rc + py * rs;
+    const qy = -px * rs + py * rc;
+    const r = Math.hypot(qx, qy);
+    const th = Math.atan2(qy, qx);
+    const e = Math.min(1, r / (R * 0.35));
+    return e * (Math.cos(n * th) * Math.cos(kr * r - (n * Math.PI) / 2 - Math.PI / 4) + 0.5 * Math.cos((n + 3) * th + 1) * Math.cos(kr * 1.55 * r));
+  };
+  for (let l = 0; l < nl; l++) {
+    const lv = (l / (nl - 1) - 0.5) * 0.8;
+    d += contourPath(w, h, (x, y) => field(x, y) - lv);
+  }
+  const [cx, cy] = P(0, 0);
+  d += circle(cx, cy, R) + circle(cx, cy, R * 0.13);
+  return { d, clip: { cx, cy, r: R + 1, hole: R * 0.13 } };
+}
+
 /** The figure as one SVG path, in card pixels. Lengths are measured in card heights. */
 function leafPath(w: number, h: number, fig: LeafFigure): string {
   const { kind, origin, scale = 1, level = 0, rot = 0, seed = 0 } = fig;
@@ -463,7 +590,11 @@ export function BokehGradient({
   }, [size, scene]);
 
   // The figure is still: drawn once per size.
-  const figurePath = useMemo(() => (figure && size ? leafPath(size.w, size.h, figure) : ''), [figure, size]);
+  const figurePaths = useMemo<FigurePaths>(() => {
+    if (!figure || !size) return { d: '' };
+    return EDGE_KINDS.has(figure.kind) ? edgePaths(size.w, size.h, figure) : { d: leafPath(size.w, size.h, figure) };
+  }, [figure, size]);
+  const clipId = React.useId();
 
   return (
     <div
@@ -491,7 +622,17 @@ export function BokehGradient({
             maskImage: figure.fade ?? FIGURE_FADE,
           }}
         >
-          <path d={figurePath} fill="none" stroke="#fff" strokeWidth={1} strokeLinecap="round" vectorEffect="non-scaling-stroke" />
+          {figurePaths.clip && (
+            <clipPath id={clipId}>
+              <path clipRule="evenodd" d={circle(figurePaths.clip.cx, figurePaths.clip.cy, figurePaths.clip.r) + circle(figurePaths.clip.cx, figurePaths.clip.cy, figurePaths.clip.hole)} />
+            </clipPath>
+          )}
+          <g clipPath={figurePaths.clip ? `url(#${clipId})` : undefined}>
+            {figurePaths.guide && (
+              <path d={figurePaths.guide} fill="none" stroke="#fff" strokeOpacity={0.35} strokeWidth={0.7} vectorEffect="non-scaling-stroke" />
+            )}
+            <path d={figurePaths.d} fill="none" stroke="#fff" strokeWidth={1} strokeLinecap="round" vectorEffect="non-scaling-stroke" />
+          </g>
         </svg>
       )}
       <canvas
