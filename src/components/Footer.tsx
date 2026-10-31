@@ -84,6 +84,7 @@ export default function Footer({ landingAmbient = false }: FooterProps) {
         points={FOOTER_LIGHT}
         lines={narrow ? FOOTER_LINES_NARROW : FOOTER_LINES}
         vignette={0.5}
+        sharpness={1.1}
         className="w-full pt-24 pb-12 text-white"
       >
       <div

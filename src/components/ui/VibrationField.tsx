@@ -88,6 +88,8 @@ export interface VibrationFieldProps {
   lines: VibrationLines;
   /** 0–1: how dark the corners fall. */
   vignette?: number;
+  /** How hard each light holds its own colour (default 2.5). Lower blends neighbouring lights into each other more softly. */
+  sharpness?: number;
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
@@ -140,6 +142,7 @@ uniform int uCount;
 uniform vec4 uPt[${MAX_POINTS}];
 uniform vec3 uCol[${MAX_POINTS}];
 uniform float uVignette;
+uniform float uSharp;
 out vec4 o;
 ${OKLAB}
 void main() {
@@ -153,8 +156,8 @@ void main() {
     if (i >= uCount) break;
     vec2 c = vec2(uPt[i].x * asp, uPt[i].y) / sh + vec2(sin(t * 2.0 + float(i)), cos(t * 1.7 + float(i) * 1.3)) * 0.03;
     vec2 d = a + w * 0.35 - c;
-    // Sharpened weights: each light keeps its own colour instead of averaging to brown.
-    float k = pow(exp(-dot(d, d) / (uPt[i].z * uPt[i].z)), 2.5);
+    // Weights raised to uSharp: higher keeps each light its own colour, lower blends neighbours.
+    float k = pow(exp(-dot(d, d) / (uPt[i].z * uPt[i].z)), uSharp);
     acc += toOk(uCol[i]) * k; wsum += k;
   }
   vec3 col = acc / wsum;
@@ -377,7 +380,7 @@ function program(gl: WebGL2RenderingContext, frag: string): WebGLProgram | null 
   return p;
 }
 
-export function VibrationField({ base, points, lines, vignette = 0.45, className = '', style, children }: VibrationFieldProps) {
+export function VibrationField({ base, points, lines, vignette = 0.45, sharpness = 2.5, className = '', style, children }: VibrationFieldProps) {
   const rootRef = useRef<HTMLDivElement>(null);
   const colorRef = useRef<HTMLCanvasElement>(null);
   const lineRef = useRef<HTMLCanvasElement>(null);
@@ -440,6 +443,7 @@ export function VibrationField({ base, points, lines, vignette = 0.45, className
     cgl.uniform4fv(cu('uPt'), new Float32Array(pts.flatMap((p) => [(p.x + 0.08) / 1.16, (p.y + 0.08) / 1.16, p.r, 0])));
     cgl.uniform3fv(cu('uCol'), new Float32Array(pts.flatMap((p) => hexToRgb(p.color))));
     cgl.uniform1f(cu('uVignette'), vignette);
+    cgl.uniform1f(cu('uSharp'), sharpness);
     cgl.viewport(0, 0, cc.width, cc.height);
 
     const lu = (n: string) => lgl.getUniformLocation(lp, n);
@@ -512,7 +516,7 @@ export function VibrationField({ base, points, lines, vignette = 0.45, className
       cancelAnimationFrame(raf);
       io.disconnect();
     };
-  }, [size, base, points, lines, vignette]);
+  }, [size, base, points, lines, vignette, sharpness]);
 
   return (
     <div ref={rootRef} className={`relative isolate overflow-hidden ${className}`} style={{ background: base, ...style }}>
