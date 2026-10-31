@@ -22,7 +22,10 @@ const FOOTER_LINES: VibrationLines = {
   kind: 'dome',
   dome: 'weave',
   count: 1,
-  cells: 14,
+  // Few, wide cells bent by slow noise: the same weave as the plan cards' figure.
+  cells: 6,
+  warp: 0.25,
+  seed: 1.7,
   center: { x: 0.86, y: 0.32 },
   opacity: 0.5,
   weight: 0.75,

@@ -57,9 +57,9 @@ export interface VibrationLines {
   plate?: number;
   /** Plate only: soft sand halo around each nodal line (0–1, default 0: a clean 1px line). */
   sand?: number;
-  /** Plate only: how far slow noise bends the plate (0 = symmetric; 0.08–0.2 = fluid). */
+  /** Plate and dome: how far slow noise bends the figure (0 = symmetric; 0.08–0.3 = fluid). */
   warp?: number;
-  /** Plate only: noise seed, so two surfaces never bend the same way. */
+  /** Plate and dome: noise seed, so two surfaces never bend the same way. */
   seed?: number;
   /** Dome only: cells around one full turn, ogee wave (0 = straight lozenges, ~0.12 = almond),
       and the centre in 0–1 surface coordinates (may sit off the surface). */
@@ -203,6 +203,11 @@ void main() {
     // log-polar space, so the almond cells keep their shape and shrink toward the centre.
     float sh = min(asp, 1.0);
     vec2 c = (vec2(uv.x * asp, uv.y) - vec2(uDomeC.x * asp, uDomeC.y)) / sh;
+    // Optional bend: slow noise pushes the lattice around, so no two cells share a shape.
+    if (uWarp > 0.0) {
+      vec2 wq = c * 0.8 + uSeed;
+      c += uWarp * (vec2(lfbm(wq), lfbm(wq + vec2(7.3, 3.1))) - 0.5) * 2.0;
+    }
     float rr = max(length(c), 1e-4);
     float N = uDome.x;
     float u = log(rr) * N / 6.2831853 - uTime * 0.006;
