@@ -10,10 +10,11 @@ gsap.registerPlugin(ScrollTrigger)
 interface RevealTextProps {
   children: React.ReactNode
   className?: string
-  as?: keyof JSX.IntrinsicElements
+  as?: keyof React.JSX.IntrinsicElements
 }
 
-export default function RevealText({ children, className = '', as: Element = 'div' }: RevealTextProps) {
+export default function RevealText({ children, className = '', as = 'div' }: RevealTextProps) {
+  const Element = as as React.ElementType<React.HTMLAttributes<HTMLElement> & React.RefAttributes<HTMLElement>>
   const textRef = useRef<HTMLElement>(null)
 
   useEffect(() => {
@@ -23,7 +24,7 @@ export default function RevealText({ children, className = '', as: Element = 'di
     const timeoutId = setTimeout(() => {
       if (!textRef.current) return;
       
-      const textSplit = new SplitType(textRef.current, { types: 'lines, words' })
+      const textSplit = new SplitType(textRef.current, { types: 'lines,words' })
       
       if (textSplit.lines) {
         textSplit.lines.forEach((line) => {
@@ -62,7 +63,7 @@ export default function RevealText({ children, className = '', as: Element = 'di
   }, [])
 
   return (
-    <Element ref={textRef as any} className={`reveal-text ${className}`}>
+    <Element ref={textRef} className={`reveal-text ${className}`}>
       {children}
     </Element>
   )
