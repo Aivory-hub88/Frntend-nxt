@@ -47,8 +47,8 @@ describe("PAYMENT_CONFIG sourced from pricing.ts", () => {
   });
 
   it("derives credit prices from the pricing.ts credit packs", () => {
-    expect(PAYMENT_CONFIG.creditPrices[500]).toBe(getProductPrice("credits_500"));
-    expect(PAYMENT_CONFIG.creditPrices[50]).toBe(getProductPrice("credits_50"));
+    expect(PAYMENT_CONFIG.creditPrices[3500]).toBe(getProductPrice("credits_3500"));
+    expect(PAYMENT_CONFIG.creditPrices[1000]).toBe(getProductPrice("credits_1000"));
   });
 });
 
