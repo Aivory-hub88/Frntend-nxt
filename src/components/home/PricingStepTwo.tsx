@@ -42,6 +42,21 @@ function StepIcon() {
   );
 }
 
+/* ─── Intelligence Credits ───
+ * Monthly allowance per plan and tokens per credit. Must equal
+ * TIER_ALLOWANCES and TOKENS_PER_CREDIT_PEAK/OFFPEAK in avry-backend's
+ * app/services/tiers.py, which is what is actually granted and charged: a
+ * credit is a slice of LLM spend, so it buys more tokens off-peak. */
+const TOKENS_PER_CREDIT = { peak: 13000, offpeak: 26000 };
+
+function creditFeatures(credits: number): string[] {
+  const m = (n: number) => `${Math.round(n / 1e6)}M`;
+  return [
+    `${credits.toLocaleString('en-US')} Intelligence Credits / month`,
+    `≈ ${m(credits * TOKENS_PER_CREDIT.peak)}–${m(credits * TOKENS_PER_CREDIT.offpeak)} AI tokens / month`,
+  ];
+}
+
 /* ─── Plan Data ─── */
 interface Plan {
   name: string;
@@ -65,6 +80,7 @@ const plans: Plan[] = [
     billingNote: 'Billed monthly',
     features: [
       '1 seat',
+      ...creditFeatures(1500),
       'Operational Workspace',
       'Business Workflows',
       '1 AI Workforce',
@@ -84,6 +100,7 @@ const plans: Plan[] = [
     billingNote: 'Billed monthly',
     features: [
       '5 seats',
+      ...creditFeatures(6500),
       'Multi-team Workspace',
       'Advanced Business Workflows',
       '3 AI Workforce Units',
@@ -106,6 +123,7 @@ const plans: Plan[] = [
     billingNote: 'Custom scope & deployment',
     features: [
       'Custom seats (15+)',
+      'Custom Intelligence Credit allowance',
       'Unlimited Operational Workspaces',
       'Unlimited AI Workforce',
       'Unlimited Business Workflows',
@@ -330,7 +348,9 @@ export default function PricingStepTwo({ currency, variant = 'default' }: { curr
         <div className="mx-auto mt-24 max-w-5xl border-t-2 border-[#6f7473] pt-8">
           <p className="text-[16px] md:text-[17px] font-bold leading-[1.65] text-[#494949]">
             Intelligence Credits (IC) fuel Aivory™ reasoning — every consultation, workflow generation, and agent
-            configuration runs on IC. Think of it as the fuel tank for your AI system. Need more? Top up anytime.
+            configuration runs on IC. Think of it as the fuel tank for your AI system. 1 IC covers about 13,000 AI
+            tokens at peak hours and up to 26,000 off-peak; agents are charged for the tokens they actually use.
+            Need more? Top up anytime from $15 for 1,000 IC — top-ups never expire.
           </p>
         </div>
 
