@@ -51,8 +51,8 @@ export default function WorkspaceSection() {
               lockupRatio={1018 / 123}
                 copy={<>Where teams and AI<br />agents work together,<br />literally</>}
             />
-            <img className={s.wshIll} src="/landing/workspace-illustrated.webp" alt="" width={1200} height={647} />
-            <img className={s.wshReal} src="/landing/workspace-people.webp" alt="" width={1200} height={627} />
+            <img className={s.wshIll} src="/landing/workspace-illustrated.webp?v=2" alt="" width={1200} height={647} />
+            <img className={s.wshReal} src="/landing/workspace-people.webp?v=2" alt="" width={1200} height={627} />
           </div>
         </div>
 
