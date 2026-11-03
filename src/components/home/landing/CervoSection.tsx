@@ -112,7 +112,7 @@ export default function CervoSection() {
             lockupRatio={923 / 118}
             copy={<>A team of AI agents,<br />each with its own brain,<br />memory and computer</>}
           />
-          <img className={s.fbPeople} src="/landing/cervo-team.webp?v=2" alt="" width={1600} height={714} />
+          <img className={s.fbPeople} src="/landing/cervo-team.webp?v=3" alt="" width={1600} height={739} />
         </div>
 
         {/* Connectivity strip, as in Figma (node 13:8902). */}
