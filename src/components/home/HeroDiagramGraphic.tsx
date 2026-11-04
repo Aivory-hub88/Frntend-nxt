@@ -558,15 +558,15 @@ export default function HeroDiagramGraphic() {
                 className="m-0 font-normal text-black"
                 style={{ fontFamily: LITERATA, fontSize: 42, lineHeight: '52px' }}
               >
-                Your business, minus the busywork.
+                Your business, minus the busywork
               </p>
               <p
                 className="m-0 font-normal"
                 style={{ marginTop: 10, fontFamily: LITERATA, fontSize: 28, lineHeight: '40px', color: 'rgba(0,0,0,0.55)' }}
               >
-                Aivory takes you from first assessment to agents on the job.
+                Aivory takes you from first assessment to agents on the job
                 <br />
-                No handoffs, no patchwork.
+                No handoffs, no patchwork
               </p>
             </div>
           </div>
