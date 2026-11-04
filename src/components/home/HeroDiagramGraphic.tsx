@@ -15,8 +15,6 @@ const imgFolder = '/images/hero-new/folder.png';
 const imgSmartwatchBot = '/images/hero-new/smartwatch-bot.png';
 const imgSoftStar = '/images/hero-new/soft-star.svg';
 const imgLines = '/images/hero-new/lines-bg.svg';
-const imgBlobTopLeft = '/images/hero-new/group-35392.svg';
-const imgBlobTopLeft2 = '/images/hero-new/group-35393.svg';
 // Trust-card illustrations (nodes 28:799 / 28:858) and the canonical NVIDIA
 // lockup (reused rather than Figma's own re-traced export of it).
 const imgKeynote = '/images/hero-new/trust-keynote.png';
@@ -33,7 +31,6 @@ const LITERATA = "var(--font-literata), Literata, serif";
 // How hard the ambient colour reads. The source blobs are pale washes; this
 // deepens them without shifting hue — one knob, tuned by eye against the
 // card's #ededed ground.
-const BLOB_FILTER = 'saturate(2.2) brightness(0.68) contrast(1.15)';
 
 const CANVAS_WIDTH = 1440;
 // The lockup (labels, pill, pins, arrows) and its tagline are drawn at the
@@ -383,29 +380,6 @@ export function HeroCardBackdrop() {
 
   return (
     <div ref={ref} aria-hidden="true" className="absolute inset-0 overflow-hidden" style={{ background: '#ededed' }}>
-      <div
-        className="absolute left-0 top-0 origin-top-left"
-        style={{
-          width: CANVAS_WIDTH,
-          height: CANVAS_HEIGHT,
-          transform: scale ? `scale(${scale})` : undefined,
-          visibility: scale ? 'visible' : 'hidden',
-        }}
-      >
-        {/* BLOB_X_SHIFT: both blob centres pulled further left (source values
-            are -228/-334) so the deepest blue sits directly behind the
-            navbar logo instead of past it. */}
-        <div className="absolute inset-x-0 bottom-0" style={{ top: TOP_PAD, filter: BLOB_FILTER }}>
-          <img src={imgBlobTopLeft} alt="" className="absolute" style={{ left: -228 - 150, top: -91, width: 956, height: 233 }} />
-          <img
-            src={imgBlobTopLeft2}
-            alt=""
-            className="absolute"
-            style={{ left: -334 - 150, top: -132, width: 967, height: 253, transform: 'rotate(-4.98deg)' }}
-          />
-        </div>
-      </div>
-
       {/* Concentric arcs (node 14:745) — a 1628px circle set rotated inside
           its own 2223.889px box. Dropped from an earlier pass by mistake. */}
       <div
