@@ -37,7 +37,7 @@ const literata = Literata({
 const SITE_NAME = 'Aivory AI';
 const SITE_TITLE = 'Aivory AI | Enterprise AI for Business Transformation at Scale';
 const SITE_DESCRIPTION =
-  'Aivory is the enterprise AI platform for business transformation at scale. Connect your operations, deploy governed AI agents, and run streamlined, automated workflows with permission-aware access and full auditability.';
+  'Your business, minus the busywork. Aivory takes you from first assessment to governed agents on the job: streamlined enterprise AI, no handoffs, no patchwork.';
 
 export const metadata: Metadata = {
   metadataBase: new URL(AIVORY_UK_URL),
