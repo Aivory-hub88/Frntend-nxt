@@ -208,7 +208,7 @@ function PaginationControls({ page, totalPages }: { page: number; totalPages: nu
   return (
     <nav aria-label="Blog pagination" className="flex items-center justify-between border-t border-black/25 py-10">
       {page > 1 ? (
-        <Link href={`/blog?page=${page - 1}`} className={paginationLink}>
+        <Link href={page - 1 === 1 ? '/blog' : `/blog?page=${page - 1}`} className={paginationLink}>
           Previous
         </Link>
       ) : (
