@@ -471,27 +471,27 @@ export default function HeroDiagramGraphic() {
           </div>
 
           <div className="hero-pop hero-pop-6 pointer-events-none absolute inset-0" style={{ transformOrigin: '720px 619px' }}>
-            <p
-              className="absolute m-0 text-center font-normal text-black"
-              style={{ left: 0, top: 559, width: CANVAS_WIDTH, fontFamily: LITERATA, fontSize: 25, lineHeight: '40px' }}
-            >
-              Your business, minus the busywork.
-              {/* Spans pin Literata: a global `span` rule otherwise swaps them to
-                  Manrope. Lines stay under ~40 chars so they clear the NVIDIA
-                  and 500+ cards that flank the tagline. */}
-              <br />
-              <span style={{ fontFamily: LITERATA, color: 'rgba(0,0,0,0.55)' }}>
-                Aivory takes you from first assessment
-              </span>
-              <br />
-              <span style={{ fontFamily: LITERATA, color: 'rgba(0,0,0,0.55)' }}>
-                to agents on the job.
-              </span>
-              <br />
-              <span style={{ fontFamily: LITERATA, color: 'rgba(0,0,0,0.55)' }}>
+            {/* Tagline lane: x 300-1140 at its widest line. The 500+ and NVIDIA
+                cards are parked outside it (left < 210, left > 1215) so the
+                copy can run at a readable size without sliding under them.
+                Plain <p>s on purpose: a global `span` rule swaps spans to
+                Manrope. */}
+            <div className="absolute text-center" style={{ left: 0, top: 553, width: CANVAS_WIDTH }}>
+              <p
+                className="m-0 font-normal text-black"
+                style={{ fontFamily: LITERATA, fontSize: 42, lineHeight: '52px' }}
+              >
+                Your business, minus the busywork.
+              </p>
+              <p
+                className="m-0 font-normal"
+                style={{ marginTop: 10, fontFamily: LITERATA, fontSize: 28, lineHeight: '40px', color: 'rgba(0,0,0,0.55)' }}
+              >
+                Aivory takes you from first assessment to agents on the job.
+                <br />
                 No handoffs, no patchwork.
-              </span>
-            </p>
+              </p>
+            </div>
           </div>
 
           {/* Step 7 of the pop-in sequence — after the tagline (step 6), see
@@ -504,7 +504,7 @@ export default function HeroDiagramGraphic() {
             <img src={imgMoon} alt="" className="hero-moon pointer-events-none absolute select-none" style={{ left: 269.4, top: 209, width: 144.19, height: 144.19 }} />
             <img src={imgAstronaut} alt="" className="hero-float pointer-events-none absolute select-none" style={{ left: 219, top: 113, width: 201.08, height: 203.38 }} />
 
-            <Note left={265.2} top={479} size={176.36} rotate={13} scale={0.72} delay={0} illustration={{ src: imgKeynote, width: 146, height: 147, left: 32, top: -95 }}>
+            <Note left={78} top={515} size={176.36} rotate={13} scale={0.72} delay={0} illustration={{ src: imgKeynote, width: 146, height: 147, left: 32, top: -95 }}>
               <p
                 className="absolute m-0 whitespace-nowrap font-normal text-black"
                 style={{ left: 21, top: 46, transform: 'translateY(-50%)', fontFamily: LITERATA, fontSize: 51, lineHeight: '50px' }}
@@ -538,7 +538,7 @@ export default function HeroDiagramGraphic() {
               </p>
             </Note>
 
-            <Note left={1000} top={597.87} size={124.82} rotate={-4} delay={2.6}>
+            <Note left={1236} top={595} size={124.82} rotate={-4} delay={2.6}>
               <img
                 src={imgNvidiaBadge}
                 alt="NVIDIA Inception Program — Aivory AI is a member (2026 cohort)"
