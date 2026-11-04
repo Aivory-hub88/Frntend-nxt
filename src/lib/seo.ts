@@ -187,14 +187,6 @@ export function createWebsite(siteUrl: PublicSiteUrl) {
     copyrightHolder: { '@id': `${siteUrl}/#organisation` },
     publisher: { '@id': `${siteUrl}/#organisation` },
     inLanguage: siteUrl === AIVORY_UK_URL ? ['en', 'id'] : ['id', 'en'],
-    potentialAction: {
-      '@type': 'SearchAction',
-      target: {
-        '@type': 'EntryPoint',
-        urlTemplate: `${siteUrl}/?s={search_term_string}`,
-      },
-      'query-input': 'required name=search_term_string',
-    },
   };
 }
 
@@ -906,7 +898,7 @@ export const GLOSSARY_ENTRIES = [
     term: 'Operational Maturity Assessment',
     definition:
       'An audit of how consistently an organisation’s processes actually run in practice, covering strategy, data, and people, used to find the root causes of operational bottlenecks before choosing what to automate.',
-    href: '/blog/business-operations-assessment-find-the-bottlenecks-before-you-automate',
+    href: '/blog/how-to-run-a-business-operations-assessment',
   },
   {
     term: 'No-Code AI Agent Deployment',

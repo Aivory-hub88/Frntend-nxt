@@ -67,21 +67,29 @@ function WorkflowTemplate({
   description,
 }: {
   title: string;
-  href: string;
+  href?: string;
   description: string;
 }) {
-  return (
-    <Link
-      href={href}
-      className="group border-t border-black/25 py-6 grid gap-2 md:grid-cols-[260px_minmax(0,1fr)] md:items-baseline"
-    >
-      <h3 className="text-[18px] font-light tracking-[-0.02em] text-[#11110f] group-hover:opacity-60 transition-opacity">
+  const rowClass =
+    "group border-t border-black/25 py-6 grid gap-2 md:grid-cols-[260px_minmax(0,1fr)] md:items-baseline";
+  const body = (
+    <>
+      <h3
+        className={`text-[18px] font-light tracking-[-0.02em] text-[#11110f] transition-opacity ${href ? "group-hover:opacity-60" : ""}`}
+      >
         {title}
       </h3>
       <p className="text-[14px] font-light leading-[1.7] text-black/60">
         {description}
       </p>
+    </>
+  );
+  return href ? (
+    <Link href={href} className={rowClass}>
+      {body}
     </Link>
+  ) : (
+    <div className={rowClass}>{body}</div>
   );
 }
 
@@ -203,17 +211,14 @@ export default function AIWorkflowAutomationPage() {
             />
             <WorkflowTemplate
               title="Invoice Processing"
-              href="/templates/invoice-processing"
               description="Extract line items from PDFs and emails, validate against purchase orders and flag exceptions."
             />
             <WorkflowTemplate
               title="Customer Onboarding"
-              href="/templates/customer-onboarding"
               description="Detect new signups, gather the documents and CRM records, and trigger a personalised welcome flow."
             />
             <WorkflowTemplate
               title="Email Triage"
-              href="/templates/email-triage"
               description="Classify inbound email by intent, auto-reply to routine asks and route the rest to the right team."
             />
           </div>
