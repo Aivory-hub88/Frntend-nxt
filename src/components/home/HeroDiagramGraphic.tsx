@@ -58,7 +58,7 @@ const TOP_PAD = 30;
 // outer box tall enough for unscaled content, i.e. ~150px of dead space
 // under the actually-rendered (0.85x) cards. TOP_PAD + 724 * LOCKUP_SCALE
 // (-10 + 615.4) plus a small margin.
-const CANVAS_HEIGHT = 800;
+const CANVAS_HEIGHT = 820;
 
 // Booking destination is shared with /contact and PreFooterCTA — a real Cal
 // instance, not Calendly's homepage (the bug that got the free-diagnostic
@@ -160,22 +160,22 @@ function CtaCard({
       <a
         href={href}
         {...(external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
-        className={`group flex items-center justify-between gap-5 rounded-[28px] px-7 py-6 transition-transform duration-300 ease-out hover:-translate-y-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#3434ff] focus-visible:ring-offset-4 focus-visible:ring-offset-[#ededed] ${
+        className={`group flex items-center justify-between gap-5 rounded-[22px] px-5 py-4 transition-transform duration-300 ease-out hover:-translate-y-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#3434ff] focus-visible:ring-offset-4 focus-visible:ring-offset-[#ededed] ${
           dark ? 'bg-[#11110f] text-white' : 'bg-white text-black'
         }`}
         style={{ boxShadow: CARD_SHADOW }}
       >
         <span className="block min-w-0">
-          <span className="block" style={{ fontFamily: LITERATA, fontSize: 22, lineHeight: '28px' }}>
+          <span className="block" style={{ fontFamily: LITERATA, fontSize: 18, lineHeight: '24px' }}>
             {title}
           </span>
           {caption && (
             <span
-              className="mt-1.5 block"
+              className="mt-0.5 block"
               style={{
                 fontFamily: "var(--font-manrope), 'Manrope', sans-serif",
-                fontSize: 14,
-                lineHeight: '20px',
+                fontSize: 12,
+                lineHeight: '16px',
                 color: dark ? 'rgba(255,255,255,0.55)' : 'rgba(0,0,0,0.5)',
               }}
             >
@@ -185,11 +185,11 @@ function CtaCard({
         </span>
         <span
           aria-hidden="true"
-          className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-full transition-transform duration-300 group-hover:translate-x-1 ${
+          className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full transition-transform duration-300 group-hover:translate-x-1 ${
             dark ? 'bg-white text-[#11110f]' : 'bg-[#11110f] text-white'
           }`}
         >
-          <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+          <svg width="16" height="16" viewBox="0 0 18 18" fill="none">
             <path d="M3 9h11m0 0L9.5 4.5M14 9l-4.5 4.5" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
         </span>
@@ -639,9 +639,9 @@ export default function HeroDiagramGraphic() {
           <div className="hidden lg:block">
             <CtaCard
               href="/free-diagnostic"
-              left={280}
-              top={725}
-              width={500}
+              left={320}
+              top={768}
+              width={380}
               rotate={-1.5}
               tone="dark"
               title="Start free operations assessment"
@@ -649,9 +649,9 @@ export default function HeroDiagramGraphic() {
             />
             <CtaCard
               href={WALKTHROUGH_URL}
-              left={830}
-              top={768}
-              width={340}
+              left={760}
+              top={804}
+              width={290}
               rotate={1.5}
               tone="light"
               title="Book a walkthrough"
