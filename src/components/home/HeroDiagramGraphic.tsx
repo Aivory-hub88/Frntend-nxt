@@ -476,12 +476,21 @@ export default function HeroDiagramGraphic() {
               style={{ left: 0, top: 559, width: CANVAS_WIDTH, fontFamily: LITERATA, fontSize: 25, lineHeight: '40px' }}
             >
               Your business, minus the busywork.
+              {/* Spans pin Literata: a global `span` rule otherwise swaps them to
+                  Manrope. Lines stay under ~40 chars so they clear the NVIDIA
+                  and 500+ cards that flank the tagline. */}
               <br />
-              <span className="text-black/55">
-                Aivory takes you from first assessment to agents on the job.
+              <span style={{ fontFamily: LITERATA, color: 'rgba(0,0,0,0.55)' }}>
+                Aivory takes you from first assessment
               </span>
               <br />
-              <span className="text-black/55">No handoffs, no patchwork.</span>
+              <span style={{ fontFamily: LITERATA, color: 'rgba(0,0,0,0.55)' }}>
+                to agents on the job.
+              </span>
+              <br />
+              <span style={{ fontFamily: LITERATA, color: 'rgba(0,0,0,0.55)' }}>
+                No handoffs, no patchwork.
+              </span>
             </p>
           </div>
 
