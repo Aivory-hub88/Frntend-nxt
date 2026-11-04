@@ -19,9 +19,13 @@ export default function HeroSection() {
   return (
     <div className="hero relative w-full pb-16 md:pb-24">
       <div className="relative z-10 w-full animate-slide-up-1">
-        <div className="relative overflow-hidden bg-[#ededed] shadow-[0_40px_120px_-40px_rgba(0,0,0,0.65)]">
+        <div className="relative flex min-h-[100svh] flex-col overflow-hidden bg-[#ededed] shadow-[0_40px_120px_-40px_rgba(0,0,0,0.65)]">
           <HeroCardBackdrop />
 
+          {/* The card is at least one full screen tall; `my-auto` centres the
+              diagram (and the mobile CTAs under it) in whatever is left, so
+              the next section never peeks in at the bottom. */}
+          <div className="relative my-auto w-full">
           {/* Below lg the canvas has no CTA cards, so its bottom ~8% of width is
               empty; pull the fallback buttons up into it. */}
           <div className="relative -mb-[8%] lg:mb-0">
@@ -55,6 +59,7 @@ export default function HeroSection() {
               <span className="text-black/25">&middot;</span> No sales pitch
             </p>
 
+          </div>
           </div>
         </div>
       </div>
