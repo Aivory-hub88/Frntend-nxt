@@ -1,12 +1,7 @@
 'use client';
 
 import { TechnicalFrameButton } from '@/components/ui/TechnicalFrameButton';
-import HeroDiagramGraphic, { HeroCardBackdrop } from '@/components/home/HeroDiagramGraphic';
-
-// Booking destination is shared with /contact and PreFooterCTA — a real Cal
-// instance, not Calendly's homepage (the bug that got the free-diagnostic
-// "Schedule a debrief" card pulled).
-const WALKTHROUGH_URL = 'https://book.aivory.uk/book/aivory-call';
+import HeroDiagramGraphic, { HeroCardBackdrop, WALKTHROUGH_URL } from '@/components/home/HeroDiagramGraphic';
 
 /**
  * The hero is one light card carrying the Figma lockup: the diagram graphic
@@ -27,11 +22,15 @@ export default function HeroSection() {
         <div className="relative overflow-hidden bg-[#ededed] shadow-[0_40px_120px_-40px_rgba(0,0,0,0.65)]">
           <HeroCardBackdrop />
 
-          <div className="relative">
+          {/* Below lg the canvas has no CTA cards, so its bottom ~8% of width is
+              empty; pull the fallback buttons up into it. */}
+          <div className="relative -mb-[8%] lg:mb-0">
             <HeroDiagramGraphic />
           </div>
 
-          <div className="relative flex flex-col items-center gap-5 px-5 pb-9 sm:gap-6 md:px-10 md:pb-12">
+          {/* lg+ renders the CTAs as cards inside the diagram canvas; this row is the
+              full-size fallback for tablets and phones. */}
+          <div className="relative flex flex-col items-center gap-5 px-5 pb-9 sm:gap-6 md:px-10 md:pb-12 lg:hidden">
             <div className="flex w-full flex-col items-center gap-3 sm:w-auto sm:flex-row sm:gap-4">
               <TechnicalFrameButton href="/free-diagnostic" size="heroCompact" tone="dark" className="w-full sm:w-fit">
                 START FREE OPERATIONS ASSESSMENT
