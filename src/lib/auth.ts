@@ -258,7 +258,8 @@ function setAuthCookies(data: any): void {
   for (const k of ["aivory_access_token", "aivory_session_token", "aivory_user"]) {
     document.cookie = `${k}=; path=/; domain=.aivory.id; max-age=0; SameSite=Lax`;
   }
-  const attrs = "path=/; max-age=604800; SameSite=Lax";
+  // One year: sign-out is explicit; the JWT inside is refreshed by the dashboards.
+  const attrs = "path=/; max-age=31536000; SameSite=Lax";
   document.cookie = `aivory_access_token=${at}; ${attrs}`;
   document.cookie = `aivory_session_token=${encodeURIComponent(JSON.stringify(at))}; ${attrs}`;
   document.cookie = `aivory_user=${encodeURIComponent(JSON.stringify(u))}; ${attrs}`;
