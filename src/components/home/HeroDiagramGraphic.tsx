@@ -22,10 +22,6 @@ const imgBlobTopLeft2 = '/images/hero-new/group-35393.svg';
 const imgKeynote = '/images/hero-new/trust-keynote.png';
 const imgHand = '/images/hero-new/trust-hand.png';
 const imgNvidiaBadge = '/images/nvidia-inception/nvidia-inception-program-badge-rgb-for-screen.svg';
-// Decorative astronaut + moon (nodes 40:888 / 40:928), added alongside the
-// trust-card reshuffle.
-const imgAstronaut = '/images/hero-new/trust-astronaut.png';
-const imgMoon = '/images/hero-new/trust-moon.png';
 
 const LITERATA = "var(--font-literata), Literata, serif";
 
@@ -575,12 +571,6 @@ export default function HeroDiagramGraphic() {
               globals.css. transformOrigin is the bounding-box centre of all
               three cards + their illustrations, so the group pops in place. */}
           <div className="hero-pop hero-pop-7 pointer-events-none absolute inset-0" style={{ transformOrigin: '796px 423px' }}>
-            {/* Shifted 73px left / 10px up from the Figma position: at the
-                source's own placement the astronaut's right edge (492.77)
-                overlapped BizOps (left: 444) by ~49px. */}
-            <img src={imgMoon} alt="" className="hero-moon pointer-events-none absolute select-none" style={{ left: 269.4, top: 209, width: 144.19, height: 144.19 }} />
-            <img src={imgAstronaut} alt="" className="hero-float pointer-events-none absolute select-none" style={{ left: 219, top: 113, width: 201.08, height: 203.38 }} />
-
             <Note left={78} top={515} size={176.36} rotate={13} scale={0.72} delay={0} illustration={{ src: imgKeynote, width: 146, height: 147, left: 32, top: -95 }}>
               <p
                 className="absolute m-0 whitespace-nowrap font-normal text-black"
