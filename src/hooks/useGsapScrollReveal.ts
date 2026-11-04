@@ -34,7 +34,7 @@ export function useGsapScrollReveal() {
       (el as any)._isSplit = true;
 
       // Apply SplitType to split text into lines and words
-      const text = new SplitType(el as HTMLElement, { types: 'lines, words' });
+      const text = new SplitType(el as HTMLElement, { types: 'lines,words' });
 
       // We animate the words!
       const targetElements = text.words;
