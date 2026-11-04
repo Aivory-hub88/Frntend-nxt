@@ -195,6 +195,15 @@ export default function Footer({ landingAmbient = false }: FooterProps) {
               Instagram
             </a>
             <a
+              href="https://www.youtube.com/@itsAivory"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-white/80 hover:text-white transition-colors text-sm"
+              aria-label="Watch Aivory AI on YouTube"
+            >
+              YouTube
+            </a>
+            <a
               href="https://www.linkedin.com/company/aivoryai/"
               target="_blank"
               rel="noopener noreferrer"

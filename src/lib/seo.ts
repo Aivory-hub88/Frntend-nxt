@@ -159,6 +159,7 @@ export function createOrganization(siteUrl: PublicSiteUrl) {
       'https://www.linkedin.com/company/aivoryai/',
       'https://www.producthunt.com/products/aivory-ai',
       'https://www.instagram.com/aivorylab.ai',
+      'https://www.youtube.com/@itsAivory',
     ],
     award: ['NVIDIA Inception Program (2026)'],
     contactPoint: {
