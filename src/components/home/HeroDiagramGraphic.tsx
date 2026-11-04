@@ -49,7 +49,7 @@ const LOCKUP_SCALE = 0.85;
 // clearance between the two, and it is negative because the artwork's own
 // box starts above its topmost element: the orange pin (design y=92) is the
 // real ceiling, and at this value it clears the 64px nav row by ~13px.
-const TOP_PAD = -10;
+const TOP_PAD = 30;
 // Tall enough for the lowest trust card (26:783, local y=547.97 + its own
 // 176.18px = 724.15) once it's rendered — which is *after* LOCKUP_SCALE, not
 // before: that scale's origin is the lockup group's own top edge, so it
@@ -58,7 +58,12 @@ const TOP_PAD = -10;
 // outer box tall enough for unscaled content, i.e. ~150px of dead space
 // under the actually-rendered (0.85x) cards. TOP_PAD + 724 * LOCKUP_SCALE
 // (-10 + 615.4) plus a small margin.
-const CANVAS_HEIGHT = 640;
+const CANVAS_HEIGHT = 800;
+
+// Booking destination is shared with /contact and PreFooterCTA — a real Cal
+// instance, not Calendly's homepage (the bug that got the free-diagnostic
+// "Schedule a debrief" card pulled).
+export const WALKTHROUGH_URL = 'https://book.aivory.uk/book/aivory-call';
 
 const CARD_SHADOW =
   '0px 49px 37px rgba(0,0,0,0.02), 0px 32px 21.5px rgba(0,0,0,0.02), 0px 19px 12px rgba(0,0,0,0.02), 0px 10px 6px rgba(0,0,0,0.01), 0px 4px 3px rgba(0,0,0,0.01), 0px 1px 1.5px rgba(0,0,0,0.01)';
@@ -117,6 +122,78 @@ function Note({
           )}
         </div>
       </div>
+    </div>
+  );
+}
+
+/**
+ * A hero call to action drawn as a card, in the same family as the trust
+ * notes: rounded, soft shadow, slight tilt. The outer div carries position and
+ * tilt, the inner link carries the hover lift (an inline `transform` on the
+ * link would beat the hover class). Deliberately not inside a `hero-pop`
+ * wrapper — those loop out of view, and a link must always be there.
+ */
+function CtaCard({
+  href,
+  left,
+  top,
+  width,
+  rotate,
+  tone,
+  title,
+  caption,
+  external,
+}: {
+  href: string;
+  left: number;
+  top: number;
+  width: number;
+  rotate: number;
+  tone: 'dark' | 'light';
+  title: string;
+  caption?: string;
+  external?: boolean;
+}) {
+  const dark = tone === 'dark';
+  return (
+    <div className="absolute" style={{ left, top, width, transform: `rotate(${rotate}deg)` }}>
+      <a
+        href={href}
+        {...(external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+        className={`group flex items-center justify-between gap-5 rounded-[28px] px-7 py-6 transition-transform duration-300 ease-out hover:-translate-y-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#3434ff] focus-visible:ring-offset-4 focus-visible:ring-offset-[#ededed] ${
+          dark ? 'bg-[#11110f] text-white' : 'bg-white text-black'
+        }`}
+        style={{ boxShadow: CARD_SHADOW }}
+      >
+        <span className="block min-w-0">
+          <span className="block" style={{ fontFamily: LITERATA, fontSize: 22, lineHeight: '28px' }}>
+            {title}
+          </span>
+          {caption && (
+            <span
+              className="mt-1.5 block"
+              style={{
+                fontFamily: "var(--font-manrope), 'Manrope', sans-serif",
+                fontSize: 14,
+                lineHeight: '20px',
+                color: dark ? 'rgba(255,255,255,0.55)' : 'rgba(0,0,0,0.5)',
+              }}
+            >
+              {caption}
+            </span>
+          )}
+        </span>
+        <span
+          aria-hidden="true"
+          className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-full transition-transform duration-300 group-hover:translate-x-1 ${
+            dark ? 'bg-white text-[#11110f]' : 'bg-[#11110f] text-white'
+          }`}
+        >
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+            <path d="M3 9h11m0 0L9.5 4.5M14 9l-4.5 4.5" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+        </span>
+      </a>
     </div>
   );
 }
@@ -554,6 +631,32 @@ export default function HeroDiagramGraphic() {
                 Inception member
               </p>
             </Note>
+          </div>
+
+          {/* Desktop only: below lg the scaled canvas would shrink these to
+              unreadable, hard-to-tap sizes, so HeroSection renders its own
+              full-size buttons there. Staggered rather than side by side. */}
+          <div className="hidden lg:block">
+            <CtaCard
+              href="/free-diagnostic"
+              left={280}
+              top={725}
+              width={500}
+              rotate={-1.5}
+              tone="dark"
+              title="Start free operations assessment"
+              caption="Self-guided · One sitting · No sales pitch"
+            />
+            <CtaCard
+              href={WALKTHROUGH_URL}
+              left={830}
+              top={768}
+              width={340}
+              rotate={1.5}
+              tone="light"
+              title="Book a walkthrough"
+              external
+            />
           </div>
         </div>
       </div>
