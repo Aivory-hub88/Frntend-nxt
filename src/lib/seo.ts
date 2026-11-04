@@ -160,6 +160,8 @@ export function createOrganization(siteUrl: PublicSiteUrl) {
       'https://www.producthunt.com/products/aivory-ai',
       'https://www.instagram.com/aivorylab.ai',
       'https://www.youtube.com/@itsAivory',
+      'https://www.threads.com/@its.aivory',
+      'https://x.com/aivoryai',
     ],
     award: ['NVIDIA Inception Program (2026)'],
     contactPoint: {

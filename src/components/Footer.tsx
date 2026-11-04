@@ -204,6 +204,24 @@ export default function Footer({ landingAmbient = false }: FooterProps) {
               YouTube
             </a>
             <a
+              href="https://www.threads.com/@its.aivory"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-white/80 hover:text-white transition-colors text-sm"
+              aria-label="Follow Aivory AI on Threads"
+            >
+              Threads
+            </a>
+            <a
+              href="https://x.com/aivoryai"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-white/80 hover:text-white transition-colors text-sm"
+              aria-label="Follow Aivory AI on X"
+            >
+              X
+            </a>
+            <a
               href="https://www.linkedin.com/company/aivoryai/"
               target="_blank"
               rel="noopener noreferrer"
