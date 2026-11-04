@@ -475,11 +475,13 @@ export default function HeroDiagramGraphic() {
               className="absolute m-0 text-center font-normal text-black"
               style={{ left: 0, top: 559, width: CANVAS_WIDTH, fontFamily: LITERATA, fontSize: 25, lineHeight: '40px' }}
             >
-              Map how your operations actually run
+              Your business, minus the busywork.
               <br />
-              {' then deploy the intelligence that fit'}
+              <span className="text-black/55">
+                Aivory takes you from first assessment to agents on the job.
+              </span>
               <br />
-              All in one system
+              <span className="text-black/55">No handoffs, no patchwork.</span>
             </p>
           </div>
 
