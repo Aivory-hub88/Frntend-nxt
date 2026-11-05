@@ -23,7 +23,7 @@ import fc from "fast-check";
 import { resolveDashboardUrl, resolveMarketingUrl } from "./config";
 
 const DASHBOARD_URL_DEV = "http://localhost:3000";
-const DASHBOARD_URL_PROD = "https://dashboard.aivory.uk";
+const DASHBOARD_URL_PROD = "https://aivory.uk/dashboard";
 
 /**
  * Models the `NEXT_PUBLIC_*` environment-variable input space: unset
@@ -37,7 +37,7 @@ const envArb: fc.Arbitrary<string | null | undefined> = fc.oneof(
   fc.constant(""),
   fc.constantFrom("   ", "\t", "\n", " \t \n "), // whitespace-only -> treated as unset
   fc.constantFrom(
-    "https://dashboard.aivory.uk",
+    "https://aivory.uk/dashboard",
     "http://localhost:3000",
     "https://custom.example.com",
     "  https://padded.example.com  ", // surrounding whitespace -> trimmed
