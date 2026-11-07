@@ -47,7 +47,7 @@ function StepIcon() {
  * TIER_ALLOWANCES and TOKENS_PER_CREDIT_PEAK/OFFPEAK in avry-backend's
  * app/services/tiers.py, which is what is actually granted and charged: a
  * credit is a slice of LLM spend, so it buys more tokens off-peak. */
-const TOKENS_PER_CREDIT = { peak: 13000, offpeak: 26000 };
+const TOKENS_PER_CREDIT = { peak: 28000, offpeak: 43334 };
 
 function creditFeatures(credits: number): string[] {
   const m = (n: number) => `${Math.round(n / 1e6)}M`;
