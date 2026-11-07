@@ -146,7 +146,7 @@ export default function AIWorkflowAutomationPage() {
             href="/free-diagnostic"
             className="rounded-full bg-[#11110f] px-6 py-3 text-[13px] font-medium text-white transition-opacity hover:opacity-80"
           >
-            Start with a Free Assessment
+            Start with a Free Analysis
           </Link>
           <Link
             href="/contact"
@@ -230,7 +230,7 @@ export default function AIWorkflowAutomationPage() {
           Does my business need AI workflow automation?
         </h2>
         <p className="mt-4 max-w-2xl text-[15px] font-light leading-[1.7] text-black/60">
-          Aivory's free AI readiness assessment will tell you in twelve
+          Aivory's free AI readiness analysis will tell you in twelve
           questions. The output is an operational maturity score and a report
           card that aligns with the framework we use to design every customer's
           first workflow.
@@ -239,7 +239,7 @@ export default function AIWorkflowAutomationPage() {
           href="/free-diagnostic"
           className="group mt-6 inline-flex items-center gap-3 border-b border-black pb-1 text-[13px] font-light text-black transition-opacity hover:opacity-60"
         >
-          Take the Free Assessment
+          Take the Free Analysis
         </Link>
       </section>
 

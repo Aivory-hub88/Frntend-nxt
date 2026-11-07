@@ -1,5 +1,5 @@
 /**
- * Server-side funnel breadcrumbs for the free assessment.
+ * Server-side funnel breadcrumbs for the free analysis.
  *
  * The page already fires the same milestones into GA4 via trackEvent, but a
  * large share of those hits never arrive — ad blockers drop gtag outright — and
@@ -50,7 +50,7 @@ export function getFunnelSessionId(): string {
 /**
  * Fire and forget. `keepalive` lets the request outlive the page when someone
  * abandons mid-question — the abandonment is exactly the data we want. Every
- * failure is swallowed: analytics must never be able to break the assessment.
+ * failure is swallowed: analytics must never be able to break the analysis.
  */
 export function recordFunnelEvent(event: FunnelEvent, payload: FunnelPayload = {}): void {
   if (typeof window === 'undefined') return;

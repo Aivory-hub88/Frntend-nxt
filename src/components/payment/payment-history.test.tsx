@@ -99,7 +99,7 @@ describe('Payment History Component', () => {
     it('should render all payments in the list', () => {
       render(<PaymentHistory payments={mockPayments} />);
       
-      expect(screen.getByText('Business Operations Assessment')).toBeInTheDocument();
+      expect(screen.getByText('Business Operations Analysis')).toBeInTheDocument();
       expect(screen.getByText('Operational Plan')).toBeInTheDocument();
       expect(screen.getByText('Transformation Blueprint')).toBeInTheDocument();
     });
@@ -253,14 +253,14 @@ describe('Payment History Component', () => {
       render(<PaymentHistory payments={mockPayments} loading={true} />);
       
       expect(screen.getByText('Payment History')).toBeInTheDocument();
-      expect(screen.getByText('Business Operations Assessment')).toBeInTheDocument();
+      expect(screen.getByText('Business Operations Analysis')).toBeInTheDocument();
     });
   });
 
   describe('Product Name Mapping', () => {
-    it('should map ai_snapshot to Business Operations Assessment', () => {
+    it('should map ai_snapshot to Business Operations Analysis', () => {
       render(<PaymentHistory payments={mockPayments} />);
-      expect(screen.getByText('Business Operations Assessment')).toBeInTheDocument();
+      expect(screen.getByText('Business Operations Analysis')).toBeInTheDocument();
     });
 
     it('should map ai_blueprint to Transformation Blueprint', () => {
@@ -312,7 +312,7 @@ describe('Payment History Component', () => {
     it('should have proper semantic structure for payment items', () => {
       render(<PaymentHistory payments={mockPayments} />);
       
-      const paymentItem = screen.getByText('Business Operations Assessment').closest('div');
+      const paymentItem = screen.getByText('Business Operations Analysis').closest('div');
       expect(paymentItem).toBeInTheDocument();
     });
   });

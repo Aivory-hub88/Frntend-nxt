@@ -2,7 +2,7 @@ import { jsPDF } from 'jspdf';
 import type { AssessmentStrings } from '@/lib/assessmentCopy';
 
 /**
- * A4 report for the free Business Operations Assessment.
+ * A4 report for the free Business Operations Analysis.
  *
  * This exists alongside the 1080x1350 PNG cards rather than replacing them.
  * The cards are the on-screen preview and the social artefact — 4:5 is the
@@ -321,8 +321,8 @@ export async function buildAssessmentPdf(input: AssessmentPdfInput): Promise<jsP
     title: input.strings.docTitle(input.companyName),
     subject: input.strings.docSubject(input.score, input.maturity),
     author: 'Aivory',
-    creator: 'Aivory Free Assessment',
-    keywords: 'business operations, operational maturity, assessment, Aivory',
+    creator: 'Aivory Free Analysis',
+    keywords: 'business operations, operational maturity, analysis, Aivory',
   });
 
   paintCardGround(pdf);

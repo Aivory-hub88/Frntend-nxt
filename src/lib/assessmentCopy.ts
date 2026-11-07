@@ -1,10 +1,10 @@
 import type { Language } from '@/lib/translations';
 
 /**
- * Every user-visible string in the free Business Operations Assessment, in
+ * Every user-visible string in the free Business Operations Analysis, in
  * English and Indonesian.
  *
- * It lives outside page.tsx because the assessment carries roughly 180 strings
+ * It lives outside page.tsx because the analysis carries roughly 180 strings
  * — twelve questions with four options each, twenty-four insight lines, five
  * band narratives — and interleaving two languages with the scoring engine
  * would bury the logic.
@@ -224,13 +224,13 @@ const EN: AssessmentStrings = {
   },
   ui: {
     profileTitle: "Let's start with your company",
-    profileSubtitle: 'This helps us tailor the assessment to your context.',
+    profileSubtitle: 'This helps us tailor the analysis to your context.',
     companyName: 'Company name', companySize: 'Company size', industry: 'Industry',
     selectIndustry: 'Select industry...', selectSize: 'Select company size...',
     companyPlaceholder: 'e.g. PT Maju Bersama',
     continue: 'Continue', back: '← Back to profile', next: 'Next', seeResults: 'See results',
     questionOf: (n, total) => `Question ${n} of ${total}`,
-    resultsTitle: 'Your Business Operations Assessment Report',
+    resultsTitle: 'Your Business Operations Analysis Report',
     resultsSubhead: (score, maturity) => `Score ${score}/100 · ${maturity} maturity — your full breakdown is below.`,
     emailGateLabel: 'Where should we send a copy of this report?',
     emailPlaceholder: 'you@company.com',
@@ -248,7 +248,7 @@ const EN: AssessmentStrings = {
     languageLabel: 'Language',
   },
   card: {
-    quickAssessment: 'Quick Assessment', ofBusinessOperations: 'of Business Operations',
+    quickAssessment: 'Quick Analysis', ofBusinessOperations: 'of Business Operations',
     companyName: 'Company name', industryCategory: 'Industry category', industrySize: 'Company size',
     score: 'Score', operationalProfile: 'Operational profile',
     workingForYou: 'Working for you', holdingYouBack: 'Holding you back',
@@ -265,18 +265,18 @@ const EN: AssessmentStrings = {
     needsImprovement: list => `Needs improvement: ${list}.`,
   },
   hook: {
-    findingOne: 'One part of your operation is running below the level where automation holds up. This assessment shows where it is.',
-    findingMany: w => `${w} parts of your operation are running below the level where automation holds up. This assessment shows where they are.`,
+    findingOne: 'One part of your operation is running below the level where automation holds up. This analysis shows where it is.',
+    findingMany: w => `${w} parts of your operation are running below the level where automation holds up. This analysis shows where they are.`,
     findingNone: 'Every dimension of your operation is running at or above the level where automation holds up — an unusual result, and a strong base to build on.',
-    declineOne: 'What it does not show is what fixing it is worth, which one to start with, or where AI can carry the load. That is the Business Operations Assessment.',
-    declineMany: 'What it does not show is what fixing them is worth, which one to start with, or where AI can carry the load. That is the Business Operations Assessment.',
-    declineNone: 'What this assessment does not show is which of them repays attention first, what that is worth in recovered time and cost, or where AI can carry the load. That is the Business Operations Assessment.',
+    declineOne: 'What it does not show is what fixing it is worth, which one to start with, or where AI can carry the load. That is the Business Operations Analysis.',
+    declineMany: 'What it does not show is what fixing them is worth, which one to start with, or where AI can carry the load. That is the Business Operations Analysis.',
+    declineNone: 'What this analysis does not show is which of them repays attention first, what that is worth in recovered time and cost, or where AI can carry the load. That is the Business Operations Analysis.',
     countWords: ['No', 'One', 'Two', 'Three', 'Four', 'Five'],
   },
   pdf: {
     generated: 'Generated', ref: 'Ref', page: 'Page 1 of 1',
-    ctaButton: 'See the Business Operations Assessment',
-    docTitle: c => `Business Operations Assessment — ${c}`,
+    ctaButton: 'See the Business Operations Analysis',
+    docTitle: c => `Business Operations Analysis — ${c}`,
     docSubject: (score, maturity) => `Operational maturity ${score}/100 (${maturity})`,
   },
 };
@@ -381,13 +381,13 @@ const ID: AssessmentStrings = {
   },
   ui: {
     profileTitle: 'Mulai dari perusahaan Anda',
-    profileSubtitle: 'Ini membantu kami menyesuaikan asesmen dengan konteks Anda.',
+    profileSubtitle: 'Ini membantu kami menyesuaikan analisis dengan konteks Anda.',
     companyName: 'Nama perusahaan', companySize: 'Ukuran perusahaan', industry: 'Industri',
     selectIndustry: 'Pilih industri...', selectSize: 'Pilih ukuran perusahaan...',
     companyPlaceholder: 'mis. PT Maju Bersama',
     continue: 'Lanjut', back: '← Kembali ke profil', next: 'Berikutnya', seeResults: 'Lihat hasil',
     questionOf: (n, total) => `Pertanyaan ${n} dari ${total}`,
-    resultsTitle: 'Laporan Asesmen Operasional Bisnis Anda',
+    resultsTitle: 'Laporan Analisis Operasional Bisnis Anda',
     resultsSubhead: (score, maturity) => `Skor ${score}/100 · kematangan ${maturity} — rincian lengkapnya di bawah.`,
     emailGateLabel: 'Ke mana laporan ini kami kirim?',
     emailPlaceholder: 'anda@perusahaan.com',
@@ -405,7 +405,7 @@ const ID: AssessmentStrings = {
     languageLabel: 'Bahasa',
   },
   card: {
-    quickAssessment: 'Asesmen Singkat', ofBusinessOperations: 'Operasional Bisnis',
+    quickAssessment: 'Analisis Singkat', ofBusinessOperations: 'Operasional Bisnis',
     companyName: 'Nama perusahaan', industryCategory: 'Kategori industri', industrySize: 'Ukuran perusahaan',
     score: 'Skor', operationalProfile: 'Profil operasional',
     workingForYou: 'Yang bekerja untuk Anda', holdingYouBack: 'Yang menahan Anda',
@@ -422,18 +422,18 @@ const ID: AssessmentStrings = {
     needsImprovement: list => `Perlu diperbaiki: ${list}.`,
   },
   hook: {
-    findingOne: 'Satu bagian operasional Anda berjalan di bawah level di mana otomatisasi bisa bertahan. Asesmen ini menunjukkan di mana letaknya.',
-    findingMany: w => `${w} bagian operasional Anda berjalan di bawah level di mana otomatisasi bisa bertahan. Asesmen ini menunjukkan di mana letaknya.`,
+    findingOne: 'Satu bagian operasional Anda berjalan di bawah level di mana otomatisasi bisa bertahan. Analisis ini menunjukkan di mana letaknya.',
+    findingMany: w => `${w} bagian operasional Anda berjalan di bawah level di mana otomatisasi bisa bertahan. Analisis ini menunjukkan di mana letaknya.`,
     findingNone: 'Setiap dimensi operasional Anda berada pada atau di atas level di mana otomatisasi bisa bertahan — hasil yang tidak biasa, dan fondasi yang kuat untuk dibangun.',
-    declineOne: 'Yang belum ditunjukkannya adalah berapa nilai memperbaikinya, mana yang harus dimulai lebih dulu, dan di mana AI bisa mengambil beban. Itu ada di Business Operations Assessment.',
-    declineMany: 'Yang belum ditunjukkannya adalah berapa nilai memperbaikinya, mana yang harus dimulai lebih dulu, dan di mana AI bisa mengambil beban. Itu ada di Business Operations Assessment.',
-    declineNone: 'Yang belum ditunjukkan asesmen ini adalah mana di antaranya yang paling layak diperhatikan lebih dulu, berapa nilainya dalam waktu dan biaya yang bisa dihemat, dan di mana AI bisa mengambil beban. Itu ada di Business Operations Assessment.',
+    declineOne: 'Yang belum ditunjukkannya adalah berapa nilai memperbaikinya, mana yang harus dimulai lebih dulu, dan di mana AI bisa mengambil beban. Itu ada di Business Operations Analysis.',
+    declineMany: 'Yang belum ditunjukkannya adalah berapa nilai memperbaikinya, mana yang harus dimulai lebih dulu, dan di mana AI bisa mengambil beban. Itu ada di Business Operations Analysis.',
+    declineNone: 'Yang belum ditunjukkan analisis ini adalah mana di antaranya yang paling layak diperhatikan lebih dulu, berapa nilainya dalam waktu dan biaya yang bisa dihemat, dan di mana AI bisa mengambil beban. Itu ada di Business Operations Analysis.',
     countWords: ['Nol', 'Satu', 'Dua', 'Tiga', 'Empat', 'Lima'],
   },
   pdf: {
     generated: 'Dibuat', ref: 'Ref', page: 'Halaman 1 dari 1',
-    ctaButton: 'Lihat Business Operations Assessment',
-    docTitle: c => `Asesmen Operasional Bisnis — ${c}`,
+    ctaButton: 'Lihat Business Operations Analysis',
+    docTitle: c => `Analisis Operasional Bisnis — ${c}`,
     docSubject: (score, maturity) => `Kematangan operasional ${score}/100 (${maturity})`,
   },
 };

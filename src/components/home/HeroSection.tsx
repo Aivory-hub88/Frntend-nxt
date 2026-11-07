@@ -37,7 +37,7 @@ export default function HeroSection() {
           <div className="relative flex flex-col items-center gap-5 px-5 pb-9 sm:gap-6 md:px-10 md:pb-12 lg:hidden">
             <div className="flex w-full flex-col items-center gap-3 sm:w-auto sm:flex-row sm:gap-4">
               <TechnicalFrameButton href="/free-diagnostic" size="heroCompact" tone="dark" className="w-full sm:w-fit">
-                START FREE OPERATIONS ASSESSMENT
+                START FREE OPERATIONS ANALYSIS
               </TechnicalFrameButton>
               <TechnicalFrameButton
                 href={WALKTHROUGH_URL}

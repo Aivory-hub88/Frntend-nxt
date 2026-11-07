@@ -13,8 +13,8 @@ const LabFlaskCanvas = dynamic(
 // Product context text
 const showcaseProducts = [
   {
-    step: '01. DISCOVER', title: 'Deep Assessment',
-    description: 'We audit your current operations, constraints, and data accessibility. We map out a customised assessment to establish a realistic readiness baseline.',
+    step: '01. DISCOVER', title: 'Deep Analysis',
+    description: 'We audit your current operations, constraints, and data accessibility. We map out a customised analysis to establish a realistic readiness baseline.',
   },
   {
     step: '02. DESIGN', title: 'AI System Blueprint',
@@ -26,7 +26,7 @@ const showcaseProducts = [
   },
   {
     step: '04. CONTROL', title: 'AI Console',
-    description: 'A unified strategic interface. Query your systems, review diagnostic assessments, track operational telemetry, and instruct automated agents.',
+    description: 'A unified strategic interface. Query your systems, review diagnostic analyses, track operational telemetry, and instruct automated agents.',
   },
   {
     step: '05. BUILD', title: 'Workflow Builder',
@@ -94,7 +94,7 @@ export function InteractiveGridShowcase() {
             Operational Framework
           </SpotlightButton>
           <h3 className="text-4xl md:text-5xl font-light tracking-normal mb-6 leading-tight">
-            From Assessment <br className="hidden md:block" />to Staged <span className="italic" style={{ color: '#e4effd' }}>Autonomy</span>
+            From Analysis <br className="hidden md:block" />to Staged <span className="italic" style={{ color: '#e4effd' }}>Autonomy</span>
           </h3>
           <p className="text-white/75 font-light leading-relaxed">
             We take you step-by-step from auditing bottlenecks to running customised, automated system workflows. Explore the core product layers.

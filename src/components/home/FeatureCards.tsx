@@ -226,7 +226,7 @@ export default function FeatureCards() {
                 <DiagnosticStatItem
                   target={10} prefix="" suffix="min" icon="assessment"
                   title="Faster decision-making"
-                  description="A self-guided operations assessment maps every process, bottleneck, and cost in one sitting — not weeks of stakeholder interviews."
+                  description="A self-guided operations analysis maps every process, bottleneck, and cost in one sitting — not weeks of stakeholder interviews."
                   active={statsActive} delay={0}
                 />
                 <DiagnosticStatItem

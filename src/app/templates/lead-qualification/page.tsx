@@ -137,7 +137,7 @@ export default function LeadQualificationTemplatePage() {
             href="/free-diagnostic"
             className="rounded-full bg-[#11110f] px-6 py-3 text-[13px] font-medium text-white transition-opacity hover:opacity-80"
           >
-            Start with a Free Assessment
+            Start with a Free Analysis
           </Link>
           <Link
             href="/contact"

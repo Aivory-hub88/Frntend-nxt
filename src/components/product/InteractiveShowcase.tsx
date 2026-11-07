@@ -93,7 +93,7 @@ const showcaseProducts = [
   {
     id: "diagnostic",
     step: "01. DISCOVER",
-    title: "Business Operations Assessment",
+    title: "Business Operations Analysis",
     description: (
       <>
         Every transformation requires an operational baseline. Assess current workflows, identify structural bottlenecks, and determine where AI can drive measurable impact.
@@ -110,7 +110,7 @@ const showcaseProducts = [
     step: "02. DESIGN",
     title: "Transformation Blueprint",
     description:
-      "Data without direction is noise. We map assessment insights into a structured architectural blueprint, ensuring infrastructure and operations align before execution begins.",
+      "Data without direction is noise. We map analysis insights into a structured architectural blueprint, ensuring infrastructure and operations align before execution begins.",
     features: [
       "Operational Priorities",
       "Transformation Roadmap",
@@ -339,7 +339,7 @@ export function DiagnosticAnimation() {
               className="flex items-center justify-center w-full h-full absolute inset-0"
             >
               <span className="text-sm sm:text-base text-white/90 font-light">
-                Lets begin your Business Operations Assessment
+                Lets begin your Business Operations Analysis
               </span>
             </motion.div>
           )}
@@ -734,7 +734,7 @@ export function DiagnosticAnimation() {
                 />
               </div>
               <span className="text-[10px] sm:text-[11px] text-[#c4c9b8]/90 uppercase tracking-[0.22em] font-light px-3 py-1 bg-[#0d0d0d]/80 border border-white/5 rounded-md whitespace-nowrap backdrop-blur-sm shadow-[0_4px_12px_rgba(0,0,0,0.5)]">
-                Deep Assessment Results
+                Deep Analysis Results
               </span>
               <span className="text-xs sm:text-sm text-white/70 bg-white/10 backdrop-blur-md border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.2)] px-4 py-1 rounded-full backdrop-blur-sm mt-2 opacity-0 animate-[fade-in-text_2.0s_ease-out_forwards]">
                 Document generated & ready
@@ -2127,7 +2127,7 @@ export function BlueprintAnimation() {
                 className="flex items-center justify-center w-full h-full absolute inset-0 z-20"
               >
                 <span className="text-sm sm:text-base text-white/90 font-light text-center px-4 max-w-sm">
-                  Generating System Blueprint from Deep Assessment Results
+                  Generating System Blueprint from Deep Analysis Results
                 </span>
               </motion.div>
             )}
@@ -2213,7 +2213,7 @@ export function BlueprintAnimation() {
                       />
                     </div>
                     <span className="text-[10px] sm:text-[11px] text-[#c4c9b8]/90 uppercase tracking-[0.22em] font-light px-3 py-1 bg-[#0d0d0d]/80 border border-white/5 rounded-md whitespace-nowrap backdrop-blur-sm shadow-[0_4px_12px_rgba(0,0,0,0.5)]">
-                      Deep Assessment Results
+                      Deep Analysis Results
                     </span>
                   </div>
 
@@ -2279,7 +2279,7 @@ export function BlueprintAnimation() {
                 {/* Engine Context */}
                 <div className="flex flex-col items-center gap-4 z-10 relative mt-2 w-full max-w-[420px]">
                   <span className="text-xs sm:text-sm text-white/70 bg-white/10 backdrop-blur-md border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.2)] px-4 py-1 rounded-full backdrop-blur-sm opacity-0 animate-[fade-in-text_4.5s_ease-out_forwards]">
-                    Engine processing from Deep Assessment result
+                    Engine processing from Deep Analysis result
                   </span>
                   <div className="flex flex-wrap justify-center gap-3 sm:gap-4 w-full">
                     <div
@@ -2502,7 +2502,7 @@ export function BlueprintAnimation() {
           </div>
         </div>
 
-        {/* Complete: System Blueprint doc, same premium doc-card style as the Deep Assessment Results beat */}
+        {/* Complete: System Blueprint doc, same premium doc-card style as the Deep Analysis Results beat */}
         <AnimatePresence>
           <motion.div
             initial={{ opacity: 0 }}

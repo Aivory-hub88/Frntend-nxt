@@ -82,7 +82,7 @@ export const SHARE_CONFIGS: NetworkShareConfig[] = [
   {
     network: "linkedin",
     template:
-      "I just scored {score}/100 ({category}) on Aivory's Enterprise AI Readiness Assessment! 🚀\nCheck your company's readiness at {url}",
+      "I just scored {score}/100 ({category}) on Aivory's Enterprise AI Readiness Analysis! 🚀\nCheck your company's readiness at {url}",
     mode: "intent-url",
     intentUrlBase: "https://www.linkedin.com/feed/?shareActive=true&text=",
     supportsImageParam: false, // → copy text + prompt to attach downloaded PNG
@@ -91,7 +91,7 @@ export const SHARE_CONFIGS: NetworkShareConfig[] = [
   {
     network: "twitter",
     template:
-      "I just scored {score}/100 ({category}) on Aivory's Enterprise AI Readiness Assessment! 🚀\nCheck your company's readiness here:",
+      "I just scored {score}/100 ({category}) on Aivory's Enterprise AI Readiness Analysis! 🚀\nCheck your company's readiness here:",
     mode: "intent-url",
     intentUrlBase: "https://twitter.com/intent/tweet?text=", // &url= appended
     supportsImageParam: false,
@@ -100,7 +100,7 @@ export const SHARE_CONFIGS: NetworkShareConfig[] = [
   {
     network: "whatsapp",
     template:
-      "I scored {score}/100 ({category}) on Aivory's AI Readiness Assessment 🚀 Check yours: {url}",
+      "I scored {score}/100 ({category}) on Aivory's AI Readiness Analysis 🚀 Check yours: {url}",
     mode: "intent-url",
     intentUrlBase: "https://wa.me/?text=",
     supportsImageParam: false,
@@ -109,7 +109,7 @@ export const SHARE_CONFIGS: NetworkShareConfig[] = [
   {
     network: "email",
     template:
-      'Hi team,\n\nWe scored {score}/100 ("{category}") on Aivory\'s AI Readiness Assessment.\nLet\'s review next-step blueprints: {url}\n\nBest regards',
+      'Hi team,\n\nWe scored {score}/100 ("{category}") on Aivory\'s AI Readiness Analysis.\nLet\'s review next-step blueprints: {url}\n\nBest regards',
     mode: "mailto",
     supportsImageParam: false,
     copyBeforeOpen: false,
@@ -117,7 +117,7 @@ export const SHARE_CONFIGS: NetworkShareConfig[] = [
   {
     network: "native",
     template:
-      "I scored {score}/100 ({category}) on Aivory's AI Readiness Assessment 🚀 {url}",
+      "I scored {score}/100 ({category}) on Aivory's AI Readiness Analysis 🚀 {url}",
     mode: "native", // navigator.share — can include the image file on mobile
     supportsImageParam: true,
     copyBeforeOpen: false,

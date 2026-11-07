@@ -61,14 +61,14 @@ const cards: PricingCard[] = [
     frequency: '3 uses',
     description: 'Gain a clear understanding of how your organisation operates before making AI decisions.',
     features: [
-      '• 3 assessments included',
-      '• Operational maturity assessment',
+      '• 3 analyses included',
+      '• Operational maturity analysis',
       '• Business objective alignment',
       '• Operational bottleneck analysis',
       '• AI opportunity mapping',
       '• Process and data readiness',
     ],
-    cta: 'Begin Assessment',
+    cta: 'Begin Analysis',
     productId: PRODUCT_IDS.DEEP_DIAGNOSTIC,
   },
   {
@@ -90,14 +90,14 @@ const cards: PricingCard[] = [
   },
   {
     title: 'Complete Transformation Package',
-    subtitle: 'Business Operations Assessment\n+\nTransformation Blueprint\n+\nTransformation Roadmap\n+\n1 Month Business Plan',
+    subtitle: 'Business Operations Analysis\n+\nTransformation Blueprint\n+\nTransformation Roadmap\n+\n1 Month Business Plan',
     price: 299,
     // Each purchase includes 3 runs (avry-backend feature_uses).
     frequency: '3 uses',
-    description: 'Everything required to move from operational assessment to a clear transformation strategy.',
+    description: 'Everything required to move from operational analysis to a clear transformation strategy.',
     features: [
-      '• 3 full runs: Assessment → Blueprint → Roadmap',
-      '• Business Operations Assessment',
+      '• 3 full runs: Analysis → Blueprint → Roadmap',
+      '• Business Operations Analysis',
       '• Transformation Blueprint',
       '• Transformation Roadmap',
       '• AI opportunity prioritisation',

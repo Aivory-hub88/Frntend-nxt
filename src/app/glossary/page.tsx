@@ -14,7 +14,7 @@ import {
 export const metadata: Metadata = {
   title: "AI Operations Glossary",
   description:
-    'Plain-English definitions for AI operations terms: agentic AI, autonomous agents, readiness assessments and orchestration.',
+    'Plain-English definitions for AI operations terms: agentic AI, autonomous agents, readiness analyses and orchestration.',
   alternates: {
     canonical: "/glossary",
   },
@@ -22,7 +22,7 @@ export const metadata: Metadata = {
     type: "website",
     title: "AI Operations Glossary | Aivory",
     description:
-      "Plain-English definitions for the terms that matter in AI operations: agentic AI platforms, autonomous agents, AI readiness assessments, orchestration, and governed deployment.",
+      "Plain-English definitions for the terms that matter in AI operations: agentic AI platforms, autonomous agents, AI readiness analyses, orchestration, and governed deployment.",
     url: "/glossary",
   },
   twitter: { card: "summary_large_image" },
@@ -96,7 +96,7 @@ export default function GlossaryPage() {
             AI Operations Glossary
           </h1>
           <p className="mt-8 max-w-xl text-[16px] font-light leading-[1.7] text-black/70 md:text-[17px]">
-            Plain-English definitions for the terms that matter in AI operations, from agentic platforms and agent orchestration to readiness assessments and governed deployment.
+            Plain-English definitions for the terms that matter in AI operations, from agentic platforms and agent orchestration to readiness analyses and governed deployment.
           </p>
         </section>
 

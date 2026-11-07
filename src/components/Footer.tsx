@@ -37,7 +37,7 @@ const FOOTER_LINES: VibrationLines = {
 const FOOTER_LINES_NARROW: VibrationLines = { ...FOOTER_LINES, center: { x: 1.15, y: 0.35 }, opacity: 0.3, clear: { x: 0.5, y: 0.5, rx: 0.0001, ry: 0.0001 } };
 
 const productLinks = [
-  { label: 'Deep Assessment', href: '/product' },
+  { label: 'Deep Analysis', href: '/product' },
   { label: 'AI Blueprint', href: '/product' },
   { label: 'AI Roadmap', href: '/product' },
   { label: 'Workflow Builder', href: '/product' },
