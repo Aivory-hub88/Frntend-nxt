@@ -63,7 +63,7 @@ interface CapturedCard {
  * are we today", "what is slowing us down") credibly, and to leave the other
  * three ("what should change first", "what is it worth", "where does AI help
  * most") visibly unanswered. Those three are what the paid Business Operations
- * Assessment sells, so any question that would let a visitor answer them on
+ * Analysis sells, so any question that would let a visitor answer them on
  * their own belongs in the paid intake, not here.
  *
  * Grouped as: baseline (1-4), friction (5-8), capacity to change (9-12). The
@@ -267,7 +267,7 @@ function getStrengths(profile: DimensionScore[], exclude: Set<string>): Dimensio
  * Soft prioritisation ("your biggest constraint appears to be X, followed by
  * Y") and a generic next step are safe to give away: they say *where* to look,
  * never *how* to fix it. What to change first with a costed case, and the plan
- * behind it, remain the paid assessment.
+ * behind it, remain the paid analysis.
  */
 function getQuickNote(
   score: number, maturity: string, strengths: DimensionScore[],
@@ -294,10 +294,10 @@ function getQuickNote(
  * The closing hook — the free tier's only mention of AI, and the only place it
  * says out loud what it has not answered.
  *
- * The free assessment answers two of the five executive questions: where are we
+ * The free analysis answers two of the five executive questions: where are we
  * today, and what is slowing us down. What to change first, what a fix is worth,
  * and where AI helps most are deliberately left open — that is what the paid
- * assessment sells. Naming the gap is more honest than implying the free score
+ * analysis sells. Naming the gap is more honest than implying the free score
  * is the whole picture, and it is also the actual sales argument.
  *
  * The count is derived from the answers rather than asserted, so the line reads
@@ -486,7 +486,7 @@ export default function FreeDiagnosticClient() {
   };
 
   // Per-screen funnel events. Without these there is no way to see which
-  // question people abandon the assessment on.
+  // question people abandon the analysis on.
   useEffect(() => {
     if (step !== 'question') return;
     trackEvent('assessment_step', {
@@ -1223,7 +1223,7 @@ export default function FreeDiagnosticClient() {
               <div className="upgrade-grid">
                 <div className="upgrade-card">
                   <div className="upgrade-eyebrow">Upgrade path 01</div>
-                  <h3>Business Operations Assessment</h3>
+                  <h3>Business Operations Analysis</h3>
                   <div className="upgrade-price">$79 <span>one time</span></div>
                   <p className="upgrade-summary">Puts a number on the gaps this score only located — hours lost, cost carried, and what closing each one is worth.</p>
                   <div className="comparison-note"><strong>What this adds:</strong> twelve questions place you on the scale. Forty questions across six dimensions, read against your industry, turn that position into a costed, ordered plan.</div>
@@ -1239,7 +1239,7 @@ export default function FreeDiagnosticClient() {
                     onClick={() => trackEvent('assessment_upgrade_click', { plan: 'business_operations_assessment', score, maturity })}
                   >
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ display: 'inline-block', marginRight: 4 }}><path d="M7 7l10 10M17 7v10H7" /></svg>
-                    Upgrade to Business Operations Assessment
+                    Upgrade to Business Operations Analysis
                   </a>
                 </div>
 
@@ -1247,10 +1247,10 @@ export default function FreeDiagnosticClient() {
                   <div className="upgrade-eyebrow">Best next step</div>
                   <h3>Complete Transformation Package</h3>
                   <div className="upgrade-price">$299 <span>one time</span></div>
-                  <p className="upgrade-summary">The assessment, plus the system design and the phased plan that act on it: Business Operations Assessment + Transformation Blueprint + Transformation Roadmap.</p>
+                  <p className="upgrade-summary">The analysis, plus the system design and the phased plan that act on it: Business Operations Analysis + Transformation Blueprint + Transformation Roadmap.</p>
                   <div className="comparison-note"><strong>Why bundle:</strong> a costed list of constraints still leaves you deciding how to fix them. This carries the diagnosis through to what gets built, in what order, against which targets.</div>
                   <ul className="cta-features">
-                    <li>Everything in Business Operations Assessment</li>
+                    <li>Everything in Business Operations Analysis</li>
                     <li>AI system blueprint and workflow architecture</li>
                     <li>Phased implementation roadmap</li>
                     <li>KPI targets and deployment priorities</li>

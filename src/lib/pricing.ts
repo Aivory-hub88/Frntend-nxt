@@ -139,7 +139,7 @@ export function creditPackId(credits: number): string {
 export const ONE_TIME_PRODUCTS: OneTimeProduct[] = [
   {
     id: PRODUCT_IDS.DEEP_DIAGNOSTIC,
-    name: 'Business Operations Assessment',
+    name: 'Business Operations Analysis',
     price: 79,
     currency: PRICING_CURRENCY,
     kind: 'one-time',

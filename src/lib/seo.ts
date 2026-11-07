@@ -21,11 +21,11 @@ const ORGANIZATION_DESCRIPTION =
 const ORGANIZATION_DISAMBIGUATION =
   'Business transformation and AI operations platform (United Kingdom / global), founded by Irfan Reichmann and canonically published at aivory.uk. Distinct from dental practice software, HRMS platforms, code-compliance tooling, consumer AI apps, or creative studios that share a similar name — none of those are affiliated with this organisation.';
 const WEBSITE_DESCRIPTION =
-  'AI infrastructure for business transformation — from operational assessment to autonomous AI agents.';
+  'AI infrastructure for business transformation — from operational analysis to autonomous AI agents.';
 const HOMEPAGE_DESCRIPTION =
   'AI infrastructure for business transformation, operational intelligence, governed AI agents, and workflow automation. Assess operations, design your blueprint, and deploy with confidence.';
 const PLATFORM_DESCRIPTION =
-  'Aivory is the agentic AI operations platform that guides organisations from business operations assessment to autonomous AI agent orchestration, no-code workflow automation, and operational intelligence.';
+  'Aivory is the agentic AI operations platform that guides organisations from business operations analysis to autonomous AI agent orchestration, no-code workflow automation, and operational intelligence.';
 const BASTION_DESCRIPTION =
   'AI-powered autonomous infrastructure defence platform combining continuous monitoring, adaptive threat response, zero-trust posture, and operational resilience.';
 const FOUNDER_DESCRIPTION =
@@ -136,9 +136,9 @@ export function createOrganization(siteUrl: PublicSiteUrl) {
       'Operational Intelligence',
       'Autonomous AI Agents',
       'AI Agent Orchestration',
-      'Business Operations Assessment',
+      'Business Operations Analysis',
       'AI Readiness Diagnostic',
-      'Operational Maturity Assessment',
+      'Operational Maturity Analysis',
       'Workflow Automation',
       'No-Code AI Agent Deployment',
       'Autonomous Infrastructure Defence',
@@ -206,9 +206,9 @@ export function buildSiteGraph(siteUrl: PublicSiteUrl): Record<string, unknown> 
 }
 
 const OFFER_DESCRIPTIONS: Record<string, string> = {
-  [PRODUCT_IDS.DEEP_DIAGNOSTIC]: 'Operational maturity and AI opportunity assessment, 3 uses included',
+  [PRODUCT_IDS.DEEP_DIAGNOSTIC]: 'Operational maturity and AI opportunity analysis, 3 uses included',
   [PRODUCT_IDS.BLUEPRINT]: 'Operational transformation blueprint and AI deployment strategy, 3 uses included',
-  [PRODUCT_IDS.FULL_STACK]: 'Assessment, blueprint, and transformation roadmap: 3 full runs',
+  [PRODUCT_IDS.FULL_STACK]: 'Analysis, blueprint, and transformation roadmap: 3 full runs',
   [PRODUCT_IDS.OPERATIONAL]: 'Monthly Operational plan — Operational Workspace and 1 AI Workforce',
   [PRODUCT_IDS.BUSINESS]: 'Monthly Business plan for expanded AI operations and automation',
   [PRODUCT_IDS.OPERATIONAL_ANNUAL]: 'Operational plan billed annually — 12 months in one payment',
@@ -252,7 +252,7 @@ function createPlatformApplication(siteUrl: PublicSiteUrl) {
     url: `${siteUrl}/`,
     description: PLATFORM_DESCRIPTION,
     featureList: [
-      'Business Operations Assessment',
+      'Business Operations Analysis',
       'Transformation Blueprint and Roadmap',
       'Natural Language Workflow Builder',
       'Autonomous AI Agents',
@@ -296,7 +296,7 @@ function createAssessmentService(siteUrl: PublicSiteUrl) {
   return {
     '@type': 'Service',
     '@id': `${siteUrl}/#service-assessment`,
-    name: 'Business Operations Assessment',
+    name: 'Business Operations Analysis',
     serviceType: 'AI Readiness & Operations Diagnostic',
     provider: { '@id': `${siteUrl}/#organisation` },
     description: 'One-time diagnostic that assesses operational maturity, data readiness, process bottlenecks, and AI opportunity areas before any technology deployment.',
@@ -318,7 +318,7 @@ function createTransformationService(siteUrl: PublicSiteUrl) {
     name: 'AI Transformation Blueprint & Roadmap',
     serviceType: 'Business Transformation Consulting',
     provider: { '@id': `${siteUrl}/#organisation` },
-    description: 'Structured blueprint and phased roadmap that turns operational assessment insights into governed AI deployment plans.',
+    description: 'Structured blueprint and phased roadmap that turns operational analysis insights into governed AI deployment plans.',
     url: `${siteUrl}/`,
     offers: {
       '@type': 'Offer',
@@ -344,12 +344,12 @@ export const FAQ_ENTITIES = [
     answer: 'Aivory was founded by Irfan Reichmann, who focuses on practical AI adoption through operational clarity and governed systems.',
   },
   {
-    question: 'How does the Business Operations Assessment work?',
-    answer: 'The assessment evaluates operational health, data readiness, process maturity, and AI opportunity areas. It identifies bottlenecks and produces a clear starting point before any AI system is deployed.',
+    question: 'How does the Business Operations Analysis work?',
+    answer: 'The analysis evaluates operational health, data readiness, process maturity, and AI opportunity areas. It identifies bottlenecks and produces a clear starting point before any AI system is deployed.',
   },
   {
     question: 'What is included in the Transformation Blueprint?',
-    answer: 'The Transformation Blueprint includes a future-state workflow architecture, AI deployment strategy, integration recommendations, and an executive implementation framework based on your assessment results.',
+    answer: 'The Transformation Blueprint includes a future-state workflow architecture, AI deployment strategy, integration recommendations, and an executive implementation framework based on your analysis results.',
   },
   {
     question: 'Does Aivory support multilingual AI agents?',
@@ -461,7 +461,7 @@ export const FAQ_ENTITIES_JA = [
 export const ASSESSMENT_STEPS = [
   {
     name: 'Start the diagnostic',
-    text: 'Begin the Business Operations Assessment to evaluate current workflows, constraints, and data environment.',
+    text: 'Begin the Business Operations Analysis to evaluate current workflows, constraints, and data environment.',
   },
   {
     name: 'Review operational scores',
@@ -473,7 +473,7 @@ export const ASSESSMENT_STEPS = [
   },
   {
     name: 'Generate Transformation Blueprint',
-    text: 'Convert assessment insights into a structured architecture and implementation roadmap.',
+    text: 'Convert analysis insights into a structured architecture and implementation roadmap.',
   },
 ] as const;
 
@@ -520,7 +520,7 @@ export function createAssessmentHowTo(siteUrl: PublicSiteUrl) {
   return {
     '@type': 'HowTo',
     '@id': `${siteUrl}/#howto-assessment`,
-    name: 'How to run a Business Operations Assessment with Aivory',
+    name: 'How to run a Business Operations Analysis with Aivory',
     description: 'Step-by-step process to assess operational readiness and identify AI opportunities before deployment.',
     url: absoluteUrlForSite(siteUrl, '/about#how-it-works'),
     step: ASSESSMENT_STEPS.map((entry, index) => ({
@@ -683,7 +683,7 @@ export function createFaqPageFromEntries(
 }
 
 const PRICING_DESCRIPTION =
-  'Simple, transparent pricing for AI infrastructure and business transformation. One-time assessments, transformation blueprints, monthly operating plans, and Intelligence Credit packs.';
+  'Simple, transparent pricing for AI infrastructure and business transformation. One-time analyses, transformation blueprints, monthly operating plans, and Intelligence Credit packs.';
 
 export function buildPricingPageGraph(
   siteUrl: PublicSiteUrl,
@@ -876,7 +876,7 @@ export const GLOSSARY_ENTRIES = [
   {
     term: 'AI Operations Platform',
     definition:
-      'A platform that takes an organisation from operational assessment through to deployed, governed AI agents and workflow automation, rather than offering any single one of those pieces in isolation.',
+      'A platform that takes an organisation from operational analysis through to deployed, governed AI agents and workflow automation, rather than offering any single one of those pieces in isolation.',
     href: '/product',
   },
   {
@@ -892,13 +892,13 @@ export const GLOSSARY_ENTRIES = [
     href: '/product',
   },
   {
-    term: 'AI Readiness Assessment',
+    term: 'AI Readiness Analysis',
     definition:
       'A structured evaluation of an organisation’s data quality, process maturity, and governance before any AI system is deployed, used to identify where automation will create measurable value and where it will not.',
     href: '/free-diagnostic',
   },
   {
-    term: 'Operational Maturity Assessment',
+    term: 'Operational Maturity Analysis',
     definition:
       'An audit of how consistently an organisation’s processes actually run in practice, covering strategy, data, and people, used to find the root causes of operational bottlenecks before choosing what to automate.',
     href: '/blog/how-to-run-a-business-operations-assessment',
@@ -934,7 +934,7 @@ export const GLOSSARY_ENTRIES = [
     href: '/blog/ai-agent-vs-chatbot-vs-rpa-what-actually-differs',
   },
   {
-    term: 'Business Operations Assessment',
+    term: 'Business Operations Analysis',
     definition:
       'A diagnostic that scores an organisation’s process, data, strategy, governance, and people maturity, producing a baseline that transformation and automation decisions can be measured against.',
     href: '/free-diagnostic',
@@ -960,7 +960,7 @@ export const GLOSSARY_ENTRIES = [
 ] as const;
 
 const GLOSSARY_DESCRIPTION =
-  'Plain-English definitions for the terms that matter in AI operations: agentic AI platforms, autonomous agents, AI readiness assessments, orchestration, and governed deployment.';
+  'Plain-English definitions for the terms that matter in AI operations: agentic AI platforms, autonomous agents, AI readiness analyses, orchestration, and governed deployment.';
 
 export function buildGlossaryPageGraph(siteUrl: PublicSiteUrl): Record<string, unknown> {
   const glossaryUrl = absoluteUrlForSite(siteUrl, '/glossary');

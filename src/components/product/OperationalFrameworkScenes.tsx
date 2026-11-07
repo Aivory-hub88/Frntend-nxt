@@ -200,7 +200,7 @@ function OperationalHealthCard({ phase }: { phase: DiagnosticPhase }) {
 
       <div className="grid grid-cols-[105px_1fr] items-center gap-3 border-b border-white/[0.07] py-2">
         <div><span className="text-[6px] uppercase tracking-[0.12em] text-[#a1a1aa]">Strongest</span><p className="text-[9px] font-light">Governance</p></div>
-        <p className="flex items-start gap-2 text-[7px] leading-relaxed text-white/70"><span className="mt-0.5 text-[#c7d3b5]">▲</span>Your company scores 49/100, placing it at Initiating maturity. (composite blended 70% deterministic + 30% AI assessment)</p>
+        <p className="flex items-start gap-2 text-[7px] leading-relaxed text-white/70"><span className="mt-0.5 text-[#c7d3b5]">▲</span>Your company scores 49/100, placing it at Initiating maturity. (composite blended 70% deterministic + 30% AI analysis)</p>
       </div>
 
       <div className="min-h-0 flex-1 pt-2">
@@ -251,7 +251,7 @@ export function DiagnosticAnimation() {
   }, [reduceMotion]);
 
   return (
-    <DashboardFrame label="Business Assessment" meta="Executive view">
+    <DashboardFrame label="Business Analysis" meta="Executive view">
       <AnimatePresence mode="wait">
         {phase === 'capture' && (
           <motion.div key="capture" {...enter} className="flex h-full items-center justify-center">
@@ -309,7 +309,7 @@ export function BlueprintAnimation() {
           <motion.div key="source" {...enter} className="flex h-full items-center justify-center">
             <div className="w-full max-w-[320px] rounded-xl p-4" style={panelStyle}>
               <div className="mb-3 flex items-center justify-between">
-                <div><p className="text-[8px] uppercase text-[#a1a1aa]">Assessment input</p><p className="text-[12px]">Operational Readiness</p></div>
+                <div><p className="text-[8px] uppercase text-[#a1a1aa]">Analysis input</p><p className="text-[12px]">Operational Readiness</p></div>
                 <div className="flex h-12 w-12 items-center justify-center rounded-full border-[4px] border-[#c7d3b5] text-[14px] font-light">64</div>
               </div>
               {['Centralise customer data', 'Standardise lead handoff', 'Automate qualification'].map((item, index) => (

@@ -11,7 +11,7 @@ export interface Product {
 const products: Product[] = [
   {
     id: 'ai-readiness-diagnostic',
-    title: 'AI Readiness Deep Assessment',
+    title: 'AI Readiness Deep Analysis',
     tagline: 'Know Before You Build',
     description:
       'Assess exactly where your business stands on AI readiness before investing a single dollar.',

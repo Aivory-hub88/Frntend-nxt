@@ -4,7 +4,7 @@ const STEPS = [
   {
     label: 'Step 1 · Assess',
     title: 'Diagnose how work really runs',
-    body: 'A self-guided operations assessment maps every process, bottleneck and cost in one sitting.',
+    body: 'A self-guided operations analysis maps every process, bottleneck and cost in one sitting.',
     mini: (
       <div className={s.mini}>
         <div className={s.miniRow}><span>Invoice approval</span><span className={s.pill}>38% manual</span></div>

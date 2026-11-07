@@ -295,7 +295,7 @@ export function HalftoneWave() {
     let footerAt = Infinity;
     const computeAnchors = () => {
       const vh = window.innerHeight;
-      // The section containing "From Assessment to Staged Autonomy" on the home page has id="showcase"
+      // The section containing "From Analysis to Staged Autonomy" on the home page has id="showcase"
       const showcaseEl = document.getElementById('showcase');
       if (showcaseEl) {
         const scTop = showcaseEl.getBoundingClientRect().top + window.scrollY;

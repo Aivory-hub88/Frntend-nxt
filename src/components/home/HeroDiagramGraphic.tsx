@@ -534,7 +534,7 @@ export default function HeroDiagramGraphic() {
                 className="m-0 font-normal"
                 style={{ marginTop: 10, fontFamily: LITERATA, fontSize: 28, lineHeight: '40px', color: 'rgba(0,0,0,0.55)' }}
               >
-                Aivory takes you from first assessment to agents on the job
+                Aivory takes you from first analysis to agents on the job
                 <br />
                 No handoffs, no patchwork
               </p>
@@ -608,7 +608,7 @@ export default function HeroDiagramGraphic() {
               width={380}
               rotate={-1.5}
               tone="dark"
-              title="Start free operations assessment"
+              title="Start free operations analysis"
               caption="Self-guided · One sitting · No sales pitch"
             />
             <CtaCard

@@ -57,7 +57,7 @@ export default function PreFooterCTA() {
                   size="compact"
                   onClick={() => setActiveProductId(PRODUCT_IDS.DEEP_DIAGNOSTIC)}
                 >
-                  Begin Assessment
+                  Begin Analysis
                 </TechnicalFrameButton>
                 <TechnicalFrameButton
                   type="button"

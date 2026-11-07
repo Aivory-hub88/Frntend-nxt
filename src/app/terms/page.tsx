@@ -109,7 +109,7 @@ export default function TermsPage() {
             <section className="space-y-5">
               <SectionTitle>4. Your content</SectionTitle>
               <p className={leadClass}>
-                Anything you create inside Aivory — your assessments, blueprints,
+                Anything you create inside Aivory — your analyses, blueprints,
                 workflows, agent configurations — belongs to you. We don&apos;t claim
                 ownership of your work.
               </p>
@@ -133,7 +133,7 @@ export default function TermsPage() {
               <SectionTitle>6. Payments and refunds</SectionTitle>
               <p className={leadClass}>
                 Subscription plans are billed monthly or annually. One-time products like
-                the Deep Assessment and Blueprint are charged at purchase.
+                the Deep Analysis and Blueprint are charged at purchase.
               </p>
               <p className={leadClass}>
                 If something doesn&apos;t work the way we said it would, contact us within 7

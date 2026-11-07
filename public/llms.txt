@@ -6,7 +6,7 @@ Aivory is distinct from unrelated companies sharing a similar name (dental pract
 
 ## Products
 
-- [Aivory Platform](https://aivory.uk/product): AI operations platform — business operations assessment, AI transformation blueprints, and deployment of governed autonomous AI agents and workflow automation.
+- [Aivory Platform](https://aivory.uk/product): AI operations platform — business operations analysis, AI transformation blueprints, and deployment of governed autonomous AI agents and workflow automation.
 - [Bastion](https://aivory.uk/bastion): Autonomous infrastructure defence — AI-powered security monitoring and protection for modern infrastructure.
 - [AI Workflow Automation](https://aivory.uk/ai-workflow-automation): No-code AI workflow automation with 30+ integrations including Slack, HubSpot, Notion, Gmail, Salesforce, WhatsApp, Telegram, OpenAI, Claude and Gemini.
 - [Free Diagnostic](https://aivory.uk/free-diagnostic): Free AI readiness diagnostic for businesses.

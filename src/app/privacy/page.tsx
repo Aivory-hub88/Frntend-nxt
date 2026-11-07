@@ -84,7 +84,7 @@ export default function PrivacyPage() {
               <p className={leadClass}>
                 <strong className={strongClass}>Content you create</strong>
                 <br />
-                Your assessments, blueprints, workflows, and agent configurations. We
+                Your analyses, blueprints, workflows, and agent configurations. We
                 store this so you can access and use it. It stays yours.
               </p>
               <p className={leadClass}>

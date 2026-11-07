@@ -119,7 +119,7 @@ export default function AboutPage() {
                   href="/free-diagnostic"
                   className="inline-flex items-center gap-3 border-b border-black pb-1 text-[13px] font-light text-black transition-opacity hover:opacity-55"
                 >
-                  Start assessment
+                  Start analysis
                   <ArrowIcon />
                 </Link>
                 <Link
@@ -303,7 +303,7 @@ export default function AboutPage() {
           </div>
           <div className="flex flex-wrap gap-3 lg:col-span-5 lg:justify-end">
             <TechnicalFrameButton href="/free-diagnostic">
-              <ArrowIcon /> Start assessment
+              <ArrowIcon /> Start analysis
             </TechnicalFrameButton>
             <TechnicalFrameButton href="/contact">
               Talk to us

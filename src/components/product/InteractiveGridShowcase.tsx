@@ -19,7 +19,7 @@ const LabFlaskCanvas = dynamic(
 // Product context text
 const showcaseProducts = [
   {
-    step: '01. DISCOVER', title: 'Business Operations Assessment',
+    step: '01. DISCOVER', title: 'Business Operations Analysis',
     description: (
       <>
         Every successful transformation begins with operational clarity. Assess how your business operates, identify what limits performance, and prioritise the improvements that create the greatest business impact.
@@ -28,7 +28,7 @@ const showcaseProducts = [
   },
   {
     step: '02. DESIGN', title: 'Transformation Blueprint',
-    description: 'Transform assessment insights into a practical roadmap for business improvement. Prioritise operational improvements, identify AI opportunities, and define a clear path from strategy to execution.',
+    description: 'Transform analysis insights into a practical roadmap for business improvement. Prioritise operational improvements, identify AI opportunities, and define a clear path from strategy to execution.',
   },
   {
     step: '03. PLAN', title: 'Transformation Roadmap',
