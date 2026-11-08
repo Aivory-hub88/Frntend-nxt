@@ -534,7 +534,7 @@ export default function HeroDiagramGraphic() {
                 className="m-0 font-normal"
                 style={{ marginTop: 10, fontFamily: LITERATA, fontSize: 28, lineHeight: '40px', color: 'rgba(0,0,0,0.55)' }}
               >
-                Aivory takes you from first analysis to AI that works with you.
+                Aivory takes you from first analysis to AI that works with you
                 <br />
                 No handoffs, no patchwork
               </p>
