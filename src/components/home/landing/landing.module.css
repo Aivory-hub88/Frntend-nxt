@@ -1028,45 +1028,70 @@
   line-height: 1.45;
 }
 
-/* ── Workflow builder (user dashboard canvas look) ── */
+/* ── Workflow builder: iOS light glass, matches the Cervo bento ──
+   A pale pool stage, frosted white panels, iMessage-blue bubble, squircle
+   app-icon glyphs on white pill nodes, system-grey dashed connectors. */
 .builder {
+  --ios-label: #1c1c1e;
+  --ios-secondary: #6e6e73;
+  --ios-tertiary: #aeaeb2;
+  --ios-bg: #f2f2f7;
+  --ios-blue: #007aff;
+  --ios-green: #34c759;
+  --ios-orange: #ff9500;
+  --ios-indigo: #5856d6;
+  --ios-grey: #8e8e93;
   margin-top: 48px;
   display: grid;
   grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
-  gap: 16px;
+  gap: 20px;
   align-items: stretch;
+  padding: clamp(14px, 2.4vw, 28px);
+  border-radius: 36px;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  background:
+    radial-gradient(60% 55% at 12% 8%, rgba(0, 122, 255, 0.13), transparent 70%),
+    radial-gradient(55% 50% at 92% 90%, rgba(175, 130, 255, 0.14), transparent 70%),
+    radial-gradient(45% 40% at 85% 6%, rgba(52, 199, 89, 0.08), transparent 70%),
+    #f5f5f7;
 }
-/* Copilot card: CopilotTogglePanel colours and spacing */
+/* Copilot card: frosted white glass */
 .cop {
-  background: #3a3a38;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 16px;
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.35);
+  background: rgba(255, 255, 255, 0.78);
+  -webkit-backdrop-filter: saturate(180%) blur(24px);
+  backdrop-filter: saturate(180%) blur(24px);
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  border-radius: 26px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04), 0 18px 44px rgba(20, 30, 60, 0.1);
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  color: #f7f7f7;
+  color: var(--ios-label);
 }
 .copH {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 14px 20px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 16px 20px 14px;
+  border-bottom: 1px solid rgba(60, 60, 67, 0.1);
 }
 .copLogo {
-  height: 22px;
-  width: auto;
+  display: block;
+  height: 15px;
+  aspect-ratio: 978.9 / 141.6;
+  background-color: var(--ios-label);
+  -webkit-mask: url('/landing/aivory-logo-2026.svg') no-repeat left center / contain;
+  mask: url('/landing/aivory-logo-2026.svg') no-repeat left center / contain;
 }
 .copIcons {
   display: flex;
-  gap: 8px;
+  gap: 10px;
 }
 .copIcons svg {
   width: 15px;
   height: 15px;
   fill: none;
-  stroke: rgba(255, 255, 255, 0.4);
+  stroke: var(--ios-tertiary);
   stroke-width: 1.8;
   stroke-linecap: round;
   stroke-linejoin: round;
@@ -1075,83 +1100,89 @@
   flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  padding: 14px 16px;
+  gap: 14px;
+  padding: 18px 18px 14px;
 }
 .copUser {
   align-self: flex-end;
-  max-width: 85%;
-  background: #282825;
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  border-radius: 16px 16px 6px 16px;
-  padding: 8px 14px;
-  font-size: 13px;
-  line-height: 1.6;
+  max-width: 88%;
+  background: var(--ios-blue);
+  color: #fff;
+  border-radius: 20px 20px 6px 20px;
+  padding: 10px 15px;
+  font-size: 13.5px;
+  line-height: 1.55;
 }
 .copAi {
   display: flex;
   align-items: flex-start;
   gap: 10px;
-  font-size: 13px;
+  font-size: 13.5px;
   line-height: 1.6;
-  color: #ecebe7;
+  color: var(--ios-label);
 }
 .copAi p + p {
   margin-top: 8px !important;
 }
+.copAi b {
+  font-weight: 600;
+}
 .copAvatar {
-  width: 18px;
-  height: 18px;
-  margin-top: 3px;
+  width: 22px;
+  height: 22px;
+  margin-top: 1px;
   flex: none;
+  border-radius: 7px;
+  background-color: var(--ios-label);
+  -webkit-mask: url('/landing/aivory-avatar.svg') no-repeat center / 78%;
+  mask: url('/landing/aivory-avatar.svg') no-repeat center / 78%;
 }
 .copApply {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  margin: 0 12px 8px;
-  padding: 10px 16px;
-  border-radius: 12px;
-  background: rgba(24, 24, 27, 0.6);
-  border-top: 1px solid rgba(82, 82, 91, 0.4);
+  margin: 0 14px 10px;
+  padding: 12px 14px 12px 16px;
+  border-radius: 18px;
+  background: var(--ios-bg);
 }
 .copApply b {
   display: block;
-  font-size: 13px;
-  font-weight: 500;
+  font-size: 13.5px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
 }
 .copApply small {
-  font-size: 11px;
-  color: #a1a1aa;
+  font-size: 11.5px;
+  color: var(--ios-secondary);
 }
 .copApplyBtn {
   font-size: 13px;
   font-weight: 600;
-  padding: 6px 16px;
-  border-radius: 8px;
-  background: #6c5ce7;
+  padding: 8px 16px;
+  border-radius: 999px;
+  background: var(--ios-blue);
   color: #fff;
   white-space: nowrap;
 }
 .copInputWrap {
-  padding: 8px 12px 8px;
+  padding: 0 14px 10px;
 }
 .copInput {
   display: flex;
   align-items: flex-end;
   gap: 12px;
-  background: #2e2e2c;
-  border: 1px solid rgba(255, 255, 255, 0.07);
-  border-radius: 14px;
-  padding: 10px 12px 10px 16px;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.15);
+  background: #fff;
+  border: 1px solid rgba(60, 60, 67, 0.14);
+  border-radius: 22px;
+  padding: 8px 8px 8px 16px;
 }
 .copPlaceholder {
   flex: 1;
-  font-size: 13px;
+  font-size: 13.5px;
   line-height: 1.6;
-  color: rgba(255, 255, 255, 0.3);
+  color: var(--ios-tertiary);
   padding-bottom: 6px;
 }
 .copClip {
@@ -1160,17 +1191,17 @@
   flex: none;
   margin-bottom: 7px;
   fill: none;
-  stroke: rgba(255, 255, 255, 0.4);
+  stroke: var(--ios-tertiary);
   stroke-width: 1.8;
   stroke-linecap: round;
   stroke-linejoin: round;
 }
 .copSend {
-  width: 36px;
-  height: 36px;
+  width: 34px;
+  height: 34px;
   flex: none;
-  border-radius: 20px;
-  background: #52525b;
+  border-radius: 50%;
+  background: var(--ios-blue);
   display: grid;
   place-items: center;
 }
@@ -1179,86 +1210,89 @@
   height: 16px;
   fill: none;
   stroke: #fff;
-  stroke-width: 2;
+  stroke-width: 2.2;
   stroke-linecap: round;
   stroke-linejoin: round;
 }
 .copGrip {
-  height: 12px;
+  height: 14px;
   display: grid;
   place-items: center;
 }
 .copGrip i {
-  width: 32px;
-  height: 4px;
+  width: 36px;
+  height: 5px;
   border-radius: 9px;
-  background: rgba(255, 255, 255, 0.2);
+  background: rgba(60, 60, 67, 0.18);
 }
+/* Canvas: light dotted grid inside the same glass language */
 .wfc {
-  background-color: #18181b;
-  background-image: radial-gradient(circle, rgba(255, 255, 255, 0.08) 1px, transparent 1.2px);
+  background-color: rgba(255, 255, 255, 0.62);
+  background-image: radial-gradient(circle, rgba(60, 60, 67, 0.16) 1px, transparent 1.3px);
   background-size: 24px 24px;
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  border-radius: 12px;
-  padding: 28px 20px;
+  -webkit-backdrop-filter: saturate(180%) blur(24px);
+  backdrop-filter: saturate(180%) blur(24px);
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  border-radius: 26px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04), 0 18px 44px rgba(20, 30, 60, 0.1);
+  padding: 30px 20px;
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 .wn {
+  --tint: var(--ios-grey);
   width: min(300px, 100%);
-  min-height: 56px;
-  padding: 10px 18px 10px 12px;
+  min-height: 58px;
+  padding: 9px 18px 9px 10px;
   border-radius: 999px;
-  border: 1.5px solid rgba(255, 255, 255, 0.12);
-  background: #27272a;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  background: #fff;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05), 0 8px 20px rgba(20, 30, 60, 0.08);
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 11px;
   box-sizing: border-box;
 }
 .wn[data-c='trigger'],
-.wn[data-c='condition'] { border-color: rgba(251, 191, 36, 0.28); background-image: linear-gradient(rgba(251, 191, 36, 0.06), rgba(251, 191, 36, 0.06)); }
-.wn[data-c='ai'] { border-color: rgba(178, 204, 162, 0.28); background-image: linear-gradient(rgba(178, 204, 162, 0.05), rgba(178, 204, 162, 0.05)); }
-.wn[data-c='app'] { border-color: rgba(129, 140, 248, 0.28); background-image: linear-gradient(rgba(129, 140, 248, 0.06), rgba(129, 140, 248, 0.06)); }
-.wn[data-c='channel'] { border-color: rgba(59, 130, 246, 0.28); background-image: linear-gradient(rgba(59, 130, 246, 0.06), rgba(59, 130, 246, 0.06)); }
-.wn[data-c='action'] { border-color: rgba(255, 255, 255, 0.09); background-image: linear-gradient(rgba(255, 255, 255, 0.045), rgba(255, 255, 255, 0.045)); }
+.wn[data-c='condition'] { --tint: var(--ios-orange); }
+.wn[data-c='ai'] { --tint: var(--ios-green); }
+.wn[data-c='app'] { --tint: var(--ios-indigo); }
+.wn[data-c='channel'] { --tint: var(--ios-blue); }
+.wn[data-c='action'] { --tint: var(--ios-grey); }
 .wi {
-  width: 36px;
-  height: 36px;
+  width: 38px;
+  height: 38px;
   flex: none;
   display: grid;
   place-items: center;
+  border-radius: 12px;
+  background: var(--tint);
+  color: #fff;
 }
 .wi svg {
-  width: 22px;
-  height: 22px;
+  width: 21px;
+  height: 21px;
 }
-.wn[data-c='trigger'] .wi,
-.wn[data-c='condition'] .wi { color: rgba(251, 191, 36, 0.85); }
-.wn[data-c='ai'] .wi { color: rgba(178, 204, 162, 0.85); }
-.wn[data-c='app'] .wi { color: rgba(129, 140, 248, 0.85); }
-.wn[data-c='channel'] .wi { color: rgba(59, 130, 246, 0.85); }
-.wn[data-c='action'] .wi { color: rgba(168, 166, 162, 0.82); }
 .wt {
   display: grid;
   gap: 3px;
   min-width: 0;
 }
 .wt b {
-  font-size: 15px;
-  font-weight: 500;
-  color: #fff;
+  font-size: 14.5px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--ios-label);
   line-height: 1.25;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 .wt small {
-  font-size: 11px;
+  font-size: 11.5px;
   font-weight: 500;
-  color: rgba(255, 255, 255, 0.5);
+  color: var(--ios-secondary);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -1276,7 +1310,7 @@
 .we path,
 .wsplit path {
   fill: none;
-  stroke: #e0e0e0;
+  stroke: #c7c7cc;
   stroke-width: 2;
   stroke-dasharray: 8 4;
   stroke-linecap: round;
@@ -1284,7 +1318,7 @@
 }
 .we polygon,
 .wsplit polygon {
-  fill: #e0e0e0;
+  fill: #c7c7cc;
 }
 .wbr {
   width: min(560px, 100%);
@@ -1307,7 +1341,7 @@
   font-weight: 600;
   letter-spacing: 0.5px;
   text-transform: uppercase;
-  color: #a1a1aa;
+  color: var(--ios-secondary);
 }
 @media (prefers-reduced-motion: no-preference) {
   .we path,
