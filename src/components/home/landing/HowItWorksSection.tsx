@@ -1,41 +1,65 @@
 import s from './landing.module.css';
 
-const STEPS = [
-  {
-    label: 'Step 1 · Assess',
-    title: 'Diagnose how work really runs',
-    body: 'A self-guided operations analysis maps every process, bottleneck and cost in one sitting.',
-    mini: (
-      <div className={s.mini}>
-        <div className={s.miniRow}><span>Invoice approval</span><span className={s.pill}>38% manual</span></div>
-        <div className={s.bar}><span style={{ width: '38%' }} /></div>
-        <div className={s.miniRow}><span>Helpdesk triage</span><span className={s.pill}>61% manual</span></div>
-        <div className={s.bar}><span style={{ width: '61%' }} /></div>
+/* Illustrations of the real product in the landing's iOS light glass look:
+   the Deep Diagnostic chat, the blueprint report, an agent approval. */
+
+function Diagnose() {
+  return (
+    <div className={`${s.hwMock} ${s.hwChat}`} aria-hidden="true">
+      <div className={s.hwPhase}>
+        <span>Phase 2 of 4 · Operations &amp; data foundation</span>
+        <span className={s.hwSegs}><i data-on /><i data-on /><i /><i /></span>
       </div>
-    ),
-  },
-  {
-    label: 'Step 2 · Blueprint',
-    title: 'Get a deployment-ready blueprint',
-    body: 'A concrete automation plan generated straight from your diagnostic, not a slide deck.',
-    mini: (
-      <div className={s.mini}>
-        <div className={s.miniRow}><span>Quick-win automations</span><span className={s.pill}>7 found</span></div>
-        <div className={s.miniRow}><span>Connects to</span><span>ERP · CRM · Helpdesk</span></div>
+      <div className={s.hwQ}>Which processes take the most manual effort?</div>
+      <div className={s.hwOpts}>
+        <div className={s.hwOpt} data-sel><b>✓</b><span>Invoice approval</span><em>38% manual</em></div>
+        <div className={s.hwOpt} data-sel><b>✓</b><span>Helpdesk triage</span><em>61% manual</em></div>
+        <div className={s.hwOpt}><b>3</b><span>Customer onboarding</span></div>
       </div>
-    ),
-  },
-  {
-    label: 'Step 3 · Deploy',
-    title: 'Scale with governed agents',
-    body: 'Agents run inside your stack with approvals, audit trails and role-based access.',
-    mini: (
-      <div className={s.mini}>
-        <div className={s.miniRow}><span>Refund over $500</span><span className={s.pill}>Needs approval</span></div>
-        <div className={s.miniRow}><span>Requested by</span><span>Finance agent</span></div>
+    </div>
+  );
+}
+
+function Blueprint() {
+  return (
+    <div className={`${s.hwMock} ${s.hwReport}`} aria-hidden="true">
+      <div className={s.hwBig}><strong>7</strong><span>quick-win automations found</span></div>
+      <ul className={s.hwList}>
+        <li><i data-c="green" />Invoice matching<small>Odoo</small></li>
+        <li><i data-c="blue" />Ticket triage<small>Helpdesk</small></li>
+        <li><i data-c="orange" />Lead routing<small>CRM</small></li>
+      </ul>
+    </div>
+  );
+}
+
+function Deploy() {
+  return (
+    <div className={s.hwDeploy} aria-hidden="true">
+      <div className={`${s.hwMock} ${s.hwApprove}`}>
+        <div className={s.hwApproveTop}>
+          <span className={s.hwAv}>FA</span>
+          <div>
+            <b>Refund over $500</b>
+            <small>Requested by Finance agent</small>
+          </div>
+          <span className={s.hwChip}>Needs approval</span>
+        </div>
+        <div className={s.hwBtns}><span data-p>Approve</span><span>Decline</span></div>
       </div>
-    ),
-  },
+      <ol className={`${s.hwMock} ${s.hwAudit}`}>
+        <li><i />Finance agent drafted the refund<small>09:41</small></li>
+        <li><i />Sent to Finance lead for approval<small>09:41</small></li>
+        <li><i data-ok />Approved and posted to Odoo<small>09:43</small></li>
+      </ol>
+    </div>
+  );
+}
+
+const CARDS = [
+  { n: 1, tone: 'blue', cls: s.hwA, title: 'Diagnose how work really runs.', body: 'A self-guided analysis maps every process, bottleneck and cost in one sitting.', mock: <Diagnose /> },
+  { n: 2, tone: 'lilac', cls: s.hwB, title: 'Get a deployment-ready blueprint.', body: 'A concrete automation plan from your diagnostic, not a slide deck.', mock: <Blueprint /> },
+  { n: 3, tone: 'green', cls: s.hwC, title: 'Scale with governed agents.', body: 'Agents run inside your stack with approvals, audit trails and role-based access.', mock: <Deploy /> },
 ];
 
 export default function HowItWorksSection() {
@@ -57,13 +81,16 @@ export default function HowItWorksSection() {
             <a className={`${s.btn} ${s.ghost}`} href="#cervo">See how it works</a>
           </div>
         </div>
-        <div className={s.steps}>
-          {STEPS.map((step) => (
-            <article key={step.label} className={s.step}>
-              <span className={s.stepN}>{step.label}</span>
-              <h3>{step.title}</h3>
-              <p>{step.body}</p>
-              {step.mini}
+        <div className={s.hw}>
+          {CARDS.map((c) => (
+            <article key={c.n} className={`${s.hwCard} ${c.cls}`} data-tone={c.tone}>
+              <div className={s.hwCopy}>
+                <span className={s.hwNum}>{c.n}</span>
+                <h3>
+                  {c.title} <span>{c.body}</span>
+                </h3>
+              </div>
+              {c.mock}
             </article>
           ))}
         </div>
