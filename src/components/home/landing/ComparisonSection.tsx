@@ -1,5 +1,6 @@
 import type { CSSProperties } from 'react';
-import { BokehGradient, type BokehScene, type LeafFigure } from '@/components/ui/BokehGradient';
+import { BokehGradient, type BokehScene } from '@/components/ui/BokehGradient';
+import { ParametricPattern } from '@/components/ui/ParametricPattern';
 import s from './landing.module.css';
 
 type Status = 'yes' | 'no' | 'warn';
@@ -25,7 +26,6 @@ const SCENE: BokehScene = {
   light: 0.35,
   shadow: 0.55,
 };
-const FIGURE: LeafFigure = { kind: 'fibonacci', origin: [1.02, 0.05], unit: 0.018, count: 5 };
 
 /* Every cell is placed explicitly (the card holds the last column on every row, which breaks
    auto-placement). Rows pass their line numbers down as custom properties: --r on desktop,
@@ -85,8 +85,10 @@ export default function ComparisonSection() {
 
         <div className={s.cmp}>
           <div className={s.cmpGrid} role="table" aria-label="Aivory compared with AI chat, consulting and automation">
-            {/* The Aivory column: one gradient card behind the last column, overhanging the panel. */}
-            <BokehGradient scene={SCENE} figure={FIGURE} className={s.cmpCard} />
+            {/* The Aivory column: one gradient card (with a parametric facade pattern) behind the last column, overhanging the panel. */}
+            <BokehGradient scene={SCENE} className={s.cmpCard}>
+              <ParametricPattern kind="lattice" />
+            </BokehGradient>
 
             <div className={s.cmpRow} role="row" style={HEAD_LINES}>
               <span className={`${s.cmpHead} ${s.cmpCap}`} role="columnheader">Capabilities</span>
