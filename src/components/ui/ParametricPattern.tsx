@@ -239,8 +239,7 @@ function globePath(w: number, h: number, p: GlobeProps, t: number): Layer[] {
 /**
  * Facade of crossing sine ribbons on a real sphere. Rows follow latitude, waves run along
  * longitude: neighbouring lines in opposite phase kiss at pinch points and open almond / eye
- * cells. Wavelength varies around the globe and row spacing varies from equator to pole, so
- * cell sizes vary. Each ribbon is three strands. The sphere leans left (`roll`), shows its
+ * cells. Every cell has the same width; row spacing varies from equator to pole. Each ribbon is three strands. The sphere leans left (`roll`), shows its
  * north pole a little (`tilt`) and turns slowly on its axis. Drawn on a canvas from geometry
  * built once, so a frame only rotates points (the SVG + breathing version was too heavy).
  */
@@ -257,16 +256,9 @@ function waveGeo(): WaveGeo {
     rows.push(v);
     v += 0.034 + 0.05 * Math.pow(0.5 + 0.5 * Math.sin(v * 4.3 + 0.6), 1.6);
   }
-  // Phase around longitude: varying wavenumber, a whole number of cycles per turn (no seam).
-  const N = 720;
-  const base: number[] = [0];
-  let acc = 0;
-  for (let i = 1; i <= N; i++) {
-    const u = (i / N) * TAU;
-    acc += (1 + 0.55 * Math.sin(u * 2 - 0.7) + 0.2 * Math.sin(u * 5 + 1.1)) * (TAU / N);
-    base.push(acc);
-  }
-  const scale = (26 * TAU) / acc;
+  // Phase around longitude: uniform, so every cell has the same width; a whole number of
+  // cycles per turn, so the seam never shows as the globe turns.
+  const CYCLES = 26;
   const SAMPLES = 720;
   const cosLon = new Float32Array(SAMPLES + 1);
   const sinLon = new Float32Array(SAMPLES + 1);
@@ -275,7 +267,7 @@ function waveGeo(): WaveGeo {
     const lon = (i / SAMPLES) * TAU;
     cosLon[i] = Math.cos(lon);
     sinLon[i] = Math.sin(lon);
-    ph[i] = base[Math.min(N, Math.round((i / SAMPLES) * N))] * scale;
+    ph[i] = lon * CYCLES;
   }
   const strands: WaveGeo['strands'] = [];
   for (let j = 0; j + 1 < rows.length; j++) {
