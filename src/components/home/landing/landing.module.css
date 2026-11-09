@@ -421,6 +421,102 @@
   .hwDeploy { grid-template-columns: minmax(0, 1fr); }
 }
 
+/* ── Aivory Aether: lockup eyebrow + three stage cards (reuses the hw bento look) ── */
+.aeLockup {
+  display: block;
+  height: 26px;
+  width: auto;
+  max-width: 100%;
+  margin-bottom: 4px;
+}
+.ae {
+  --ios-label: #1c1c1e;
+  --ios-secondary: #6e6e73;
+  --ios-bg: #f2f2f7;
+  margin-top: 48px;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 20px;
+}
+.ae .hwCopy h3 { max-width: 24ch; }
+.aeMock { min-height: 256px; display: flex; flex-direction: column; gap: 14px; }
+.aeSource {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--ios-secondary);
+  padding-bottom: 14px;
+  border-bottom: 1px solid rgba(60, 60, 67, 0.1);
+}
+.aeDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex: none;
+  background: var(--ios-label);
+  box-shadow: 0 0 0 4px rgba(28, 28, 30, 0.08);
+}
+.aeProfile { margin: 0; display: grid; gap: 10px; }
+.aeProfile div { display: flex; justify-content: space-between; gap: 12px; }
+.aeProfile dt { color: var(--ios-secondary); font-weight: 500; }
+.aeProfile dd { margin: 0; font-weight: 600; text-align: right; }
+.aeEcho {
+  align-self: flex-end;
+  max-width: 85%;
+  padding: 9px 13px;
+  border-radius: 16px 16px 4px 16px;
+  background: var(--ios-bg);
+  color: var(--ios-secondary);
+  font-size: 13px;
+  font-weight: 500;
+}
+.aeAsk { font-size: 15px; font-weight: 600; letter-spacing: -0.01em; line-height: 1.4; }
+.aeChips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: auto; }
+.aeChips span {
+  padding: 7px 12px;
+  border-radius: 999px;
+  font-size: 12.5px;
+  font-weight: 600;
+  background: var(--ios-bg);
+  border: 1px solid transparent;
+}
+.aeChips span[data-sel] { background: #fff; border-color: var(--ios-label); }
+.aePlanHead {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(60, 60, 67, 0.1);
+}
+.aePlanHead small { font-size: 12px; font-weight: 500; color: var(--ios-secondary); }
+.aePlan { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+.aePlan li { display: flex; align-items: center; gap: 12px; font-weight: 500; }
+.aePlan b {
+  width: 22px;
+  height: 22px;
+  border-radius: 7px;
+  flex: none;
+  display: grid;
+  place-items: center;
+  font-size: 12px;
+  color: #fff;
+  background: var(--ios-label);
+}
+.aeCta { justify-content: center; margin-top: 40px; }
+@media (max-width: 960px) {
+  .ae { grid-template-columns: minmax(0, 1fr); }
+  .aeMock { min-height: 0; }
+}
+@media (max-width: 440px) {
+  .aeLockup { height: 20px; }
+  .aeCta .btn { white-space: normal; text-align: center; }
+}
+
 /* ── Figma banners with people layered as in the frame ── */
 .fb {
   container-type: inline-size;

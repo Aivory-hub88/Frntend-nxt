@@ -5,6 +5,7 @@ import ScrollRevealProvider from '@/components/home/ScrollRevealProvider';
 import { AmbientBackground } from '@/components/ui/AmbientBackground';
 import PromoVideoSection from '@/components/home/landing/PromoVideoSection';
 import HowItWorksSection from '@/components/home/landing/HowItWorksSection';
+import AetherSection from '@/components/home/landing/AetherSection';
 import CervoSection from '@/components/home/landing/CervoSection';
 import WorkspaceSection from '@/components/home/landing/WorkspaceSection';
 import WorkflowBuilderSection from '@/components/home/landing/WorkflowBuilderSection';
@@ -41,6 +42,7 @@ export default function HomePage() {
           <SectionReveal rootId="landing-bands" />
           <PromoVideoSection />
           <HowItWorksSection />
+          <AetherSection />
           <CervoSection />
           <WorkspaceSection />
           <WorkflowBuilderSection />
