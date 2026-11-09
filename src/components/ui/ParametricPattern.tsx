@@ -157,7 +157,10 @@ export interface GlobeProps {
   center: { x: number; y: number };
   /** Radius in host heights. */
   radius: number;
-  /** Cells around the equator, and cell rows from pole to pole. */
+  /** 'lattice' = lens lattice on longitude/latitude; 'waves' = crossing sine ribbons that open
+      almond cells of varying size (woven facade). */
+  pattern?: 'lattice' | 'waves';
+  /** Cells around the equator, and cell rows from pole to pole (lattice). */
   cols?: number;
   rows?: number;
   /** Tilt toward the viewer and roll, radians. */
@@ -169,7 +172,9 @@ export interface GlobeProps {
   className?: string;
 }
 
-function globePath(w: number, h: number, p: GlobeProps, t: number): string[] {
+type Layer = [string, number];
+
+function globePath(w: number, h: number, p: GlobeProps, t: number): Layer[] {
   const R = p.radius * h;
   const cx = p.center.x * w;
   const cy = p.center.y * h;
@@ -224,7 +229,88 @@ function globePath(w: number, h: number, p: GlobeProps, t: number): string[] {
     }
   }
   const limb = `M${f(cx - R)} ${f(cy)}A${f(R)} ${f(R)} 0 1 0 ${f(cx + R)} ${f(cy)}A${f(R)} ${f(R)} 0 1 0 ${f(cx - R)} ${f(cy)}Z`;
-  return [...bands.map((b) => b.join('')), limb];
+  const op = [0.35, 0.65, 1];
+  return [...bands.map((b, i): Layer => [b.join(''), op[i]]), [limb, 0.5]];
+}
+
+
+/* ── Woven waves ── */
+
+type P = [number, number];
+
+/**
+ * Facade of crossing sine ribbons: neighbouring lines run in opposite phase and kiss at the
+ * pinch points, so almond / eye-shaped cells open between them. Wavelength changes across the
+ * surface and row spacing changes down it, so cells range from long slim eyes to small seeds.
+ * Each ribbon is three parallel strands (a metal fin). Laid in a disc and bent onto the globe.
+ */
+function wavesPath(w: number, h: number, p: GlobeProps, t: number): Layer[] {
+  const R = p.radius * h;
+  const cx = p.center.x * w;
+  const cy = p.center.y * h;
+  const toScreen = (q: P): P => {
+    const r = Math.hypot(q[0], q[1]);
+    if (r < 1e-6) return [cx, cy];
+    const rr = Math.sin(Math.min(1, r) * Math.PI / 2) / r;
+    return [cx + q[0] * rr * R, cy + q[1] * rr * R];
+  };
+  // Row spacing varies down the surface: wide bands of big eyes, then tight rows of small ones.
+  const rowsV: number[] = [];
+  for (let v = -1.08; v < 1.08; ) {
+    rowsV.push(v);
+    v += 0.045 + 0.085 * Math.pow(0.5 + 0.5 * Math.sin(v * 3.1 + 0.6), 1.6);
+  }
+  // Phase along u: integral of a wavenumber that changes across the surface (long eyes <-> short).
+  const STEP = 0.005;
+  const phaseAt: number[] = [];
+  let acc = 0;
+  for (let u = -1.1; u <= 1.1 + 1e-9; u += STEP) {
+    const k = 15 + 20 * Math.pow(0.5 + 0.5 * Math.sin(u * 2.4 - 0.7), 1.3);
+    acc += k * STEP;
+    phaseAt.push(acc);
+  }
+  const drift = t * 0.22;
+  const breathe = 1 + 0.04 * Math.sin(t * 0.4);
+  const near: string[] = [];
+  const far: string[] = [];
+  const side: string[] = [];
+  const strands = [-0.006, 0, 0.006];
+  for (let j = 0; j + 1 < rowsV.length; j++) {
+    // The crossing line between rows j and j+1, with amplitude half of each neighbouring gap.
+    const v0 = (rowsV[j] + rowsV[j + 1]) / 2;
+    const gapUp = rowsV[j + 1] - rowsV[j];
+    const gapDn = j + 2 < rowsV.length ? rowsV[j + 2] - rowsV[j + 1] : gapUp;
+    const amp = 0.5 * Math.min(gapUp, gapDn) * 1.0 * breathe;
+    const sign = j % 2 ? 1 : -1;
+    for (const off of strands) {
+      let cur: string[] | null = null;
+      let d = '';
+      const flush = () => {
+        if (cur && d) cur.push(d);
+        d = '';
+        cur = null;
+      };
+      phaseAt.forEach((ph, i) => {
+        const u = -1.1 + i * STEP;
+        const v = v0 + off + sign * amp * Math.sin(ph - drift);
+        const r = Math.hypot(u, v);
+        if (r > 0.995) {
+          flush();
+          return;
+        }
+        const band = off !== 0 ? side : r < 0.8 ? near : far;
+        if (band !== cur) {
+          flush();
+          cur = band;
+        }
+        const [x, y] = toScreen([u, v]);
+        d += `${d ? 'L' : 'M'}${f(x)} ${f(y)}`;
+      });
+      flush();
+    }
+  }
+  const limb = `M${f(cx - R)} ${f(cy)}A${f(R)} ${f(R)} 0 1 0 ${f(cx + R)} ${f(cy)}A${f(R)} ${f(R)} 0 1 0 ${f(cx - R)} ${f(cy)}Z`;
+  return [[far.join(''), 0.5], [near.join(''), 1], [side.join(''), 0.35], [limb, 0.45]];
 }
 
 export function ParametricGlobe(props: GlobeProps) {
@@ -251,7 +337,15 @@ export function ParametricGlobe(props: GlobeProps) {
   useEffect(() => {
     const svg = svgRef.current;
     if (!svg || !size) return;
-    const paint = (time: number) => globePath(size.w, size.h, propsRef.current, time).forEach((d, i) => pathRefs.current[i]?.setAttribute('d', d));
+    const paint = (time: number) => {
+      const pr = propsRef.current;
+      const layers = (pr.pattern === 'waves' ? wavesPath : globePath)(size.w, size.h, pr, time);
+      pathRefs.current.forEach((el, i) => {
+        if (!el) return;
+        el.setAttribute('d', layers[i]?.[0] ?? '');
+        el.setAttribute('opacity', String(layers[i]?.[1] ?? 0));
+      });
+    };
     paint(0);
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
     let raf = 0;
@@ -279,7 +373,7 @@ export function ParametricGlobe(props: GlobeProps) {
       cancelAnimationFrame(raf);
       io.disconnect();
     };
-  }, [size, props.center.x, props.center.y, props.radius]);
+  }, [size, props.center.x, props.center.y, props.radius, props.pattern]);
 
   const w = size?.w ?? 1;
   const h = size?.h ?? 1;
@@ -308,8 +402,8 @@ export function ParametricGlobe(props: GlobeProps) {
         </mask>
       </defs>
       <g mask={`url(#${maskId})`} fill="none" stroke="#fff" strokeWidth={0.75} strokeLinejoin="round">
-        {[0.35, 0.65, 1, 0.5].map((o, i) => (
-          <path key={i} ref={(el) => { pathRefs.current[i] = el; }} opacity={o} vectorEffect="non-scaling-stroke" />
+        {[0, 1, 2, 3, 4].map((i) => (
+          <path key={i} ref={(el) => { pathRefs.current[i] = el; }} vectorEffect="non-scaling-stroke" />
         ))}
       </g>
     </svg>
