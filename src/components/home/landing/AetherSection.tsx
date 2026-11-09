@@ -2,8 +2,8 @@ import s from './landing.module.css';
 import WorkflowBuilderDemo from './WorkflowBuilderDemo';
 
 /* Aivory Aether: the reasoning layer behind the Deep Diagnostic.
-   Positioned as Aivory's mind, never as a model of its own: the models give
-   Aivory language, Aether decides what to ask and what to recommend.
+   Positioned as Aivory's brain and engine, never as a model of its own:
+   it decides what to ask, what to recommend and what to build.
    Each card mirrors a real stage of the diagnostic state machine
    (website context -> adaptive questions -> recommendation), then the
    workflow builder, where Aether turns a brief into a workflow. The example
@@ -110,12 +110,12 @@ export default function AetherSection() {
             height={40}
           />
           <h2 className={s.h2}>
-            Models give Aivory language
+            The state-of-the-art brain
             <br />
-            <span className={s.dim}>Aether gives it judgment</span>
+            <span className={s.dim}>and engine behind Aivory</span>
           </h2>
           <p className={s.lede}>
-            Aether reads your business, asks what matters, plans the change, then builds the workflows that run it
+            Aether understands your business, reasons through every decision, plans the change, then builds and runs the workflows behind it
           </p>
         </div>
         <div className={s.ae}>
