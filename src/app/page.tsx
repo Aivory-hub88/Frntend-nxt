@@ -8,7 +8,6 @@ import HowItWorksSection from '@/components/home/landing/HowItWorksSection';
 import AetherSection from '@/components/home/landing/AetherSection';
 import CervoSection from '@/components/home/landing/CervoSection';
 import WorkspaceSection from '@/components/home/landing/WorkspaceSection';
-import WorkflowBuilderSection from '@/components/home/landing/WorkflowBuilderSection';
 import LandingPricing from '@/components/home/landing/LandingPricing';
 import ComparisonSection from '@/components/home/landing/ComparisonSection';
 import PrivacyPanel from '@/components/home/landing/PrivacyPanel';
@@ -45,7 +44,6 @@ export default function HomePage() {
           <AetherSection />
           <CervoSection />
           <WorkspaceSection />
-          <WorkflowBuilderSection />
           <LandingPricing />
           <ComparisonSection />
           <PrivacyPanel />

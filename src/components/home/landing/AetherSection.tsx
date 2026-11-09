@@ -1,16 +1,19 @@
 import s from './landing.module.css';
+import WorkflowBuilderDemo from './WorkflowBuilderDemo';
 
 /* Aivory Aether: the reasoning layer behind the Deep Diagnostic.
    Positioned as Aivory's mind, never as a model of its own: the models give
    Aivory language, Aether decides what to ask and what to recommend.
    Each card mirrors a real stage of the diagnostic state machine
-   (website context -> adaptive questions -> recommendation). The example
+   (website context -> adaptive questions -> recommendation), then the
+   workflow builder, where Aether turns a brief into a workflow. The example
    company and numbers are illustrative, like the How it works mocks. */
 
 const ICONS = {
   understands: 'M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12zm10 3a3 3 0 1 0 0-6 3 3 0 0 0 0 6z',
   reasons: 'M6 3v12M6 15a3 3 0 1 0 0 6 3 3 0 0 0 0-6zM18 9a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM18 9a9 9 0 0 1-9 9',
   recommends: 'M9 11l3 3 8-8M20 12v7a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h9',
+  builds: 'M4 4h6v6H4zM14 14h6v6h-6zM7 10v4a3 3 0 0 0 3 3h4M17 14V7l-3 3m3-3 3 3',
 } as const;
 
 function Icon({ name }: { name: keyof typeof ICONS }) {
@@ -112,7 +115,7 @@ export default function AetherSection() {
             <span className={s.dim}>Aether gives it judgment</span>
           </h2>
           <p className={s.lede}>
-            Aether reads your business, asks what matters, and turns the answers into a plan you can act on
+            Aether reads your business, asks what matters, plans the change, then builds the workflows that run it
           </p>
         </div>
         <div className={s.ae}>
@@ -127,6 +130,15 @@ export default function AetherSection() {
               {c.mock}
             </article>
           ))}
+          <article id="workflow-builder" className={`${s.hwCard} ${s.aeD}`} data-ae="mint">
+            <div className={s.hwCopy}>
+              <Icon name="builds" />
+              <h3>
+                Builds <span>Describe a process in plain language, Aether turns it into a workflow you review before it goes live</span>
+              </h3>
+            </div>
+            <WorkflowBuilderDemo />
+          </article>
         </div>
         <div className={`${s.row} ${s.aeCta}`}>
           <a className={s.btn} href="/free-diagnostic">Meet Aether in your Deep Diagnostic</a>

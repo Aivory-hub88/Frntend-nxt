@@ -40,28 +40,15 @@ function Edge() {
   );
 }
 
-export default function WorkflowBuilderSection() {
+// The workflow builder demo, shown as the "Builds" stage of the Aether section:
+// Aether turns a plain-language brief into a workflow on the canvas.
+export default function WorkflowBuilderDemo() {
   return (
-    <section id="workflow-builder" className={`${s.band} ${s.light}`}>
-      <div className={s.wrap}>
-        <div className={s.head}>
-          <span className={s.eyebrow}>Workflow builder</span>
-          <h2 className={s.h2}>
-            Describe the process in plain language
-            <br />
-            <span className={s.dim}>Aivory builds the workflow.</span>
-          </h2>
-          <p className={s.lede}>
-            No flowchart editor to learn. Write it the way you would brief a colleague, then review each step before
-            it goes live.
-          </p>
-        </div>
-
         <div className={s.builder}>
           {/* Copilot panel illustration in iMessage-style light glass. */}
-          <div className={s.cop} aria-label="Aivory Copilot conversation">
+          <div className={s.cop} aria-label="Aivory Aether conversation">
             <div className={s.copH}>
-              <span className={s.copLogo} role="img" aria-label="Aivory" />
+              <img className={s.copAether} src="/landing/aether/aivory-aether-black.svg" alt="Aivory Aether" width={421} height={40} />
               <span className={s.copIcons} aria-hidden="true">
                 <svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6" /><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" /><path d="M10 11v6M14 11v6" /><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2" /></svg>
                 <svg viewBox="0 0 24 24"><polyline points="18 15 12 9 6 15" /></svg>
@@ -73,7 +60,7 @@ export default function WorkflowBuilderSection() {
                 amount is over $500, ask Finance to approve in Slack. Then post the bill to Odoo.
               </div>
               <div className={s.copAi}>
-                <span className={s.copAvatar} aria-hidden="true" />
+                <span className={`${s.aeOrb} ${s.copOrb}`} aria-hidden="true" />
                 <div>
                   <p>Here&apos;s the workflow. It watches the Finance inbox, extracts the invoice fields and matches them to the PO in Odoo.</p>
                   <p>Anything over <b>$500</b> goes to Finance in Slack for approval; the rest is approved and logged. Both paths post the vendor bill to Odoo.</p>
@@ -131,7 +118,5 @@ export default function WorkflowBuilderSection() {
             <Node c="app" icon="doc" title="Post bill to Odoo" sub="App · Accounting, vendor bills" />
           </div>
         </div>
-      </div>
-    </section>
   );
 }

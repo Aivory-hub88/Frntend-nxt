@@ -676,6 +676,16 @@
   color: #fff;
   background: var(--ios-indigo);
 }
+.aeD { grid-column: span 12; padding-bottom: 28px; }
+.aeD .hwCopy h3 { max-width: 46ch; }
+.aeD .builder { margin-top: 0; }
+.hwCard[data-ae='mint'] {
+  background:
+    radial-gradient(50% 70% at 100% 0%, rgba(52, 199, 89, 0.16), transparent 70%),
+    radial-gradient(45% 60% at 0% 100%, rgba(48, 176, 199, 0.16), transparent 70%), #f5f5f7;
+}
+.copAether { display: block; height: 15px; width: auto; }
+.copOrb { margin-top: 1px; }
 .aeCta { justify-content: center; margin-top: 40px; }
 @media (max-width: 960px) {
   .aeA, .aeB, .aeC { grid-column: span 12; }
