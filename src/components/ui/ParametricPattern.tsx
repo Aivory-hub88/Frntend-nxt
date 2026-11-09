@@ -62,7 +62,7 @@ function lattice(t: number): string {
       const s = 0.55 + 0.4 * (0.5 + 0.5 * Math.sin(x * 0.03 + y * 0.018 - t * 0.6));
       const hw = (cw / 2) * s;
       const hh = ch * s;
-      if (hw < 1.2) continue;
+      if (hw < 2.2) continue; // drop the tiniest lenses so crushed areas stay airy
       out.push(`M${f(x - hw)} ${f(y)}Q${f(x)} ${f(y - hh * 2)} ${f(x + hw)} ${f(y)}Q${f(x)} ${f(y + hh * 2)} ${f(x - hw)} ${f(y)}Z`);
     }
   }
@@ -85,7 +85,8 @@ function ribbons(t: number): string {
 }
 
 const draw = (kind: ParametricKind, t: number) => (kind === 'lattice' ? lattice(t) : ribbons(t));
-const MASK = 'linear-gradient(180deg, #000 0%, rgba(0,0,0,.75) 12%, rgba(0,0,0,.12) 25%, rgba(0,0,0,.12) 76%, rgba(0,0,0,.9) 100%)';
+// Brightest at the very top and bottom edges; dips behind the wordmark (~10%) and the last row (~88%).
+const MASK = 'linear-gradient(180deg, rgba(0,0,0,.95) 0%, rgba(0,0,0,.6) 6%, rgba(0,0,0,.32) 11%, rgba(0,0,0,.1) 23%, rgba(0,0,0,.1) 79%, rgba(0,0,0,.32) 88%, #000 100%)';
 
 export function ParametricPattern({ kind = 'lattice', opacity = 0.3, className = '' }: { kind?: ParametricKind; opacity?: number; className?: string }) {
   const svgRef = useRef<SVGSVGElement>(null);
