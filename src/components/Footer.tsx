@@ -4,10 +4,12 @@ import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
 import { VibrationField, type LightPoint, type VibrationLines } from '@/components/ui/VibrationField';
+import { ParametricGlobe, type GlobeProps } from '@/components/ui/ParametricPattern';
 
 // Footer surface: the Enterprise card's teal · ember world as a lit dusk (dusty teal
 // sky, burnt orange low, a pale deep-teal corner bottom-left),
-// with a round Chladni plate in extreme close-up at the bottom-right, in 1px lines.
+// with a parametric globe (the comparison card's lens lattice wrapped on a sphere) in
+// extreme close-up at the bottom-right, in 1px lines. The shader's own lines are off.
 const FOOTER_LIGHT: LightPoint[] = [
   { x: 0.78, y: 0.05, color: '#6e8d99', r: 0.75 },
   { x: 0.25, y: 0.02, color: '#8f9a96', r: 0.5 },
@@ -33,8 +35,22 @@ const FOOTER_LINES: VibrationLines = {
   // Behind the wordmark and the NVIDIA badge the lines step back so both stay crisp.
   quiet: { x: 0.86, y: 0.2, rx: 0.17, ry: 0.2, level: 0.25 },
 };
-// On a phone the links fill the whole footer, so the figure steps back.
-const FOOTER_LINES_NARROW: VibrationLines = { ...FOOTER_LINES, center: { x: 1.15, y: 0.35 }, opacity: 0.3, clear: { x: 0.5, y: 0.5, rx: 0.0001, ry: 0.0001 } };
+// The parametric globe replaces the shader's Chladni lines (kept as config, drawn at 0).
+const FOOTER_LINES_OFF: VibrationLines = { ...FOOTER_LINES, opacity: 0 };
+const FOOTER_GLOBE: GlobeProps = {
+  center: { x: 0.8, y: 0.98 },
+  radius: 0.98,
+  opacity: 0.5,
+  quiet: [
+    // Copy columns on the left half, and the wordmark + NVIDIA badge top-right.
+    { x: 0.36, y: 0.42, rx: 0.36, ry: 0.5, level: 0.1 },
+    { x: 0.83, y: 0.2, rx: 0.2, ry: 0.22, level: 0.3 },
+    // Bottom bar: copyright, Product Hunt badge and social links.
+    { x: 0.36, y: 0.85, rx: 0.34, ry: 0.16, level: 0.15 },
+  ],
+};
+// On a phone the links fill the whole footer, so the globe moves out and steps back.
+const FOOTER_GLOBE_NARROW: GlobeProps = { ...FOOTER_GLOBE, center: { x: 1.02, y: 0.96 }, radius: 0.3, opacity: 0.24, quiet: [] };
 
 const productLinks = [
   { label: 'Deep Analysis', href: '/product' },
@@ -82,11 +98,12 @@ export default function Footer({ landingAmbient = false }: FooterProps) {
       <VibrationField
         base="#3a5260"
         points={FOOTER_LIGHT}
-        lines={narrow ? FOOTER_LINES_NARROW : FOOTER_LINES}
+        lines={FOOTER_LINES_OFF}
         vignette={0.5}
         sharpness={1.1}
         className="w-full pt-24 pb-12 text-white"
       >
+      <ParametricGlobe {...(narrow ? FOOTER_GLOBE_NARROW : FOOTER_GLOBE)} />
       <div
         ref={ref}
         className={`relative z-10 animate-on-scroll ${isVisible ? 'is-visible' : ''}`}
