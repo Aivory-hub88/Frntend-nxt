@@ -1,33 +1,71 @@
+import type { CSSProperties } from 'react';
+import { BokehGradient, type BokehScene, type LeafFigure } from '@/components/ui/BokehGradient';
 import s from './landing.module.css';
 
 type Status = 'yes' | 'no' | 'warn';
 
-// Same capability matrix as the previous EnterpriseComparisonSection.
-const ROWS: Array<{ capability: string; values: [Status, Status, Status, Status] }> = [
-  { capability: 'Business Understanding', values: ['no', 'yes', 'warn', 'yes'] },
-  { capability: 'AI Deployment', values: ['warn', 'no', 'yes', 'yes'] },
-  { capability: 'Workflow Design', values: ['no', 'yes', 'warn', 'yes'] },
-  { capability: 'Continuous Platform', values: ['no', 'no', 'yes', 'yes'] },
-  { capability: 'Executive Visibility', values: ['no', 'warn', 'warn', 'yes'] },
+const ROWS: Array<{ capability: string; detail: string; values: [Status, Status, Status] }> = [
+  { capability: 'Business Understanding', detail: 'Learns your processes, data and goals', values: ['no', 'yes', 'warn'] },
+  { capability: 'AI Deployment', detail: 'Puts working agents into your tools', values: ['warn', 'no', 'yes'] },
+  { capability: 'Workflow Design', detail: 'Maps how work should flow, end to end', values: ['no', 'yes', 'warn'] },
+  { capability: 'Continuous Platform', detail: 'Keeps running and improving after launch', values: ['no', 'no', 'yes'] },
+  { capability: 'Executive Visibility', detail: 'One view of impact for leadership', values: ['no', 'warn', 'warn'] },
 ];
 
-const COLUMNS = ['AI Chat', 'Consulting', 'Automation', 'Aivory'];
-
+const RIVALS = ['AI Chat', 'Consulting', 'Automation'];
 const LABEL: Record<Status, string> = { yes: 'Yes', warn: 'Partly', no: 'No' };
-const PATH: Record<Status, string> = {
-  yes: 'M5 13l4 4L19 7',
-  warn: 'M12 8v5M12 16.5h.01',
-  no: 'M6 18L18 6M6 6l12 12',
-};
-const COLOR: Record<Status, string> = { yes: '#0a8fa6', warn: '#b7791f', no: '#9aa7ad' };
 
+/* Aivory's own trio (same world as the Operational plan card): deep blue field,
+   a periwinkle-steel shape, a warm orange glow. The one colour moment of the section. */
+const SCENE: BokehScene = {
+  colors: ['#0a1838', '#1d4a9a', '#5a6fb0', '#e46a24', '#9aaedc', '#9aaedc'],
+  mode: 'tri',
+  scale: 0.55,
+  seed: 5.2,
+  light: 0.35,
+  shadow: 0.55,
+};
+const FIGURE: LeafFigure = { kind: 'fibonacci', origin: [1.02, 0.05], unit: 0.018, count: 5 };
+
+/* Every cell is placed explicitly (the card holds the last column on every row, which breaks
+   auto-placement). Rows pass their line numbers down as custom properties: --r on desktop,
+   --rl (title) and --rm (marks) on mobile, where the title sits on its own line. */
+const rowLines = (i: number) => ({ '--r': String(i + 2), '--rl': String(2 * i + 2), '--rm': String(2 * i + 3) }) as CSSProperties;
+const HEAD_LINES = { '--r': '1', '--rl': '1', '--rm': '1' } as CSSProperties;
+
+/** Neutral marks for the other columns: filled = yes, half = partly, dashed ring = no. */
 function Mark({ status }: { status: Status }) {
   return (
-    <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8, color: COLOR[status] }}>
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-        <path d={PATH[status]} />
+    <span className={s.cmpMark} data-status={status}>
+      <svg width="22" height="22" viewBox="0 0 22 22" aria-hidden="true">
+        {status === 'yes' && (
+          <>
+            <circle cx="11" cy="11" r="10" fill="currentColor" />
+            <path d="M6.8 11.3l2.8 2.8 5.6-6" fill="none" stroke="#fff" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+          </>
+        )}
+        {status === 'warn' && (
+          <>
+            <circle cx="11" cy="11" r="9.25" fill="none" stroke="currentColor" strokeWidth="1.5" />
+            <path d="M11 1.75a9.25 9.25 0 0 1 0 18.5z" fill="currentColor" />
+          </>
+        )}
+        {status === 'no' && <circle cx="11" cy="11" r="9.25" fill="none" stroke="currentColor" strokeWidth="1.5" strokeDasharray="2.4 2.6" />}
       </svg>
-      <span style={{ fontSize: 13 }}>{LABEL[status]}</span>
+      <span className={s.cmpMarkLabel}>{LABEL[status]}</span>
+    </span>
+  );
+}
+
+function AivoryMark() {
+  return (
+    <span className={s.cmpYes}>
+      <span className={s.cmpYesDot}>
+        <svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true">
+          <path d="M2.6 6.2l2.2 2.2 4.6-4.9" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+      </span>
+      <span className={s.cmpMarkLabel}>Included</span>
     </span>
   );
 }
@@ -44,31 +82,41 @@ export default function ComparisonSection() {
             <span className={s.dim}>chat, consultants and scripts</span>
           </h2>
         </div>
-        <div className={s.tableWrap}>
-          <table className={s.table}>
-            <thead>
-              <tr>
-                <th scope="col">Capabilities</th>
-                {COLUMNS.map((c, i) => (
-                  <th key={c} scope="col" className={i === 3 ? s.me : undefined}>
-                    {i === 3 ? <span className={s.meLogo} role="img" aria-label="Aivory" /> : c}
-                  </th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {ROWS.map((row) => (
-                <tr key={row.capability}>
-                  <th scope="row" style={{ textTransform: 'none', letterSpacing: 0, fontSize: 15, fontWeight: 400, color: 'var(--ink)' }}>
-                    {row.capability}
-                  </th>
-                  {row.values.map((v, i) => (
-                    <td key={COLUMNS[i]} className={i === 3 ? s.me : undefined}><Mark status={v} /></td>
-                  ))}
-                </tr>
+
+        <div className={s.cmp}>
+          <div className={s.cmpGrid} role="table" aria-label="Aivory compared with AI chat, consulting and automation">
+            {/* The Aivory column: one gradient card behind the last column, overhanging the panel. */}
+            <BokehGradient scene={SCENE} figure={FIGURE} className={s.cmpCard} />
+
+            <div className={s.cmpRow} role="row" style={HEAD_LINES}>
+              <span className={`${s.cmpHead} ${s.cmpCap}`} role="columnheader">Capabilities</span>
+              {RIVALS.map((r) => (
+                <span key={r} className={s.cmpHead} role="columnheader">{r}</span>
               ))}
-            </tbody>
-          </table>
+              <span className={`${s.cmpHead} ${s.cmpMe}`} role="columnheader">
+                <span className={s.cmpLogo} role="img" aria-label="Aivory" />
+              </span>
+            </div>
+
+            {ROWS.map((row, r) => (
+              <div key={row.capability} className={s.cmpRow} role="row" style={rowLines(r)}>
+                <span className={`${s.cmpCell} ${s.cmpCap}`} role="rowheader">
+                  <span className={s.cmpTitle}>{row.capability}</span>
+                  <span className={s.cmpDetail}>{row.detail}</span>
+                </span>
+                {row.values.map((v, i) => (
+                  <span key={RIVALS[i]} className={s.cmpCell} role="cell"><Mark status={v} /></span>
+                ))}
+                <span className={`${s.cmpCell} ${s.cmpMe}`} role="cell"><AivoryMark /></span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className={s.cmpLegend} aria-hidden="true">
+          <Mark status="yes" />
+          <Mark status="warn" />
+          <Mark status="no" />
         </div>
       </div>
     </section>
