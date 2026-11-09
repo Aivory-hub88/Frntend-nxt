@@ -258,7 +258,7 @@ function waveGeo(): WaveGeo {
   }
   // Phase around longitude: uniform, so every cell has the same width; a whole number of
   // cycles per turn, so the seam never shows as the globe turns.
-  const CYCLES = 26;
+  const CYCLES = 12;
   const SAMPLES = 720;
   const cosLon = new Float32Array(SAMPLES + 1);
   const sinLon = new Float32Array(SAMPLES + 1);
