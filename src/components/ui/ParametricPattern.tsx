@@ -255,22 +255,35 @@ function wavesPath(w: number, h: number, p: GlobeProps, t: number): Layer[] {
     return [cx + q[0] * rr * R, cy + q[1] * rr * R];
   };
   // Row spacing varies down the surface: wide bands of big eyes, then tight rows of small ones.
+  // Breathing: a slow wave runs through the surface and locally stretches, then squeezes, the
+  // rows (cells grow taller, then shrink) and the wavelength (cells widen, then narrow). Both are
+  // warps x -> x + A·sin(ωt − κx)/κ: bounded, so nothing slides away, and neighbouring ribbons
+  // still meet at their pinch points.
+  const BREATH = 0.85; // rad/s, ~7 s per breath
+  const warpV = (v: number) => v + (0.3 * Math.sin(t * BREATH - v * 7.5)) / 7.5;
+  const warpU = (u: number) => u + (0.24 * Math.sin(t * BREATH * 0.8 - u * 6.5 + 1.3)) / 6.5;
   const rowsV: number[] = [];
-  for (let v = -1.08; v < 1.08; ) {
-    rowsV.push(v);
+  for (let v = -1.2; v < 1.2; ) {
+    rowsV.push(warpV(v));
     v += 0.045 + 0.085 * Math.pow(0.5 + 0.5 * Math.sin(v * 3.1 + 0.6), 1.6);
   }
   // Phase along u: integral of a wavenumber that changes across the surface (long eyes <-> short).
   const STEP = 0.005;
-  const phaseAt: number[] = [];
+  const base: number[] = [];
   let acc = 0;
-  for (let u = -1.1; u <= 1.1 + 1e-9; u += STEP) {
+  for (let u = -1.4; u <= 1.4 + 1e-9; u += STEP) {
     const k = 15 + 20 * Math.pow(0.5 + 0.5 * Math.sin(u * 2.4 - 0.7), 1.3);
     acc += k * STEP;
-    phaseAt.push(acc);
+    base.push(acc);
   }
-  const drift = t * 0.22;
-  const breathe = 1 + 0.04 * Math.sin(t * 0.4);
+  const phaseOf = (u: number) => {
+    const x = (u + 1.4) / STEP;
+    const i = Math.max(0, Math.min(base.length - 2, Math.floor(x)));
+    return base[i] + (base[i + 1] - base[i]) * (x - i);
+  };
+  const phaseAt: number[] = [];
+  for (let u = -1.1; u <= 1.1 + 1e-9; u += STEP) phaseAt.push(phaseOf(warpU(u)));
+  const drift = t * 0.12;
   const near: string[] = [];
   const far: string[] = [];
   const side: string[] = [];
@@ -280,7 +293,7 @@ function wavesPath(w: number, h: number, p: GlobeProps, t: number): Layer[] {
     const v0 = (rowsV[j] + rowsV[j + 1]) / 2;
     const gapUp = rowsV[j + 1] - rowsV[j];
     const gapDn = j + 2 < rowsV.length ? rowsV[j + 2] - rowsV[j + 1] : gapUp;
-    const amp = 0.5 * Math.min(gapUp, gapDn) * 1.0 * breathe;
+    const amp = 0.5 * Math.min(gapUp, gapDn);
     const sign = j % 2 ? 1 : -1;
     for (const off of strands) {
       let cur: string[] | null = null;
