@@ -38,6 +38,7 @@ const FOOTER_LINES: VibrationLines = {
 // The parametric globe replaces the shader's Chladni lines (kept as config, drawn at 0).
 const FOOTER_LINES_OFF: VibrationLines = { ...FOOTER_LINES, opacity: 0 };
 const FOOTER_GLOBE: GlobeProps = {
+  pattern: 'waves',
   center: { x: 0.8, y: 0.98 },
   radius: 0.98,
   opacity: 0.5,
