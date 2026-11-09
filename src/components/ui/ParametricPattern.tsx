@@ -236,63 +236,87 @@ function globePath(w: number, h: number, p: GlobeProps, t: number): Layer[] {
 
 /* ── Woven waves ── */
 
-type P = [number, number];
-
 /**
- * Facade of crossing sine ribbons: neighbouring lines run in opposite phase and kiss at the
- * pinch points, so almond / eye-shaped cells open between them. Wavelength changes across the
- * surface and row spacing changes down it, so cells range from long slim eyes to small seeds.
- * Each ribbon is three parallel strands (a metal fin). Laid in a disc and bent onto the globe.
+ * Facade of crossing sine ribbons on a real sphere. Rows follow latitude, waves run along
+ * longitude: neighbouring lines in opposite phase kiss at pinch points and open almond / eye
+ * cells. Wavelength varies around the globe and row spacing varies from equator to pole, so
+ * cell sizes vary. Each ribbon is three strands. The sphere leans left (`roll`), shows its
+ * north pole a little (`tilt`), turns on its axis, and a slow travelling wave makes the cells
+ * swell and shrink (breathing) without breaking the weave.
  */
 function wavesPath(w: number, h: number, p: GlobeProps, t: number): Layer[] {
   const R = p.radius * h;
   const cx = p.center.x * w;
   const cy = p.center.y * h;
-  const toScreen = (q: P): P => {
-    const r = Math.hypot(q[0], q[1]);
-    if (r < 1e-6) return [cx, cy];
-    const rr = Math.sin(Math.min(1, r) * Math.PI / 2) / r;
-    return [cx + q[0] * rr * R, cy + q[1] * rr * R];
-  };
-  // Row spacing varies down the surface: wide bands of big eyes, then tight rows of small ones.
-  // Breathing: a slow wave runs through the surface and locally stretches, then squeezes, the
-  // rows (cells grow taller, then shrink) and the wavelength (cells widen, then narrow). Both are
-  // warps x -> x + A·sin(ωt − κx)/κ: bounded, so nothing slides away, and neighbouring ribbons
-  // still meet at their pinch points.
-  const BREATH = 0.85; // rad/s, ~7 s per breath
-  const warpV = (v: number) => v + (0.3 * Math.sin(t * BREATH - v * 7.5)) / 7.5;
-  const warpU = (u: number) => u + (0.24 * Math.sin(t * BREATH * 0.8 - u * 6.5 + 1.3)) / 6.5;
-  const rowsV: number[] = [];
-  for (let v = -1.2; v < 1.2; ) {
-    rowsV.push(warpV(v));
-    v += 0.045 + 0.085 * Math.pow(0.5 + 0.5 * Math.sin(v * 3.1 + 0.6), 1.6);
+  const tilt = p.tilt ?? 0.38;
+  const roll = p.roll ?? 0.46;
+  const ct = Math.cos(tilt);
+  const st = Math.sin(tilt);
+  const cr = Math.cos(roll);
+  const sr = Math.sin(roll);
+  const spin = t * 0.045; // one turn every ~2.3 min
+  const TAU = Math.PI * 2;
+
+  // Breathing warps (bounded, periodic around the globe so the seam never shows).
+  const BREATH = 0.85;
+  const warpLat = (v: number) => v + (0.3 * Math.sin(t * BREATH - v * 9)) / 9;
+  const warpLon = (u: number) => u + (0.24 * Math.sin(t * BREATH * 0.8 - u * 7 + 1.3)) / 7;
+
+  // Rows: spacing in radians of latitude, tighter in some bands than others.
+  const rows: number[] = [];
+  for (let v = -1.42; v < 1.42; ) {
+    rows.push(warpLat(v));
+    v += 0.034 + 0.05 * Math.pow(0.5 + 0.5 * Math.sin(v * 4.3 + 0.6), 1.6);
   }
-  // Phase along u: integral of a wavenumber that changes across the surface (long eyes <-> short).
-  const STEP = 0.005;
-  const base: number[] = [];
+
+  // Phase around longitude: varying wavenumber, scaled to a whole number of cycles per turn.
+  const N = 720;
+  const base: number[] = [0];
   let acc = 0;
-  for (let u = -1.4; u <= 1.4 + 1e-9; u += STEP) {
-    const k = 15 + 20 * Math.pow(0.5 + 0.5 * Math.sin(u * 2.4 - 0.7), 1.3);
-    acc += k * STEP;
+  for (let i = 1; i <= N; i++) {
+    const u = (i / N) * TAU;
+    acc += (1 + 0.55 * Math.sin(u * 2 - 0.7) + 0.2 * Math.sin(u * 5 + 1.1)) * (TAU / N);
     base.push(acc);
   }
+  const CYCLES = 26;
+  const scale = (CYCLES * TAU) / acc;
   const phaseOf = (u: number) => {
-    const x = (u + 1.4) / STEP;
-    const i = Math.max(0, Math.min(base.length - 2, Math.floor(x)));
-    return base[i] + (base[i + 1] - base[i]) * (x - i);
+    let x = (((u % TAU) + TAU) % TAU) / TAU * N;
+    const i = Math.min(N - 1, Math.floor(x));
+    x -= i;
+    const turns = Math.floor(u / TAU);
+    return (base[i] + (base[i + 1] - base[i]) * x + turns * acc) * scale;
   };
-  const phaseAt: number[] = [];
-  for (let u = -1.1; u <= 1.1 + 1e-9; u += STEP) phaseAt.push(phaseOf(warpU(u)));
-  const drift = t * 0.12;
+
+  const proj = (lon: number, lat: number): [number, number, number] => {
+    const cl = Math.cos(lat);
+    const x0 = cl * Math.sin(lon + spin);
+    const y0 = Math.sin(lat);
+    const z0 = cl * Math.cos(lon + spin);
+    const y1 = y0 * ct + z0 * st;
+    const z1 = -y0 * st + z0 * ct;
+    const x2 = x0 * cr - y1 * sr;
+    const y2 = x0 * sr + y1 * cr;
+    return [cx + R * x2, cy - R * y2, z1];
+  };
+
+  const SAMPLES = 900;
+  const lonAt: number[] = [];
+  const phAt: number[] = [];
+  for (let i = 0; i <= SAMPLES; i++) {
+    const lon = (i / SAMPLES) * TAU;
+    lonAt.push(lon);
+    phAt.push(phaseOf(warpLon(lon)));
+  }
+
   const near: string[] = [];
   const far: string[] = [];
   const side: string[] = [];
-  const strands = [-0.006, 0, 0.006];
-  for (let j = 0; j + 1 < rowsV.length; j++) {
-    // The crossing line between rows j and j+1, with amplitude half of each neighbouring gap.
-    const v0 = (rowsV[j] + rowsV[j + 1]) / 2;
-    const gapUp = rowsV[j + 1] - rowsV[j];
-    const gapDn = j + 2 < rowsV.length ? rowsV[j + 2] - rowsV[j + 1] : gapUp;
+  const strands = [-0.0045, 0, 0.0045];
+  for (let j = 0; j + 1 < rows.length; j++) {
+    const v0 = (rows[j] + rows[j + 1]) / 2;
+    const gapUp = rows[j + 1] - rows[j];
+    const gapDn = j + 2 < rows.length ? rows[j + 2] - rows[j + 1] : gapUp;
     const amp = 0.5 * Math.min(gapUp, gapDn);
     const sign = j % 2 ? 1 : -1;
     for (const off of strands) {
@@ -303,27 +327,25 @@ function wavesPath(w: number, h: number, p: GlobeProps, t: number): Layer[] {
         d = '';
         cur = null;
       };
-      phaseAt.forEach((ph, i) => {
-        const u = -1.1 + i * STEP;
-        const v = v0 + off + sign * amp * Math.sin(ph - drift);
-        const r = Math.hypot(u, v);
-        if (r > 0.995) {
+      for (let i = 0; i <= SAMPLES; i++) {
+        const lat = v0 + off + sign * amp * Math.sin(phAt[i]);
+        const [x, y, z] = proj(lonAt[i], lat);
+        if (z < 0.02 || x < -40 || x > w + 40 || y < -40 || y > h + 40) {
           flush();
-          return;
+          continue;
         }
-        const band = off !== 0 ? side : r < 0.8 ? near : far;
+        const band = off !== 0 ? side : z > 0.45 ? near : far;
         if (band !== cur) {
           flush();
           cur = band;
         }
-        const [x, y] = toScreen([u, v]);
         d += `${d ? 'L' : 'M'}${f(x)} ${f(y)}`;
-      });
+      }
       flush();
     }
   }
   const limb = `M${f(cx - R)} ${f(cy)}A${f(R)} ${f(R)} 0 1 0 ${f(cx + R)} ${f(cy)}A${f(R)} ${f(R)} 0 1 0 ${f(cx - R)} ${f(cy)}Z`;
-  return [[far.join(''), 0.5], [near.join(''), 1], [side.join(''), 0.35], [limb, 0.45]];
+  return [[far.join(''), 0.45], [near.join(''), 1], [side.join(''), 0.35], [limb, 0.45]];
 }
 
 export function ParametricGlobe(props: GlobeProps) {
