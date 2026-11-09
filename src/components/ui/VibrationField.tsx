@@ -481,9 +481,14 @@ export function VibrationField({ base, points, lines, vignette = 0.45, sharpness
     const cT = cu('uTime');
     const lT = lu('uTime');
     let time = 0;
+    // Lines at opacity 0 (a surface that draws its own ornament on top) cost a full-resolution
+    // shader pass every frame for nothing: clear once and skip them.
+    const linesOn = (lines.opacity ?? 0.5) > 0;
+    lgl.clear(lgl.COLOR_BUFFER_BIT);
     const draw = () => {
       cgl.uniform1f(cT, time);
       cgl.drawArrays(cgl.TRIANGLES, 0, 3);
+      if (!linesOn) return;
       lgl.clear(lgl.COLOR_BUFFER_BIT);
       lgl.uniform1f(lT, time);
       lgl.drawArrays(lgl.TRIANGLES, 0, 3);

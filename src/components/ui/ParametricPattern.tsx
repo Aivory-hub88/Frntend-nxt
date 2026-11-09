@@ -241,10 +241,67 @@ function globePath(w: number, h: number, p: GlobeProps, t: number): Layer[] {
  * longitude: neighbouring lines in opposite phase kiss at pinch points and open almond / eye
  * cells. Wavelength varies around the globe and row spacing varies from equator to pole, so
  * cell sizes vary. Each ribbon is three strands. The sphere leans left (`roll`), shows its
- * north pole a little (`tilt`), turns on its axis, and a slow travelling wave makes the cells
- * swell and shrink (breathing) without breaking the weave.
+ * north pole a little (`tilt`) and turns slowly on its axis. Drawn on a canvas from geometry
+ * built once, so a frame only rotates points (the SVG + breathing version was too heavy).
  */
-function wavesPath(w: number, h: number, p: GlobeProps, t: number): Layer[] {
+type WaveGeo = { cosLon: Float32Array; sinLon: Float32Array; strands: { cl: Float32Array; sl: Float32Array; band: 0 | 1 | 2 }[] };
+let WAVE_GEO: WaveGeo | null = null;
+
+/** Static geometry, built once: per strand, cos/sin of latitude at every longitude sample.
+    Each frame only turns these points around the axis, so no trig and no strings per frame. */
+function waveGeo(): WaveGeo {
+  if (WAVE_GEO) return WAVE_GEO;
+  const TAU = Math.PI * 2;
+  const rows: number[] = [];
+  for (let v = -1.42; v < 1.42; ) {
+    rows.push(v);
+    v += 0.034 + 0.05 * Math.pow(0.5 + 0.5 * Math.sin(v * 4.3 + 0.6), 1.6);
+  }
+  // Phase around longitude: varying wavenumber, a whole number of cycles per turn (no seam).
+  const N = 720;
+  const base: number[] = [0];
+  let acc = 0;
+  for (let i = 1; i <= N; i++) {
+    const u = (i / N) * TAU;
+    acc += (1 + 0.55 * Math.sin(u * 2 - 0.7) + 0.2 * Math.sin(u * 5 + 1.1)) * (TAU / N);
+    base.push(acc);
+  }
+  const scale = (26 * TAU) / acc;
+  const SAMPLES = 720;
+  const cosLon = new Float32Array(SAMPLES + 1);
+  const sinLon = new Float32Array(SAMPLES + 1);
+  const ph = new Float32Array(SAMPLES + 1);
+  for (let i = 0; i <= SAMPLES; i++) {
+    const lon = (i / SAMPLES) * TAU;
+    cosLon[i] = Math.cos(lon);
+    sinLon[i] = Math.sin(lon);
+    ph[i] = base[Math.min(N, Math.round((i / SAMPLES) * N))] * scale;
+  }
+  const strands: WaveGeo['strands'] = [];
+  for (let j = 0; j + 1 < rows.length; j++) {
+    const v0 = (rows[j] + rows[j + 1]) / 2;
+    const gapUp = rows[j + 1] - rows[j];
+    const gapDn = j + 2 < rows.length ? rows[j + 2] - rows[j + 1] : gapUp;
+    const amp = 0.5 * Math.min(gapUp, gapDn);
+    const sign = j % 2 ? 1 : -1;
+    for (const off of [-0.0045, 0, 0.0045]) {
+      const cl = new Float32Array(SAMPLES + 1);
+      const sl = new Float32Array(SAMPLES + 1);
+      for (let i = 0; i <= SAMPLES; i++) {
+        const lat = v0 + off + sign * amp * Math.sin(ph[i]);
+        cl[i] = Math.cos(lat);
+        sl[i] = Math.sin(lat);
+      }
+      strands.push({ cl, sl, band: off === 0 ? 0 : 2 });
+    }
+  }
+  WAVE_GEO = { cosLon, sinLon, strands };
+  return WAVE_GEO;
+}
+
+/** Draws the woven-wave globe for rotation angle `spin` into a CSS-px canvas context. */
+function drawWaves(ctx: CanvasRenderingContext2D, w: number, h: number, p: GlobeProps, spin: number) {
+  const g = waveGeo();
   const R = p.radius * h;
   const cx = p.center.x * w;
   const cy = p.center.y * h;
@@ -254,193 +311,162 @@ function wavesPath(w: number, h: number, p: GlobeProps, t: number): Layer[] {
   const st = Math.sin(tilt);
   const cr = Math.cos(roll);
   const sr = Math.sin(roll);
-  const spin = t * 0.045; // one turn every ~2.3 min
-  const TAU = Math.PI * 2;
-
-  // Breathing warps (bounded, periodic around the globe so the seam never shows).
-  const BREATH = 0.85;
-  const warpLat = (v: number) => v + (0.3 * Math.sin(t * BREATH - v * 9)) / 9;
-  const warpLon = (u: number) => u + (0.24 * Math.sin(t * BREATH * 0.8 - u * 7 + 1.3)) / 7;
-
-  // Rows: spacing in radians of latitude, tighter in some bands than others.
-  const rows: number[] = [];
-  for (let v = -1.42; v < 1.42; ) {
-    rows.push(warpLat(v));
-    v += 0.034 + 0.05 * Math.pow(0.5 + 0.5 * Math.sin(v * 4.3 + 0.6), 1.6);
-  }
-
-  // Phase around longitude: varying wavenumber, scaled to a whole number of cycles per turn.
-  const N = 720;
-  const base: number[] = [0];
-  let acc = 0;
-  for (let i = 1; i <= N; i++) {
-    const u = (i / N) * TAU;
-    acc += (1 + 0.55 * Math.sin(u * 2 - 0.7) + 0.2 * Math.sin(u * 5 + 1.1)) * (TAU / N);
-    base.push(acc);
-  }
-  const CYCLES = 26;
-  const scale = (CYCLES * TAU) / acc;
-  const phaseOf = (u: number) => {
-    let x = (((u % TAU) + TAU) % TAU) / TAU * N;
-    const i = Math.min(N - 1, Math.floor(x));
-    x -= i;
-    const turns = Math.floor(u / TAU);
-    return (base[i] + (base[i + 1] - base[i]) * x + turns * acc) * scale;
-  };
-
-  const proj = (lon: number, lat: number): [number, number, number] => {
-    const cl = Math.cos(lat);
-    const x0 = cl * Math.sin(lon + spin);
-    const y0 = Math.sin(lat);
-    const z0 = cl * Math.cos(lon + spin);
-    const y1 = y0 * ct + z0 * st;
-    const z1 = -y0 * st + z0 * ct;
-    const x2 = x0 * cr - y1 * sr;
-    const y2 = x0 * sr + y1 * cr;
-    return [cx + R * x2, cy - R * y2, z1];
-  };
-
-  const SAMPLES = 900;
-  const lonAt: number[] = [];
-  const phAt: number[] = [];
-  for (let i = 0; i <= SAMPLES; i++) {
-    const lon = (i / SAMPLES) * TAU;
-    lonAt.push(lon);
-    phAt.push(phaseOf(warpLon(lon)));
-  }
-
-  const near: string[] = [];
-  const far: string[] = [];
-  const side: string[] = [];
-  const strands = [-0.0045, 0, 0.0045];
-  for (let j = 0; j + 1 < rows.length; j++) {
-    const v0 = (rows[j] + rows[j + 1]) / 2;
-    const gapUp = rows[j + 1] - rows[j];
-    const gapDn = j + 2 < rows.length ? rows[j + 2] - rows[j + 1] : gapUp;
-    const amp = 0.5 * Math.min(gapUp, gapDn);
-    const sign = j % 2 ? 1 : -1;
-    for (const off of strands) {
-      let cur: string[] | null = null;
-      let d = '';
-      const flush = () => {
-        if (cur && d) cur.push(d);
-        d = '';
-        cur = null;
-      };
-      for (let i = 0; i <= SAMPLES; i++) {
-        const lat = v0 + off + sign * amp * Math.sin(phAt[i]);
-        const [x, y, z] = proj(lonAt[i], lat);
-        if (z < 0.02 || x < -40 || x > w + 40 || y < -40 || y > h + 40) {
-          flush();
-          continue;
-        }
-        const band = off !== 0 ? side : z > 0.45 ? near : far;
-        if (band !== cur) {
-          flush();
-          cur = band;
-        }
-        d += `${d ? 'L' : 'M'}${f(x)} ${f(y)}`;
+  const cs = Math.cos(spin);
+  const ss = Math.sin(spin);
+  const near = new Path2D();
+  const far = new Path2D();
+  const side = new Path2D();
+  const n = g.cosLon.length;
+  for (const s of g.strands) {
+    let pen: Path2D | null = null;
+    for (let i = 0; i < n; i++) {
+      // sin/cos(lon + spin) by angle addition: no trig in the loop.
+      const sL = g.sinLon[i] * cs + g.cosLon[i] * ss;
+      const cL = g.cosLon[i] * cs - g.sinLon[i] * ss;
+      const x0 = s.cl[i] * sL;
+      const y0 = s.sl[i];
+      const z0 = s.cl[i] * cL;
+      const z1 = -y0 * st + z0 * ct;
+      if (z1 < 0.02) {
+        pen = null;
+        continue;
       }
-      flush();
+      const y1 = y0 * ct + z0 * st;
+      const x = cx + R * (x0 * cr - y1 * sr);
+      const y = cy - R * (x0 * sr + y1 * cr);
+      if (x < -40 || x > w + 40 || y < -40 || y > h + 40) {
+        pen = null;
+        continue;
+      }
+      const target = s.band === 2 ? side : z1 > 0.45 ? near : far;
+      if (pen !== target) {
+        if (pen) pen.lineTo(x, y); // close the gap where the depth band changes
+        target.moveTo(x, y);
+        pen = target;
+      } else {
+        target.lineTo(x, y);
+      }
     }
   }
-  const limb = `M${f(cx - R)} ${f(cy)}A${f(R)} ${f(R)} 0 1 0 ${f(cx + R)} ${f(cy)}A${f(R)} ${f(R)} 0 1 0 ${f(cx - R)} ${f(cy)}Z`;
-  return [[far.join(''), 0.45], [near.join(''), 1], [side.join(''), 0.35], [limb, 0.45]];
+  ctx.strokeStyle = '#fff';
+  ctx.lineWidth = 0.75;
+  ctx.lineJoin = 'round';
+  ctx.globalAlpha = 0.45;
+  ctx.stroke(far);
+  ctx.globalAlpha = 1;
+  ctx.stroke(near);
+  ctx.globalAlpha = 0.35;
+  ctx.stroke(side);
+  ctx.globalAlpha = 0.45;
+  ctx.beginPath();
+  ctx.arc(cx, cy, R, 0, Math.PI * 2);
+  ctx.stroke();
+  ctx.globalAlpha = 1;
+}
+
+/** Quiet zones: punch soft elliptical holes so the lines step back behind copy. */
+function punchQuiet(ctx: CanvasRenderingContext2D, w: number, h: number, quiet: Ellipse[]) {
+  if (!quiet.length) return;
+  ctx.save();
+  ctx.globalCompositeOperation = 'destination-out';
+  for (const q of quiet) {
+    ctx.save();
+    ctx.translate(q.x * w, q.y * h);
+    ctx.scale(q.rx * w, q.ry * h);
+    const gr = ctx.createRadialGradient(0, 0, 0, 0, 0, 1);
+    gr.addColorStop(0, `rgba(0,0,0,${1 - q.level})`);
+    gr.addColorStop(0.6, `rgba(0,0,0,${(1 - q.level) * 0.8})`);
+    gr.addColorStop(1, 'rgba(0,0,0,0)');
+    ctx.fillStyle = gr;
+    ctx.beginPath();
+    ctx.arc(0, 0, 1, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+  }
+  ctx.restore();
 }
 
 export function ParametricGlobe(props: GlobeProps) {
-  const { opacity = 0.45, quiet = [], className = '' } = props;
-  const svgRef = useRef<SVGSVGElement>(null);
-  const pathRefs = useRef<(SVGPathElement | null)[]>([]);
-  const [size, setSize] = useState<{ w: number; h: number } | null>(null);
+  const { opacity = 0.45, className = '' } = props;
+  const canvasRef = useRef<HTMLCanvasElement>(null);
   const propsRef = useRef(props);
   propsRef.current = props;
 
   useEffect(() => {
-    const el = svgRef.current;
-    if (!el) return;
-    const measure = () => {
-      const r = el.getBoundingClientRect();
-      setSize((s) => (s && Math.round(s.w) === Math.round(r.width) && Math.round(s.h) === Math.round(r.height) ? s : { w: r.width, h: r.height }));
-    };
-    measure();
-    const ro = new ResizeObserver(measure);
-    ro.observe(el);
-    return () => ro.disconnect();
-  }, []);
-
-  useEffect(() => {
-    const svg = svgRef.current;
-    if (!svg || !size) return;
-    const paint = (time: number) => {
+    const canvas = canvasRef.current;
+    const ctx = canvas?.getContext('2d');
+    if (!canvas || !ctx) return;
+    let w = 0;
+    let h = 0;
+    let spin = 0;
+    const paint = () => {
+      if (!w || !h) return;
+      const dpr = Math.min(2, window.devicePixelRatio || 1);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      ctx.clearRect(0, 0, w, h);
       const pr = propsRef.current;
-      const layers = (pr.pattern === 'waves' ? wavesPath : globePath)(size.w, size.h, pr, time);
-      pathRefs.current.forEach((el, i) => {
-        if (!el) return;
-        el.setAttribute('d', layers[i]?.[0] ?? '');
-        el.setAttribute('opacity', String(layers[i]?.[1] ?? 0));
-      });
+      if (pr.pattern === 'waves') {
+        drawWaves(ctx, w, h, pr, spin);
+      } else {
+        ctx.strokeStyle = '#fff';
+        ctx.lineWidth = 0.75;
+        for (const [d, o] of globePath(w, h, pr, spin / 0.035)) {
+          ctx.globalAlpha = o;
+          ctx.stroke(new Path2D(d));
+        }
+        ctx.globalAlpha = 1;
+      }
+      punchQuiet(ctx, w, h, pr.quiet ?? []);
     };
-    paint(0);
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const resize = () => {
+      const r = canvas.getBoundingClientRect();
+      if (Math.round(r.width) === Math.round(w) && Math.round(r.height) === Math.round(h)) return;
+      w = r.width;
+      h = r.height;
+      const dpr = Math.min(2, window.devicePixelRatio || 1);
+      canvas.width = Math.max(1, Math.round(w * dpr));
+      canvas.height = Math.max(1, Math.round(h * dpr));
+      paint();
+    };
+    resize();
+    const ro = new ResizeObserver(resize);
+    ro.observe(canvas);
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return () => ro.disconnect();
+
+    // Rotation only: a slow turn (~2.3 min), repainted at ~24 fps while on screen.
     let raf = 0;
     let visible = false;
     let last = 0;
-    let t = 0;
     const tick = (now: number) => {
       raf = requestAnimationFrame(tick);
       if (!visible) {
         last = now;
         return;
       }
-      const dt = Math.min(0.1, (now - last) / 1000);
-      if (dt < 1 / 30) return;
+      const dt = (now - last) / 1000;
+      if (dt < 1 / 24) return;
       last = now;
-      t += dt;
-      paint(t);
+      spin += Math.min(0.1, dt) * 0.045;
+      paint();
     };
     const io = new IntersectionObserver(([e]) => {
       visible = e.isIntersecting;
     });
-    io.observe(svg);
+    io.observe(canvas);
     raf = requestAnimationFrame(tick);
     return () => {
       cancelAnimationFrame(raf);
       io.disconnect();
+      ro.disconnect();
     };
-  }, [size, props.center.x, props.center.y, props.radius, props.pattern]);
+  }, [props.center.x, props.center.y, props.radius, props.pattern]);
 
-  const w = size?.w ?? 1;
-  const h = size?.h ?? 1;
-  const maskId = 'pg-mask';
   return (
-    <svg
-      ref={svgRef}
-      className={`pointer-events-none absolute inset-0 h-full w-full ${className}`}
-      viewBox={`0 0 ${w} ${h}`}
+    <canvas
+      ref={canvasRef}
       aria-hidden="true"
+      className={`pointer-events-none absolute inset-0 h-full w-full ${className}`}
       style={{ opacity }}
-    >
-      <defs>
-        {quiet.map((q, i) => (
-          <radialGradient key={i} id={`${maskId}-q${i}`} cx="0.5" cy="0.5" r="0.5">
-            <stop offset="0" stopColor="#000" stopOpacity={1 - q.level} />
-            <stop offset="0.6" stopColor="#000" stopOpacity={(1 - q.level) * 0.8} />
-            <stop offset="1" stopColor="#000" stopOpacity={0} />
-          </radialGradient>
-        ))}
-        <mask id={maskId} maskUnits="userSpaceOnUse" x="0" y="0" width={w} height={h}>
-          <rect width={w} height={h} fill="#fff" />
-          {quiet.map((q, i) => (
-            <ellipse key={i} cx={q.x * w} cy={q.y * h} rx={q.rx * w} ry={q.ry * h} fill={`url(#${maskId}-q${i})`} />
-          ))}
-        </mask>
-      </defs>
-      <g mask={`url(#${maskId})`} fill="none" stroke="#fff" strokeWidth={0.75} strokeLinejoin="round">
-        {[0, 1, 2, 3, 4].map((i) => (
-          <path key={i} ref={(el) => { pathRefs.current[i] = el; }} vectorEffect="non-scaling-stroke" />
-        ))}
-      </g>
-    </svg>
+    />
   );
 }
