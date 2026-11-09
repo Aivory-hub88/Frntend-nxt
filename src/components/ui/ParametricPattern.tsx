@@ -143,3 +143,175 @@ export function ParametricPattern({ kind = 'lattice', opacity = 0.3, className =
 }
 
 export default ParametricPattern;
+
+/* ── Parametric globe ──────────────────────────────────────────────────────────
+   The same lens lattice, wrapped on a sphere and drawn in extreme close-up past a
+   surface edge. Cells are laid out on longitude/latitude, so they foreshorten toward
+   the limb (the globe effect); opening sizes swell along a wave; the globe turns slowly.
+   Lengths are in CSS px of the host (measured), so the sphere stays round. */
+
+type Ellipse = { x: number; y: number; rx: number; ry: number; level: number };
+
+export interface GlobeProps {
+  /** Sphere centre as a fraction of the host's width and height (may sit off the surface). */
+  center: { x: number; y: number };
+  /** Radius in host heights. */
+  radius: number;
+  /** Cells around the equator, and cell rows from pole to pole. */
+  cols?: number;
+  rows?: number;
+  /** Tilt toward the viewer and roll, radians. */
+  tilt?: number;
+  roll?: number;
+  opacity?: number;
+  /** Ellipses (host fractions) where the lattice steps back to `level` of its opacity. */
+  quiet?: Ellipse[];
+  className?: string;
+}
+
+function globePath(w: number, h: number, p: GlobeProps, t: number): string[] {
+  const R = p.radius * h;
+  const cx = p.center.x * w;
+  const cy = p.center.y * h;
+  const cols = p.cols ?? 72;
+  const rows = p.rows ?? 38;
+  const tilt = p.tilt ?? -0.55;
+  const roll = p.roll ?? 0.35;
+  const spin = t * 0.035;
+  const ct = Math.cos(tilt);
+  const st = Math.sin(tilt);
+  const cr = Math.cos(roll);
+  const sr = Math.sin(roll);
+  const dLon = (Math.PI * 2) / cols;
+  const dLat = Math.PI / rows;
+  // Projected point, or null on the far side of the sphere.
+  const proj = (lon: number, lat: number): [number, number, number] => {
+    const x0 = Math.cos(lat) * Math.sin(lon + spin);
+    const y0 = Math.sin(lat);
+    const z0 = Math.cos(lat) * Math.cos(lon + spin);
+    const y1 = y0 * ct - z0 * st;
+    const z1 = y0 * st + z0 * ct;
+    const x2 = x0 * cr - y1 * sr;
+    const y2 = x0 * sr + y1 * cr;
+    return [cx + R * x2, cy - R * y2, z1];
+  };
+  const bands: string[][] = [[], [], []];
+  const N = 22;
+  for (let j = 1; j < rows; j++) {
+    const lat = -Math.PI / 2 + j * dLat;
+    for (let i = 0; i < cols; i++) {
+      const lon = (i + (j % 2 ? 0.5 : 0)) * dLon;
+      const [mx, my, mz] = proj(lon, lat);
+      if (mz < 0.04) continue;
+      if (mx < -60 || mx > w + 60 || my < -60 || my > h + 60) continue;
+      const s = 0.62 + 0.38 * (0.5 + 0.5 * Math.sin(lon * 3 + lat * 5 - t * 0.5));
+      // Wider than the cell, so neighbouring lenses touch and read as one woven skin.
+      const hw = (dLon / 2) * s * 1.28;
+      const hh = (dLat / 2) * s * 0.95;
+      let d = '';
+      for (let k = 0; k < N; k++) {
+        const a = (k / N) * Math.PI * 2;
+        const c = Math.cos(a);
+        const sn = Math.sin(a);
+        // Lens: pointed at the longitude ends, round across latitude.
+        const u = c;
+        const v = Math.sign(sn) * Math.pow(Math.abs(sn), 1.9);
+        const [x, y] = proj(lon + u * hw, lat + v * hh);
+        d += `${k === 0 ? 'M' : 'L'}${f(x)} ${f(y)}`;
+      }
+      // Depth: cells turning away toward the limb fade, so the sphere reads.
+      bands[mz > 0.62 ? 2 : mz > 0.3 ? 1 : 0].push(d + 'Z');
+    }
+  }
+  const limb = `M${f(cx - R)} ${f(cy)}A${f(R)} ${f(R)} 0 1 0 ${f(cx + R)} ${f(cy)}A${f(R)} ${f(R)} 0 1 0 ${f(cx - R)} ${f(cy)}Z`;
+  return [...bands.map((b) => b.join('')), limb];
+}
+
+export function ParametricGlobe(props: GlobeProps) {
+  const { opacity = 0.45, quiet = [], className = '' } = props;
+  const svgRef = useRef<SVGSVGElement>(null);
+  const pathRefs = useRef<(SVGPathElement | null)[]>([]);
+  const [size, setSize] = useState<{ w: number; h: number } | null>(null);
+  const propsRef = useRef(props);
+  propsRef.current = props;
+
+  useEffect(() => {
+    const el = svgRef.current;
+    if (!el) return;
+    const measure = () => {
+      const r = el.getBoundingClientRect();
+      setSize((s) => (s && Math.round(s.w) === Math.round(r.width) && Math.round(s.h) === Math.round(r.height) ? s : { w: r.width, h: r.height }));
+    };
+    measure();
+    const ro = new ResizeObserver(measure);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
+
+  useEffect(() => {
+    const svg = svgRef.current;
+    if (!svg || !size) return;
+    const paint = (time: number) => globePath(size.w, size.h, propsRef.current, time).forEach((d, i) => pathRefs.current[i]?.setAttribute('d', d));
+    paint(0);
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    let raf = 0;
+    let visible = false;
+    let last = 0;
+    let t = 0;
+    const tick = (now: number) => {
+      raf = requestAnimationFrame(tick);
+      if (!visible) {
+        last = now;
+        return;
+      }
+      const dt = Math.min(0.1, (now - last) / 1000);
+      if (dt < 1 / 30) return;
+      last = now;
+      t += dt;
+      paint(t);
+    };
+    const io = new IntersectionObserver(([e]) => {
+      visible = e.isIntersecting;
+    });
+    io.observe(svg);
+    raf = requestAnimationFrame(tick);
+    return () => {
+      cancelAnimationFrame(raf);
+      io.disconnect();
+    };
+  }, [size, props.center.x, props.center.y, props.radius]);
+
+  const w = size?.w ?? 1;
+  const h = size?.h ?? 1;
+  const maskId = 'pg-mask';
+  return (
+    <svg
+      ref={svgRef}
+      className={`pointer-events-none absolute inset-0 h-full w-full ${className}`}
+      viewBox={`0 0 ${w} ${h}`}
+      aria-hidden="true"
+      style={{ opacity }}
+    >
+      <defs>
+        {quiet.map((q, i) => (
+          <radialGradient key={i} id={`${maskId}-q${i}`} cx="0.5" cy="0.5" r="0.5">
+            <stop offset="0" stopColor="#000" stopOpacity={1 - q.level} />
+            <stop offset="0.6" stopColor="#000" stopOpacity={(1 - q.level) * 0.8} />
+            <stop offset="1" stopColor="#000" stopOpacity={0} />
+          </radialGradient>
+        ))}
+        <mask id={maskId} maskUnits="userSpaceOnUse" x="0" y="0" width={w} height={h}>
+          <rect width={w} height={h} fill="#fff" />
+          {quiet.map((q, i) => (
+            <ellipse key={i} cx={q.x * w} cy={q.y * h} rx={q.rx * w} ry={q.ry * h} fill={`url(#${maskId}-q${i})`} />
+          ))}
+        </mask>
+      </defs>
+      <g mask={`url(#${maskId})`} fill="none" stroke="#fff" strokeWidth={0.75} strokeLinejoin="round">
+        {[0.35, 0.65, 1, 0.5].map((o, i) => (
+          <path key={i} ref={(el) => { pathRefs.current[i] = el; }} opacity={o} vectorEffect="non-scaling-stroke" />
+        ))}
+      </g>
+    </svg>
+  );
+}
