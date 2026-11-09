@@ -121,7 +121,7 @@ export default function CervoSection() {
         {/* Connectivity strip, as in Figma (node 13:8902). */}
         <div className={s.caps} aria-label="Connectivity">
           <div className={s.cap}>
-            <span>30+ Apps Integrations</span>
+            <span>100+ Apps Integrations</span>
             <span className={s.chip}>
               <img className={s.chipIc} src="/landing/strip/puzzle.svg" alt="" />
               Integrations
@@ -167,7 +167,7 @@ export default function CervoSection() {
           </article>
 
           <article className={s.igc}>
-            <h4>30+ Apps &amp; Any MCP</h4>
+            <h4>100+ Apps &amp; Any MCP</h4>
             <p className={s.igd}>Agents read and write in the tools your teams already use. Plug in any MCP server and it becomes a new skill.</p>
             <div className={`${s.igp} ${s.icons}`}>
               {APP_ICONS.map((app) =>
