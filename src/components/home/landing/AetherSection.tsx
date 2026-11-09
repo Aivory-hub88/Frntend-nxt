@@ -99,7 +99,7 @@ const CARDS = [
 
 export default function AetherSection() {
   return (
-    <section id="aether" className={`${s.band} ${s.light} ${s.aeBand}`}>
+    <section id="aether" className={`${s.band} ${s.light}`}>
       <div className={s.wrap}>
         <div className={s.head}>
           <img
