@@ -213,10 +213,9 @@ export default function CervoSection() {
                 <span className={s.bx}><Line d="M9 12h6M9 16h6M17 21H7a2 2 0 01-2-2V5a2 2 0 012-2h5.6L19 9.4V19a2 2 0 01-2 2z" /></span>
                 <span className={s.ln} />
                 <span className={s.bx}><img src="/integrations/icons/google-drive.svg" alt="Google Drive" /></span>
-                <span className={`${s.bdg} ${s.blue} ${s.push}`}>Processing</span>
               </div>
-              <Task src="Odoo · Aged receivables" badge="Processing" tone="blue" text='"Export overdue invoices for March."' result="Opening browser · Filtering 214 rows" working />
-              <Task src="Sheets · Cash forecast" badge="Synced" tone="ok" text='"Update the 13-week forecast."' result="Forecast refreshed. #finance notified." />
+              <Task src="Odoo · Aged receivables" badge="Processing" tone="blue" text="“Export overdue invoices for March”" result="Opening browser · Filtering 214 rows" working />
+              <Task src="Sheets · Cash forecast" badge="Synced" tone="ok" text="“Update the 13-week forecast”" result="Forecast refreshed, #finance notified" />
             </div>
           </article>
 
@@ -229,10 +228,9 @@ export default function CervoSection() {
                 <AgentPic type="leads_qualifier" className={s.flowPic} /><small className={s.fl}>Lex</small>
                 <span className={s.arr}><Line d="M16 3l4 4-4 4M20 7H4M8 21l-4-4 4-4M4 17h16" /></span>
                 <AgentPic type="finance_invoice_ops" className={s.flowPic} /><small className={s.fl}>Finn</small>
-                <span className={`${s.bdg} ${s.ok} ${s.push}`}>In sync</span>
               </div>
-              <Task src="Lex (Sales) ↔ Finn (Finance)" badge="Agreed" tone="ok" text='"Acme Ltd closed, 12 seats. Net 30?"' result="Finn: Yes. INV-0412 drafted with deal terms." />
-              <Task src="Support ↔ Operations" badge="Working" tone="blue" text='"Replacement unit for order #9042."' result="Checking stock · Booking courier" working />
+              <Task src="Lex (Sales) ↔ Finn (Finance)" badge="Agreed" tone="ok" text="“Acme Ltd closed, 12 seats. Net 30?”" result="Finn: yes, INV-0412 drafted with deal terms" />
+              <Task src="Support ↔ Operations" badge="Working" tone="blue" text="“Replacement unit for order #9042”" result="Checking stock · Booking courier" working />
             </div>
           </article>
 
@@ -247,8 +245,8 @@ export default function CervoSection() {
                 <span className={`${s.tg} ${s.tgOn}`}>Approver</span>
                 <span className={s.tg}>Audit</span>
               </div>
-              <Task src="Finance · Refund $640" badge="Pending" tone="amb" text='"Refund order #9042 for Acme Ltd."' result="Waiting for Rachel in Slack." />
-              <Task src="Operations · PO $2,400" badge="Approved" tone="ok" text='"Restock 40 units from Northwind Logistics."' result="Approved by Ben. Logged to audit trail." />
+              <Task src="Finance · Refund $640" badge="Pending" tone="amb" text="“Refund order #9042 for Acme Ltd”" result="Waiting for Rachel in Slack" />
+              <Task src="Operations · PO $2,400" badge="Approved" tone="ok" text="“Restock 40 units from Northwind Logistics”" result="Approved by Ben, logged to audit trail" />
             </div>
           </article>
         </div>

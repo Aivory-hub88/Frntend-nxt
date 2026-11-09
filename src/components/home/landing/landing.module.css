@@ -893,14 +893,17 @@
   height: 30px;
 }
 
-/* ── Cervo bento, iOS light look ──
-   White widget cards, #f2f2f7 grouped panels, iMessage-style bubbles,
-   full-colour app icons, Settings-style coloured role glyphs, system colours. */
+/* ── Cervo bento, iOS light look (premium pass, 2026-11) ──
+   Same language as How it works and Aether: each card has its own soft
+   colour wash, the product mock is one frosted glass panel that bleeds off
+   the card's bottom edge, rows are split by hairlines instead of boxed,
+   and status is a coloured dot plus text rather than a filled pill. */
 .ig {
   --ios-bg: #f2f2f7;
   --ios-label: #1c1c1e;
   --ios-secondary: #6e6e73;
-  --ios-sep: rgba(60, 60, 67, 0.12);
+  --ios-tertiary: #aeaeb2;
+  --ios-sep: rgba(60, 60, 67, 0.1);
   --ios-blue: #007aff;
   --ios-green: #34c759;
   --ios-orange: #ff9500;
@@ -913,32 +916,43 @@
   position: relative;
   display: flex;
   flex-direction: column;
-  padding: 24px;
-  border-radius: 26px;
-  background: #fff;
-  border: 1px solid rgba(0, 0, 0, 0.06);
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04), 0 10px 30px rgba(0, 0, 0, 0.06);
+  padding: 28px 24px 0;
+  border-radius: 30px;
+  background: #f5f5f7;
+  border: 1px solid rgba(0, 0, 0, 0.05);
   overflow: hidden;
   min-width: 0;
   color: var(--ios-label);
 }
+.igc:nth-child(1) { background: radial-gradient(70% 55% at 0% 0%, rgba(0, 122, 255, 0.14), transparent 70%), radial-gradient(60% 50% at 100% 100%, rgba(120, 170, 255, 0.12), transparent 70%), #f5f5f7; }
+.igc:nth-child(2) { background: radial-gradient(70% 55% at 100% 0%, rgba(255, 149, 0, 0.14), transparent 70%), radial-gradient(60% 50% at 0% 100%, rgba(255, 105, 140, 0.1), transparent 70%), #f5f5f7; }
+.igc:nth-child(3) { background: radial-gradient(70% 55% at 0% 0%, rgba(175, 130, 255, 0.17), transparent 70%), radial-gradient(60% 50% at 100% 100%, rgba(90, 200, 250, 0.1), transparent 70%), #f5f5f7; }
+.igc:nth-child(4) { background: radial-gradient(70% 55% at 100% 0%, rgba(48, 176, 199, 0.16), transparent 70%), radial-gradient(60% 50% at 0% 100%, rgba(52, 199, 89, 0.1), transparent 70%), #f5f5f7; }
+.igc:nth-child(5) { background: radial-gradient(70% 55% at 0% 0%, rgba(52, 199, 89, 0.14), transparent 70%), radial-gradient(60% 50% at 100% 100%, rgba(0, 122, 255, 0.1), transparent 70%), #f5f5f7; }
+.igc:nth-child(6) { background: radial-gradient(70% 55% at 100% 0%, rgba(255, 159, 10, 0.13), transparent 70%), radial-gradient(60% 50% at 0% 100%, rgba(88, 86, 214, 0.12), transparent 70%), #f5f5f7; }
 .igc h4 {
-  margin: 0 0 6px;
-  font-size: 19px;
+  margin: 0 0 8px;
+  font-size: 20px;
   font-weight: 600;
-  letter-spacing: -0.015em;
+  letter-spacing: -0.02em;
 }
 .igd {
   color: var(--ios-secondary);
-  font-size: 14px;
+  font-size: 14.5px;
   font-weight: 400;
   line-height: 1.55;
-  margin-bottom: 20px !important;
+  margin-bottom: 24px !important;
 }
+/* The mock: frosted white glass, bleeds off the card's bottom edge */
 .igp {
   margin-top: auto;
-  background: var(--ios-bg);
-  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.82);
+  -webkit-backdrop-filter: saturate(180%) blur(24px);
+  backdrop-filter: saturate(180%) blur(24px);
+  border: 1px solid rgba(255, 255, 255, 0.95);
+  border-bottom: 0;
+  border-radius: 22px 22px 0 0;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04), 0 18px 44px rgba(20, 30, 60, 0.1);
   overflow: hidden;
   min-height: 272px;
 }
@@ -953,14 +967,13 @@
   flex-direction: column;
   align-items: center;
   gap: 4px;
-  padding: 12px 16px 10px;
-  background: rgba(249, 249, 249, 0.94);
+  padding: 14px 16px 12px;
   border-bottom: 1px solid var(--ios-sep);
   text-align: center;
 }
 .chatH b {
   display: block;
-  font-size: 12px;
+  font-size: 12.5px;
   font-weight: 600;
   color: var(--ios-label);
 }
@@ -969,13 +982,14 @@
   color: var(--ios-secondary);
 }
 .cvm {
-  width: 34px;
-  height: 34px;
+  width: 38px;
+  height: 38px;
   border-radius: 50%;
   background: transparent;
   display: grid;
   place-items: center;
   flex: none;
+  box-shadow: 0 0 0 2px #fff, 0 4px 12px rgba(0, 0, 0, 0.12);
 }
 .cvm img {
   width: 62%;
@@ -989,25 +1003,24 @@
   display: flex;
   flex-direction: column;
   gap: 8px;
-  padding: 14px 12px;
-  background: #fff;
+  padding: 16px 14px 24px;
 }
 .bub {
   max-width: 82%;
-  padding: 8px 12px;
+  padding: 9px 13px;
   border-radius: 18px;
   font-size: 12.5px;
-  line-height: 1.4;
+  line-height: 1.45;
 }
 .bubMe {
   align-self: flex-end;
-  background: var(--ios-blue);
+  background: linear-gradient(180deg, #2b8cff, #007aff);
   color: #fff;
   border-bottom-right-radius: 6px;
 }
 .bubAg {
   align-self: flex-start;
-  background: #e9e9eb;
+  background: #ececf0;
   color: var(--ios-label);
   border-bottom-left-radius: 6px;
 }
@@ -1028,13 +1041,13 @@
   grid-template-columns: repeat(7, minmax(0, 1fr));
   gap: 10px;
   align-content: start;
-  padding: 16px;
+  padding: 18px 16px 24px;
 }
 .icoT {
   aspect-ratio: 1;
   border-radius: 24%;
-  background: #fff;
-  box-shadow: 0 0.5px 1.5px rgba(0, 0, 0, 0.12);
+  background: linear-gradient(180deg, #fff, #f7f7f9);
+  box-shadow: inset 0 0 0 0.5px rgba(0, 0, 0, 0.08), 0 2px 6px rgba(20, 30, 60, 0.08);
   display: grid;
   place-items: center;
 }
@@ -1054,8 +1067,8 @@
   height: 80%;
 }
 .icoHot {
-  background: var(--ios-blue);
-  box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.22), 0 4px 12px rgba(0, 122, 255, 0.35);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0) 55%), var(--ios-blue);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4), 0 0 0 4px rgba(0, 122, 255, 0.16), 0 6px 16px rgba(0, 122, 255, 0.35);
 }
 .icoHot img {
   width: 56%;
@@ -1063,86 +1076,83 @@
   filter: brightness(0) invert(1);
 }
 
-/* Roles: Settings-style coloured glyphs */
+/* Roles: glossy iOS app glyphs on the glass, no boxes */
 .roles {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 10px;
-  padding: 16px;
+  gap: 18px 10px;
+  padding: 22px 16px 26px;
 }
 .role {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 8px;
-  background: #fff;
-  border-radius: 14px;
-  padding: 14px 6px;
+  gap: 9px;
 }
 .roleIc {
-  width: 32px;
-  height: 32px;
-  border-radius: 8px;
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
   display: grid;
   place-items: center;
   color: #fff;
+  background-image: linear-gradient(180deg, rgba(255, 255, 255, 0.32), rgba(255, 255, 255, 0) 55%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.45), inset 0 0 0 0.5px rgba(0, 0, 0, 0.08), 0 6px 14px rgba(20, 30, 60, 0.14);
 }
 .roleIc svg {
-  width: 18px;
-  height: 18px;
+  width: 22px;
+  height: 22px;
 }
 .role > span:last-child {
-  font-size: 11.5px;
+  font-size: 12px;
   font-weight: 500;
   color: var(--ios-label);
   text-align: center;
 }
 
-/* Agent panels: status, flow and task rows as an inset grouped list */
+/* Agent panels: status line, flow and task rows as one list split by hairlines */
 .agentp {
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  padding: 14px;
+  padding: 16px 18px 8px;
   min-height: 330px;
 }
 .st {
-  align-self: flex-start;
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  padding: 4px 10px;
-  border-radius: 999px;
-  background: #fff;
+  gap: 7px;
   font-size: 11px;
-  font-weight: 500;
+  font-weight: 600;
+  letter-spacing: 0.02em;
   color: var(--ios-secondary);
+  padding-bottom: 12px;
 }
 .st i {
   width: 7px;
   height: 7px;
   border-radius: 50%;
   background: var(--ios-green);
+  box-shadow: 0 0 0 3px rgba(52, 199, 89, 0.18);
 }
 .flow {
   display: flex;
   align-items: center;
-  gap: 6px;
-  min-height: 40px;
-  padding: 8px 10px;
-  background: #fff;
-  border-radius: 14px;
+  gap: 8px;
+  min-height: 44px;
+  padding: 12px 0;
+  border-top: 1px solid var(--ios-sep);
 }
 .bx {
-  width: 30px;
-  height: 30px;
+  width: 32px;
+  height: 32px;
   flex: none;
   display: grid;
   place-items: center;
-  background: var(--ios-bg);
-  border-radius: 8px;
+  background: #fff;
+  border-radius: 9px;
   color: var(--ios-secondary);
+  box-shadow: inset 0 0 0 0.5px rgba(0, 0, 0, 0.1), 0 2px 6px rgba(20, 30, 60, 0.06);
 }
 .bx svg {
   width: 16px;
@@ -1160,8 +1170,8 @@
   height: 62%;
 }
 .fl {
-  font-size: 11.5px;
-  font-weight: 500;
+  font-size: 12px;
+  font-weight: 600;
   color: var(--ios-label);
   margin-right: 2px;
 }
@@ -1173,42 +1183,62 @@
 }
 .ln {
   flex: 1;
-  height: 2px;
+  height: 0;
   min-width: 12px;
-  border-radius: 2px;
-  background: #e5e5ea;
+  border-top: 1.5px dashed #d1d1d6;
 }
 .push {
   margin-left: auto;
 }
+/* Approval chain: a quiet step track, done steps carry a green check */
 .tg {
-  font-size: 11px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-right: 8px;
+  font-size: 11.5px;
   font-weight: 500;
-  padding: 4px 10px;
-  border-radius: 999px;
-  background: var(--ios-bg);
-  color: #aeaeb2;
+  color: var(--ios-tertiary);
+}
+.tg::before {
+  content: '';
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  box-sizing: border-box;
+  border: 1.5px solid #d1d1d6;
 }
 .tgOn {
-  background: rgba(0, 122, 255, 0.12);
-  color: var(--ios-blue);
+  color: var(--ios-label);
 }
+.tgOn::before {
+  border: 0;
+  background: var(--ios-green) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12l5 5L20 7'/%3E%3C/svg%3E") center / 9px no-repeat;
+}
+/* Status: coloured dot + text, no filled pill */
 .bdg {
-  font-size: 10.5px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
   font-weight: 600;
-  padding: 3px 8px;
-  border-radius: 999px;
   white-space: nowrap;
 }
-.ok { background: rgba(52, 199, 89, 0.14); color: #248a3d; }
-.blue { background: rgba(0, 122, 255, 0.12); color: var(--ios-blue); }
-.amb { background: rgba(255, 149, 0, 0.16); color: #c93400; }
+.bdg::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+}
+.ok { color: #248a3d; }
+.blue { color: var(--ios-blue); }
+.amb { color: #c25e00; }
 .task {
-  background: #fff;
-  border-radius: 14px;
-  padding: 11px 14px;
+  padding: 13px 0;
+  border-top: 1px solid var(--ios-sep);
   display: grid;
-  gap: 4px;
+  gap: 5px;
 }
 .th {
   display: flex;
@@ -1225,11 +1255,13 @@
   text-overflow: ellipsis;
 }
 .task p {
-  font-size: 13px;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
   color: var(--ios-label);
 }
 .res {
-  font-size: 11.5px;
+  font-size: 12px;
   color: var(--ios-secondary);
   display: flex;
   align-items: center;
@@ -1240,9 +1272,19 @@
   height: 5px;
   border-radius: 50%;
   background: var(--ios-blue);
+  animation: igDot 1.2s ease-in-out infinite;
 }
+.resDots i:nth-child(2) { animation-delay: 0.15s; }
 .resDots i:nth-child(3) {
   margin-right: 4px;
+  animation-delay: 0.3s;
+}
+@keyframes igDot {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 1; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .resDots i { animation: none; }
 }
 
 /* ── Workspace ── */
