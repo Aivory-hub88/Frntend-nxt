@@ -670,11 +670,14 @@
 }
 .copAether { display: block; height: 15px; width: auto; }
 .copOrb { margin-top: 1px; }
+.aeE { grid-column: span 12; flex-direction: row; align-items: stretch; gap: 40px; }
+.aeE .hwCopy { flex: 0 0 30%; justify-content: center; padding-bottom: 28px; }
 .aeCta { justify-content: center; margin-top: 40px; }
 @media (max-width: 960px) {
-  .aeA, .aeB, .aeC { grid-column: span 12; }
-  .aeC { flex-direction: column; gap: 26px; }
-  .aeC .hwCopy { flex: none; padding-bottom: 0; }
+  .aeA, .aeB, .aeC, .aeE { grid-column: span 12; }
+  .aeC, .aeE { flex-direction: column; gap: 26px; }
+  .aeC .hwCopy, .aeE .hwCopy { flex: none; padding-bottom: 0; }
+  .aeE .hwDeploy { grid-template-columns: minmax(0, 1fr); }
   .aePlanWrap { grid-template-columns: minmax(0, 1fr); }
 }
 @media (max-width: 440px) {
