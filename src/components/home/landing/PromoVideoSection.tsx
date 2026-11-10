@@ -41,7 +41,7 @@ export default function PromoVideoSection() {
         <div className={s.head}>
           <span className={s.eyebrow}>Aivory in 90 seconds</span>
           <h2 className={s.h2}>
-            From diagnosis to agents at work
+            From analysis to agents at work
             <br />
             <span className={s.dim}>the whole system, in motion.</span>
           </h2>
