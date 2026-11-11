@@ -281,22 +281,16 @@
 }
 
 /* Drawings */
-.drWrap {
+.render {
   position: absolute;
-  inset: 0;
   z-index: 3;
-}
-.drWrap :global(.hero-dr) {
-  position: absolute;
-  left: 0;
-  top: 2px;
-  width: 100%;
-  height: calc(100% - 66px);
-  fill: transparent;
-  stroke: #fff;
-  stroke-width: 1.1;
-  stroke-linejoin: round;
-  stroke-linecap: round;
+  left: 7%;
+  top: 6%;
+  width: 86%;
+  height: calc(100% - 78px);
+  object-fit: contain;
+  pointer-events: none;
+  user-select: none;
 }
 
 /* Photos fill the card, no frame. */
