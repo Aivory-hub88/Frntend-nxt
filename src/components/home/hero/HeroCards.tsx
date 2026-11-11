@@ -522,6 +522,7 @@ export function HeroCard({
     <div ref={cardRef} className={cls} data-card={def.id}>
       {def.classes.includes('tile') && <i className={styles.wash} aria-hidden="true" />}
       {def.body({ orbRef, decorative })}
+      <i className={styles.frame} aria-hidden="true" />
     </div>
   );
 }
