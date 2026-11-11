@@ -1,6 +1,6 @@
 /*
- * Home hero: a ring of cards orbiting the headline (desktop) or two
- * counter-running rails under it (below 1100px).
+ * Home hero: the copy on top and two counter-running rails of cards under
+ * it, at every width (the file keeps its name from the earlier orbit layout).
  *
  * Cards are designed on a 196px square and scaled as a whole, so type, drawings
  * and spacing keep their proportions at every size. Everything that moves does
@@ -115,7 +115,6 @@
   border-radius: 14px;
   overflow: hidden;
   text-align: left;
-  will-change: transform;
 }
 
 /* Frosted pane, as in the reference film: flat, matte, no specular highlight. */
@@ -607,22 +606,33 @@
   height: 100%;
   filter: drop-shadow(0 10px 12px rgba(120, 50, 10, 0.2));
 }
-.mail i {
+/* Frosted pill: white glass with a bright rim, ink type, a soft drop. */
+.mail span {
   position: absolute;
-  /* Top corner: the mark's own "A" sits bottom right and must stay clear. */
-  right: -10px;
-  top: 4px;
-  display: flex;
+  left: 82px;
+  top: 6px;
+  display: inline-flex;
   align-items: center;
-  justify-content: center;
-  width: 30px;
-  height: 30px;
-  border-radius: 50%;
-  background: #111214;
+  gap: 4px;
+  padding: 5px 9px 5px 7px;
+  border-radius: 999px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(240, 243, 250, 0.82));
   box-shadow:
-    0 0 0 3px rgba(255, 255, 255, 0.92),
-    0 6px 12px -4px rgba(17, 18, 20, 0.45);
-  color: #fff;
+    inset 0 0 0 1px rgba(255, 255, 255, 0.95),
+    inset 0 -1px 2px rgba(120, 140, 190, 0.18),
+    0 0 0 1px rgba(17, 18, 20, 0.07),
+    0 8px 16px -8px rgba(20, 30, 60, 0.4);
+  font-family: var(--font-manrope), 'Manrope', sans-serif;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: -0.005em;
+  line-height: 1;
+  white-space: nowrap;
+  color: var(--ink);
+}
+.mail span svg {
+  flex: none;
+  color: #1f8a5b;
 }
 
 /* Photos fill the card, no frame. */
@@ -709,183 +719,150 @@
   }
 }
 
-/* Apps: bare icons drifting over the pane */
+/* Apps: bare marks in two tidy rows of four, no frames. */
 .icons {
   position: absolute;
-  inset: 0 0 62px 0;
-  transform: scale(0.8);
-  transform-origin: 50% 0;
-}
-.icons i {
-  position: absolute;
-  display: block;
-  animation: drift 6s ease-in-out infinite alternate;
-}
-.icons i:nth-child(even) {
-  animation-name: drift2;
+  left: 22px;
+  right: 22px;
+  top: 24px;
+  display: grid;
+  grid-template-columns: repeat(4, 30px);
+  justify-content: space-between;
+  row-gap: 16px;
 }
 .icons img {
   display: block;
-  width: 100%;
-  height: 100%;
+  width: 30px;
+  height: 30px;
   object-fit: contain;
 }
-@keyframes drift {
-  from {
-    transform: translate(0, -4px) rotate(-5deg);
-  }
-  to {
-    transform: translate(3px, 5px) rotate(4deg);
-  }
-}
-@keyframes drift2 {
-  from {
-    transform: translate(2px, 4px) rotate(6deg);
-  }
-  to {
-    transform: translate(-3px, -5px) rotate(-4deg);
-  }
-}
 
-/* ---------------------------------------------------------------- orbit (>= 1100px) */
+/* ---------------------------------------------------------------- rails */
 
-.orbit,
+/*
+ * Two rows of cards run under the copy in opposite directions, at every width.
+ * Cards are drawn at 196px and scaled to the slot: --slot is the slot edge and
+ * --k the matching scale (slot / 196).
+ */
+.root {
+  --slot: 150px;
+  --k: 0.765;
+}
 .rails {
-  display: none;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-top: 40px;
+  padding-bottom: 56px;
 }
-
-.world {
+.row {
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+}
+.track {
+  display: flex;
+  gap: 14px;
+  width: max-content;
+  will-change: transform;
+  animation: rail 38s linear infinite;
+}
+.row[data-dir='back'] .track {
+  animation-direction: reverse;
+  animation-duration: 46s;
+}
+.slot {
+  position: relative;
+  flex: none;
+  width: var(--slot);
+  height: var(--slot);
+}
+.slot > .card {
   position: absolute;
-  left: 50%;
-  top: 50%;
-  width: 1280px;
-  height: 760px;
-  margin: -380px 0 0 -640px;
-  transform-origin: 50% 50%;
-  opacity: 0;
-  transition: opacity 0.7s ease;
+  left: 0;
+  top: 0;
+  margin: 0;
+  transform: scale(var(--k));
+  transform-origin: 0 0;
 }
-.world[data-ready='true'] {
-  opacity: 1;
+/* No live blur on moving panes: a near-opaque pane reads the same on this ground. */
+.slot .glass {
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+  background: rgba(255, 255, 255, 0.86);
+}
+.slot .cap {
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.9) 55%);
+}
+.slot .tile .cap {
+  background: linear-gradient(180deg, rgba(12, 16, 34, 0), rgba(12, 16, 34, 0.62) 55%);
+}
+.slot .ui .cap {
+  background: linear-gradient(180deg, rgba(20, 21, 24, 0), rgba(20, 21, 24, 0.94) 50%);
+}
+.slot .frame {
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+/* The track holds four runs of its cards; one loop moves it by one run
+   (a quarter of its width plus a quarter of one 14px gap). */
+@keyframes rail {
+  to {
+    transform: translateX(calc(-25% - 3.5px));
+  }
 }
 
+/* Desktop: the same layout with full-size cards, the copy on single lines.
+   Shorter windows step the cards down so both rails stay in the first screen. */
 @media (min-width: 1100px) {
   .root {
-    height: clamp(640px, 100svh, 1000px);
-    min-height: 0;
-  }
-  /* The ring stops above the trust strip, which sits on the hero's own ground. */
-  .orbit {
-    display: block;
-    position: absolute;
-    inset: 0 0 46px 0;
-    z-index: 1;
-  }
-  .trust {
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    z-index: 2;
+    --slot: 196px;
+    --k: 1;
   }
   .copy {
-    position: absolute;
-    left: 50%;
-    /* Above the ring's centre: the top arc is empty, so the copy takes that room
-       and the cards sweep round beneath it. */
-    top: calc(37% - 23px);
     width: max-content;
-    padding-top: 0;
-    margin: 0;
-    transform: translate(-50%, -50%);
+    max-width: calc(100% - 40px);
+    padding-top: clamp(118px, 15svh, 168px);
   }
   .h {
-    font-size: 42px;
+    font-size: 44px;
     white-space: nowrap;
   }
   .sub {
     white-space: nowrap;
   }
-}
-
-/* ---------------------------------------------------------------- rails (< 1100px) */
-
-@media (max-width: 1099.98px) {
   .rails {
-    display: flex;
-    flex-direction: column;
-    gap: 14px;
-    margin-top: 40px;
-    padding-bottom: 56px;
-  }
-  .row {
-    overflow: hidden;
-    -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
-    mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+    margin-top: clamp(40px, 6svh, 64px);
   }
   .track {
-    display: flex;
-    gap: 14px;
-    width: max-content;
-    animation: rail 38s linear infinite;
+    animation-duration: 50s;
   }
   .row[data-dir='back'] .track {
-    animation-direction: reverse;
-    animation-duration: 46s;
-  }
-  .slot {
-    position: relative;
-    flex: none;
-    width: 150px;
-    height: 150px;
-  }
-  .slot > .card {
-    position: absolute;
-    left: 0;
-    top: 0;
-    margin: 0;
-    transform: scale(0.765);
-    transform-origin: 0 0;
-  }
-  /* No live blur on moving panes: a near-opaque pane reads the same on this ground. */
-  .slot .glass {
-    -webkit-backdrop-filter: none;
-    backdrop-filter: none;
-    background: rgba(255, 255, 255, 0.86);
-  }
-  .slot .cap {
-    -webkit-backdrop-filter: none;
-    backdrop-filter: none;
-    background: linear-gradient(180deg, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.9) 55%);
-  }
-  .slot .tile .cap {
-    background: linear-gradient(180deg, rgba(12, 16, 34, 0), rgba(12, 16, 34, 0.62) 55%);
-  }
-  .slot .ui .cap {
-    background: linear-gradient(180deg, rgba(20, 21, 24, 0), rgba(20, 21, 24, 0.94) 50%);
-  }
-  .slot .frame {
-    -webkit-backdrop-filter: none;
-    backdrop-filter: none;
+    animation-duration: 60s;
   }
 }
-@keyframes rail {
-  to {
-    transform: translateX(calc(-50% - 7px));
+@media (min-width: 1100px) and (max-height: 840px) {
+  .root {
+    --slot: 170px;
+    --k: 0.867;
+  }
+}
+@media (min-width: 1100px) and (max-height: 740px) {
+  .root {
+    --slot: 150px;
+    --k: 0.765;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .heads i,
-  .icons i,
   .track {
     animation: none;
   }
   .heads i {
     transform: rotate(var(--r));
-  }
-  .world {
-    transition: none;
   }
 }
 
@@ -903,8 +880,9 @@
   align-items: center;
   justify-content: center;
   gap: 18px 64px;
-  margin: 0;
-  padding: 4px 24px 14px;
+  /* Sits in the rails' bottom padding, on the hero's own ground. */
+  margin: -32px 0 0;
+  padding: 0 20px 22px;
   list-style: none;
   font-family: var(--font-manrope), 'Manrope', sans-serif;
 }
@@ -935,10 +913,4 @@
 }
 .trustBadge {
   height: 28px;
-}
-@media (max-width: 1099.98px) {
-  .trust {
-    margin-top: -32px;
-    padding: 0 20px 22px;
-  }
 }
