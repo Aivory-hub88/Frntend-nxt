@@ -127,11 +127,15 @@ const Ornament = () => (
 
 /* ------------------------------------------------------------------ card bodies */
 
+/** Bump (and rename the files) whenever the renders change: Cloudflare caches
+ *  /landing/* for a year, so a new image needs a new URL. */
+const RENDER_VERSION = 'v3';
+
 /** Close-up 3D technical drawing (Three.js line render, baked to a transparent WebP). */
 const Render = ({ name }: { name: string }) => (
   <img
     className={styles.render}
-    src={`/landing/hero/render-${name}.webp`}
+    src={`/landing/hero/render-${name}-${RENDER_VERSION}.webp`}
     alt=""
     aria-hidden="true"
     loading="lazy"
