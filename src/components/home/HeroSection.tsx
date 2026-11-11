@@ -147,7 +147,7 @@ export default function HeroSection() {
             <p className={styles.sub}>
               Aivory takes you from first analysis to AI that works with you
               <br />
-              No handoffs, no patchwork
+              at any scale
             </p>
             <div className={styles.cta}>
               <Link href="/free-diagnostic" className={`${styles.btn} ${styles.btnPrimary}`}>

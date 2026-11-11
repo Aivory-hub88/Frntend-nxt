@@ -119,7 +119,8 @@ const Ornament = () => (
     pattern="waves"
     center={{ x: 0.92, y: 0.08 }}
     radius={0.78}
-    opacity={0.55}
+    opacity={0.5}
+    lineWidth={0.4}
     quiet={[{ x: 0.3, y: 0.82, rx: 0.42, ry: 0.26, level: 0.2 }]}
     className={styles.ornament}
   />
@@ -353,6 +354,7 @@ export function HeroCard({
   const cls = [styles.card, ...def.classes.map((c) => styles[c])].join(' ');
   return (
     <div ref={cardRef} className={cls} data-card={def.id}>
+      {def.classes.includes('tile') && <i className={styles.wash} aria-hidden="true" />}
       {def.body({ orbRef, decorative })}
     </div>
   );

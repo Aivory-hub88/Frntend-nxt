@@ -176,42 +176,93 @@
   pointer-events: none;
 }
 
-/* Six palettes, one per tile, none repeated. */
+/* Six palettes, one per tile, none repeated. The card holds the base colour;
+   .wash (an oversized layer behind the drawing) holds three light pools and
+   drifts on its own clock, compositor-only (transform). */
+.wash {
+  position: absolute;
+  inset: -35%;
+  z-index: 0;
+  pointer-events: none;
+  animation: wash 24s ease-in-out infinite alternate;
+  will-change: transform;
+}
+@keyframes wash {
+  0% {
+    transform: rotate(0deg) translate(0, 0) scale(1);
+  }
+  50% {
+    transform: rotate(18deg) translate(5%, -4%) scale(1.08);
+  }
+  100% {
+    transform: rotate(-12deg) translate(-5%, 5%) scale(1.02);
+  }
+}
 .g1 {
+  background: #1d4a9a;
+}
+.g1 .wash {
   background:
-    radial-gradient(120% 90% at 100% 100%, #e46a24 0, transparent 44%),
-    radial-gradient(90% 90% at 78% 10%, #9aaedc 0, transparent 60%),
-    #1d4a9a;
+    radial-gradient(30% 24% at 80% 80%, #e46a24 0, #e46a24 28%, transparent 100%),
+    radial-gradient(32% 30% at 66% 28%, #9aaedc 0, #9aaedc 28%, transparent 100%),
+    radial-gradient(30% 34% at 28% 60%, #2b63c6 0, #2b63c6 28%, transparent 100%);
+  animation-duration: 23s;
+  animation-delay: -4s;
 }
 .g2 {
+  background: #3a3aa8;
+}
+.g2 .wash {
   background:
-    radial-gradient(100% 80% at 100% 0%, #f2a07a 0, transparent 42%),
-    radial-gradient(95% 95% at 96% 78%, #b05ad0 0, transparent 60%),
-    #3a3aa8;
+    radial-gradient(28% 24% at 79% 22%, #f2a07a 0, #f2a07a 28%, transparent 100%),
+    radial-gradient(34% 32% at 74% 66%, #b05ad0 0, #b05ad0 28%, transparent 100%),
+    radial-gradient(30% 28% at 26% 74%, #5050c8 0, #5050c8 28%, transparent 100%);
+  animation-duration: 27s;
+  animation-delay: -11s;
 }
 .g3 {
+  background: #1c1e26;
+}
+.g3 .wash {
   background:
-    radial-gradient(100% 80% at 100% 0%, #d06a3a 0, transparent 40%),
-    radial-gradient(100% 100% at 90% 84%, #4a5e86 0, transparent 62%),
-    #1c1e26;
+    radial-gradient(26% 22% at 79% 22%, #d06a3a 0, #d06a3a 28%, transparent 100%),
+    radial-gradient(36% 34% at 70% 70%, #4a5e86 0, #4a5e86 28%, transparent 100%),
+    radial-gradient(30% 30% at 28% 30%, #2c3140 0, #2c3140 28%, transparent 100%);
+  animation-duration: 21s;
+  animation-delay: -7s;
 }
 .g4 {
+  background: #2f4a58;
+}
+.g4 .wash {
   background:
-    radial-gradient(90% 70% at 0% 0%, #d06a3a 0, transparent 40%),
-    radial-gradient(100% 90% at 100% 30%, #86aebb 0, transparent 58%),
-    #2f4a58;
+    radial-gradient(28% 22% at 22% 22%, #d06a3a 0, #d06a3a 28%, transparent 100%),
+    radial-gradient(34% 30% at 78% 40%, #86aebb 0, #86aebb 28%, transparent 100%),
+    radial-gradient(34% 26% at 50% 78%, #3f6474 0, #3f6474 28%, transparent 100%);
+  animation-duration: 25s;
+  animation-delay: -15s;
 }
 .g5 {
+  background: #0d1b2e;
+}
+.g5 .wash {
   background:
-    radial-gradient(80% 70% at 100% 0%, #c9cf52 0, transparent 40%),
-    radial-gradient(100% 90% at 0% 0%, #2f4f72 0, transparent 60%),
-    #0d1b2e;
+    radial-gradient(26% 22% at 78% 22%, #c9cf52 0, #c9cf52 28%, transparent 100%),
+    radial-gradient(34% 32% at 24% 24%, #2f4f72 0, #2f4f72 28%, transparent 100%),
+    radial-gradient(34% 28% at 62% 76%, #17304f 0, #17304f 28%, transparent 100%);
+  animation-duration: 29s;
+  animation-delay: -2s;
 }
 .g6 {
+  background: #3a1d46;
+}
+.g6 .wash {
   background:
-    radial-gradient(90% 80% at 100% 100%, #f0a45a 0, transparent 40%),
-    radial-gradient(100% 90% at 0% 0%, #b8517a 0, transparent 56%),
-    #3a1d46;
+    radial-gradient(26% 24% at 78% 78%, #f0a45a 0, #f0a45a 28%, transparent 100%),
+    radial-gradient(34% 30% at 24% 24%, #b8517a 0, #b8517a 28%, transparent 100%),
+    radial-gradient(30% 28% at 70% 34%, #6a2f6e 0, #6a2f6e 28%, transparent 100%);
+  animation-duration: 24s;
+  animation-delay: -9s;
 }
 
 .scale .cap {
@@ -493,5 +544,11 @@
   }
   .world {
     transition: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wash {
+    animation: none;
   }
 }
