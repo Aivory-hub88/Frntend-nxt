@@ -216,6 +216,47 @@ export default function HeroSection() {
             ))}
           </div>
         </div>
+
+        {/* Trust strip: the programme Aivory belongs to and the providers it runs on.
+            Existing brand files, shown in one grey so the row stays quiet. */}
+        <ul className={styles.trust} aria-label="Programs and infrastructure behind Aivory">
+          <li>
+            <span>Member of</span>
+            <Link href="/nvidia-inception" aria-label="NVIDIA Inception Program">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                className={styles.trustBadge}
+                src="/images/nvidia-inception/nvidia-inception-program-badge-rgb-for-screen.svg"
+                alt="NVIDIA Inception Program"
+                width={450}
+                height={166}
+                loading="lazy"
+                decoding="async"
+              />
+            </Link>
+          </li>
+          <li>
+            <span>Hosted on</span>
+            <b className={styles.trustLockup}>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src="/integrations/icons/tencent-cloud.svg" alt="" width={24} height={24} loading="lazy" decoding="async" />
+              Tencent Cloud
+            </b>
+          </li>
+          <li>
+            <span>Payments by</span>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              className={styles.trustWordmark}
+              src="/payments/midtrans-blue.svg"
+              alt="Midtrans"
+              width={185}
+              height={30}
+              loading="lazy"
+              decoding="async"
+            />
+          </li>
+        </ul>
       </div>
     </div>
   );
