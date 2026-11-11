@@ -1,7 +1,6 @@
 'use client';
 
 import { useEffect, useRef, type CSSProperties, type MutableRefObject, type ReactNode } from 'react';
-import { ParametricGlobe } from '@/components/ui/ParametricPattern';
 import styles from './HeroOrbit.module.css';
 
 /** Draws the Aether orb at time `t` (seconds). Registered by the card, called by the orbit loop. */
@@ -108,21 +107,85 @@ function AetherOrb({ drawRef }: { drawRef?: MutableRefObject<OrbDraw | null> }) 
   return <canvas ref={ref} width={360} height={360} className={styles.orbCanvas} aria-hidden="true" />;
 }
 
-/* ------------------------------------------------------------------ parametric ornament */
+/* ------------------------------------------------------------------ product UI crops */
 
-// Woven sine ribbons: each pair of lines runs in opposite phase and kisses at
-// pinch points, which leaves almond cells of varying size. Drawn once.
-/** The footer's woven-wave globe, close up in the top-right corner. */
-const Ornament = () => (
-  <ParametricGlobe
-    pattern="waves"
-    center={{ x: 0.92, y: 0.08 }}
-    radius={0.78}
-    opacity={0.5}
-    lineWidth={0.4}
-    quiet={[{ x: 0.3, y: 0.82, rx: 0.42, ry: 0.26, level: 0.2 }]}
-    className={styles.ornament}
-  />
+/*
+ * Two cards show the product itself rather than an illustration. They are
+ * rebuilt in markup from the dashboard's own components (WorkflowNode and the
+ * diagnostic report's ScoreRing + ROIMetricTile: same colours, radii, type
+ * scale), with sample data, so they stay sharp at every ring size and carry
+ * no account data.
+ */
+
+/** One workflow-builder node, expanded, with its dashed edges running off the card. */
+const UiWorkflow = () => (
+  <div className={styles.uiFlow} aria-hidden="true">
+    <svg className={styles.uiEdges} viewBox="0 0 196 196" fill="none">
+      <path className={styles.uiEdgeTrack} d="M-4 44 C 4 44, 6 60, 14 60" />
+      <path className={styles.uiEdge} d="M-4 44 C 4 44, 6 60, 14 60" />
+      <path className={styles.uiEdgeTrack} d="M182 60 C 190 60, 190 82, 200 82" />
+      <path className={styles.uiEdge} d="M182 60 C 190 60, 190 82, 200 82" />
+    </svg>
+    <div className={styles.uiNode}>
+      <i className={styles.uiDotL} />
+      <i className={styles.uiDotR} />
+      <div className={styles.uiNodeBar}>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src={`${IMG}/app-gmail.svg`} alt="" width={22} height={22} loading="lazy" decoding="async" />
+        <span>
+          <b>Trigger</b>
+          <em>New invoice email</em>
+        </span>
+        <i className={styles.uiChevron}>
+          <svg viewBox="0 0 12 12" width="8" height="8">
+            <path d="M3 4.5 6 7.5 9 4.5" stroke="currentColor" strokeWidth="1.4" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+        </i>
+      </div>
+      <p className={styles.uiNodeBody}>
+        <b>Read the PDF</b>
+        Check totals against the PO
+      </p>
+    </div>
+  </div>
+);
+
+/** Diagnostic report close-up: readiness ring plus two Financial Case cells. */
+const RING_R = 24;
+const RING_C = 2 * Math.PI * RING_R;
+const UiReport = () => (
+  <div className={styles.uiReport} aria-hidden="true">
+    <div className={styles.uiScore}>
+      <svg viewBox="0 0 64 64" width="64" height="64">
+        <circle cx="32" cy="32" r={RING_R} className={styles.uiRingTrack} />
+        <circle
+          cx="32"
+          cy="32"
+          r={RING_R}
+          className={styles.uiRingArc}
+          strokeDasharray={`${(RING_C * 0.72).toFixed(1)} ${RING_C.toFixed(1)}`}
+          transform="rotate(-90 32 32)"
+        />
+        <text x="32" y="33.5" className={styles.uiRingNum}>
+          72
+        </text>
+      </svg>
+      <span>
+        <b>Sample report</b>
+        <em>AI readiness</em>
+      </span>
+    </div>
+    <dl className={styles.uiMetrics}>
+      <div>
+        <dt>Hours saved</dt>
+        <dd>2,340</dd>
+      </div>
+      <div>
+        <dt>Payback</dt>
+        <dd>4.2 mo</dd>
+      </div>
+    </dl>
+  </div>
 );
 
 /* ------------------------------------------------------------------ card bodies */
@@ -225,6 +288,16 @@ export const HERO_CARDS: CardDef[] = [
       photo(`${IMG}/woman-celebrating.webp`, 'A woman celebrating with her laptop on an orange bean bag', decorative),
   },
   {
+    id: 'ui-workflow',
+    classes: ['ui'],
+    body: () => (
+      <>
+        <UiWorkflow />
+        {cap('Workflow builder')}
+      </>
+    ),
+  },
+  {
     id: 'aether',
     classes: ['glass'],
     body: ({ orbRef, decorative }) => (
@@ -317,12 +390,12 @@ export const HERO_CARDS: CardDef[] = [
     ),
   },
   {
-    id: 'scale',
-    classes: ['tile', 'g1', 'scale'],
+    id: 'ui-report',
+    classes: ['ui'],
     body: () => (
       <>
-        <Ornament />
-        {cap('Aivory makes work better at any scale')}
+        <UiReport />
+        {cap('Operations analysis')}
       </>
     ),
   },
