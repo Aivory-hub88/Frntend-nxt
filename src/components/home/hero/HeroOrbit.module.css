@@ -129,22 +129,37 @@
     0 16px 30px -24px rgba(20, 30, 60, 0.25);
 }
 
+/* Caption on a frosted glass plate laid over the bottom of the card, so the
+   type can run larger and the artwork carries on, blurred, behind it. */
 .cap {
   position: absolute;
-  left: 16px;
-  right: 14px;
-  bottom: 15px;
+  left: 7px;
+  right: 7px;
+  bottom: 7px;
   z-index: 3;
+  padding: 10px 12px 12px;
+  border-radius: 10px;
   font-family: var(--font-manrope), 'Manrope', sans-serif;
   font-weight: 300;
-  font-size: 18px;
-  line-height: 1.16;
-  letter-spacing: -0.015em;
+  font-size: 21px;
+  line-height: 1.1;
+  letter-spacing: -0.022em;
+  text-wrap: balance;
   color: var(--ink);
+  background: linear-gradient(165deg, rgba(255, 255, 255, 0.62), rgba(255, 255, 255, 0.4));
+  -webkit-backdrop-filter: blur(12px) saturate(1.35);
+  backdrop-filter: blur(12px) saturate(1.35);
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.85),
+    0 0 0 1px rgba(17, 18, 20, 0.05);
 }
 
 .tile .cap {
   color: #fff;
+  background: linear-gradient(165deg, rgba(255, 255, 255, 0.24), rgba(255, 255, 255, 0.09));
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.26),
+    inset 0 1px 0 rgba(255, 255, 255, 0.22);
 }
 
 /* Gradient tiles: grain on top, diagonal light bands like the reference. */
@@ -289,7 +304,10 @@
 }
 .ui .cap {
   color: #fff;
-  text-wrap: balance;
+  background: linear-gradient(165deg, rgba(255, 255, 255, 0.13), rgba(255, 255, 255, 0.05));
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.14),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
 }
 .uiFlow {
   position: absolute;
@@ -318,7 +336,7 @@
   position: absolute;
   left: 14px;
   right: 14px;
-  top: 28px;
+  top: 16px;
   border-radius: 14px;
   background: #1f2024;
   box-shadow:
@@ -410,7 +428,7 @@
 .uiReport {
   position: absolute;
   inset: 0;
-  padding: 12px 16px 0;
+  padding: 7px 16px 0;
   font-family: var(--font-manrope), 'Manrope', sans-serif;
 }
 .uiScore {
@@ -467,11 +485,11 @@
 .uiMetrics {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  margin: 10px 0 0;
+  margin: 7px 0 0;
   border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 .uiMetrics div {
-  padding: 8px 0 0;
+  padding: 7px 0 0;
 }
 .uiMetrics div + div {
   padding-left: 12px;
@@ -495,13 +513,13 @@
   position: absolute;
   inset: 0;
   background: repeating-linear-gradient(90deg, transparent 0 27px, rgba(255, 255, 255, 0.05) 27px 28px);
-  -webkit-mask-image: linear-gradient(180deg, #000 52%, transparent 66%);
-  mask-image: linear-gradient(180deg, #000 52%, transparent 66%);
+  -webkit-mask-image: linear-gradient(180deg, #000 46%, transparent 60%);
+  mask-image: linear-gradient(180deg, #000 46%, transparent 60%);
 }
 .uiGanttDays {
   position: absolute;
   left: 0;
-  top: 12px;
+  top: 8px;
   display: flex;
 }
 .uiGanttDays span {
@@ -527,8 +545,8 @@
 .uiGanttToday,
 .uiGanttDeadline {
   position: absolute;
-  top: 32px;
-  height: 90px;
+  top: 27px;
+  height: 80px;
   width: 0;
 }
 .uiGanttToday {
@@ -577,8 +595,8 @@
 
 /* Drawings */
 .render {
-  /* Full-bleed close-up: the drawing runs off the card edges and fades out
-     above the caption. Sits under the grain (::after) so it shares the film. */
+  /* Full-bleed close-up: the drawing runs off the card edges and carries on
+     behind the caption plate. Sits under the grain (::after) so it shares the film. */
   position: absolute;
   z-index: 1;
   inset: 0;
@@ -587,8 +605,6 @@
   object-fit: cover;
   pointer-events: none;
   user-select: none;
-  -webkit-mask-image: linear-gradient(180deg, #000 60%, transparent 90%);
-  mask-image: linear-gradient(180deg, #000 60%, transparent 90%);
 }
 
 /* Tag stack: glossy pills piled on each other, each with its own glow. */
@@ -681,10 +697,6 @@
   line-height: 1;
   letter-spacing: -0.05em;
 }
-.num .cap {
-  text-wrap: balance;
-}
-
 /* Aether orb */
 .orbCanvas {
   position: absolute;
@@ -745,6 +757,8 @@
 .icons {
   position: absolute;
   inset: 0 0 62px 0;
+  transform: scale(0.8);
+  transform-origin: 50% 0;
 }
 .icons i {
   position: absolute;
@@ -880,6 +894,17 @@
     -webkit-backdrop-filter: none;
     backdrop-filter: none;
     background: rgba(255, 255, 255, 0.86);
+  }
+  .slot .cap {
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+    background: rgba(255, 255, 255, 0.82);
+  }
+  .slot .tile .cap {
+    background: rgba(20, 24, 40, 0.42);
+  }
+  .slot .ui .cap {
+    background: rgba(40, 42, 48, 0.9);
   }
 }
 @keyframes rail {

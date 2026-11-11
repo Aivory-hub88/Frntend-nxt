@@ -121,10 +121,10 @@ function AetherOrb({ drawRef }: { drawRef?: MutableRefObject<OrbDraw | null> }) 
 const UiWorkflow = () => (
   <div className={styles.uiFlow} aria-hidden="true">
     <svg className={styles.uiEdges} viewBox="0 0 196 196" fill="none">
-      <path className={styles.uiEdgeTrack} d="M-4 36 C 4 36, 6 52, 14 52" />
-      <path className={styles.uiEdge} d="M-4 36 C 4 36, 6 52, 14 52" />
-      <path className={styles.uiEdgeTrack} d="M182 52 C 190 52, 190 74, 200 74" />
-      <path className={styles.uiEdge} d="M182 52 C 190 52, 190 74, 200 74" />
+      <path className={styles.uiEdgeTrack} d="M-4 24 C 4 24, 6 40, 14 40" />
+      <path className={styles.uiEdge} d="M-4 24 C 4 24, 6 40, 14 40" />
+      <path className={styles.uiEdgeTrack} d="M182 40 C 190 40, 190 62, 200 62" />
+      <path className={styles.uiEdge} d="M182 40 C 190 40, 190 62, 200 62" />
     </svg>
     <div className={styles.uiNode}>
       <i className={styles.uiDotL} />
@@ -156,7 +156,7 @@ const RING_C = 2 * Math.PI * RING_R;
 const UiReport = () => (
   <div className={styles.uiReport} aria-hidden="true">
     <div className={styles.uiScore}>
-      <svg viewBox="0 0 64 64" width="58" height="58">
+      <svg viewBox="0 0 64 64" width="54" height="54">
         <circle cx="32" cy="32" r={RING_R} className={styles.uiRingTrack} />
         <circle
           cx="32"
@@ -209,7 +209,7 @@ const UiTimeline = () => (
     <i className={styles.uiGanttToday} />
     <i className={styles.uiGanttDeadline} />
     {GANTT_BARS.map((b, i) => (
-      <span key={b.label} className={styles.uiGanttBar} data-tone={b.tone} style={{ left: b.left, width: b.width, top: 42 + i * 25 }}>
+      <span key={b.label} className={styles.uiGanttBar} data-tone={b.tone} style={{ left: b.left, width: b.width, top: 34 + i * 24 }}>
         {b.label}
       </span>
     ))}
