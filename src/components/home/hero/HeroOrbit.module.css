@@ -296,6 +296,36 @@
   mask-image: linear-gradient(180deg, #000 60%, transparent 90%);
 }
 
+/* Tag stack: glossy pills piled on each other, each with its own glow. */
+.tags {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.tags li {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  padding: 2px 11px 4px;
+  border-radius: 10px;
+  white-space: nowrap;
+  font-family: var(--font-manrope), 'Manrope', sans-serif;
+  font-weight: 700;
+  line-height: 1.25;
+  letter-spacing: -0.03em;
+  color: var(--ink);
+  text-shadow: 0 1px 0 color-mix(in oklab, var(--c), white 45%);
+  background: linear-gradient(180deg, color-mix(in oklab, var(--c), white 22%), var(--c) 70%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.55),
+    inset 0 -1.5px 2px color-mix(in oklab, var(--c), black 18%),
+    0 6px 14px -5px color-mix(in oklab, var(--c) 75%, transparent),
+    0 1px 2px rgba(17, 18, 20, 0.12);
+  transform: translate(-50%, -50%) translate(var(--x), var(--y)) rotate(var(--r));
+}
+
 /* Photos fill the card, no frame. */
 .photo {
   -webkit-backdrop-filter: none;

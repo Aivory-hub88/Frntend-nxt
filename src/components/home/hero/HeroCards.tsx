@@ -182,6 +182,18 @@ const photo = (src: string, alt: string, decorative: boolean) => (
 );
 
 /** Card order is the order around the ring. */
+
+/** Glossy tags piled on each other: everything Aivory covers, in one stack. */
+type Tag = { label: string; c: string; ink: string; x: number; y: number; r: number; size?: number };
+const TAGS: Tag[] = [
+  { label: 'Email', c: '#ffc83d', ink: '#4a3300', x: -6, y: -40, r: -6 },
+  { label: 'Workspace', c: '#ff8a3a', ink: '#4a1f00', x: -18, y: -18, r: 4 },
+  { label: 'CRM', c: '#ff5a35', ink: '#4a0e00', x: 40, y: -31, r: 12, size: 17 },
+  { label: 'Automation', c: '#3b7bff', ink: '#0a1e57', x: 10, y: 22, r: 3 },
+  { label: 'Enterprise AI', c: '#ffb0b5', ink: '#4a1a1f', x: -2, y: 1, r: -4, size: 20 },
+  { label: 'AI Agents', c: '#2fc3ff', ink: '#04334c', x: -16, y: 41, r: -5 },
+];
+
 export const HERO_CARDS: CardDef[] = [
   {
     id: 'audit',
@@ -273,6 +285,31 @@ export const HERO_CARDS: CardDef[] = [
         <Render name="lock" />
         {cap('Encrypted')}
       </>
+    ),
+  },
+  {
+    id: 'stack',
+    classes: ['glass', 'stack'],
+    body: ({ decorative }) => (
+      <ul className={styles.tags} aria-label={decorative ? undefined : 'Email, Workspace, CRM, Automation, AI Agents, Enterprise AI'} aria-hidden={decorative || undefined}>
+        {TAGS.map((t) => (
+          <li
+            key={t.label}
+            style={
+              {
+                '--c': t.c,
+                '--ink': t.ink,
+                '--x': `${t.x}px`,
+                '--y': `${t.y}px`,
+                '--r': `${t.r}deg`,
+                fontSize: t.size ?? 17,
+              } as CSSProperties
+            }
+          >
+            {t.label}
+          </li>
+        ))}
+      </ul>
     ),
   },
   {

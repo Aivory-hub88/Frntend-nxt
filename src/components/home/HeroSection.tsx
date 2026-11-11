@@ -17,7 +17,7 @@ const REST_T = 9;
 
 /** Two rails for narrow screens: the same cards, split so each rail mixes surfaces. */
 const RAIL_A = ['audit', 'streamline', 'photo-celebrating', 'aether', 'automate', 'apps'];
-const RAIL_B = ['encrypted', 'scale', 'team', 'photo-profile', 'sovereignty', 'proof'];
+const RAIL_B = ['encrypted', 'stack', 'scale', 'team', 'photo-profile', 'sovereignty', 'proof'];
 const byId = (ids: string[]) => ids.map((id) => HERO_CARDS.find((c) => c.id === id)!);
 
 /**
