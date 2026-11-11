@@ -760,6 +760,18 @@
   -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
   mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
 }
+/* The lower rail melts away over its bottom half, so the upper one reads as
+   the clear row and the trust mark can sit against the fade. */
+.row[data-dir='back'] {
+  -webkit-mask-image:
+    linear-gradient(180deg, #000 38%, rgba(0, 0, 0, 0.5) 66%, transparent 96%),
+    linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+  mask-image:
+    linear-gradient(180deg, #000 38%, rgba(0, 0, 0, 0.5) 66%, transparent 96%),
+    linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+  -webkit-mask-composite: source-in;
+  mask-composite: intersect;
+}
 .track {
   display: flex;
   gap: 14px;
@@ -824,7 +836,7 @@
   .copy {
     width: max-content;
     max-width: calc(100% - 40px);
-    padding-top: clamp(118px, 15svh, 168px);
+    padding-top: clamp(140px, 21svh, 236px);
   }
   .h {
     font-size: 44px;
@@ -834,7 +846,10 @@
     white-space: nowrap;
   }
   .rails {
-    margin-top: clamp(40px, 6svh, 64px);
+    margin-top: clamp(44px, 7svh, 84px);
+    /* Lets the trust mark ride up into the lower rail's fade on tight windows. */
+    margin-bottom: -44px;
+    padding-bottom: 0;
   }
   .track {
     animation-duration: 50s;
@@ -913,4 +928,14 @@
 }
 .trustBadge {
   height: 28px;
+}
+/* Desktop: the trust mark drops to the foot of the hero, against the lower rail's fade. */
+@media (min-width: 1100px) {
+  .trust {
+    position: relative;
+    z-index: 2;
+    margin-top: auto;
+    padding-top: 10px;
+    padding-bottom: 26px;
+  }
 }
