@@ -15,17 +15,17 @@ const PERIOD = 30;
 /** Where the ring rests under reduced motion, and where it starts. */
 const REST_T = 9;
 /** Ring radii in the 1280x760 world, and the card scale at the back and front. */
-const RX = 556;
-const RY = 272;
-const SCALE_FAR = 0.45;
-const SCALE_SPAN = 0.44;
+const RX = 564;
+const RY = 276;
+const SCALE_FAR = 0.43;
+const SCALE_SPAN = 0.43;
 /** Card edge in world px (matches `.card`), the room kept between cards, and table size. */
 const CARD = 196;
-const GAP = 10;
+const GAP = 8;
 const LUT = 1024;
 
 /** Two rails for narrow screens: the same cards, split so each rail mixes surfaces. */
-const RAIL_A = ['audit', 'streamline', 'photo-celebrating', 'aether', 'automate', 'apps', 'decision'];
+const RAIL_A = ['audit', 'streamline', 'photo-celebrating', 'aether', 'automate', 'apps', 'decision', 'ui-timeline'];
 const RAIL_B = ['encrypted', 'stack', 'ui-report', 'team', 'photo-profile', 'sovereignty', 'proof', 'ui-workflow'];
 const byId = (ids: string[]) => ids.map((id) => HERO_CARDS.find((c) => c.id === id)!);
 
