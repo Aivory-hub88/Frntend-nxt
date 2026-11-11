@@ -1,11 +1,11 @@
 'use client';
 
-import { useEffect, useRef, type CSSProperties, type MutableRefObject, type ReactNode } from 'react';
+import { useEffect, useRef, type CSSProperties, type ReactNode } from 'react';
 import { MODE_DRAWS, resolvePreset } from 'thinking-orbs';
 import styles from './HeroOrbit.module.css';
 
-/** Draws the Aether orb at time `t` (seconds). Registered by the card, called by the orbit loop. */
-export type OrbDraw = (t: number) => void;
+/** Draws the Aether orb at time `t` (seconds). */
+type OrbDraw = (t: number) => void;
 
 
 /* ------------------------------------------------------------------ Aether orb */
@@ -105,24 +105,17 @@ function makeOrbDrawer(ctx: CanvasRenderingContext2D): OrbDraw {
   };
 }
 
-function AetherOrb({ drawRef }: { drawRef?: MutableRefObject<OrbDraw | null> }) {
+function AetherOrb() {
   const ref = useRef<HTMLCanvasElement>(null);
   useEffect(() => {
-    const ctx = ref.current?.getContext('2d');
-    if (!ctx) return;
+    const canvas = ref.current;
+    const ctx = canvas?.getContext('2d');
+    if (!canvas || !ctx) return;
     const draw = makeOrbDrawer(ctx);
     draw(9);
-    // On the ring, the orbit loop drives the orb (one rAF for the whole hero).
-    if (drawRef) {
-      drawRef.current = draw;
-      return () => {
-        drawRef.current = null;
-      };
-    }
-    // On the rails there is no such loop, so the orb runs its own at half
-    // rate, only while it is on screen, and not under reduced motion.
-    const canvas = ref.current;
-    if (!canvas || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    // Each orb runs its own loop at half rate, only while it is on screen,
+    // and not at all under reduced motion.
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
     let raf = 0;
     let frame = 0;
     const loop = (now: number) => {
@@ -138,7 +131,7 @@ function AetherOrb({ drawRef }: { drawRef?: MutableRefObject<OrbDraw | null> }) 
       cancelAnimationFrame(raf);
       io.disconnect();
     };
-  }, [drawRef]);
+  }, []);
   return <canvas ref={ref} width={360} height={360} className={styles.orbCanvas} aria-hidden="true" />;
 }
 
@@ -262,17 +255,19 @@ const UiTimeline = () => (
   </div>
 );
 
-/** Aivory Mail: the app mark at full size, with a lock on its corner. */
+/** Aivory Mail: the app mark at full size, with a glass "Encrypted" pill tucked
+ *  into the empty corner above its flap (never over the mark's own "A"). */
 const UiMail = () => (
   <div className={styles.mail} aria-hidden="true">
     {/* eslint-disable-next-line @next/next/no-img-element */}
     <img src="/integrations/icons/aivory-mail.svg" alt="" width={112} height={112} loading="lazy" decoding="async" />
-    <i>
-      <svg viewBox="0 0 16 16" width="15" height="15" fill="none">
-        <rect x="3" y="7" width="10" height="7" rx="2" fill="currentColor" />
-        <path d="M5.3 7V5.2a2.7 2.7 0 0 1 5.4 0V7" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" />
+    <span>
+      <svg viewBox="0 0 16 16" width="11" height="11" fill="none">
+        <rect x="3" y="7" width="10" height="7" rx="2.2" fill="currentColor" />
+        <path d="M5.4 7V5.3a2.6 2.6 0 0 1 5.2 0V7" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
       </svg>
-    </i>
+      Encrypted
+    </span>
   </div>
 );
 
@@ -298,16 +293,16 @@ const Render = ({ name }: { name: string }) => (
 const IMG = '/landing/hero';
 const ICONS = '/integrations/icons';
 
-type Drift = { src: string; w: number; x: number; y: number };
-const APP_ICONS: Drift[] = [
-  { src: `${IMG}/app-gmail.svg`, w: 54, x: 18, y: 24 },
-  { src: `${ICONS}/slack.svg`, w: 44, x: 112, y: 12 },
-  { src: `${ICONS}/notion.svg`, w: 38, x: 70, y: 66 },
-  { src: `${IMG}/app-hubspot.svg`, w: 50, x: 14, y: 74 },
-  { src: `${ICONS}/google-calendar.svg`, w: 32, x: 136, y: 74 },
-  { src: `${ICONS}/shopify.svg`, w: 28, x: 84, y: 10 },
-  { src: `${ICONS}/jira.svg`, w: 26, x: 150, y: 38 },
-  { src: `${ICONS}/odoo.svg`, w: 52, x: 84, y: 96 },
+/** Two tidy rows of four, each mark in the same 30px box. */
+const APP_ICONS: string[] = [
+  `${IMG}/app-gmail.svg`,
+  `${ICONS}/slack.svg`,
+  `${ICONS}/notion.svg`,
+  `${IMG}/app-hubspot.svg`,
+  `${ICONS}/google-calendar.svg`,
+  `${ICONS}/shopify.svg`,
+  `${ICONS}/jira.svg`,
+  `${ICONS}/odoo.svg`,
 ];
 
 type Head = { name: string; w: number; x: number; y: number; r: number; far?: boolean };
@@ -324,7 +319,7 @@ export type CardDef = {
   id: string;
   /** Extra class names from the module (surface + palette). */
   classes: string[];
-  body: (o: { orbRef?: MutableRefObject<OrbDraw | null>; decorative: boolean }) => ReactNode;
+  body: (o: { decorative: boolean }) => ReactNode;
 };
 
 const cap = (text: string) => <span className={styles.cap}>{text}</span>;
@@ -333,7 +328,6 @@ const photo = (src: string, alt: string, decorative: boolean) => (
   <img src={src} alt={decorative ? '' : alt} width={480} height={480} loading="lazy" decoding="async" />
 );
 
-/** Card order is the order around the ring. */
 
 export const HERO_CARDS: CardDef[] = [
   {
@@ -375,9 +369,9 @@ export const HERO_CARDS: CardDef[] = [
   {
     id: 'aether',
     classes: ['glass'],
-    body: ({ orbRef, decorative }) => (
+    body: ({ decorative }) => (
       <>
-        <AetherOrb drawRef={orbRef} />
+        <AetherOrb />
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           className={styles.orbLogo}
@@ -407,21 +401,9 @@ export const HERO_CARDS: CardDef[] = [
     body: () => (
       <>
         <div className={styles.icons} aria-hidden="true">
-          {APP_ICONS.map((a, i) => (
-            <i
-              key={a.src}
-              style={{
-                width: a.w,
-                height: a.w,
-                left: a.x,
-                top: a.y,
-                animationDuration: `${(5 + i * 0.9).toFixed(1)}s`,
-                animationDelay: `-${(i * 1.3).toFixed(1)}s`,
-              }}
-            >
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={a.src} alt="" loading="lazy" decoding="async" />
-            </i>
+          {APP_ICONS.map((src) => (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img key={src} src={src} alt="" loading="lazy" decoding="async" />
           ))}
         </div>
         {cap('Works with 100+ apps')}
@@ -537,22 +519,12 @@ export const HERO_CARDS: CardDef[] = [
 ];
 
 /** One card: the surface classes plus its body. */
-export function HeroCard({
-  def,
-  orbRef,
-  decorative = false,
-  cardRef,
-}: {
-  def: CardDef;
-  orbRef?: MutableRefObject<OrbDraw | null>;
-  decorative?: boolean;
-  cardRef?: (el: HTMLDivElement | null) => void;
-}) {
+export function HeroCard({ def, decorative = false }: { def: CardDef; decorative?: boolean }) {
   const cls = [styles.card, ...def.classes.map((c) => styles[c])].join(' ');
   return (
-    <div ref={cardRef} className={cls} data-card={def.id}>
+    <div className={cls} data-card={def.id}>
       {def.classes.includes('tile') && <i className={styles.wash} aria-hidden="true" />}
-      {def.body({ orbRef, decorative })}
+      {def.body({ decorative })}
       <i className={styles.frame} aria-hidden="true" />
     </div>
   );
