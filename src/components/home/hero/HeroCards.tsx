@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef, type CSSProperties, type MutableRefObject, type ReactNode } from 'react';
+import { ParametricGlobe } from '@/components/ui/ParametricPattern';
 import styles from './HeroOrbit.module.css';
 import { DRAWINGS } from './heroDrawings';
 
@@ -112,32 +113,17 @@ function AetherOrb({ drawRef }: { drawRef?: MutableRefObject<OrbDraw | null> }) 
 
 // Woven sine ribbons: each pair of lines runs in opposite phase and kisses at
 // pinch points, which leaves almond cells of varying size. Drawn once.
-function Ornament() {
-  const ref = useRef<HTMLCanvasElement>(null);
-  useEffect(() => {
-    const ctx = ref.current?.getContext('2d');
-    if (!ctx) return;
-    ctx.strokeStyle = '#fff';
-    ctx.lineWidth = 1.3;
-    let y = -30;
-    for (let i = 0; y < 430; i++) {
-      const spread = 24 + 13 * Math.sin(i * 0.9 + 1);
-      const lambda = 64 + 30 * Math.sin(y * 0.011 + 0.6);
-      for (const sign of [-1, 1]) {
-        ctx.beginPath();
-        for (let px = 0; px <= 392; px += 3) {
-          const warp = px + 30 * Math.sin(y * 0.012 + px * 0.007);
-          const v = y + ((sign * spread) / 2) * Math.sin((warp * TAU) / lambda);
-          if (px) ctx.lineTo(px, v);
-          else ctx.moveTo(px, v);
-        }
-        ctx.stroke();
-      }
-      y += spread;
-    }
-  }, []);
-  return <canvas ref={ref} width={392} height={392} className={styles.ornament} aria-hidden="true" />;
-}
+/** The footer's woven-wave globe, close up in the top-right corner. */
+const Ornament = () => (
+  <ParametricGlobe
+    pattern="waves"
+    center={{ x: 0.92, y: 0.08 }}
+    radius={0.78}
+    opacity={0.55}
+    quiet={[{ x: 0.3, y: 0.82, rx: 0.42, ry: 0.26, level: 0.2 }]}
+    className={styles.ornament}
+  />
+);
 
 /* ------------------------------------------------------------------ card bodies */
 
