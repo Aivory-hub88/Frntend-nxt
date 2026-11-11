@@ -110,10 +110,10 @@ function AetherOrb({ drawRef }: { drawRef?: MutableRefObject<OrbDraw | null> }) 
 /* ------------------------------------------------------------------ product UI crops */
 
 /*
- * Two cards show the product itself rather than an illustration. They are
+ * Three cards show the product itself rather than an illustration. They are
  * rebuilt in markup from the dashboard's own components (WorkflowNode and the
- * diagnostic report's ScoreRing + ROIMetricTile: same colours, radii, type
- * scale), with sample data, so they stay sharp at every ring size and carry
+ * diagnostic report's ScoreRing + ROIMetricTile, the workspace Gantt view:
+ * same colours, radii, type scale), with sample data, so they stay sharp at every ring size and carry
  * no account data.
  */
 
@@ -185,6 +185,34 @@ const UiReport = () => (
         <dd>4.2 mo</dd>
       </div>
     </dl>
+  </div>
+);
+
+/** Workspace timeline close-up: a week of the Gantt view, today and a deadline marked. */
+const GANTT_DAYS = [11, 12, 13, 14, 15, 16, 17];
+const GANTT_TODAY = 13;
+const GANTT_BARS: { label: string; tone: 'done' | 'doing' | 'todo'; left: number; width: number }[] = [
+  { label: 'Vendor setup', tone: 'done', left: 4, width: 82 },
+  { label: 'Q4 close', tone: 'doing', left: 46, width: 104 },
+  { label: 'Board deck', tone: 'todo', left: 102, width: 110 },
+];
+const UiTimeline = () => (
+  <div className={styles.uiGantt} aria-hidden="true">
+    <i className={styles.uiGanttGrid} />
+    <div className={styles.uiGanttDays}>
+      {GANTT_DAYS.map((d) => (
+        <span key={d} data-today={d === GANTT_TODAY || undefined}>
+          <b>{d}</b>
+        </span>
+      ))}
+    </div>
+    <i className={styles.uiGanttToday} />
+    <i className={styles.uiGanttDeadline} />
+    {GANTT_BARS.map((b, i) => (
+      <span key={b.label} className={styles.uiGanttBar} data-tone={b.tone} style={{ left: b.left, width: b.width, top: 42 + i * 25 }}>
+        {b.label}
+      </span>
+    ))}
   </div>
 );
 
@@ -444,6 +472,16 @@ export const HERO_CARDS: CardDef[] = [
     classes: ['glass', 'photo'],
     body: ({ decorative }) =>
       photo(`${IMG}/woman-profile.webp`, 'A smiling woman in profile against a blue studio backdrop', decorative),
+  },
+  {
+    id: 'ui-timeline',
+    classes: ['ui'],
+    body: () => (
+      <>
+        <UiTimeline />
+        {cap('Keep every project on track')}
+      </>
+    ),
   },
   {
     id: 'sovereignty',
