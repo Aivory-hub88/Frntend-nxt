@@ -156,6 +156,7 @@ const APP_ICONS: Drift[] = [
   { src: `${ICONS}/google-calendar.svg`, w: 32, x: 136, y: 74 },
   { src: `${ICONS}/shopify.svg`, w: 28, x: 84, y: 10 },
   { src: `${ICONS}/jira.svg`, w: 26, x: 150, y: 38 },
+  { src: `${ICONS}/odoo.svg`, w: 52, x: 84, y: 96 },
 ];
 
 type Head = { name: string; w: number; x: number; y: number; r: number; far?: boolean };
@@ -185,13 +186,15 @@ const photo = (src: string, alt: string, decorative: boolean) => (
 
 /** Glossy tags piled on each other: everything Aivory covers, in one stack. */
 type Tag = { label: string; c: string; ink: string; x: number; y: number; r: number; size?: number };
+/** Cool + ember: silvers and blues, one orange pill in front. */
+const W = '#ffffff';
 const TAGS: Tag[] = [
-  { label: 'Email', c: '#ffc83d', ink: '#4a3300', x: -6, y: -40, r: -6 },
-  { label: 'Workspace', c: '#ff8a3a', ink: '#4a1f00', x: -18, y: -18, r: 4 },
-  { label: 'CRM', c: '#ff5a35', ink: '#4a0e00', x: 40, y: -31, r: 12, size: 17 },
-  { label: 'Automation', c: '#3b7bff', ink: '#0a1e57', x: 10, y: 22, r: 3 },
-  { label: 'Enterprise AI', c: '#ffb0b5', ink: '#4a1a1f', x: -2, y: 1, r: -4, size: 20 },
-  { label: 'AI Agents', c: '#2fc3ff', ink: '#04334c', x: -16, y: 41, r: -5 },
+  { label: 'Email', c: '#c9d6ee', ink: '#16244a', x: -6, y: -40, r: -6 },
+  { label: 'Workspace', c: '#5d77a3', ink: W, x: -18, y: -18, r: 4 },
+  { label: 'CRM', c: '#17304f', ink: W, x: 40, y: -31, r: 12, size: 17 },
+  { label: 'Automation', c: '#2b63c6', ink: W, x: 10, y: 22, r: 3 },
+  { label: 'Enterprise AI', c: '#e46a24', ink: W, x: -2, y: 1, r: -4, size: 20 },
+  { label: 'AI Agents', c: '#86aebb', ink: '#0e2a33', x: -16, y: 41, r: -5 },
 ];
 
 export const HERO_CARDS: CardDef[] = [
@@ -302,11 +305,12 @@ export const HERO_CARDS: CardDef[] = [
                 '--x': `${t.x}px`,
                 '--y': `${t.y}px`,
                 '--r': `${t.r}deg`,
+                '--ts': t.ink === W ? '0 1px 1px rgba(0,0,0,.28)' : '0 1px 0 rgba(255,255,255,.55)',
                 fontSize: t.size ?? 17,
               } as CSSProperties
             }
           >
-            {t.label}
+            <span>{t.label}</span>
           </li>
         ))}
       </ul>
@@ -349,6 +353,16 @@ export const HERO_CARDS: CardDef[] = [
           ))}
         </div>
         {cap('Team of agentic workforce')}
+      </>
+    ),
+  },
+  {
+    id: 'decision',
+    classes: ['tile', 'g7'],
+    body: () => (
+      <>
+        <Render name="decision" />
+        {cap('Faster decision making')}
       </>
     ),
   },

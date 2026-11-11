@@ -11,4 +11,4 @@ python3 -m http.server 8765 --bind 127.0.0.1 &
 node render.mjs automation /tmp/automation.png 720 720   # also writes /tmp/automation.webp
 ```
 
-Scenes: `automation`, `streamline`, `audit`, `lock`, `vault`. Copy each `.webp` to `public/landing/hero/render-<name>-<version>.webp` and bump `RENDER_VERSION` in HeroCards.tsx. Cloudflare caches `/landing/*` for a year, so a changed image must get a new file name.
+Scenes: `automation`, `streamline`, `audit`, `lock`, `vault`, `decision`. Copy each `.webp` to `public/landing/hero/render-<name>-<version>.webp` and bump `RENDER_VERSION` in HeroCards.tsx. Cloudflare caches `/landing/*` for a year, so a changed image must get a new file name.
