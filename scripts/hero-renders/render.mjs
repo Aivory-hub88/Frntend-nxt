@@ -7,7 +7,7 @@ const p = await b.newPage({ viewport: { width: +w, height: +h } });
 const logs = [];
 p.on('console', m => logs.push(m.text()));
 p.on('pageerror', e => logs.push('ERR ' + e.message));
-await p.goto(`http://localhost:8765/${process.env.PAGE || "line.html"}?scene=${scene}&w=${w}&h=${h}`);
+await p.goto(`http://localhost:${process.env.PORT || 8765}/${process.env.PAGE || "line.html"}?scene=${scene}&w=${w}&h=${h}`);
 try {
   await p.waitForFunction(() => window.__done, null, { timeout: 60000 });
 } catch (e) {

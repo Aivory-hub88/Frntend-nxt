@@ -145,6 +145,58 @@ const SCENES = {
     return { group: g, cam: [2.1, 0.55, 1.55], look: [-0.6, 0.05, 0], fov: 62, shift: 0.1 };
   },
 
+  growth() {
+    // A bar chart seen from low and close: the bars climb, and a solid trend
+    // arrow rises over them and off towards the top corner.
+    const g = new THREE.Group();
+    for (let i = -6; i <= 6; i++) {
+      g.add(line([V(i * 0.9, 0, -5), V(i * 0.9, 0, 4)], { opacity: 0.18, dashed: true, dash: 0.05, gap: 0.12 }));
+      g.add(line([V(-6, 0, i * 0.9), V(6, 0, i * 0.9)], { opacity: 0.18, dashed: true, dash: 0.05, gap: 0.12 }));
+    }
+    const bars = [0.55, 0.95, 0.8, 1.5, 2.15];
+    const BW = 0.62, STEP = 0.92, X0 = -1.9;
+    bars.forEach((h, i) => {
+      const b = solid(new THREE.BoxGeometry(BW, h, BW), i === bars.length - 1 ? 0.92 : 0.1);
+      b.position.set(X0 + i * STEP, h / 2, 0);
+      g.add(b);
+    });
+    // Trend arrow: a ribbon through points above each bar, mitred, with a head.
+    const pts = bars.map((h, i) => new THREE.Vector2(X0 + i * STEP, h + 0.55));
+    pts.unshift(new THREE.Vector2(X0 - 0.75, 0.75));
+    const last = pts[pts.length - 1], prev = pts[pts.length - 2];
+    const dir = last.clone().sub(prev).normalize();
+    const tip = last.clone().addScaledVector(dir, 1.0);
+    const neck = last.clone().addScaledVector(dir, 0.38);
+    const path = [...pts.slice(0, -1), neck];
+    const hw = 0.085, hh = 0.3;
+    const side = (sgn) => path.map((p, i) => {
+      const a = i > 0 ? p.clone().sub(path[i - 1]).normalize() : path[1].clone().sub(p).normalize();
+      const b = i < path.length - 1 ? path[i + 1].clone().sub(p).normalize() : a;
+      const na = new THREE.Vector2(-a.y, a.x), nb = new THREE.Vector2(-b.y, b.x);
+      const m = na.clone().add(nb).normalize();
+      return p.clone().addScaledVector(m, (sgn * hw) / Math.max(0.5, m.dot(na)));
+    });
+    const L = side(1), R = side(-1).reverse();
+    const n = new THREE.Vector2(-dir.y, dir.x);
+    const sh = new THREE.Shape();
+    sh.moveTo(L[0].x, L[0].y);
+    L.slice(1).forEach((p) => sh.lineTo(p.x, p.y));
+    const hl = neck.clone().addScaledVector(n, hh), hr = neck.clone().addScaledVector(n, -hh);
+    sh.lineTo(hl.x, hl.y); sh.lineTo(tip.x, tip.y); sh.lineTo(hr.x, hr.y);
+    R.forEach((p) => sh.lineTo(p.x, p.y));
+    sh.lineTo(L[0].x, L[0].y);
+    const ag = extrude(sh, 0.16);
+    ag.translate(0, 0, -0.08);
+    g.add(solid(ag, 0.92));
+    // Drop lines from the trend to each bar top, and a baseline axis.
+    bars.forEach((h, i) => {
+      const x = X0 + i * STEP;
+      g.add(line([V(x, h, 0), V(x, h + 0.55 - hw, 0)], { dashed: true, opacity: 0.7, dash: 0.06, gap: 0.05 }));
+    });
+    g.add(line([V(X0 - 1.2, 0, 0.45), V(X0 + 5 * STEP + 0.6, 0, 0.45)], { opacity: 0.7 }));
+    return { group: g, cam: [-0.25, 1.0, 3.45], look: [0.4, 1.62, 0], fov: 62, shift: 0.1 };
+  },
+
   audit() {
     const g = new THREE.Group();
     const ys = [0, 0.42, 0.84, 1.26];

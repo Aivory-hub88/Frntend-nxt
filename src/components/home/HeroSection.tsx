@@ -15,10 +15,18 @@ const PERIOD = 30;
 /** Where the ring rests under reduced motion, and where it starts. */
 const REST_T = 9;
 /** Ring radii in the 1280x760 world, and the card scale at the back and front. */
-const RX = 564;
-const RY = 276;
-const SCALE_FAR = 0.43;
-const SCALE_SPAN = 0.43;
+const RX = 556;
+const RY = 205;
+/** Ring centre, above the middle of the 760px world: the ring is shallow and sits
+ *  close under the copy instead of filling the whole hero. */
+const CY = 316;
+const SCALE_FAR = 0.56;
+const SCALE_SPAN = 0.36;
+/** The top arc is empty: cards fade out between these depths (k is 0 at the top, 1 at the bottom). */
+const FADE_OUT = 0.2;
+const FADE_IN = 0.36;
+/** How much of its slot a hidden card keeps, so the unseen arc is crossed sooner. */
+const HIDDEN_SLOT = 0.6;
 /** Card edge in world px (matches `.card`), the room kept between cards, and table size. */
 const CARD = 196;
 const GAP = 8;
@@ -26,15 +34,15 @@ const LUT = 1024;
 
 /** Two rails for narrow screens: the same cards, split so each rail mixes surfaces. */
 const RAIL_A = ['audit', 'streamline', 'photo-celebrating', 'aether', 'automate', 'apps', 'decision', 'ui-timeline'];
-const RAIL_B = ['encrypted', 'stack', 'ui-report', 'team', 'photo-profile', 'sovereignty', 'proof', 'ui-workflow'];
+const RAIL_B = ['encrypted', 'mail', 'ui-report', 'team', 'photo-profile', 'sovereignty', 'proof', 'ui-crm'];
 const byId = (ids: string[]) => ids.map((id) => HERO_CARDS.find((c) => c.id === id)!);
 
 /**
  * The hero is one light field with the headline at its centre.
  *
  * >= 1100px: the cards ride an ellipse around it. Cards near the bottom of
- * the ring are large and opaque, cards near the top small and faded, which
- * reads as depth without any 3D. One rAF loop writes `transform`, `opacity`
+ * the ring are larger, and above the headline they fade out completely, so
+ * the top of the hero stays clear and every card on screen is readable. One rAF loop writes `transform`, `opacity`
  * and `z-index` straight to the nodes (no React renders per frame); it runs
  * only while the hero is on screen, and not at all under reduced motion.
  *
@@ -57,6 +65,7 @@ export default function HeroSection() {
     const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const n = HERO_CARDS.length;
     const lastZ: number[] = new Array(n).fill(-1);
+    const lastShown: boolean[] = new Array(n).fill(true);
     let visible = true;
     let raf = 0;
     let start = 0;
@@ -68,16 +77,21 @@ export default function HeroSection() {
      * which hid captions). Instead each card gets room in proportion to its
      * own size: `cum` integrates "card slots per radian" around the ring, and
      * `angleAt` inverts it, so equal steps in phase are equal steps in slots.
-     * With these radii and scales no two cards touch at any point of the turn
-     * (smallest gap about 14px with fifteen cards). A side effect is that near cards travel
-     * faster than far ones, as they would in real depth.
+     * Hidden cards (top arc) keep only part of their slot, which leaves more
+     * room for the ones on screen. With these radii and scales no two visible
+     * cards touch at any point of the turn (smallest gap about 9px with sixteen
+     * cards; re-simulate when the count or sizes change).
      */
     const scaleAt = (a: number) => SCALE_FAR + SCALE_SPAN * ((1 + Math.sin(a)) / 2);
+    const shownAt = (a: number) => {
+      const x = Math.min(1, Math.max(0, ((1 + Math.sin(a)) / 2 - FADE_OUT) / (FADE_IN - FADE_OUT)));
+      return x * x * (3 - 2 * x);
+    };
     const cum = new Float32Array(LUT + 1);
     for (let j = 0; j < LUT; j++) {
       const a = ((j + 0.5) / LUT) * TAU;
       const travel = Math.max(RX * Math.abs(Math.sin(a)), RY * Math.abs(Math.cos(a)));
-      cum[j + 1] = cum[j] + travel / (CARD * scaleAt(a) + GAP);
+      cum[j + 1] = cum[j] + travel / ((CARD * scaleAt(a) + GAP) * (HIDDEN_SLOT + (1 - HIDDEN_SLOT) * shownAt(a)));
     }
     const angleAt = (phase: number) => {
       const target = (phase - Math.floor(phase)) * cum[LUT];
@@ -98,9 +112,15 @@ export default function HeroSection() {
         const a = angleAt(t / PERIOD + i / n);
         const k = (1 + Math.sin(a)) / 2; // 1 at the front (bottom of the ring)
         const x = 640 + RX * Math.cos(a);
-        const y = 380 + RY * Math.sin(a);
+        const y = CY + RY * Math.sin(a);
         el.style.transform = `translate3d(${x.toFixed(1)}px,${y.toFixed(1)}px,0) scale(${scaleAt(a).toFixed(3)})`;
-        el.style.opacity = (0.45 + 0.55 * k).toFixed(2);
+        const shown = shownAt(a);
+        el.style.opacity = shown.toFixed(2);
+        // Fully faded cards leave the render tree (their backdrop blur is not free).
+        if (shown > 0 !== lastShown[i]) {
+          el.style.visibility = shown > 0 ? '' : 'hidden';
+          lastShown[i] = shown > 0;
+        }
         const z = Math.round(k * 20);
         if (z !== lastZ[i]) {
           el.style.zIndex = String(z);
