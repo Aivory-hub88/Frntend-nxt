@@ -380,10 +380,10 @@
   height: 100%;
   object-fit: cover;
 }
-/* Close-up: the gesture runs off the card edges instead of floating in white. */
+/* Closer crop that still keeps both raised fists fully inside the card. */
 .zoom img {
-  transform: scale(1.55);
-  transform-origin: 50% 27%;
+  transform: scale(1.28);
+  transform-origin: 56% 8%;
 }
 
 /* Number + badge */
