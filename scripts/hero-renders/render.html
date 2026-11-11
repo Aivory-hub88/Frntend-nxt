@@ -1,0 +1,262 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<style>html,body{margin:0;background:transparent}canvas{display:block}</style>
+<script type="importmap">{"imports":{"three":"./three/build/three.module.js","three/addons/":"./three/examples/jsm/"}}</script>
+</head><body>
+<script type="module">
+import * as THREE from 'three';
+import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.js';
+
+const q = new URLSearchParams(location.search);
+const W = +(q.get('w') || 1200), H = +(q.get('h') || 900);
+const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, preserveDrawingBuffer: true });
+renderer.setPixelRatio(1);
+renderer.setSize(W, H);
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.05;
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+document.body.appendChild(renderer.domElement);
+
+const scene = new THREE.Scene();
+const pmrem = new THREE.PMREMGenerator(renderer);
+scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
+
+const key = new THREE.DirectionalLight(0xffffff, 2.2);
+key.position.set(-3, 6, 4);
+key.castShadow = true;
+key.shadow.mapSize.set(2048, 2048);
+key.shadow.radius = 8;
+Object.assign(key.shadow.camera, { left: -4, right: 4, top: 4, bottom: -4 });
+scene.add(key);
+scene.add(new THREE.HemisphereLight(0xdfe6ff, 0x30241c, 0.5));
+
+const ceramic = new THREE.MeshPhysicalMaterial({ color: 0xf3f3f6, roughness: 0.28, clearcoat: 1, clearcoatRoughness: 0.12 });
+const copper = new THREE.MeshPhysicalMaterial({ color: 0xd06a3a, roughness: 0.3, metalness: 0.15, clearcoat: 1, clearcoatRoughness: 0.15 });
+const phys = (c) => new THREE.MeshPhysicalMaterial({ color: c, roughness: 0.3, metalness: 0.1, clearcoat: 1, clearcoatRoughness: 0.15 });
+const shadow = (m) => { m.castShadow = true; m.receiveShadow = true; return m; };
+const chrome = new THREE.MeshPhysicalMaterial({ color: 0xe8ebf2, metalness: 1, roughness: 0.18 });
+
+const SCENES = {
+  streamline() {
+    const g = new THREE.Group();
+    // Tangled on the left, through one gate, parallel on the right.
+    const left = [
+      [[0.75, 0.55], [-0.6, -0.3], [0.2, 0.7]],
+      [[-0.8, 0.2], [0.7, 0.6], [-0.3, -0.5]],
+      [[0.2, -0.8], [-0.2, 0.8], [0.65, -0.1]],
+      [[-0.35, 0.85], [0.45, -0.7], [-0.6, 0.35]],
+      [[0.9, -0.4], [-0.75, 0.15], [0.35, 0.55]],
+    ];
+    left.forEach((l, i) => {
+      const y = (i - 2) * 0.24;
+      const pts = [
+        new THREE.Vector3(-2.4, l[0][0], l[0][1]),
+        new THREE.Vector3(-1.95, l[1][0], l[1][1]),
+        new THREE.Vector3(-1.15, l[2][0], l[2][1]),
+        new THREE.Vector3(-0.45, y * 1.05, 0),
+        new THREE.Vector3(0.2, y, 0),
+        new THREE.Vector3(1.4, y, 0),
+        new THREE.Vector3(2.3, y, 0),
+      ];
+      const curve = new THREE.CatmullRomCurve3(pts, false, 'centripetal');
+      const mat = i === 2 ? copper : ceramic;
+      const tube = new THREE.Mesh(new THREE.TubeGeometry(curve, 260, 0.075, 28, false), mat);
+      tube.castShadow = tube.receiveShadow = true;
+      g.add(tube);
+      for (const p of [pts[0], pts[pts.length - 1]]) {
+        const cap = new THREE.Mesh(new THREE.SphereGeometry(0.075, 28, 20), mat);
+        cap.position.copy(p);
+        g.add(cap);
+      }
+    });
+    // The gate: a chrome frame the lines pass through.
+    const outer = new THREE.Shape();
+    const rr = (s, x, y, w, h, r) => {
+      s.moveTo(x + r, y); s.lineTo(x + w - r, y); s.quadraticCurveTo(x + w, y, x + w, y + r);
+      s.lineTo(x + w, y + h - r); s.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+      s.lineTo(x + r, y + h); s.quadraticCurveTo(x, y + h, x, y + h - r);
+      s.lineTo(x, y + r); s.quadraticCurveTo(x, y, x + r, y);
+    };
+    rr(outer, -0.62, -0.95, 1.24, 1.9, 0.32);
+    const hole = new THREE.Path();
+    rr(hole, -0.42, -0.75, 0.84, 1.5, 0.2);
+    outer.holes.push(hole);
+    const gate = new THREE.Mesh(
+      new THREE.ExtrudeGeometry(outer, { depth: 0.22, bevelEnabled: true, bevelThickness: 0.05, bevelSize: 0.05, bevelSegments: 8, curveSegments: 32 }),
+      chrome,
+    );
+    gate.rotation.y = Math.PI / 2;
+    gate.position.set(-0.2, 0, 0);
+    gate.castShadow = true;
+    g.add(gate);
+    return { group: g, cam: [3.4, 2.6, 7.6], look: [0, -0.15, 0], fov: 32, floor: -1.2 };
+  },
+
+  audit() {
+    const g = new THREE.Group();
+    const peach = phys(0xf2a07a);
+    const turns = [0.0, 0.07, -0.05, 0.03];
+    turns.forEach((t, i) => {
+      const slab = new THREE.Mesh(new RoundedBoxGeometry(2.0, 0.14, 1.3, 5, 0.06), i === 3 ? peach : ceramic);
+      slab.position.y = i * 0.34;
+      slab.rotation.y = t;
+      shadow(slab);
+      g.add(slab);
+    });
+    for (const z of [-0.42, 0.42]) {
+      const rod = new THREE.Mesh(new THREE.CylinderGeometry(0.045, 0.045, 1.42, 24), chrome);
+      rod.position.set(-0.82, 0.5, z);
+      shadow(rod);
+      g.add(rod);
+    }
+    const top = 3 * 0.34 + 0.07;
+    const check = new THREE.CatmullRomCurve3([
+      new THREE.Vector3(-0.42, top + 0.04, 0.0), new THREE.Vector3(-0.2, top + 0.04, 0.24), new THREE.Vector3(0.28, top + 0.04, -0.3),
+    ], false, 'catmullrom', 0.02);
+    const tick = new THREE.Mesh(new THREE.TubeGeometry(check, 80, 0.055, 18, false), ceramic);
+    tick.rotation.y = turns[3];
+    shadow(tick);
+    g.add(tick);
+    for (const [x, len] of [[0.52, 0.5], [0.52, 0.34]]) {
+      const bar = new THREE.Mesh(new RoundedBoxGeometry(len, 0.04, 0.09, 3, 0.02), ceramic);
+      bar.position.set(x, top + 0.02, len === 0.5 ? -0.12 : 0.1);
+      bar.rotation.y = turns[3];
+      g.add(bar);
+    }
+    return { group: g, cam: [2.5, 3.1, 3.9], look: [0, 0.45, 0], fov: 32, floor: -0.12 };
+  },
+  automate() {
+    const g = new THREE.Group();
+    const gear = (r, teeth, mat, x, z, phase) => {
+      const s = new THREE.Shape();
+      const d = 0.17, step = (Math.PI * 2) / teeth;
+      for (let i = 0; i < teeth; i++) {
+        const a = i * step + phase;
+        const pts = [[r, a], [r + d, a + step * 0.18], [r + d, a + step * 0.48], [r, a + step * 0.66], [r, a + step]];
+        pts.forEach(([rr, aa], k) => {
+          const X = rr * Math.cos(aa), Y = rr * Math.sin(aa);
+          if (i === 0 && k === 0) s.moveTo(X, Y); else s.lineTo(X, Y);
+        });
+      }
+      const hole = new THREE.Path();
+      hole.absarc(0, 0, r * 0.28, 0, Math.PI * 2, true);
+      s.holes.push(hole);
+      const m = new THREE.Mesh(new THREE.ExtrudeGeometry(s, { depth: 0.26, bevelEnabled: true, bevelThickness: 0.03, bevelSize: 0.03, bevelSegments: 4, curveSegments: 24 }), mat);
+      m.rotation.x = -Math.PI / 2;
+      m.position.set(x, 0, z);
+      shadow(m);
+      g.add(m);
+      const axle = new THREE.Mesh(new THREE.CylinderGeometry(r * 0.2, r * 0.2, 0.6, 32), chrome);
+      axle.position.set(x, 0.12, z);
+      shadow(axle);
+      g.add(axle);
+    };
+    const copperG = phys(0xd06a3a);
+    gear(1.0, 18, ceramic, -0.75, 0.25, 0);
+    gear(0.6, 11, copperG, -0.75 + 1.52, 0.25 - 0.88, 0.14);
+    gear(0.38, 8, chrome, -0.75 + 1.52 + 0.9, 0.25 - 0.88 + 0.72, 0.2);
+    return { group: g, cam: [1.2, 4.4, 4.4], look: [0.25, 0, -0.1], fov: 32, floor: -0.05 };
+  },
+  lock() {
+    const g = new THREE.Group();
+    const body = new THREE.Mesh(new RoundedBoxGeometry(1.6, 1.3, 0.62, 6, 0.16), ceramic);
+    shadow(body);
+    g.add(body);
+    const arc = new THREE.Mesh(new THREE.TorusGeometry(0.52, 0.11, 28, 72, Math.PI), chrome);
+    arc.position.y = 1.0;
+    shadow(arc);
+    g.add(arc);
+    for (const x of [-0.52, 0.52]) {
+      const leg = new THREE.Mesh(new THREE.CylinderGeometry(0.11, 0.11, 0.6, 28), chrome);
+      leg.position.set(x, 0.72, 0);
+      shadow(leg);
+      g.add(leg);
+    }
+    const dark = new THREE.MeshPhysicalMaterial({ color: 0x241226, roughness: 0.5 });
+    const hole = new THREE.Mesh(new THREE.CylinderGeometry(0.11, 0.11, 0.06, 32), dark);
+    hole.rotation.x = Math.PI / 2;
+    hole.position.set(0, 0.06, 0.3);
+    g.add(hole);
+    const slot = new THREE.Mesh(new THREE.BoxGeometry(0.075, 0.3, 0.06), dark);
+    slot.position.set(0, -0.12, 0.3);
+    g.add(slot);
+    const ring = new THREE.Mesh(new THREE.TorusGeometry(0.2, 0.03, 18, 64), phys(0xf0a45a));
+    ring.position.set(0, 0.0, 0.32);
+    g.add(ring);
+    g.rotation.y = -0.55;
+    g.position.y = 0.0;
+    return { group: g, cam: [0.4, 1.3, 4.6], look: [0, 0.3, 0], fov: 32, floor: -0.66 };
+  },
+  vault() {
+    const g = new THREE.Group();
+    const e = 1.0, rad = 0.035;
+    const corners = [];
+    for (const x of [-e, e]) for (const y of [-e, e]) for (const z of [-e, e]) corners.push(new THREE.Vector3(x, y, z));
+    for (let i = 0; i < 8; i++) for (let j = i + 1; j < 8; j++) {
+      const a = corners[i], b = corners[j];
+      if (a.distanceTo(b) > 2 * e + 0.01) continue;
+      const len = a.distanceTo(b);
+      const bar = new THREE.Mesh(new THREE.CylinderGeometry(rad, rad, len, 16), chrome);
+      bar.position.copy(a).add(b).multiplyScalar(0.5);
+      bar.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), b.clone().sub(a).normalize());
+      shadow(bar);
+      g.add(bar);
+    }
+    corners.forEach((c) => { const s = new THREE.Mesh(new THREE.SphereGeometry(rad * 1.8, 20, 14), chrome); s.position.copy(c); g.add(s); });
+    const glass = new THREE.Mesh(new THREE.BoxGeometry(2 * e, 2 * e, 2 * e), new THREE.MeshPhysicalMaterial({ color: 0xffffff, roughness: 0.05, transparent: true, opacity: 0.1, depthWrite: false }));
+    g.add(glass);
+    const base = new THREE.Mesh(new RoundedBoxGeometry(1.7, 0.1, 1.7, 4, 0.04), ceramic);
+    base.position.y = -e + 0.08;
+    shadow(base);
+    g.add(base);
+    const lime = phys(0xc9cf52);
+    const blocks = [[-0.45, -0.4, 0.5, 0.35, 0.6, ceramic], [0.35, -0.45, 0.4, 0.5, 0.95, lime], [-0.4, 0.4, 0.55, 0.45, 0.4, ceramic], [0.4, 0.35, 0.45, 0.45, 0.62, ceramic], [-0.02, 0.0, 0.3, 0.3, 0.3, chrome]];
+    for (const [x, z, w, d, h, m] of blocks) {
+      const b = new THREE.Mesh(new RoundedBoxGeometry(w, h, d, 4, 0.05), m);
+      b.position.set(x, -e + 0.13 + h / 2, z);
+      shadow(b);
+      g.add(b);
+    }
+    g.rotation.y = 0.4;
+    return { group: g, cam: [2.6, 2.4, 4.8], look: [0, -0.1, 0], fov: 32, floor: -1.04 };
+  },
+};
+
+const pick = SCENES[q.get('scene') || 'streamline']();
+scene.add(pick.group);
+const floor = new THREE.Mesh(new THREE.PlaneGeometry(30, 30), new THREE.ShadowMaterial({ opacity: 0.28 }));
+floor.rotation.x = -Math.PI / 2;
+floor.position.y = pick.floor;
+floor.receiveShadow = true;
+scene.add(floor);
+
+const camera = new THREE.PerspectiveCamera(pick.fov, W / H, 0.1, 100);
+camera.position.set(...pick.cam);
+camera.lookAt(...pick.look);
+renderer.render(scene, camera);
+// Trim to the drawn pixels (plus padding) so every card composes the same way.
+const src = renderer.domElement;
+const c2 = document.createElement('canvas');
+c2.width = W; c2.height = H;
+const x2 = c2.getContext('2d');
+x2.drawImage(src, 0, 0);
+const px = x2.getImageData(0, 0, W, H).data;
+let x0 = W, y0 = H, x1 = 0, y1 = 0;
+for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) if (px[(y * W + x) * 4 + 3] > 10) { if (x < x0) x0 = x; if (x > x1) x1 = x; if (y < y0) y0 = y; if (y > y1) y1 = y; }
+const pad = Math.round(Math.max(x1 - x0, y1 - y0) * 0.03);
+x0 = Math.max(0, x0 - pad); y0 = Math.max(0, y0 - pad); x1 = Math.min(W - 1, x1 + pad); y1 = Math.min(H - 1, y1 + pad);
+const cw = x1 - x0 + 1, ch = y1 - y0 + 1;
+const k = Math.min(1, 720 / Math.max(cw, ch));
+const out = document.createElement('canvas');
+out.width = Math.round(cw * k); out.height = Math.round(ch * k);
+const ox = out.getContext('2d');
+ox.imageSmoothingQuality = 'high';
+ox.drawImage(c2, x0, y0, cw, ch, 0, 0, out.width, out.height);
+window.__png = out.toDataURL('image/png');
+window.__webp = out.toDataURL('image/webp', 0.88);
+window.__done = true;
+</script>
+</body></html>

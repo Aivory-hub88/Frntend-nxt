@@ -3,7 +3,6 @@
 import { useEffect, useRef, type CSSProperties, type MutableRefObject, type ReactNode } from 'react';
 import { ParametricGlobe } from '@/components/ui/ParametricPattern';
 import styles from './HeroOrbit.module.css';
-import { DRAWINGS } from './heroDrawings';
 
 /** Draws the Aether orb at time `t` (seconds). Registered by the card, called by the orbit loop. */
 export type OrbDraw = (t: number) => void;
@@ -128,9 +127,18 @@ const Ornament = () => (
 
 /* ------------------------------------------------------------------ card bodies */
 
-const Drawing = ({ html }: { html: string }) => (
-  <div className={styles.drWrap} aria-hidden="true" dangerouslySetInnerHTML={{ __html: html }} />
-);
+/** Pre-rendered 3D illustration (Three.js, baked to a transparent WebP). */
+const Render = ({ name }: { name: string }) => (
+  <img
+    className={styles.render}
+    src={`/landing/hero/render-${name}.webp`}
+    alt=""
+    aria-hidden="true"
+    loading="lazy"
+    decoding="async"
+    draggable={false}
+  />
+)
 
 const IMG = '/landing/hero';
 const ICONS = '/integrations/icons';
@@ -176,7 +184,7 @@ export const HERO_CARDS: CardDef[] = [
     classes: ['tile', 'g2'],
     body: () => (
       <>
-        <Drawing html={DRAWINGS.audit} />
+        <Render name="audit" />
         {cap('Governed, with a full audit trail')}
       </>
     ),
@@ -186,7 +194,7 @@ export const HERO_CARDS: CardDef[] = [
     classes: ['tile', 'g3'],
     body: () => (
       <>
-        <Drawing html={DRAWINGS.streamline} />
+        <Render name="streamline" />
         {cap('Streamline your business operations')}
       </>
     ),
@@ -221,7 +229,7 @@ export const HERO_CARDS: CardDef[] = [
     classes: ['tile', 'g4'],
     body: () => (
       <>
-        <Drawing html={DRAWINGS.flow} />
+        <Render name="automate" />
         {cap('Automate daily tasks')}
       </>
     ),
@@ -258,7 +266,7 @@ export const HERO_CARDS: CardDef[] = [
     classes: ['tile', 'g6'],
     body: () => (
       <>
-        <Drawing html={DRAWINGS.lock} />
+        <Render name="lock" />
         {cap('Encrypted')}
       </>
     ),
@@ -314,7 +322,7 @@ export const HERO_CARDS: CardDef[] = [
     classes: ['tile', 'g5'],
     body: () => (
       <>
-        <Drawing html={DRAWINGS.vault} />
+        <Render name="vault" />
         {cap('Data sovereignty')}
       </>
     ),
