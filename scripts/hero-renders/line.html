@@ -196,6 +196,50 @@ const SCENES = {
     return { group: g, cam: [0.55, -0.35, 1.75], look: [-0.05, 0.55, 0], fov: 62, shift: 0.2 };
   },
 
+  decision() {
+    // A fork on the ground: two dashed options fade away, the chosen route is
+    // a solid arrow that shoots past the camera to its target.
+    const g = new THREE.Group();
+    for (let i = -5; i <= 5; i++) {
+      g.add(line([V(i * 0.8, 0, -7), V(i * 0.8, 0, 3)], { opacity: 0.18, dashed: true, dash: 0.05, gap: 0.12 }));
+      g.add(line([V(-4.5, 0, i * 0.8 - 2), V(4.5, 0, i * 0.8 - 2)], { opacity: 0.18, dashed: true, dash: 0.05, gap: 0.12 }));
+    }
+    const hub = solid(new THREE.CylinderGeometry(0.42, 0.42, 0.22, 48), 0.14);
+    hub.position.set(0, 0.11, 0.6);
+    g.add(hub);
+    const ring = solid(new THREE.CylinderGeometry(0.2, 0.2, 0.26, 40), 0.92);
+    ring.position.set(0, 0.13, 0.6);
+    g.add(ring);
+    // Options not taken: dashed curves to faint blocks.
+    for (const side of [-1, 1]) {
+      const cv = new THREE.CubicBezierCurve3(V(0.3 * side, 0.02, 0.4), V(1.4 * side, 0.02, 0.0), V(2.0 * side, 0.02, -1.4), V(2.2 * side, 0.02, -3.0));
+      g.add(line(cv.getPoints(60), { dashed: true, opacity: 0.7, dash: 0.1, gap: 0.08 }));
+      const b = solid(new THREE.BoxGeometry(0.6, 0.45, 0.6), 0.08);
+      b.position.set(2.2 * side, 0.225, -3.35);
+      g.add(b);
+    }
+    // The decision: a flat arrow down the middle, solid.
+    const a = new THREE.Shape();
+    const hw = 0.2, len = 3.4, head = 0.62, hh = 0.48;
+    a.moveTo(-hw, 0); a.lineTo(-hw, len - head); a.lineTo(-hh, len - head); a.lineTo(0, len);
+    a.lineTo(hh, len - head); a.lineTo(hw, len - head); a.lineTo(hw, 0); a.lineTo(-hw, 0);
+    const ag = extrude(a, 0.12);
+    ag.rotateX(-Math.PI / 2);
+    const arrow = solid(ag, 0.92);
+    arrow.position.set(0, 0, 0.2);
+    arrow.rotation.y = Math.PI;
+    arrow.scale.z = -1;
+    g.add(arrow);
+    // Speed ticks beside the arrow.
+    for (let k = 0; k < 4; k++) {
+      const z = -0.5 - k * 0.55;
+      for (const side of [-1, 1]) g.add(line([V(side * 0.36, 0.02, z), V(side * 0.36, 0.02, z - 0.28)], { opacity: 0.8 - k * 0.15 }));
+    }
+    const goal = solid(new THREE.BoxGeometry(0.75, 0.7, 0.75), 0.92);
+    goal.position.set(0, 0.35, -3.9);
+    g.add(goal);
+    return { group: g, cam: [2.15, 1.05, -0.35], look: [-0.45, 0, -1.95], fov: 60, shift: 0.14 };
+  },
   vault() {
     const g = new THREE.Group();
     const e = 1.3;
