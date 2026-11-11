@@ -216,6 +216,25 @@ export default function HeroSection() {
             ))}
           </div>
         </div>
+
+        {/* Trust strip: the programme Aivory belongs to, in grey so the row stays quiet. */}
+        <ul className={styles.trust} aria-label="Programs Aivory belongs to">
+          <li>
+            <span>Member of</span>
+            <Link href="/nvidia-inception" aria-label="NVIDIA Inception Program">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                className={styles.trustBadge}
+                src="/images/nvidia-inception/nvidia-inception-program-badge-rgb-for-screen.svg"
+                alt="NVIDIA Inception Program"
+                width={450}
+                height={166}
+                loading="lazy"
+                decoding="async"
+              />
+            </Link>
+          </li>
+        </ul>
       </div>
     </div>
   );

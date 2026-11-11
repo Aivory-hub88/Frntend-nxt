@@ -496,18 +496,10 @@ export const HERO_CARDS: CardDef[] = [
   {
     id: 'proof',
     classes: ['glass', 'num'],
-    body: ({ decorative }) => (
+    body: () => (
       <>
         <b>500+</b>
         {cap('Business running on Aivory')}
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          className={styles.nv}
-          src="/images/nvidia-inception/nvidia-inception-program-badge-rgb-for-screen.svg"
-          alt={decorative ? '' : 'NVIDIA Inception Program — Aivory AI is a member (2026 cohort)'}
-          loading="lazy"
-          decoding="async"
-        />
       </>
     ),
   },

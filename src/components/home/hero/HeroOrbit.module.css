@@ -670,35 +670,19 @@
   transform-origin: 56% 8%;
 }
 
-/* Number + badge */
+/* Number card: the figure on top, its caption in the usual place below. */
 .num b {
   position: absolute;
   left: 14px;
-  top: 14px;
+  top: 20px;
   font-family: var(--font-manrope), 'Manrope', sans-serif;
   font-weight: 300;
-  font-size: 62px;
+  font-size: 76px;
   line-height: 1;
-  letter-spacing: -0.045em;
+  letter-spacing: -0.05em;
 }
 .num .cap {
-  top: 80px;
-  bottom: auto;
-  font-weight: 400;
-  font-size: 12.5px;
-  line-height: 1.3;
-  letter-spacing: 0;
-  color: rgba(17, 18, 20, 0.65);
-}
-.nv {
-  position: absolute;
-  left: 16px;
-  bottom: 16px;
-  height: 58px;
-  width: auto;
-  max-width: 164px;
-  object-fit: contain;
-  object-position: left bottom;
+  text-wrap: balance;
 }
 
 /* Aether orb */
@@ -817,7 +801,8 @@
 
 @media (min-width: 1100px) {
   .root {
-    height: clamp(640px, 100svh, 1000px);
+    /* Leaves room for the top bar and the trust strip, so the strip lands in the first screen. */
+    height: clamp(640px, calc(100svh - 135px), 1000px);
     min-height: 0;
   }
   .orbit {
@@ -913,5 +898,63 @@
 @media (prefers-reduced-motion: reduce) {
   .wash {
     animation: none;
+  }
+}
+
+/* ---------------------------------------------------------------- trust strip */
+
+.trust {
+  /* Above the hero's drop shadow, which would otherwise grey the strip. */
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 18px 64px;
+  margin: 0;
+  padding: 26px 24px 28px;
+  list-style: none;
+  background: #fbfbfb;
+  border-top: 1px solid rgba(17, 18, 20, 0.07);
+  font-family: var(--font-manrope), 'Manrope', sans-serif;
+}
+.trust li {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.trust li > span {
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: rgba(17, 18, 20, 0.45);
+}
+.trust a {
+  display: block;
+}
+/* One grey for every mark; multiply drops the badge's white plate into the paper. */
+.trust img {
+  display: block;
+  width: auto;
+  filter: grayscale(1);
+  opacity: 0.62;
+  mix-blend-mode: multiply;
+}
+.trustBadge {
+  height: 40px;
+}
+@media (max-width: 720px) {
+  .trust {
+    flex-direction: column;
+    gap: 20px;
+    padding: 24px 20px 26px;
+  }
+  .trust li {
+    flex-direction: column;
+    gap: 10px;
   }
 }
