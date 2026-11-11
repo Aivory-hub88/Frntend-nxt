@@ -220,7 +220,7 @@ export const HERO_CARDS: CardDef[] = [
   },
   {
     id: 'photo-celebrating',
-    classes: ['glass', 'photo'],
+    classes: ['glass', 'photo', 'zoom'],
     body: ({ decorative }) =>
       photo(`${IMG}/woman-celebrating.webp`, 'A woman celebrating with her laptop on an orange bean bag', decorative),
   },
