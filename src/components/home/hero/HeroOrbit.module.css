@@ -963,24 +963,6 @@
 .trustBadge {
   height: 40px;
 }
-.trustWordmark {
-  height: 19px;
-}
-.trustLockup {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 18px;
-  font-weight: 600;
-  line-height: 1;
-  letter-spacing: -0.02em;
-  white-space: nowrap;
-  color: rgba(17, 18, 20, 0.6);
-}
-.trustLockup img {
-  height: 24px;
-  opacity: 0.6;
-}
 @media (max-width: 720px) {
   .trust {
     flex-direction: column;
