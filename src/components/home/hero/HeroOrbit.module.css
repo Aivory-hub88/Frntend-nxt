@@ -282,15 +282,18 @@
 
 /* Drawings */
 .render {
+  /* Full-bleed close-up: the drawing runs off the card edges and fades out
+     above the caption. Sits under the grain (::after) so it shares the film. */
   position: absolute;
-  z-index: 3;
-  left: 7%;
-  top: 6%;
-  width: 86%;
-  height: calc(100% - 78px);
-  object-fit: contain;
+  z-index: 1;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
   pointer-events: none;
   user-select: none;
+  -webkit-mask-image: linear-gradient(180deg, #000 60%, transparent 90%);
+  mask-image: linear-gradient(180deg, #000 60%, transparent 90%);
 }
 
 /* Photos fill the card, no frame. */

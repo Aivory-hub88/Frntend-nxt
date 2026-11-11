@@ -127,7 +127,7 @@ const Ornament = () => (
 
 /* ------------------------------------------------------------------ card bodies */
 
-/** Pre-rendered 3D illustration (Three.js, baked to a transparent WebP). */
+/** Close-up 3D technical drawing (Three.js line render, baked to a transparent WebP). */
 const Render = ({ name }: { name: string }) => (
   <img
     className={styles.render}
@@ -229,8 +229,8 @@ export const HERO_CARDS: CardDef[] = [
     classes: ['tile', 'g4'],
     body: () => (
       <>
-        <Render name="automate" />
-        {cap('Automate daily tasks')}
+        <Render name="automation" />
+        {cap('Build any automation')}
       </>
     ),
   },
