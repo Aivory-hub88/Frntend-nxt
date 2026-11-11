@@ -167,6 +167,8 @@ export interface GlobeProps {
   tilt?: number;
   roll?: number;
   opacity?: number;
+  /** Stroke width in CSS px for the 'waves' pattern (default 0.75). */
+  lineWidth?: number;
   /** Ellipses (host fractions) where the lattice steps back to `level` of its opacity. */
   quiet?: Ellipse[];
   className?: string;
@@ -341,7 +343,7 @@ function drawWaves(ctx: CanvasRenderingContext2D, w: number, h: number, p: Globe
     }
   }
   ctx.strokeStyle = '#fff';
-  ctx.lineWidth = 0.75;
+  ctx.lineWidth = p.lineWidth ?? 0.75;
   ctx.lineJoin = 'round';
   ctx.globalAlpha = 0.45;
   ctx.stroke(far);
