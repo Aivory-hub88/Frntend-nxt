@@ -52,8 +52,9 @@
   margin: 14px 0 0;
   font-family: var(--font-manrope), 'Manrope', sans-serif;
   font-weight: 400;
-  font-size: 16px;
-  line-height: 1.5;
+  font-size: 18.4px;
+  line-height: 1.45;
+  text-wrap: balance;
   color: rgba(17, 18, 20, 0.6);
 }
 
@@ -470,13 +471,16 @@
     position: absolute;
     left: 50%;
     top: 50%;
-    width: 680px;
+    width: max-content;
     padding-top: 0;
     margin: 0;
     transform: translate(-50%, -50%);
   }
   .h {
     font-size: 42px;
+    white-space: nowrap;
+  }
+  .sub {
     white-space: nowrap;
   }
 }

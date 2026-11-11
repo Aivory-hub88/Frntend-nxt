@@ -145,9 +145,7 @@ export default function HeroSection() {
           <div className={styles.copy}>
             <h1 className={styles.h}>Your business, minus the busywork</h1>
             <p className={styles.sub}>
-              Aivory takes you from first analysis to AI that works with you
-              <br />
-              at any scale
+              Aivory takes you from first analysis to AI that works with you at any scale
             </p>
             <div className={styles.cta}>
               <Link href="/free-diagnostic" className={`${styles.btn} ${styles.btnPrimary}`}>
