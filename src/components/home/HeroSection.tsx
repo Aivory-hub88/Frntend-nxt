@@ -14,6 +14,15 @@ const TAU = Math.PI * 2;
 const PERIOD = 30;
 /** Where the ring rests under reduced motion, and where it starts. */
 const REST_T = 9;
+/** Ring radii in the 1280x760 world, and the card scale at the back and front. */
+const RX = 548;
+const RY = 268;
+const SCALE_FAR = 0.48;
+const SCALE_SPAN = 0.48;
+/** Card edge in world px (matches `.card`), the room kept between cards, and table size. */
+const CARD = 196;
+const GAP = 14;
+const LUT = 1024;
 
 /** Two rails for narrow screens: the same cards, split so each rail mixes surfaces. */
 const RAIL_A = ['audit', 'streamline', 'photo-celebrating', 'aether', 'automate', 'apps', 'decision'];
@@ -53,15 +62,44 @@ export default function HeroSection() {
     let start = 0;
     let frame = 0;
 
+    /*
+     * Spacing. Equal angles pile the cards up at the sides of the ring, where
+     * the ellipse turns and the cards are still large (up to 77px of overlap,
+     * which hid captions). Instead each card gets room in proportion to its
+     * own size: `cum` integrates "card slots per radian" around the ring, and
+     * `angleAt` inverts it, so equal steps in phase are equal steps in slots.
+     * With these radii and scales no two cards touch at any point of the turn
+     * (smallest gap about 10px). A side effect is that near cards travel
+     * faster than far ones, as they would in real depth.
+     */
+    const scaleAt = (a: number) => SCALE_FAR + SCALE_SPAN * ((1 + Math.sin(a)) / 2);
+    const cum = new Float32Array(LUT + 1);
+    for (let j = 0; j < LUT; j++) {
+      const a = ((j + 0.5) / LUT) * TAU;
+      const travel = Math.max(RX * Math.abs(Math.sin(a)), RY * Math.abs(Math.cos(a)));
+      cum[j + 1] = cum[j] + travel / (CARD * scaleAt(a) + GAP);
+    }
+    const angleAt = (phase: number) => {
+      const target = (phase - Math.floor(phase)) * cum[LUT];
+      let lo = 0;
+      let hi = LUT;
+      while (hi - lo > 1) {
+        const mid = (lo + hi) >> 1;
+        if (cum[mid] <= target) lo = mid;
+        else hi = mid;
+      }
+      return ((lo + (target - cum[lo]) / (cum[lo + 1] - cum[lo])) / LUT) * TAU;
+    };
+
     const place = (t: number) => {
       for (let i = 0; i < n; i++) {
         const el = cardEls.current[i];
         if (!el) continue;
-        const a = (t / PERIOD) * TAU + (i / n) * TAU;
+        const a = angleAt(t / PERIOD + i / n);
         const k = (1 + Math.sin(a)) / 2; // 1 at the front (bottom of the ring)
-        const x = 640 + 528 * Math.cos(a);
-        const y = 380 + 252 * Math.sin(a);
-        el.style.transform = `translate3d(${x.toFixed(1)}px,${y.toFixed(1)}px,0) scale(${(0.54 + 0.52 * k).toFixed(3)})`;
+        const x = 640 + RX * Math.cos(a);
+        const y = 380 + RY * Math.sin(a);
+        el.style.transform = `translate3d(${x.toFixed(1)}px,${y.toFixed(1)}px,0) scale(${scaleAt(a).toFixed(3)})`;
         el.style.opacity = (0.45 + 0.55 * k).toFixed(2);
         const z = Math.round(k * 20);
         if (z !== lastZ[i]) {
