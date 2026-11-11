@@ -277,18 +277,212 @@
   animation-delay: -12s;
 }
 
-.scale .cap {
-  font-size: 23px;
-  line-height: 1.12;
+/*
+ * Product UI crops. Colours, radii and type scale are the dashboard's own
+ * (WorkflowNode.module.css, ScoreRing / ROIMetricTile), drawn at card size.
+ */
+.ui {
+  background: #141518;
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.07),
+    0 16px 30px -24px rgba(20, 30, 60, 0.45);
 }
-.ornament {
+.ui .cap {
+  color: #fff;
+  text-wrap: balance;
+}
+.uiFlow {
   position: absolute;
   inset: 0;
-  z-index: 1;
+  background: radial-gradient(rgba(255, 255, 255, 0.09) 1px, transparent 1.2px) 6px 6px / 14px 14px;
+}
+.uiEdges {
+  position: absolute;
+  inset: 0;
   width: 100%;
   height: 100%;
-  opacity: 1;
-  pointer-events: none;
+}
+.uiEdgeTrack {
+  stroke: rgba(255, 255, 255, 0.07);
+  stroke-width: 3.2;
+  stroke-linecap: round;
+}
+.uiEdge {
+  stroke: rgba(255, 255, 255, 0.5);
+  stroke-width: 1.4;
+  stroke-dasharray: 4.5 5.5;
+  stroke-linecap: round;
+}
+.uiNode {
+  --accent: #fb923c;
+  position: absolute;
+  left: 14px;
+  right: 14px;
+  top: 28px;
+  border-radius: 14px;
+  background: #1f2024;
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.08),
+    0 1px 2px rgba(0, 0, 0, 0.35);
+  font-family: var(--font-manrope), 'Manrope', sans-serif;
+}
+.uiDotL,
+.uiDotR {
+  position: absolute;
+  top: 24px;
+  width: 10px;
+  height: 10px;
+  margin-top: -5px;
+  border-radius: 50%;
+  box-sizing: border-box;
+  background: #1b1c20;
+  border: 1.6px solid var(--accent);
+}
+.uiDotL {
+  left: -5px;
+}
+.uiDotR {
+  right: -5px;
+}
+.uiNodeBar {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 10px 9px 10px 12px;
+}
+.uiNodeBar img {
+  flex: none;
+  width: 22px;
+  height: 22px;
+}
+.uiNodeBar span {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+.uiNodeBar b {
+  font-size: 8px;
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+.uiNodeBar em {
+  font-style: normal;
+  font-size: 11.5px;
+  font-weight: 500;
+  line-height: 1.2;
+  letter-spacing: -0.005em;
+  white-space: nowrap;
+  color: #f4f4f5;
+}
+.uiChevron {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 7px;
+  background: rgba(255, 255, 255, 0.05);
+  color: rgba(255, 255, 255, 0.55);
+}
+.uiNodeBody {
+  margin: 0 6px 6px;
+  padding: 8px 10px;
+  border-radius: 9px;
+  background: color-mix(in srgb, var(--accent) 9%, rgba(0, 0, 0, 0.25));
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--accent) 16%, transparent);
+  font-size: 9.5px;
+  font-weight: 500;
+  line-height: 1.45;
+  color: rgba(255, 255, 255, 0.6);
+}
+.uiNodeBody b {
+  display: block;
+  font-weight: 500;
+  color: #f4f4f5;
+}
+
+.uiReport {
+  position: absolute;
+  inset: 0;
+  padding: 12px 16px 0;
+  font-family: var(--font-manrope), 'Manrope', sans-serif;
+}
+.uiScore {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.uiScore svg {
+  flex: none;
+}
+.uiRingTrack {
+  fill: none;
+  stroke: #45463f;
+  stroke-width: 7;
+}
+.uiRingArc {
+  fill: none;
+  stroke: #b7cba6;
+  stroke-width: 7;
+  stroke-linecap: round;
+}
+.uiRingNum {
+  font-family: var(--font-doto), var(--font-manrope), sans-serif;
+  font-size: 21px;
+  font-weight: 700;
+  fill: #e5e5e3;
+  text-anchor: middle;
+  dominant-baseline: middle;
+}
+.uiScore span {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.uiScore b,
+.uiMetrics dt {
+  font-size: 8px;
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #e5e5e3;
+}
+.uiScore b {
+  color: #a3a39c;
+}
+.uiScore em {
+  font-style: normal;
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.15;
+  color: #f4f4f5;
+}
+.uiMetrics {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  margin: 10px 0 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+.uiMetrics div {
+  padding: 8px 0 0;
+}
+.uiMetrics div + div {
+  padding-left: 12px;
+  border-left: 1px solid rgba(255, 255, 255, 0.1);
+}
+.uiMetrics dd {
+  margin: 4px 0 0;
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1.2;
+  color: #b7cba6;
 }
 
 /* Drawings */
