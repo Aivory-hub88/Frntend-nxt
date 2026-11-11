@@ -1,0 +1,230 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<style>html,body{margin:0;background:transparent}canvas{display:block}</style>
+<script type="importmap">{"imports":{"three":"./three/build/three.module.js","three/addons/":"./three/examples/jsm/"}}</script>
+</head><body>
+<script type="module">
+// Technical drawings rendered in true 3D: white hairline edges, faint shaded faces,
+// hidden lines removed by the faces' depth, extreme close-up perspective cameras.
+import * as THREE from 'three';
+import { LineSegments2 } from 'three/addons/lines/LineSegments2.js';
+import { LineSegmentsGeometry } from 'three/addons/lines/LineSegmentsGeometry.js';
+import { LineMaterial } from 'three/addons/lines/LineMaterial.js';
+import { Line2 } from 'three/addons/lines/Line2.js';
+import { LineGeometry } from 'three/addons/lines/LineGeometry.js';
+
+const q = new URLSearchParams(location.search);
+const W = +(q.get('w') || 720), H = +(q.get('h') || 720);
+const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, preserveDrawingBuffer: true });
+renderer.setPixelRatio(1);
+renderer.setSize(W, H);
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+document.body.appendChild(renderer.domElement);
+const scene = new THREE.Scene();
+scene.add(new THREE.AmbientLight(0xffffff, 1.4));
+const sun = new THREE.DirectionalLight(0xffffff, 2.2);
+sun.position.set(-2, 5, 3);
+scene.add(sun);
+
+const RES = new THREE.Vector2(W, H);
+const LW = +(q.get('lw') || 2.6);
+const lineMat = (o = {}) => new LineMaterial({
+  color: o.color ?? 0xffffff, linewidth: (o.w ?? 1) * LW, resolution: RES, transparent: true,
+  opacity: o.opacity ?? 1, dashed: !!o.dashed, dashSize: o.dash ?? 0.07, gapSize: o.gap ?? 0.07,
+});
+// Flat technical tones per face direction (top brightest, sides dimmer), no lighting gradients.
+const fillMat = (opacity) => new THREE.ShaderMaterial({
+  transparent: true, depthWrite: true, side: THREE.DoubleSide,
+  polygonOffset: true, polygonOffsetFactor: 1, polygonOffsetUnits: 1,
+  uniforms: { uOpacity: { value: opacity } },
+  vertexShader: 'varying vec3 vN; void main(){ vN = normalize(mat3(modelMatrix) * normal); gl_Position = projectionMatrix * viewMatrix * modelMatrix * vec4(position,1.0); }',
+  fragmentShader: 'uniform float uOpacity; varying vec3 vN; void main(){ vec3 n = normalize(vN); float t = abs(n.y) > 0.6 ? (n.y > 0.0 ? 1.0 : 0.45) : (abs(n.x) > abs(n.z) ? 0.6 : 0.8); gl_FragColor = vec4(1.0, 1.0, 1.0, uOpacity * t); }',
+});
+/** A solid: faint shaded faces (they hide what is behind) plus crisp feature edges. */
+function solid(geom, fill = 0.1, o = {}) {
+  const g = new THREE.Group();
+  if (fill > 0) g.add(new THREE.Mesh(geom, fillMat(fill)));
+  const lg = new LineSegmentsGeometry().fromEdgesGeometry(new THREE.EdgesGeometry(geom, o.angle ?? 28));
+  const l = new LineSegments2(lg, lineMat(o));
+  if (o.dashed) l.computeLineDistances();
+  l.renderOrder = 2;
+  g.add(l);
+  return g;
+}
+/** A polyline through 3D points. */
+function line(pts, o = {}) {
+  const g = new LineGeometry();
+  g.setPositions(pts.flatMap((p) => [p.x, p.y, p.z]));
+  const l = new Line2(g, lineMat(o));
+  if (o.dashed) l.computeLineDistances();
+  l.renderOrder = 2;
+  return l;
+}
+const V = (x, y, z) => new THREE.Vector3(x, y, z);
+function rrShape(w, h, r, s = new THREE.Shape()) {
+  const x = -w / 2, y = -h / 2;
+  s.moveTo(x + r, y); s.lineTo(x + w - r, y); s.quadraticCurveTo(x + w, y, x + w, y + r);
+  s.lineTo(x + w, y + h - r); s.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+  s.lineTo(x + r, y + h); s.quadraticCurveTo(x, y + h, x, y + h - r);
+  s.lineTo(x, y + r); s.quadraticCurveTo(x, y, x + r, y);
+  return s;
+}
+const extrude = (shape, depth) => new THREE.ExtrudeGeometry(shape, { depth, bevelEnabled: false, curveSegments: 14 });
+/** A flat rounded slab lying on the ground (w along x, d along z, t thick). */
+function slab(w, d, t, r) {
+  const geo = extrude(rrShape(w, d, r), t);
+  geo.rotateX(-Math.PI / 2);
+  return geo;
+}
+
+const SCENES = {
+  automation() {
+    const g = new THREE.Group();
+    // Canvas grid, like the builder's dotted board.
+    for (let i = -6; i <= 6; i++) {
+      g.add(line([V(i, 0, -8), V(i, 0, 4)], { opacity: 0.22, dashed: true, dash: 0.05, gap: 0.12 }));
+      g.add(line([V(-6, 0, i - 2), V(8, 0, i - 2)], { opacity: 0.22, dashed: true, dash: 0.05, gap: 0.12 }));
+    }
+    const nodes = [
+      { p: [0, 1.0], lit: true },
+      { p: [2.7, -0.4] },
+      { p: [2.2, -3.0] },
+      { p: [5.4, -2.0] },
+      { p: [-2.6, -1.8] },
+    ];
+    const NW = 1.7, ND = 1.05, NT = 0.16;
+    const port = (x, z, side) => V(x + (side * NW) / 2, NT * 0.6, z);
+    nodes.forEach(({ p: [x, z], lit }) => {
+      const n = solid(slab(NW, ND, NT, 0.2), lit ? 0.92 : 0.1);
+      n.position.set(x, 0, z);
+      g.add(n);
+      const ink = lit ? { color: 0x23303a, w: 1.2 } : { w: 1 };
+      const top = NT + 0.004;
+      const ico = rrShape(0.36, 0.36, 0.08).getPoints(10).map((v) => V(x - 0.52 + v.x, top, z + v.y));
+      g.add(line([...ico, ico[0]], ink));
+      g.add(line([V(x - 0.18, top, z - 0.1), V(x + 0.62, top, z - 0.1)], ink));
+      g.add(line([V(x - 0.18, top, z + 0.12), V(x + 0.3, top, z + 0.12)], { ...ink, opacity: 0.7 }));
+      for (const side of [-1, 1]) {
+        const c = solid(new THREE.CylinderGeometry(0.08, 0.08, NT + 0.04, 24), 0.9);
+        c.position.copy(port(x, z, side)).setY((NT + 0.04) / 2);
+        g.add(c);
+      }
+    });
+    const wire = (a, b, dashed) => {
+      const A = port(...nodes[a].p, 1), B = port(...nodes[b].p, -1);
+      const k = Math.max(0.8, Math.abs(B.x - A.x) * 0.5);
+      const cv = new THREE.CubicBezierCurve3(A, V(A.x + k, A.y, A.z), V(B.x - k, B.y, B.z), B);
+      g.add(line(cv.getPoints(60), { w: 1.2, dashed, dash: 0.08, gap: 0.08 }));
+    };
+    wire(4, 0); wire(0, 1); wire(1, 3); wire(0, 2, true);
+    return { group: g, cam: [-0.7, 1.7, 2.1], look: [1.3, 0, -0.9], fov: 56, shift: 0.2 };
+  },
+
+  streamline() {
+    const g = new THREE.Group();
+    const frame = rrShape(1.5, 2.2, 0.36);
+    frame.holes.push(rrShape(1.0, 1.7, 0.2, new THREE.Path()));
+    const geo = extrude(frame, 0.3);
+    geo.translate(0, 0, -0.15);
+    geo.rotateY(Math.PI / 2);
+    g.add(solid(geo, 0.9));
+    const ys = [-0.5, -0.25, 0, 0.25, 0.5];
+    const wild = [[0.7, 0.9, -0.6, 0.3], [-0.8, -0.2, 0.7, -0.9], [0.3, -0.9, 0.2, 0.8], [-0.4, 0.8, -0.9, -0.2], [0.9, -0.5, 0.5, 0.6]];
+    ys.forEach((y, i) => {
+      const w = wild[i];
+      const cv = new THREE.CatmullRomCurve3([
+        V(-4.2, w[0] * 1.2, w[1] * 1.3), V(-3.0, w[2] * 1.1, w[3] * 1.2), V(-1.9, w[1] * 0.9, w[0] * 0.8), V(-0.9, y * 1.1, w[2] * 0.25), V(-0.25, y, 0),
+      ], false, 'centripetal');
+      g.add(line(cv.getPoints(120), { w: 1.1 }));
+      g.add(line([V(-0.25, y, 0), V(5.5, y, 0)], { w: 1.1 }));
+      const dot = solid(new THREE.SphereGeometry(0.045, 16, 12), 1, { angle: 80 });
+      dot.position.set(1.6, y, 0);
+      g.add(dot);
+    });
+    g.add(line([V(-0.15, -1.5, 0.95), V(-0.15, 1.5, 0.95)], { dashed: true, opacity: 0.6, dash: 0.14, gap: 0.06 }));
+    return { group: g, cam: [2.1, 0.55, 1.55], look: [-0.6, 0.05, 0], fov: 62, shift: 0.1 };
+  },
+
+  audit() {
+    const g = new THREE.Group();
+    const ys = [0, 0.42, 0.84, 1.26];
+    ys.forEach((y, i) => {
+      const s = solid(slab(2.6, 1.7, 0.13, 0.16), i === 3 ? 0.92 : 0.1);
+      s.position.y = y;
+      g.add(s);
+      if (i < 3) {
+        g.add(line([V(-0.6, y + 0.135, -0.35), V(0.9, y + 0.135, -0.35)], { opacity: 0.8 }));
+        g.add(line([V(-0.6, y + 0.135, 0.05), V(0.4, y + 0.135, 0.05)], { opacity: 0.6 }));
+      }
+    });
+    for (const [x, z] of [[-1.15, -0.7], [1.15, -0.7], [1.15, 0.7], [-1.15, 0.7]]) {
+      g.add(line([V(x, -0.2, z), V(x, 1.8, z)], { dashed: true, opacity: 0.7 }));
+    }
+    const top = 1.26 + 0.134;
+    const ink = { color: 0x2b2a7a, w: 1.8 };
+    g.add(line([V(-0.95, top, -0.05), V(-0.72, top, 0.2), V(-0.3, top, -0.32)], ink));
+    g.add(line([V(-0.05, top, -0.22), V(0.95, top, -0.22)], { color: 0x2b2a7a, w: 1.2 }));
+    g.add(line([V(-0.05, top, 0.08), V(0.6, top, 0.08)], { color: 0x2b2a7a, w: 1.2, opacity: 0.7 }));
+    return { group: g, cam: [1.75, 2.15, 1.75], look: [-0.45, 0.85, -0.25], fov: 58 };
+  },
+
+  lock() {
+    const g = new THREE.Group();
+    const body = extrude(rrShape(1.7, 1.35, 0.22), 0.62);
+    body.translate(0, 0, -0.31);
+    g.add(solid(body, 0.92));
+    const u = new THREE.Shape();
+    const R = 0.56, r = 0.38, base = 0.5, top = 1.15;
+    u.moveTo(-R, base); u.lineTo(-R, top); u.absarc(0, top, R, Math.PI, 0, true); u.lineTo(R, base);
+    u.lineTo(r, base); u.lineTo(r, top); u.absarc(0, top, r, 0, Math.PI, false); u.lineTo(-r, base); u.lineTo(-R, base);
+    const sh = extrude(u, 0.2);
+    sh.translate(0, 0, -0.1);
+    g.add(solid(sh, 0.18));
+    const key = new THREE.Shape();
+    key.absarc(0, 0.08, 0.13, 0, Math.PI * 2, false);
+    const keyMesh = new THREE.Mesh(new THREE.ShapeGeometry(key, 24), new THREE.MeshBasicMaterial({ color: 0x3a1d46 }));
+    keyMesh.position.z = 0.312;
+    g.add(keyMesh);
+    const slot = new THREE.Mesh(new THREE.PlaneGeometry(0.09, 0.32), new THREE.MeshBasicMaterial({ color: 0x3a1d46 }));
+    slot.position.set(0, -0.12, 0.312);
+    g.add(slot);
+    g.add(line([V(0, -1.4, 0.33), V(0, 2.1, 0.33)], { dashed: true, opacity: 0.55, dash: 0.16, gap: 0.06 }));
+    g.add(line([V(-1.25, -0.675, 0.33), V(-1.25, 0.675, 0.33)], { opacity: 0.7 }));
+    g.add(line([V(-1.33, -0.675, 0.33), V(-1.17, -0.675, 0.33)], { opacity: 0.7 }));
+    g.add(line([V(-1.33, 0.675, 0.33), V(-1.17, 0.675, 0.33)], { opacity: 0.7 }));
+    g.rotation.y = -0.42;
+    return { group: g, cam: [0.55, -0.35, 1.75], look: [-0.05, 0.55, 0], fov: 62, shift: 0.2 };
+  },
+
+  vault() {
+    const g = new THREE.Group();
+    const e = 1.3;
+    g.add(solid(new THREE.BoxGeometry(2 * e, 2 * e, 2 * e), 0, { w: 1.1 }));
+    const base = solid(slab(2.3, 2.3, 0.08, 0.06), 0.12);
+    base.position.y = -e;
+    g.add(base);
+    const mods = [[-0.55, -0.5, 0.7, 0.5, 0.75, 0.1], [0.45, -0.55, 0.55, 0.7, 1.3, 0.92], [-0.55, 0.5, 0.75, 0.6, 0.5, 0.1], [0.5, 0.45, 0.6, 0.6, 0.85, 0.32], [0.0, 0.0, 0.32, 0.32, 0.32, 0.1]];
+    for (const [x, z, w, d, h, f] of mods) {
+      const geo = new THREE.BoxGeometry(w, h, d);
+      const m = solid(geo, f);
+      m.position.set(x, -e + 0.08 + h / 2, z);
+      g.add(m);
+    }
+    g.add(line([V(-e, e + 0.25, e), V(e, e + 0.25, e)], { opacity: 0.6 }));
+    g.rotation.y = 0.35;
+    return { group: g, cam: [1.85, 1.35, 2.05], look: [-0.25, -0.45, -0.2], fov: 62, shift: 0.16 };
+  },
+};
+
+const pick = SCENES[q.get('scene') || 'automation']();
+scene.add(pick.group);
+const camera = new THREE.PerspectiveCamera(pick.fov, W / H, 0.05, 100);
+camera.position.set(...pick.cam);
+camera.lookAt(...pick.look);
+if (pick.shift) camera.setViewOffset(W, H, 0, H * pick.shift, W, H);
+renderer.render(scene, camera);
+window.__png = renderer.domElement.toDataURL('image/png');
+window.__webp = renderer.domElement.toDataURL('image/webp', 0.9);
+window.__done = true;
+</script>
+</body></html>
