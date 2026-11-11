@@ -293,7 +293,7 @@ export const HERO_CARDS: CardDef[] = [
     body: () => (
       <>
         <UiWorkflow />
-        {cap('Workflow builder')}
+        {cap('Watch every step run')}
       </>
     ),
   },
@@ -395,7 +395,7 @@ export const HERO_CARDS: CardDef[] = [
     body: () => (
       <>
         <UiReport />
-        {cap('Operations analysis')}
+        {cap('Know where AI pays off')}
       </>
     ),
   },
