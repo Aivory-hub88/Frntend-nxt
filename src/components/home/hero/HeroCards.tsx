@@ -1,94 +1,107 @@
 'use client';
 
 import { useEffect, useRef, type CSSProperties, type MutableRefObject, type ReactNode } from 'react';
+import { MODE_DRAWS, resolvePreset } from 'thinking-orbs';
 import styles from './HeroOrbit.module.css';
 
 /** Draws the Aether orb at time `t` (seconds). Registered by the card, called by the orbit loop. */
 export type OrbDraw = (t: number) => void;
 
-const TAU = Math.PI * 2;
 
 /* ------------------------------------------------------------------ Aether orb */
 
-// Nodes on a sphere (Fibonacci lattice), each linked to its nearest neighbours,
-// plus a few long chords through the core. Built once, shared by every orb.
-const ORB_POINTS: [number, number, number][] = [];
-const ORB_EDGES: [number, number][] = [];
-(function buildOrb() {
-  const n = 86;
-  const golden = Math.PI * (3 - Math.sqrt(5));
-  for (let i = 0; i < n; i++) {
-    const y = 1 - (2 * (i + 0.5)) / n;
-    const r = Math.sqrt(1 - y * y);
-    ORB_POINTS.push([Math.cos(i * golden) * r, y, Math.sin(i * golden) * r]);
-  }
-  for (let i = 0; i < n; i++) {
-    const d: [number, number][] = [];
-    for (let j = 0; j < n; j++) {
-      if (j === i) continue;
-      const dx = ORB_POINTS[i][0] - ORB_POINTS[j][0];
-      const dy = ORB_POINTS[i][1] - ORB_POINTS[j][1];
-      const dz = ORB_POINTS[i][2] - ORB_POINTS[j][2];
-      d.push([dx * dx + dy * dy + dz * dz, j]);
-    }
-    d.sort((a, b) => a[0] - b[0]);
-    for (let j = 0; j < 3; j++) if (d[j][1] > i || j === 2) ORB_EDGES.push([i, d[j][1]]);
-  }
-  for (let i = 0; i < 14; i++) ORB_EDGES.push([(i * 7) % n, (i * 29 + 11) % n]);
-})();
+// The Aether orb is the "solving" orb from thinking-orbs (MIT, Jakub Antalik):
+// a dotted sphere whose bands scramble in quarter turns and click back solved.
+// Its 64px tuning is drawn through a scaled transform, so the dots stay crisp
+// at card size, in dark ink for the light card.
+const ORB_PRESET = resolvePreset('solving', 64);
+const ORB_PAINT = MODE_DRAWS[ORB_PRESET.mode];
+const ORB_PX = 288; // the 64px design on the 360px canvas
+const ORB_K = ORB_PX / 64;
+const ORB_X = (360 - ORB_PX) / 2;
+const ORB_Y = 22;
+
+// Aurora glass behind the dots: a clear sphere with slow pastel light inside
+// (brand blue, violet, ember, ice), a soft rim and one specular arc. A few
+// gradient fills per frame, no filters.
+const TAU = Math.PI * 2;
+const GLASS_R = 126;
+const GLASS_X = ORB_X + ORB_PX / 2;
+const GLASS_Y = ORB_Y + ORB_PX / 2;
+const AURORA: { c: string; r: number; d: number; w: number; p: number }[] = [
+  { c: '86,140,255', r: 0.95, d: 0.5, w: 0.23, p: 0.2 },
+  { c: '156,120,255', r: 0.8, d: 0.55, w: -0.17, p: 2.3 },
+  { c: '255,146,84', r: 0.72, d: 0.6, w: 0.19, p: 4.2 },
+  { c: '120,222,235', r: 0.7, d: 0.5, w: -0.27, p: 5.6 },
+];
 
 function makeOrbDrawer(ctx: CanvasRenderingContext2D): OrbDraw {
-  const R = 118;
-  const cx = 180;
-  const cy = 168;
-  const tilt = 0.42;
-  const ct = Math.cos(tilt);
-  const st = Math.sin(tilt);
-  const grad = ctx.createLinearGradient(40, 40, 320, 320);
-  grad.addColorStop(0, '#1d4a9a');
-  grad.addColorStop(0.55, '#5d77a3');
-  grad.addColorStop(1, '#e46a24');
-  const glow = ctx.createRadialGradient(cx, cy, 0, cx, cy, R * 1.25);
-  glow.addColorStop(0, 'rgba(90,130,220,.26)');
-  glow.addColorStop(0.6, 'rgba(120,150,230,.1)');
-  glow.addColorStop(1, 'rgba(255,255,255,0)');
-  const q: [number, number, number][] = ORB_POINTS.map(() => [0, 0, 0]);
+  const R = GLASS_R;
+  const cx = GLASS_X;
+  const cy = GLASS_Y;
+  const base = ctx.createRadialGradient(cx - R * 0.2, cy - R * 0.3, 0, cx, cy, R);
+  base.addColorStop(0, 'rgba(255,255,255,.95)');
+  base.addColorStop(1, 'rgba(228,236,255,.9)');
+  const clear = ctx.createRadialGradient(cx, cy - R * 0.1, 0, cx, cy - R * 0.1, R * 0.9);
+  clear.addColorStop(0, 'rgba(255,255,255,.55)');
+  clear.addColorStop(1, 'rgba(255,255,255,0)');
+  const rim = ctx.createRadialGradient(cx, cy, R * 0.74, cx, cy, R);
+  rim.addColorStop(0, 'rgba(40,60,150,0)');
+  rim.addColorStop(1, 'rgba(40,60,150,.2)');
+  const edge = ctx.createLinearGradient(cx - R, cy - R, cx + R, cy + R);
+  edge.addColorStop(0, 'rgba(255,255,255,1)');
+  edge.addColorStop(0.5, 'rgba(150,170,230,.35)');
+  edge.addColorStop(1, 'rgba(255,255,255,.9)');
+  const blob = (x: number, y: number, r: number, c: string, a: number) => {
+    const g = ctx.createRadialGradient(x, y, 0, x, y, r);
+    g.addColorStop(0, `rgba(${c},${a})`);
+    g.addColorStop(0.5, `rgba(${c},${a * 0.45})`);
+    g.addColorStop(1, `rgba(${c},0)`);
+    ctx.fillStyle = g;
+    ctx.fillRect(x - r, y - r, r * 2, r * 2);
+  };
 
   return (t) => {
-    const a = t * 0.32;
-    const ca = Math.cos(a);
-    const sa = Math.sin(a);
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
     ctx.clearRect(0, 0, 360, 360);
-    ctx.fillStyle = glow;
-    ctx.fillRect(0, 0, 360, 360);
-    for (let i = 0; i < ORB_POINTS.length; i++) {
-      const p = ORB_POINTS[i];
-      const x = p[0] * ca + p[2] * sa;
-      const z0 = -p[0] * sa + p[2] * ca;
-      q[i][0] = cx + x * R;
-      q[i][1] = cy + (p[1] * ct - z0 * st) * R;
-      q[i][2] = p[1] * st + z0 * ct;
+
+    // Light the sphere throws on the card around it.
+    for (const b of AURORA) {
+      const a = t * b.w + b.p;
+      blob(cx + Math.cos(a) * R * 0.5, cy + Math.sin(a * 1.2 + b.p) * R * 0.5 + R * 0.12, R * 1.25, b.c, 0.13);
     }
-    ctx.strokeStyle = grad;
-    ctx.fillStyle = grad;
-    ctx.lineWidth = 1.4;
-    for (const [ia, ib] of ORB_EDGES) {
-      const A = q[ia];
-      const B = q[ib];
-      ctx.globalAlpha = 0.14 + (0.6 * ((A[2] + B[2]) / 2 + 1)) / 2;
-      ctx.beginPath();
-      ctx.moveTo(A[0], A[1]);
-      ctx.lineTo(B[0], B[1]);
-      ctx.stroke();
+
+    ctx.save();
+    ctx.beginPath();
+    ctx.arc(cx, cy, R, 0, TAU);
+    ctx.clip();
+    ctx.fillStyle = base;
+    ctx.fillRect(cx - R, cy - R, R * 2, R * 2);
+    for (const b of AURORA) {
+      const a = t * b.w + b.p;
+      blob(cx + Math.cos(a) * R * b.d, cy + Math.sin(a * 1.2 + b.p) * R * b.d, R * b.r, b.c, 0.62);
     }
-    for (const p of q) {
-      const k = (p[2] + 1) / 2;
-      ctx.globalAlpha = 0.25 + 0.75 * k;
-      ctx.beginPath();
-      ctx.arc(p[0], p[1], 1.6 + 3 * k, 0, TAU);
-      ctx.fill();
-    }
-    ctx.globalAlpha = 1;
+    ctx.fillStyle = clear;
+    ctx.fillRect(cx - R, cy - R, R * 2, R * 2);
+    ctx.fillStyle = rim;
+    ctx.fillRect(cx - R, cy - R, R * 2, R * 2);
+    ctx.restore();
+
+    ctx.strokeStyle = edge;
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.arc(cx, cy, R - 1, 0, TAU);
+    ctx.stroke();
+    ctx.strokeStyle = 'rgba(255,255,255,.85)';
+    ctx.lineWidth = 5;
+    ctx.lineCap = 'round';
+    ctx.beginPath();
+    ctx.arc(cx, cy, R * 0.86, Math.PI * 1.13, Math.PI * 1.4);
+    ctx.stroke();
+
+    // The solving orb, in dark ink, inside the glass.
+    ctx.setTransform(ORB_K, 0, 0, ORB_K, ORB_X, ORB_Y);
+    ORB_PAINT(ctx, 64, t * ORB_PRESET.speed, false, ORB_PRESET.opts);
   };
 }
 
@@ -99,9 +112,31 @@ function AetherOrb({ drawRef }: { drawRef?: MutableRefObject<OrbDraw | null> }) 
     if (!ctx) return;
     const draw = makeOrbDrawer(ctx);
     draw(9);
-    if (drawRef) drawRef.current = draw;
+    // On the ring, the orbit loop drives the orb (one rAF for the whole hero).
+    if (drawRef) {
+      drawRef.current = draw;
+      return () => {
+        drawRef.current = null;
+      };
+    }
+    // On the rails there is no such loop, so the orb runs its own at half
+    // rate, only while it is on screen, and not under reduced motion.
+    const canvas = ref.current;
+    if (!canvas || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    let raf = 0;
+    let frame = 0;
+    const loop = (now: number) => {
+      if ((frame++ & 1) === 0) draw(now / 1000);
+      raf = requestAnimationFrame(loop);
+    };
+    const io = new IntersectionObserver(([e]) => {
+      cancelAnimationFrame(raf);
+      raf = e.isIntersecting ? requestAnimationFrame(loop) : 0;
+    });
+    io.observe(canvas);
     return () => {
-      if (drawRef) drawRef.current = null;
+      cancelAnimationFrame(raf);
+      io.disconnect();
     };
   }, [drawRef]);
   return <canvas ref={ref} width={360} height={360} className={styles.orbCanvas} aria-hidden="true" />;
@@ -111,42 +146,53 @@ function AetherOrb({ drawRef }: { drawRef?: MutableRefObject<OrbDraw | null> }) 
 
 /*
  * Three cards show the product itself rather than an illustration. They are
- * rebuilt in markup from the dashboard's own components (WorkflowNode and the
+ * rebuilt in markup from the dashboard's own components (the CRM Deals board, the
  * diagnostic report's ScoreRing + ROIMetricTile, the workspace Gantt view:
  * same colours, radii, type scale), with sample data, so they stay sharp at every ring size and carry
  * no account data.
  */
 
-/** One workflow-builder node, expanded, with its dashed edges running off the card. */
-const UiWorkflow = () => (
-  <div className={styles.uiFlow} aria-hidden="true">
-    <svg className={styles.uiEdges} viewBox="0 0 196 196" fill="none">
-      <path className={styles.uiEdgeTrack} d="M-4 24 C 4 24, 6 40, 14 40" />
-      <path className={styles.uiEdge} d="M-4 24 C 4 24, 6 40, 14 40" />
-      <path className={styles.uiEdgeTrack} d="M182 40 C 190 40, 190 62, 200 62" />
-      <path className={styles.uiEdge} d="M182 40 C 190 40, 190 62, 200 62" />
-    </svg>
-    <div className={styles.uiNode}>
-      <i className={styles.uiDotL} />
-      <i className={styles.uiDotR} />
-      <div className={styles.uiNodeBar}>
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={`${IMG}/app-gmail.svg`} alt="" width={22} height={22} loading="lazy" decoding="async" />
-        <span>
-          <b>Trigger</b>
-          <em>New invoice email</em>
-        </span>
-        <i className={styles.uiChevron}>
-          <svg viewBox="0 0 12 12" width="8" height="8">
-            <path d="M3 4.5 6 7.5 9 4.5" stroke="currentColor" strokeWidth="1.4" fill="none" strokeLinecap="round" strokeLinejoin="round" />
-          </svg>
-        </i>
-      </div>
-      <p className={styles.uiNodeBody}>
-        <b>Read the PDF</b>
-        Check totals against the PO
-      </p>
-    </div>
+/** CRM pipeline close-up: one stage column of the Deals board, the next stage running off the card. */
+const CRM_COLS: { stage: string; tone: 'qualified' | 'proposal'; count: number; total: string; deals: [string, string][] }[] = [
+  {
+    stage: 'Qualified',
+    tone: 'qualified',
+    count: 3,
+    total: '84,000',
+    deals: [
+      ['Northwind renewal', 'Northwind · $48,000'],
+      ['Acme onboarding', 'Acme Corp · $36,000'],
+    ],
+  },
+  {
+    stage: 'Proposal',
+    tone: 'proposal',
+    count: 2,
+    total: '61,500',
+    deals: [
+      ['Halden rollout', 'Halden · $40,000'],
+      ['Kite pilot', 'Kite Labs · $21,500'],
+    ],
+  },
+];
+const UiCrm = () => (
+  <div className={styles.uiCrm} aria-hidden="true">
+    {CRM_COLS.map((col) => (
+      <section key={col.stage} className={styles.uiCrmCol}>
+        <header>
+          <i data-tone={col.tone} />
+          <b>{col.stage}</b>
+          <span>{col.count}</span>
+          <em>{col.total}</em>
+        </header>
+        {col.deals.map(([title, meta]) => (
+          <p key={title}>
+            <b>{title}</b>
+            {meta}
+          </p>
+        ))}
+      </section>
+    ))}
   </div>
 );
 
@@ -216,6 +262,20 @@ const UiTimeline = () => (
   </div>
 );
 
+/** Aivory Mail: the app mark at full size, with a lock on its corner. */
+const UiMail = () => (
+  <div className={styles.mail} aria-hidden="true">
+    {/* eslint-disable-next-line @next/next/no-img-element */}
+    <img src="/integrations/icons/aivory-mail.svg" alt="" width={112} height={112} loading="lazy" decoding="async" />
+    <i>
+      <svg viewBox="0 0 16 16" width="15" height="15" fill="none">
+        <rect x="3" y="7" width="10" height="7" rx="2" fill="currentColor" />
+        <path d="M5.3 7V5.2a2.7 2.7 0 0 1 5.4 0V7" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" />
+      </svg>
+    </i>
+  </div>
+);
+
 /* ------------------------------------------------------------------ card bodies */
 
 /** Bump (and rename the files) whenever the renders change: Cloudflare caches
@@ -275,19 +335,6 @@ const photo = (src: string, alt: string, decorative: boolean) => (
 
 /** Card order is the order around the ring. */
 
-/** Glossy tags piled on each other: everything Aivory covers, in one stack. */
-type Tag = { label: string; c: string; ink: string; x: number; y: number; r: number; size?: number };
-/** Cool + ember: silvers and blues, one orange pill in front. */
-const W = '#ffffff';
-const TAGS: Tag[] = [
-  { label: 'Email', c: '#c9d6ee', ink: '#16244a', x: -6, y: -40, r: -6 },
-  { label: 'Workspace', c: '#5d77a3', ink: W, x: -18, y: -18, r: 4 },
-  { label: 'CRM', c: '#17304f', ink: W, x: 40, y: -31, r: 12, size: 17 },
-  { label: 'Automation', c: '#2b63c6', ink: W, x: 10, y: 22, r: 3 },
-  { label: 'Enterprise AI', c: '#e46a24', ink: W, x: -2, y: 1, r: -4, size: 20 },
-  { label: 'AI Agents', c: '#86aebb', ink: '#0e2a33', x: -16, y: 41, r: -5 },
-];
-
 export const HERO_CARDS: CardDef[] = [
   {
     id: 'audit',
@@ -304,7 +351,7 @@ export const HERO_CARDS: CardDef[] = [
     classes: ['tile', 'g3'],
     body: () => (
       <>
-        <Render name="streamline" />
+        <Render name="growth" />
         {cap('Streamline your business operations')}
       </>
     ),
@@ -316,12 +363,12 @@ export const HERO_CARDS: CardDef[] = [
       photo(`${IMG}/woman-celebrating.webp`, 'A woman celebrating with her laptop on an orange bean bag', decorative),
   },
   {
-    id: 'ui-workflow',
+    id: 'ui-crm',
     classes: ['ui'],
     body: () => (
       <>
-        <UiWorkflow />
-        {cap('Watch every step run')}
+        <UiCrm />
+        {cap('Move every deal forward')}
       </>
     ),
   },
@@ -377,7 +424,7 @@ export const HERO_CARDS: CardDef[] = [
             </i>
           ))}
         </div>
-        {cap('Works with the apps you already use')}
+        {cap('Works with 100+ apps')}
       </>
     ),
   },
@@ -392,29 +439,13 @@ export const HERO_CARDS: CardDef[] = [
     ),
   },
   {
-    id: 'stack',
-    classes: ['glass', 'stack'],
-    body: ({ decorative }) => (
-      <ul className={styles.tags} aria-label={decorative ? undefined : 'Email, Workspace, CRM, Automation, AI Agents, Enterprise AI'} aria-hidden={decorative || undefined}>
-        {TAGS.map((t) => (
-          <li
-            key={t.label}
-            style={
-              {
-                '--c': t.c,
-                '--ink': t.ink,
-                '--x': `${t.x}px`,
-                '--y': `${t.y}px`,
-                '--r': `${t.r}deg`,
-                '--ts': t.ink === W ? '0 1px 1px rgba(0,0,0,.28)' : '0 1px 0 rgba(255,255,255,.55)',
-                fontSize: t.size ?? 17,
-              } as CSSProperties
-            }
-          >
-            <span>{t.label}</span>
-          </li>
-        ))}
-      </ul>
+    id: 'mail',
+    classes: ['glass'],
+    body: () => (
+      <>
+        <UiMail />
+        {cap('Private, fully encrypted email')}
+      </>
     ),
   },
   {
