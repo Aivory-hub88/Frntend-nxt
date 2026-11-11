@@ -129,7 +129,7 @@ const Ornament = () => (
 
 /** Bump (and rename the files) whenever the renders change: Cloudflare caches
  *  /landing/* for a year, so a new image needs a new URL. */
-const RENDER_VERSION = 'v3';
+const RENDER_VERSION = 'v4';
 
 /** Close-up 3D technical drawing (Three.js line render, baked to a transparent WebP). */
 const Render = ({ name }: { name: string }) => (
