@@ -801,20 +801,27 @@
 
 @media (min-width: 1100px) {
   .root {
-    /* Leaves room for the top bar and the trust strip, so the strip lands in the first screen. */
-    height: clamp(640px, calc(100svh - 135px), 1000px);
+    height: clamp(640px, 100svh, 1000px);
     min-height: 0;
   }
+  /* The ring stops above the trust strip, which sits on the hero's own ground. */
   .orbit {
     display: block;
     position: absolute;
-    inset: 0;
+    inset: 0 0 46px 0;
     z-index: 1;
+  }
+  .trust {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 2;
   }
   .copy {
     position: absolute;
     left: 50%;
-    top: 50%;
+    top: calc(50% - 23px);
     width: max-content;
     padding-top: 0;
     margin: 0;
@@ -904,28 +911,23 @@
 /* ---------------------------------------------------------------- trust strip */
 
 .trust {
-  /* Above the hero's drop shadow, which would otherwise grey the strip. */
-  position: relative;
-  z-index: 1;
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   justify-content: center;
   gap: 18px 64px;
   margin: 0;
-  padding: 26px 24px 28px;
+  padding: 4px 24px 14px;
   list-style: none;
-  background: #fbfbfb;
-  border-top: 1px solid rgba(17, 18, 20, 0.07);
   font-family: var(--font-manrope), 'Manrope', sans-serif;
 }
 .trust li {
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: 12px;
 }
 .trust li > span {
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 500;
   line-height: 1;
   letter-spacing: 0.1em;
@@ -945,16 +947,11 @@
   mix-blend-mode: multiply;
 }
 .trustBadge {
-  height: 40px;
+  height: 28px;
 }
-@media (max-width: 720px) {
+@media (max-width: 1099.98px) {
   .trust {
-    flex-direction: column;
-    gap: 20px;
-    padding: 24px 20px 26px;
-  }
-  .trust li {
-    flex-direction: column;
-    gap: 10px;
+    margin-top: -32px;
+    padding: 0 20px 22px;
   }
 }
