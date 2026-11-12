@@ -10,6 +10,7 @@ import SignInModal from '@/components/auth/SignInModal';
 import { isAuthenticated, getUser, logout } from '@/lib/auth';
 import { TechnicalFrameButton } from '@/components/ui/TechnicalFrameButton';
 import AccountMenu from '@/components/home/AccountMenu';
+import glass from '@/components/home/AccountMenu.module.css';
 
 /* ─── Arrow Icon ─── */
 function ArrowIcon({ className = '' }: { className?: string }) {
@@ -111,8 +112,7 @@ export default function Navbar({ inPlace = false }: { inPlace?: boolean } = {}) 
   const onCard = lightPage; // dark type (kept for the mobile hamburger below)
   const ink = lightPage ? 'text-[#0f1f26]' : 'text-white';
   const navLinkClass = `${ink} px-2.5 py-2 text-[14px] font-normal no-underline opacity-90 hover:opacity-100 transition-opacity duration-200`;
-  const outlineBtn = `${lightPage ? 'border-[#0f1f26] text-[#0f1f26] hover:bg-[#0f1f26]/[0.06]' : 'border-white/80 text-white hover:bg-white/10'} inline-flex items-center rounded-md border px-4 py-2 text-[14px] font-medium transition-colors duration-200 cursor-pointer bg-transparent`;
-  const solidBtn = `${lightPage ? 'bg-[#0f1f26] border-[#0f1f26] text-white hover:bg-[#23343b]' : 'bg-white border-white text-[#0f1f26] hover:bg-white/90'} inline-flex items-center rounded-md border px-4 py-2 text-[14px] font-medium transition-colors duration-200 cursor-pointer`;
+  const outlineBtn = `${lightPage ? 'border-[#0f1f26] text-[#0f1f26] hover:bg-[#0f1f26]/[0.06]' : 'border-white/80 text-white hover:bg-white/10'} inline-flex items-center h-9 rounded-full border px-[18px] text-[14px] font-medium transition-colors duration-200 cursor-pointer bg-transparent`;
   const manrope = { fontFamily: "var(--font-manrope), 'Manrope', sans-serif" };
 
   const NAV_LINKS = [
@@ -191,7 +191,7 @@ export default function Navbar({ inPlace = false }: { inPlace?: boolean } = {}) 
               Sign in
             </button>
           )}
-          <button onClick={() => handleDashboard('user')} className={solidBtn}>
+          <button onClick={() => handleDashboard('user')} className={lightPage ? glass.glassBtn : `${glass.glassBtn} ${glass.dark}`} style={manrope}>
             Dashboard
           </button>
           {/* Signed in: who you are, Admin and Sign out live in the avatar menu. */}
