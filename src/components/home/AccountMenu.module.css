@@ -175,3 +175,72 @@
     transition: none;
   }
 }
+
+/* Dashboard button in the nav: the primary action as liquid glass. Ink-tinted
+   glass on light pages (white type), clear white glass on dark ones (ink type).
+   Same rim and sheen as the avatar so the pair reads as one set. */
+.glassBtn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  height: 36px;
+  padding: 0 18px;
+  border: 0;
+  border-radius: 999px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  color: #fff;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.22), rgba(255, 255, 255, 0) 55%),
+    rgba(15, 31, 38, 0.86);
+  -webkit-backdrop-filter: blur(14px) saturate(180%);
+  backdrop-filter: blur(14px) saturate(180%);
+  box-shadow:
+    inset 0 1px 0.5px rgba(255, 255, 255, 0.5),
+    inset 0 -1px 1px rgba(255, 255, 255, 0.12),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.14),
+    0 0 0 1px rgba(15, 31, 38, 0.2),
+    0 8px 18px -8px rgba(15, 31, 38, 0.5);
+  transition:
+    transform 160ms ease-out,
+    box-shadow 200ms ease-out,
+    background-color 200ms ease-out;
+}
+.glassBtn:hover {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.28), rgba(255, 255, 255, 0) 55%),
+    rgba(15, 31, 38, 0.78);
+  box-shadow:
+    inset 0 1px 0.5px rgba(255, 255, 255, 0.65),
+    inset 0 -1px 1px rgba(255, 255, 255, 0.16),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.2),
+    0 0 0 1px rgba(15, 31, 38, 0.22),
+    0 10px 22px -8px rgba(15, 31, 38, 0.55);
+}
+.glassBtn:active {
+  transform: scale(0.97);
+}
+.glassBtn:focus-visible {
+  outline: 2px solid rgba(15, 31, 38, 0.5);
+  outline-offset: 2px;
+}
+.dark.glassBtn {
+  color: #0f1f26;
+  background:
+    radial-gradient(120% 120% at 30% 0%, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0) 70%),
+    rgba(255, 255, 255, 0.72);
+  box-shadow:
+    inset 0 1px 0.5px rgba(255, 255, 255, 1),
+    inset 0 -1px 1px rgba(255, 255, 255, 0.5),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.6),
+    0 8px 18px -8px rgba(0, 0, 0, 0.6);
+}
+.dark.glassBtn:hover {
+  background:
+    radial-gradient(120% 120% at 30% 0%, rgba(255, 255, 255, 1), rgba(255, 255, 255, 0) 70%),
+    rgba(255, 255, 255, 0.82);
+}
+.dark.glassBtn:focus-visible {
+  outline-color: rgba(255, 255, 255, 0.6);
+}
