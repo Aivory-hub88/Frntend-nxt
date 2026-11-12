@@ -764,10 +764,10 @@
    the clear row and the trust mark can sit against the fade. */
 .row[data-dir='back'] {
   -webkit-mask-image:
-    linear-gradient(180deg, #000 38%, rgba(0, 0, 0, 0.5) 66%, transparent 96%),
+    linear-gradient(180deg, #000 6%, rgba(0, 0, 0, 0.45) 30%, rgba(0, 0, 0, 0.12) 52%, transparent 70%),
     linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
   mask-image:
-    linear-gradient(180deg, #000 38%, rgba(0, 0, 0, 0.5) 66%, transparent 96%),
+    linear-gradient(180deg, #000 6%, rgba(0, 0, 0, 0.45) 30%, rgba(0, 0, 0, 0.12) 52%, transparent 70%),
     linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
   -webkit-mask-composite: source-in;
   mask-composite: intersect;
