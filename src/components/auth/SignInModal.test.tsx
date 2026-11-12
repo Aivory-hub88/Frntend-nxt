@@ -55,9 +55,9 @@ describe('SignInModal overlay', () => {
     expect(document.body.style.paddingRight).toBe('');
   });
 
-  it('links "Explore plans" to the pricing page', () => {
+  it('links "Create a free account" to the free analysis signup', () => {
     render(<SignInModal isOpen onClose={() => {}} />);
-    expect(screen.getByText(/Explore plans/).closest('a')?.getAttribute('href')).toBe('/pricing');
+    expect(screen.getByText(/Create a free account/).closest('a')?.getAttribute('href')).toBe('/free-diagnostic');
   });
 
   it('closes on Escape and on backdrop click', () => {    const onClose = vi.fn();
