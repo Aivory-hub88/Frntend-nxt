@@ -32,6 +32,23 @@ export const SILVER_BLUE_ORANGE: GrainPalette = {
   blobs: ['#a3b3ca', '#7f97bd', '#2b63c6', '#1b3f86', '#f2701f'],
 };
 
+/**
+ * Indigo + Orchid + Peach (approved Step 2 palette, 2026-10-27): the free
+ * analysis signup, so it reads as its own surface next to the checkout's
+ * silver-blue-orange. Deep indigo top, orchid through the middle, peach only
+ * as the lower glow; the base ends on a deep coral so white copy stays legible.
+ */
+export const INDIGO_ORCHID_PEACH: GrainPalette = {
+  base: 'linear-gradient(180deg, #2a2a86 0%, #3a3aa8 30%, #5e44b4 52%, #9a52c4 74%, #c8687a 100%)',
+  blobs: ['#7c7ce0', '#4d4cc4', '#3a3aa8', '#b05ad0', '#f2a07a'],
+};
+
+/** The same three hues left to right, for a wordmark or pill on white. */
+export const INDIGO_ORCHID_PEACH_HEADER: GrainPalette = {
+  base: 'linear-gradient(90deg, #2a2a86 0%, #3a3aa8 35%, #b05ad0 70%, #f2a07a 100%)',
+  blobs: ['#2a2a86', '#7c7ce0', '#3a3aa8', '#e08a7a', '#b05ad0'],
+};
+
 // Where each blob sits and how slowly it drifts, as fractions of the surface.
 const BLOB_LAYOUT = [
   { x: 8, y: 0, w: 70, h: 95, dur: 22, delay: 0 },
