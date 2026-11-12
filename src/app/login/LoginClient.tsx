@@ -10,6 +10,23 @@ import { isAuthenticated, login as authLogin, PaymentRequiredError } from "@/lib
  *
  * Standalone login page matching the landing-site SignInModal dark design.
  */
+/**
+ * Where to go after signing in: `?next=` when it is a same-site path (the
+ * free-analysis page sends `/dashboard/diagnostics`), else the homepage.
+ * Paths outside this Next app (/dashboard, /admin) need a full navigation.
+ */
+function nextTarget(): string {
+  if (typeof window === "undefined") return "/";
+  const next = new URLSearchParams(window.location.search).get("next") || "";
+  return /^\/(?!\/)[^\s\\]*$/.test(next) ? next : "/";
+}
+
+function goNext(router: ReturnType<typeof useRouter>): void {
+  const target = nextTarget();
+  if (target === "/") router.push("/");
+  else window.location.assign(target);
+}
+
 export default function LoginClient() {
   const router = useRouter();
   const [email, setEmail] = useState("");
@@ -21,7 +38,7 @@ export default function LoginClient() {
   // Redirect if already authenticated
   useEffect(() => {
     if (isAuthenticated()) {
-      router.push("/");
+      goNext(router);
     } else {
       setIsInitializing(false);
     }
@@ -50,7 +67,7 @@ export default function LoginClient() {
     setIsLoading(true);
     try {
       await authLogin(email, password);
-      router.push("/");
+      goNext(router);
     } catch (err) {
       if (err instanceof PaymentRequiredError) {
         router.push(`/complete-payment?deadline=${encodeURIComponent(err.deadlineAt)}`);
@@ -99,7 +116,7 @@ export default function LoginClient() {
             Welcome back
           </h2>
           <p className="text-[#b2cca2] text-sm font-light">
-            Only subscribed users can access their workspace.
+            Sign in to your Aivory workspace
           </p>
         </div>
 
@@ -162,9 +179,9 @@ export default function LoginClient() {
 
         <div className="mt-8 text-center">
           <p className="text-[13px] text-white/60">
-            Don&apos;t have a subscription yet?{" "}
-            <a href="/pricing" className="text-white hover:text-[#b2cca2] transition-colors font-medium">
-              Explore plans &rarr;
+            New to Aivory?{" "}
+            <a href="/free-diagnostic" className="text-white hover:text-[#b2cca2] transition-colors font-medium">
+              Create a free account &rarr;
             </a>
           </p>
         </div>

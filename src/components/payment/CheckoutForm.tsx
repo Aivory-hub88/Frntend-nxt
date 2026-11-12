@@ -49,6 +49,7 @@ import {
 import { formatCheckoutPrice, type CheckoutCurrency } from '@/lib/checkout-format';
 import { SpotlightButton } from '@/components/ui/SpotlightButton';
 import { GrainGradient, type GrainPalette } from '@/components/ui/GrainGradient';
+import { GradientWordmark } from '@/components/ui/GradientWordmark';
 import TurnstileWidget from '@/components/payment/TurnstileWidget';
 import { trackEvent } from '@/lib/analytics';
 
@@ -173,28 +174,6 @@ const HEADER_GRADIENT: GrainPalette = {
   base: 'linear-gradient(90deg, #1b3f86 0%, #2a58a8 40%, #5d77a3 70%, #e46a24 100%)',
   blobs: ['#1b3f86', '#7f97bd', '#2b63c6', '#a8582f', '#2a58a8'],
 };
-
-const WORDMARK_MASK = 'url(/aivory-wordmark.svg) center / contain no-repeat';
-
-/** The 2026 wordmark, filled with the grainy gradient through its own shape. */
-function GradientWordmark() {
-  return (
-    <div
-      role="img"
-      aria-label="Aivory"
-      className="relative aspect-[205/30] h-6"
-      style={{ WebkitMask: WORDMARK_MASK, mask: WORDMARK_MASK }}
-    >
-      <GrainGradient
-        palette={HEADER_GRADIENT}
-        contours={false}
-        hover={false}
-        blur={8}
-        className="h-full w-full"
-      />
-    </div>
-  );
-}
 
 // ---------------------------------------------------------------------------
 // Small presentational helpers
@@ -876,7 +855,7 @@ export function CheckoutForm({
       {/* Header */}
       <div className="flex justify-between items-center mb-12">
         {/* The landing page's 2026 wordmark, filled with the grainy gradient. */}
-        <GradientWordmark />
+        <GradientWordmark palette={HEADER_GRADIENT} />
         <div className="relative">
           <button
             type="button"

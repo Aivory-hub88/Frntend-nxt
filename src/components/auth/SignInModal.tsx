@@ -128,7 +128,7 @@ export default function SignInModal({ isOpen, onClose }: SignInModalProps) {
             Welcome back
           </h2>
           <p className="text-[#b2cca2] text-sm font-light">
-            Only subscribed users can access their workspace.
+            Sign in to your Aivory workspace
           </p>
         </div>
 
@@ -189,9 +189,9 @@ export default function SignInModal({ isOpen, onClose }: SignInModalProps) {
 
         <div className="mt-8 text-center">
           <p className="text-[13px] text-white/60">
-            Don&apos;t have a subscription yet?{' '}
-            <a href="/pricing" className="text-white hover:text-[#b2cca2] transition-colors font-medium">
-              Explore plans &rarr;
+            New to Aivory?{' '}
+            <a href="/free-diagnostic" className="text-white hover:text-[#b2cca2] transition-colors font-medium">
+              Create a free account &rarr;
             </a>
           </p>
         </div>
