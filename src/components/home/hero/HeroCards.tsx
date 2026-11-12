@@ -255,19 +255,23 @@ const UiTimeline = () => (
   </div>
 );
 
-/** Aivory Mail: the app mark at full size, with a glass "Encrypted" pill tucked
- *  into the empty corner above its flap (never over the mark's own "A"). */
+/** Aivory Mail: the app mark glowing over a field of ciphertext, which melts away
+ *  around it. The hex is generated from a fixed seed so server and client match. */
+const CIPHER = (() => {
+  let x = 0x5eed1e55;
+  let out = '';
+  for (let i = 0; i < 440; i++) {
+    x = (Math.imul(x, 1664525) + 1013904223) >>> 0;
+    out += '0123456789abcdef'[x >>> 28] + (i % 4 === 3 ? ' ' : '');
+  }
+  return out;
+})();
+
 const UiMail = () => (
   <div className={styles.mail} aria-hidden="true">
+    <p>{CIPHER}</p>
     {/* eslint-disable-next-line @next/next/no-img-element */}
-    <img src="/integrations/icons/aivory-mail.svg" alt="" width={112} height={112} loading="lazy" decoding="async" />
-    <span>
-      <svg viewBox="0 0 16 16" width="11" height="11" fill="none">
-        <rect x="3" y="7" width="10" height="7" rx="2.2" fill="currentColor" />
-        <path d="M5.4 7V5.3a2.6 2.6 0 0 1 5.2 0V7" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
-      </svg>
-      Encrypted
-    </span>
+    <img src="/integrations/icons/aivory-mail.svg" alt="" width={92} height={92} loading="lazy" decoding="async" />
   </div>
 );
 
@@ -422,7 +426,7 @@ export const HERO_CARDS: CardDef[] = [
   },
   {
     id: 'mail',
-    classes: ['glass'],
+    classes: ['ui'],
     body: () => (
       <>
         <UiMail />
