@@ -9,6 +9,7 @@ import { useLanguage } from '@/components/context/LanguageContext';
 import SignInModal from '@/components/auth/SignInModal';
 import { isAuthenticated, getUser, logout } from '@/lib/auth';
 import { TechnicalFrameButton } from '@/components/ui/TechnicalFrameButton';
+import AccountMenu from '@/components/home/AccountMenu';
 
 /* ─── Arrow Icon ─── */
 function ArrowIcon({ className = '' }: { className?: string }) {
@@ -33,6 +34,7 @@ export default function Navbar({ inPlace = false }: { inPlace?: boolean } = {}) 
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [authed, setAuthed] = useState(false);
   const [userName, setUserName] = useState('');
+  const [userEmail, setUserEmail] = useState('');
   const [accountType, setAccountType] = useState('free');
   const [mounted, setMounted] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
@@ -62,9 +64,11 @@ export default function Navbar({ inPlace = false }: { inPlace?: boolean } = {}) 
       if (a) {
         const u = getUser();
         setUserName(u?.email?.split('@')[0] || u?.email || '');
+        setUserEmail(u?.email || '');
         setAccountType(u?.account_type || 'free');
       } else {
         setUserName('');
+        setUserEmail('');
         setAccountType('free');
       }
     };
@@ -182,14 +186,7 @@ export default function Navbar({ inPlace = false }: { inPlace?: boolean } = {}) 
               ID
             </button>
           </div>
-          {authed ? (
-            <>
-              <span className={`${ink} text-[13px] opacity-80`}>Welcome, {userName}</span>
-              <button onClick={() => logout()} className={outlineBtn}>
-                Sign out
-              </button>
-            </>
-          ) : (
+          {!authed && (
             <button onClick={() => setIsSignInModalOpen(true)} className={outlineBtn}>
               Sign in
             </button>
@@ -197,10 +194,15 @@ export default function Navbar({ inPlace = false }: { inPlace?: boolean } = {}) 
           <button onClick={() => handleDashboard('user')} className={solidBtn}>
             Dashboard
           </button>
-          {authed && (accountType === 'superadmin' || accountType === 'admin') && (
-            <button onClick={() => handleDashboard('admin')} className={outlineBtn}>
-              Admin
-            </button>
+          {/* Signed in: who you are, Admin and Sign out live in the avatar menu. */}
+          {authed && (
+            <AccountMenu
+              email={userEmail}
+              isAdmin={accountType === 'superadmin' || accountType === 'admin'}
+              light={lightPage}
+              onDashboard={handleDashboard}
+              onSignOut={() => logout()}
+            />
           )}
         </div>
 
