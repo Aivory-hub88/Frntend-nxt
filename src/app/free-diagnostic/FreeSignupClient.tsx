@@ -21,15 +21,21 @@ import { useLanguage } from '@/components/context/LanguageContext';
 import { GrainGradient, INDIGO_ORCHID_PEACH, INDIGO_ORCHID_PEACH_HEADER } from '@/components/ui/GrainGradient';
 import { GradientWordmark } from '@/components/ui/GradientWordmark';
 import { SpotlightButton } from '@/components/ui/SpotlightButton';
+import { PasswordInput } from '@/components/ui/PasswordInput';
+import TurnstileWidget from '@/components/payment/TurnstileWidget';
 
 export const DASHBOARD_DIAGNOSTICS = '/dashboard/diagnostics';
+
+const TURNSTILE_SITE_KEY = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY ?? '';
+/** Must match EXPECTED_ACTION in avry-backend app/services/turnstile.py. */
+const TURNSTILE_ACTION = 'signup';
 
 const COPY = {
   en: {
     signupTitle: 'Start your free analysis',
     signinTitle: 'Sign in to continue',
     subtitle: 'Free account',
-    subtitleStrong: '2 analyses included',
+    subtitleStrong: 'AI readiness analysis included',
     signupTab: 'Create account',
     signinTab: 'Sign in',
     email: 'Email',
@@ -52,6 +58,10 @@ const COPY = {
     errExists: 'This email already has an account. Sign in instead',
     errSignin: 'Email or password is incorrect',
     errGeneric: 'Something went wrong. Please try again',
+    errVerify: 'Please complete the verification check',
+    errVerifyFailed: 'Verification failed. Please try the check again',
+    showPassword: 'Show password',
+    hidePassword: 'Hide password',
     redirecting: 'Opening your dashboard…',
     panelTitle: 'Your free account',
     panelNote: 'No card needed',
@@ -60,21 +70,16 @@ const COPY = {
     itemPrice: 'Free',
     itemDescription:
       'See where your operations are ready for AI, where the bottlenecks are, and what to automate first',
-    features: [
-      '2 AI readiness analyses',
-      '1 Workflow Copilot session',
-      'Full dashboard preview',
-      'Upgrade any time, no lock-in',
-    ],
+    features: ['Free AI readiness analysis', 'Full dashboard preview', 'Upgrade any time, no lock-in'],
     total: 'Total due today',
     totalValue: 'Free',
-    after: 'Your analyses run in the Aivory dashboard. Paid plans unlock AI agents, the AI Console and integrations',
+    after: 'Your analysis runs in the Aivory dashboard. Paid plans unlock the Deep Diagnostic, workflows, AI agents and integrations',
   },
   id: {
     signupTitle: 'Mulai analisis gratis',
     signinTitle: 'Masuk untuk melanjutkan',
     subtitle: 'Akun gratis',
-    subtitleStrong: 'termasuk 2 analisis',
+    subtitleStrong: 'termasuk analisis kesiapan AI',
     signupTab: 'Buat akun',
     signinTab: 'Masuk',
     email: 'Email',
@@ -97,6 +102,10 @@ const COPY = {
     errExists: 'Email ini sudah punya akun. Silakan masuk',
     errSignin: 'Email atau kata sandi salah',
     errGeneric: 'Terjadi kesalahan. Coba lagi',
+    errVerify: 'Selesaikan pemeriksaan verifikasi dulu',
+    errVerifyFailed: 'Verifikasi gagal. Coba pemeriksaannya lagi',
+    showPassword: 'Tampilkan kata sandi',
+    hidePassword: 'Sembunyikan kata sandi',
     redirecting: 'Membuka dashboard…',
     panelTitle: 'Akun gratis kamu',
     panelNote: 'Tanpa kartu',
@@ -105,22 +114,17 @@ const COPY = {
     itemPrice: 'Gratis',
     itemDescription:
       'Lihat bagian operasional mana yang siap untuk AI, di mana hambatannya, dan apa yang perlu diotomasi lebih dulu',
-    features: [
-      '2 analisis kesiapan AI',
-      '1 sesi Workflow Copilot',
-      'Pratinjau dashboard lengkap',
-      'Upgrade kapan saja, tanpa ikatan',
-    ],
+    features: ['Analisis kesiapan AI gratis', 'Pratinjau dashboard lengkap', 'Upgrade kapan saja, tanpa ikatan'],
     total: 'Total hari ini',
     totalValue: 'Gratis',
-    after: 'Analisis berjalan di dashboard Aivory. Paket berbayar membuka AI agent, AI Console, dan integrasi',
+    after: 'Analisis berjalan di dashboard Aivory. Paket berbayar membuka Deep Diagnostic, workflow, AI agent, dan integrasi',
   },
 } as const;
 
 type Lang = keyof typeof COPY;
 type Mode = 'signup' | 'signin';
 type FieldKey = 'errCompany' | 'errEmail' | 'errPassword' | 'errPasswordEmpty' | 'errConfirm';
-type FormKey = 'errExists' | 'errSignin' | 'errGeneric';
+type FormKey = 'errExists' | 'errSignin' | 'errGeneric' | 'errVerify' | 'errVerifyFailed';
 /** Copy keys (so the text follows a language switch); `form` may also carry a backend message. */
 type Errors = Partial<Record<'company' | 'email' | 'password' | 'confirm', FieldKey>> & {
   form?: FormKey | { raw: string };
@@ -145,6 +149,11 @@ export default function FreeSignupClient() {
   const [busy, setBusy] = useState(false);
   const [redirecting, setRedirecting] = useState(false);
   const [langOpen, setLangOpen] = useState(false);
+  // Turnstile (signup only). Tokens are single-use: any failed attempt bumps
+  // resetSignal for a fresh challenge.
+  const turnstileEnabled = TURNSTILE_SITE_KEY.length > 0;
+  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
+  const [turnstileReset, setTurnstileReset] = useState(0);
 
   // Signed in already: the analysis is in the dashboard.
   useEffect(() => {
@@ -170,13 +179,16 @@ export default function FreeSignupClient() {
     } else if (!password) {
       next.password = 'errPasswordEmpty';
     }
+    if (!Object.keys(next).length && mode === 'signup' && turnstileEnabled && !turnstileToken) {
+      next.form = 'errVerify';
+    }
     setErrors(next);
     if (Object.keys(next).length) return;
 
     setBusy(true);
     try {
       if (mode === 'signup') {
-        await signup(email.trim(), password, company.trim());
+        await signup(email.trim(), password, company.trim(), turnstileToken ?? undefined);
         trackEvent('free_signup_completed', { source: 'free-diagnostic' });
       } else {
         await login(email.trim(), password);
@@ -185,7 +197,13 @@ export default function FreeSignupClient() {
       window.location.assign(DASHBOARD_DIAGNOSTICS);
     } catch (err) {
       const msg = err instanceof Error ? err.message : '';
-      if (mode === 'signup' && /already registered|already exists/i.test(msg)) {
+      if (mode === 'signup' && turnstileEnabled) {
+        setTurnstileToken(null);
+        setTurnstileReset((n) => n + 1);
+      }
+      if (mode === 'signup' && /human verification/i.test(msg)) {
+        setErrors({ form: 'errVerifyFailed' });
+      } else if (mode === 'signup' && /already registered|already exists/i.test(msg)) {
         // Keep the email and password: one click on "Sign in" finishes it.
         setMode('signin');
         setErrors({ form: 'errExists' });
@@ -326,9 +344,10 @@ export default function FreeSignupClient() {
                       <label htmlFor="free-password" className={labelClass}>
                         {t.password}
                       </label>
-                      <input
+                      <PasswordInput
                         id="free-password"
-                        type="password"
+                        showLabel={t.showPassword}
+                        hideLabel={t.hidePassword}
                         autoComplete={mode === 'signup' ? 'new-password' : 'current-password'}
                         placeholder="••••••••"
                         value={password}
@@ -343,9 +362,10 @@ export default function FreeSignupClient() {
                         <label htmlFor="free-confirm" className={labelClass}>
                           {t.confirm}
                         </label>
-                        <input
+                        <PasswordInput
                           id="free-confirm"
-                          type="password"
+                          showLabel={t.showPassword}
+                          hideLabel={t.hidePassword}
                           autoComplete="new-password"
                           placeholder="••••••••"
                           value={confirm}
@@ -354,6 +374,18 @@ export default function FreeSignupClient() {
                           className={inputClass}
                         />
                         {errors.confirm && <span className={fieldError}>{t[errors.confirm]}</span>}
+                      </div>
+                    )}
+
+                    {mode === 'signup' && turnstileEnabled && (
+                      <div className="flex justify-center">
+                        <TurnstileWidget
+                          siteKey={TURNSTILE_SITE_KEY}
+                          action={TURNSTILE_ACTION}
+                          onToken={setTurnstileToken}
+                          onExpire={() => setTurnstileToken(null)}
+                          resetSignal={turnstileReset}
+                        />
                       </div>
                     )}
 

@@ -56,7 +56,7 @@ describe('free analysis signup', () => {
     expect(screen.getByRole('button', { name: /Create free account/ })).toBeTruthy();
     fill();
     await waitFor(() => expect(assign).toHaveBeenCalledWith('/dashboard/diagnostics'));
-    expect(signupMock).toHaveBeenCalledWith('a@b.co', 'secret123', 'PT Maju');
+    expect(signupMock).toHaveBeenCalledWith('a@b.co', 'secret123', 'PT Maju', undefined);
   });
 
   it('sends a signed-in visitor straight to the dashboard', () => {
@@ -111,5 +111,17 @@ describe('free analysis signup', () => {
     submit();
     expect(await screen.findByText('Email or password is incorrect')).toBeTruthy();
     expect(assign).not.toHaveBeenCalled();
+  });
+});
+
+describe('password visibility', () => {
+  it('the eye button shows and hides the password', () => {
+    render(<FreeSignupClient />);
+    const input = screen.getByLabelText('Password') as HTMLInputElement;
+    expect(input.type).toBe('password');
+    fireEvent.click(screen.getAllByRole('button', { name: 'Show password' })[0]);
+    expect(input.type).toBe('text');
+    fireEvent.click(screen.getByRole('button', { name: 'Hide password' }));
+    expect(input.type).toBe('password');
   });
 });
