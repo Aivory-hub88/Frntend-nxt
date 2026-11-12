@@ -758,6 +758,9 @@
     linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
   -webkit-mask-composite: source-in;
   mask-composite: intersect;
+  /* Muted and a little faint, so the colour stays with the upper rail. */
+  filter: grayscale(0.6);
+  opacity: 0.7;
 }
 .track {
   display: flex;
