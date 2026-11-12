@@ -8,11 +8,17 @@ export const WALKTHROUGH_URL = 'https://book.aivory.uk/book/aivory-call';
 
 /** How many times each rail repeats its cards. One repeat is one loop of the
  *  animation, so four keep the row filled on screens up to about 5000px wide. */
-const COPIES = [0, 1, 2, 3];
+const COPIES = [0, 1];
 
 /** Two rails: every card once, split so each rail mixes surfaces. */
 const RAIL_A = ['audit', 'streamline', 'photo-celebrating', 'aether', 'automate', 'apps', 'decision', 'ui-timeline'];
 const RAIL_B = ['encrypted', 'mail', 'ui-report', 'team', 'photo-profile', 'sovereignty', 'proof', 'ui-crm'];
+// Both rails carry all sixteen cards. The upper one is the readable row; the lower
+// one runs the same set half a loop apart, so the two never show the same card together.
+const ROWS = [
+  [...RAIL_A, ...RAIL_B],
+  [...RAIL_B, ...RAIL_A],
+];
 const byId = (ids: string[]) => ids.map((id) => HERO_CARDS.find((c) => c.id === id)!);
 
 /**
@@ -50,14 +56,14 @@ export default function HeroSection() {
           </div>
 
           <div className={styles.rails} aria-label="What Aivory does for an enterprise">
-            {[RAIL_A, RAIL_B].map((ids, r) => (
+            {ROWS.map((ids, r) => (
               <div key={r} className={styles.row} data-dir={r ? 'back' : 'fwd'}>
                 <div className={styles.track}>
                   {COPIES.map((copy) =>
                     byId(ids).map((def) => (
-                      // The first run of cards is the readable one; repeats are decoration.
-                      <div key={`${copy}-${def.id}`} className={styles.slot} aria-hidden={copy > 0 || undefined}>
-                        <HeroCard def={def} decorative={copy > 0} />
+                      // The upper rail's first run is the readable one; the rest is decoration.
+                      <div key={`${copy}-${def.id}`} className={styles.slot} aria-hidden={r > 0 || copy > 0 || undefined}>
+                        <HeroCard def={def} decorative={r > 0 || copy > 0} />
                       </div>
                     )),
                   )}
