@@ -51,6 +51,7 @@ import { SpotlightButton } from '@/components/ui/SpotlightButton';
 import { GrainGradient, type GrainPalette } from '@/components/ui/GrainGradient';
 import { GradientWordmark } from '@/components/ui/GradientWordmark';
 import TurnstileWidget from '@/components/payment/TurnstileWidget';
+import { PasswordInput } from '@/components/ui/PasswordInput';
 import { trackEvent } from '@/lib/analytics';
 
 // Live. Set to true only to demo the flow without touching the gateway; the
@@ -64,6 +65,8 @@ const TURNSTILE_SITE_KEY = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY ?? '';
 
 // Must match EXPECTED_ACTION in src/app/api/turnstile/verify/route.ts.
 const TURNSTILE_ACTION = 'checkout';
+// Account creation has its own action, verified by avry-backend on register.
+const TURNSTILE_SIGNUP_ACTION = 'signup';
 
 type Step =
   | 'auth'
@@ -389,6 +392,10 @@ export function CheckoutForm({
   const [authCompany, setAuthCompany] = useState('');
   const [authError, setAuthError] = useState<string | null>(null);
   const [authLoading, setAuthLoading] = useState(false);
+  // Signup needs its own single-use Turnstile token (action "signup"); the
+  // backend checks it before creating the account.
+  const [signupToken, setSignupToken] = useState<string | null>(null);
+  const [signupTokenReset, setSignupTokenReset] = useState(0);
   const [currentUser, setCurrentUser] = useState<User | null>(null);
 
   // Card fields
@@ -831,15 +838,23 @@ export function CheckoutForm({
       setAuthError('Passwords do not match.');
       return;
     }
+    if (authMode === 'signup' && turnstileEnabled && !signupToken) {
+      setAuthError('Please complete the verification check.');
+      return;
+    }
     setAuthLoading(true);
     try {
       const user =
         authMode === 'signin'
           ? await login(authEmail, authPassword)
-          : await signup(authEmail, authPassword, authCompany || undefined);
+          : await signup(authEmail, authPassword, authCompany || undefined, signupToken ?? undefined);
       setCurrentUser(user);
       setStep('method');
     } catch (err) {
+      if (authMode === 'signup' && turnstileEnabled) {
+        setSignupToken(null);
+        setSignupTokenReset((n) => n + 1);
+      }
       setAuthError(
         err instanceof Error ? err.message : 'Something went wrong. Please try again.'
       );
@@ -976,8 +991,7 @@ export function CheckoutForm({
               )}
               <div>
                 <label className={labelClass}>Password</label>
-                <input
-                  type="password"
+                <PasswordInput
                   required
                   autoComplete={authMode === 'signin' ? 'current-password' : 'new-password'}
                   placeholder="••••••••"
@@ -989,14 +1003,24 @@ export function CheckoutForm({
               {authMode === 'signup' && (
                 <div>
                   <label className={labelClass}>Confirm Password</label>
-                  <input
-                    type="password"
+                  <PasswordInput
                     required
                     autoComplete="new-password"
                     placeholder="••••••••"
                     value={authConfirm}
                     onChange={(e) => setAuthConfirm(e.target.value)}
                     className={inputClass}
+                  />
+                </div>
+              )}
+              {authMode === 'signup' && turnstileEnabled && (
+                <div className="flex justify-center">
+                  <TurnstileWidget
+                    siteKey={TURNSTILE_SITE_KEY}
+                    action={TURNSTILE_SIGNUP_ACTION}
+                    onToken={setSignupToken}
+                    onExpire={() => setSignupToken(null)}
+                    resetSignal={signupTokenReset}
                   />
                 </div>
               )}

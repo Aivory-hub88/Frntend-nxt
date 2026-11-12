@@ -190,17 +190,23 @@ export function getPostLoginRedirectUrl(): string {
   return "/";
 }
 
-/** Register a new user — uses the backend auth service (works locally without Supabase). */
+/**
+ * Register a new user — uses the backend auth service (works locally without Supabase).
+ * `turnstile_token` is the Cloudflare Turnstile token (widget action "signup");
+ * the backend verifies it before creating the account (avry-backend
+ * app/services/turnstile.py).
+ */
 export async function signup(
   email: string,
   password: string,
-  company_name?: string
+  company_name?: string,
+  turnstile_token?: string
 ): Promise<User> {
   const backendUrl = getServiceUrl("backend");
   const res = await fetch(`${backendUrl}/api/v1/auth/register`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ email, password, company_name }),
+    body: JSON.stringify({ email, password, company_name, ...(turnstile_token ? { turnstile_token } : {}) }),
   });
 
   if (!res.ok) {
