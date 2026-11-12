@@ -777,11 +777,11 @@
   gap: 14px;
   width: max-content;
   will-change: transform;
-  animation: rail 38s linear infinite;
+  animation: rail 64s linear infinite;
 }
 .row[data-dir='back'] .track {
   animation-direction: reverse;
-  animation-duration: 46s;
+  animation-duration: 84s;
 }
 .slot {
   position: relative;
@@ -818,11 +818,11 @@
   -webkit-backdrop-filter: none;
   backdrop-filter: none;
 }
-/* The track holds four runs of its cards; one loop moves it by one run
-   (a quarter of its width plus a quarter of one 14px gap). */
+/* The track holds two runs of all sixteen cards; one loop moves it by one run
+   (half its width plus half of one 14px gap). The upper rail runs faster. */
 @keyframes rail {
   to {
-    transform: translateX(calc(-25% - 3.5px));
+    transform: translateX(calc(-50% - 7px));
   }
 }
 
@@ -852,10 +852,10 @@
     padding-bottom: 0;
   }
   .track {
-    animation-duration: 50s;
+    animation-duration: 72s;
   }
   .row[data-dir='back'] .track {
-    animation-duration: 60s;
+    animation-duration: 100s;
   }
 }
 @media (min-width: 1100px) and (max-height: 840px) {
