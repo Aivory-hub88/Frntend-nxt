@@ -33,7 +33,7 @@
   z-index: 5;
   width: min(680px, calc(100% - 40px));
   margin: 0 auto;
-  padding-top: 118px;
+  padding-top: 142px;
   text-align: center;
 }
 
@@ -752,7 +752,7 @@
   display: flex;
   flex-direction: column;
   gap: 14px;
-  margin-top: 40px;
+  margin-top: 52px;
   padding-bottom: 56px;
 }
 .row {
@@ -760,14 +760,15 @@
   -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
   mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
 }
-/* The lower rail melts away over its bottom half, so the upper one reads as
-   the clear row and the trust mark can sit against the fade. */
+/* Only the top half of the lower rail shows, melting away towards the cut, so
+   the upper one reads as the clear row and the copy can sit lower. */
 .row[data-dir='back'] {
+  height: calc(var(--slot) * 0.5);
   -webkit-mask-image:
-    linear-gradient(180deg, #000 6%, rgba(0, 0, 0, 0.45) 30%, rgba(0, 0, 0, 0.12) 52%, transparent 70%),
+    linear-gradient(180deg, #000 18%, rgba(0, 0, 0, 0.5) 58%, transparent 100%),
     linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
   mask-image:
-    linear-gradient(180deg, #000 6%, rgba(0, 0, 0, 0.45) 30%, rgba(0, 0, 0, 0.12) 52%, transparent 70%),
+    linear-gradient(180deg, #000 18%, rgba(0, 0, 0, 0.5) 58%, transparent 100%),
     linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
   -webkit-mask-composite: source-in;
   mask-composite: intersect;
@@ -836,7 +837,7 @@
   .copy {
     width: max-content;
     max-width: calc(100% - 40px);
-    padding-top: clamp(140px, 21svh, 236px);
+    padding-top: clamp(170px, 26svh, 280px);
   }
   .h {
     font-size: 44px;
@@ -846,9 +847,8 @@
     white-space: nowrap;
   }
   .rails {
-    margin-top: clamp(44px, 7svh, 84px);
-    /* Lets the trust mark ride up into the lower rail's fade on tight windows. */
-    margin-bottom: -44px;
+    margin-top: clamp(56px, 8.5svh, 100px);
+    margin-bottom: 0;
     padding-bottom: 0;
   }
   .track {
