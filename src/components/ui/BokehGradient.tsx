@@ -81,10 +81,10 @@ export interface LeafFigure {
 
 const MODE_INDEX: Record<BokehMode, number> = { field: 0, horizon: 1, bands: 2, aurora: 3, tri: 4 };
 const FIELD_SCALE = 0.25; // colour field resolution relative to CSS pixels
-const DEFOCUS_PX = 22; // optical blur over the field, so shapes read as an out-of-focus photo
+const DEFOCUS_PX = 26; // optical blur over the field, so shapes read as an out-of-focus photo
 const FRAME_MS = 1000 / 30;
 const GRAIN_AMPLITUDE = 78;
-const GRAIN_OPACITY = 0.42;
+const GRAIN_OPACITY = 0.32;
 const FIGURE_FADE = 'linear-gradient(to left, #000 0%, rgba(0,0,0,0.85) 30%, transparent 70%)';
 
 const VERT = `#version 300 es
@@ -121,11 +121,6 @@ float fbm(vec2 p) {
   for (int i = 0; i < 3; i++) { v += a * noise(p); p = m * p; a *= 0.5; }
   return v;
 }
-vec3 pal(float h) {
-  h = clamp(h, 0.0, 1.0) * 5.0;
-  int k = int(min(floor(h), 4.0));
-  return mix(uC[k], uC[k + 1], smoothstep(0.0, 1.0, fract(h)));
-}
 
 // Oklab, so two hues meet through a clean in-between instead of grey.
 vec3 toOk(vec3 c) {
@@ -147,6 +142,15 @@ vec3 fromOk(vec3 c) {
                   -0.0041960863 * l - 0.7034186147 * m + 1.7076147010 * s);
   return pow(clamp(lin, 0.0, 1.0), vec3(1.0 / 2.2));
 }
+// Palette steps meet in Oklab too (sRGB greyed the middle of blue to orange).
+// Clamped just under 1.0 so the last stop never wraps into a hard edge. Returns Oklab.
+vec3 pal(float h) {
+  h = clamp(h, 0.0, 0.9999) * 5.0;
+  int k = int(min(floor(h), 4.0));
+  return mix(toOk(uC[k]), toOk(uC[k + 1]), smoothstep(0.0, 1.0, fract(h)));
+}
+// 1/255 dither so long soft ramps never band on 8-bit screens.
+float dither() { return (hash(gl_FragCoord.xy + 0.37) - 0.5) / 255.0; }
 
 void main() {
   vec2 uv = gl_FragCoord.xy / uRes;
@@ -173,17 +177,17 @@ void main() {
     float h2 = fract(sin(uSeed * 78.233) * 43758.5453);
     vec2 c2 = vec2(ext.x * (0.15 + 0.45 * h1), 0.18 + 0.22 * h2) + vec2(sin(t * 3.0), cos(t * 2.3)) * 0.05 + mo * 0.25;
     float d2 = length((a - c2 + w) * vec2(1.0, 0.8));
-    float s2 = 1.0 - smoothstep(0.42, 0.78, d2);
+    float s2 = 1.0 - smoothstep(0.38, 0.84, d2);
     vec2 c3 = vec2(ext.x * (0.95 - 0.5 * h1), ext.y + 0.02) + vec2(cos(t * 2.0), sin(t * 2.7)) * 0.05 - mo * 0.2;
     float d3 = length((a - c3 + w * 0.8) * vec2(0.9, 1.25));
     float s3 = pow(1.0 - smoothstep(0.0, 0.75, d3), 1.5);
     vec3 col = toOk(uC[1]);
     col = mix(col, toOk(uC[2]), s2);
-    col = mix(col, toOk(uC[0]), 4.0 * s2 * (1.0 - s2) * uShadow);
+    col = mix(col, toOk(uC[0]), 2.8 * s2 * (1.0 - s2) * uShadow);
     col = mix(col, toOk(uC[3]), s3);
     float sheen = smoothstep(0.5, 0.0, abs(d2 - 0.36)) * smoothstep(0.55, 0.75, fbm(p * 1.5 + r + 7.0));
     col = mix(col, toOk(uC[4]), sheen * uLight);
-    o = vec4(fromOk(col) * uExposure, 1.0);
+    o = vec4(fromOk(col) * uExposure + dither(), 1.0);
     return;
   }
 
@@ -209,10 +213,10 @@ void main() {
 
   vec3 col = pal(h);
   float hl = smoothstep(0.56, 0.80, fbm(p * 0.7 + r * 1.5 + 31.0 - mo));
-  col = mix(col, uC[5], hl * uLight);
+  col = mix(col, toOk(uC[5]), hl * uLight);
   float sh = smoothstep(0.54, 0.78, fbm(p * 0.8 - r * 1.2 + 17.0));
-  col = mix(col, uC[0], sh * uShadow);
-  o = vec4(col * uExposure, 1.0);
+  col = mix(col, toOk(uC[0]), sh * uShadow);
+  o = vec4(fromOk(col) * uExposure + dither(), 1.0);
 }`;
 
 function hexToRgb(hex: string): [number, number, number] {
