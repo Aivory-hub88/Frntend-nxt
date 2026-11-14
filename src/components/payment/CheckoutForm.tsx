@@ -77,7 +77,7 @@ type Step =
   | 'processing'
   | 'awaiting'
   | 'success';
-type Channel = 'credit_card' | 'gopay' | 'qris' | 'bank_transfer';
+type Channel = 'credit_card' | 'google_pay' | 'gopay' | 'qris' | 'bank_transfer';
 
 export interface CheckoutFormProps {
   productId: string;
@@ -132,6 +132,15 @@ const CHANNELS: { id: Channel; label: string; badge: React.ReactNode }[] = [
         <ChannelMark src="/payments/visa.svg" alt="Visa" height={14} />
         <ChannelMark src="/payments/mastercard.svg" alt="Mastercard" height={18} />
       </div>
+    ),
+  },
+  {
+    // Midtrans serves Google Pay through Snap only, so this tile is not in
+    // DIRECT_CHANNELS: the pick opens Snap straight on Google Pay.
+    id: 'google_pay',
+    label: 'Google Pay',
+    badge: (
+      <span className="text-[12px] font-semibold tracking-tight text-gray-600">G Pay</span>
     ),
   },
   {
