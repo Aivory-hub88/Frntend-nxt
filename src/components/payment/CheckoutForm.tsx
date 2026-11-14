@@ -51,6 +51,7 @@ import { SpotlightButton } from '@/components/ui/SpotlightButton';
 import { GrainGradient, type GrainPalette } from '@/components/ui/GrainGradient';
 import { GradientWordmark } from '@/components/ui/GradientWordmark';
 import TurnstileWidget from '@/components/payment/TurnstileWidget';
+import GooglePayButton from '@/components/payment/GooglePayButton';
 import { PasswordInput } from '@/components/ui/PasswordInput';
 import { trackEvent } from '@/lib/analytics';
 
@@ -135,8 +136,8 @@ const CHANNELS: { id: Channel; label: string; badge: React.ReactNode }[] = [
     ),
   },
   {
-    // Midtrans serves Google Pay through Snap only, so this tile is not in
-    // DIRECT_CHANNELS: the pick opens Snap straight on Google Pay.
+    // Charged through Core API with the token from Google's own button, so it
+    // stays on this page (see GooglePayButton). Snap remains the fallback.
     id: 'google_pay',
     label: 'Google Pay',
     // Google's own acceptance mark, unaltered (brand guidelines).
@@ -554,10 +555,13 @@ export function CheckoutForm({
   // form had never worked before: the library could not find its own script
   // tag, see lib/midtrans-3ds).
   const directCardEnabled = directPayEnabled;
-  const DIRECT_CHANNELS = new Set(['gopay', 'qris', 'bank_transfer', 'credit_card']);
+  const DIRECT_CHANNELS = new Set(['gopay', 'qris', 'bank_transfer', 'credit_card', 'google_pay']);
   const needsBank = directPayEnabled && channel === 'bank_transfer';
 
-  const runDirectCharge = async (picked: Channel): Promise<boolean> => {
+  const runDirectCharge = async (
+    picked: Channel,
+    googlePayToken?: Record<string, unknown>,
+  ): Promise<boolean> => {
     let cardTokenId: string | undefined;
 
     if (picked === 'credit_card') {
@@ -602,11 +606,12 @@ export function CheckoutForm({
       cardTokenId,
       promoCode,
       picked === 'bank_transfer' ? vaBank ?? undefined : undefined,
+      googlePayToken,
     );
     if (result.fallback_to_snap || !result.success) {
       const reason = result.error || 'channel not served by Core API';
       console.warn('[checkout] Direct charge declined, falling back to Snap:', reason);
-      if (picked === 'credit_card') throw new Error(`[charge] ${reason}`);
+      if (picked === 'credit_card' || picked === 'google_pay') throw new Error(`[charge] ${reason}`);
       return false;
     }
 
@@ -817,7 +822,10 @@ export function CheckoutForm({
       // Everything else still goes straight through: e-wallets and QRIS need
       // no details from us, and a card on the Snap path must not be asked
       // twice.
-      const collectCardHere = directPayEnabled && directCardEnabled && channel === 'credit_card';
+      const collectCardHere =
+        directPayEnabled &&
+        directCardEnabled &&
+        (channel === 'credit_card' || channel === 'google_pay');
       if (MOCK_PAYMENT || collectCardHere) {
         setStep('details');
       } else {
@@ -830,6 +838,27 @@ export function CheckoutForm({
       setError('Verification failed. Please try the challenge again.');
     } finally {
       setVerifying(false);
+    }
+  };
+
+  // Google's sheet must open from the customer's own click, so the button
+  // lives on the details step and the charge runs once it hands back a token.
+  const handleGooglePayToken = async (token: Record<string, unknown>) => {
+    setStep('processing');
+    setError(null);
+    try {
+      if (!(await runDirectCharge('google_pay', token))) {
+        throw new Error('Google Pay could not be processed');
+      }
+    } catch (e) {
+      const reason = e instanceof Error ? e.message : String(e);
+      if (/token|unauthor|not authenticated|401/i.test(reason)) {
+        setAuthError('Your session has expired. Please sign in again to continue.');
+        setStep('auth');
+        return;
+      }
+      setError(`We couldn't process Google Pay: ${reason.replace(/^\[[^\]]+\]\s*/, '')}`);
+      setStep('details');
     }
   };
 
@@ -1334,6 +1363,16 @@ export function CheckoutForm({
               </div>
             )}
 
+            {channel === 'google_pay' ? (
+              <div className="mt-8 w-full">
+                <GooglePayButton
+                  totalPrice={priceUsd.toFixed(2)}
+                  currencyCode="USD"
+                  onToken={handleGooglePayToken}
+                  onError={(m) => setError(m)}
+                />
+              </div>
+            ) : (
             <div className="mt-8 w-full">
               <SpotlightButton
                 type="button"
@@ -1349,6 +1388,7 @@ export function CheckoutForm({
                     : `Pay ${priceLabel}`}
               </SpotlightButton>
             </div>
+            )}
             {/* This step used to render in mock mode only, so the disclaimer
                 was true. It now also carries a real card on the live path,
                 where "no payment data is transmitted" is flatly false and
