@@ -9,6 +9,7 @@ import React from 'react';
 const METHODS = [
   { src: '/payments/visa.svg', alt: 'Visa', height: 17 },
   { src: '/payments/mastercard.svg', alt: 'Mastercard', height: 20 },
+  { src: '/payments/googlepay.svg', alt: 'Google Pay', height: 24 },
   { src: '/payments/qris.svg', alt: 'QRIS', height: 17 },
   { src: '/payments/gopay.svg', alt: 'GoPay', height: 15 },
 ];
