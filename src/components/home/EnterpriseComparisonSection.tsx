@@ -109,11 +109,11 @@ export default function EnterpriseComparisonSection() {
               <span key={col.key} className="relative flex items-center justify-center">
                 <span className="pointer-events-none absolute -inset-y-4 left-0 right-[-1rem] md:right-[-2rem] bg-gradient-to-b from-[#e4effd]/[0.09] to-[#e4effd]/[0.03] rounded-tr-2xl" />
                 <img
-                  src="/aivory-logo.svg"
+                  src="/aivory-wordmark.svg"
                   alt="Aivory"
-                  width={383}
-                  height={79}
-                  className="relative h-3 w-auto object-contain brightness-0 invert opacity-90"
+                  width={205}
+                  height={30}
+                  className="relative h-[9px] w-auto object-contain brightness-0 invert opacity-90"
                 />
               </span>
             ) : (
