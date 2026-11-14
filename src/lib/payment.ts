@@ -613,6 +613,21 @@ export async function createPaymentTransaction(
   return result;
 }
 
+export interface GooglePayConfig {
+  auth_jwt: string | null;
+  is_production: boolean;
+  gateway_merchant_id: string;
+}
+
+/** authJwt + gateway ids the Google Pay button needs, issued for this origin. */
+export async function getGooglePayConfig(): Promise<GooglePayConfig> {
+  const response = await fetch(
+    `${API_BASE_URL}/api/v1/payments/google-pay/jwt?origin=${encodeURIComponent(window.location.origin)}`,
+  );
+  if (!response.ok) throw new Error('Google Pay is unavailable right now');
+  return (await response.json()) as GooglePayConfig;
+}
+
 export interface DirectChargeResult {
   success: boolean;
   order_id?: string;
@@ -657,6 +672,8 @@ export async function createDirectCharge(
   promoCode?: string,
   /** Bank for a `bank_transfer` virtual account (bni, bri, mandiri, permata, cimb, bsi). */
   bank?: string,
+  /** Token object from Google's PaymentData. Required for `google_pay`. */
+  googlePayToken?: Record<string, unknown>,
 ): Promise<DirectChargeResult> {
   if (!isAuthenticated()) {
     throw new Error('User not authenticated');
@@ -688,6 +705,7 @@ export async function createDirectCharge(
       ...(cardTokenId ? { card_token_id: cardTokenId } : {}),
       ...(promoCode ? { promo_code: promoCode } : {}),
       ...(bank ? { bank } : {}),
+      ...(googlePayToken ? { google_pay_token: googlePayToken } : {}),
     }),
   });
 
