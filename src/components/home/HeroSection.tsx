@@ -10,9 +10,10 @@ export const WALKTHROUGH_URL = 'https://book.aivory.uk/book/aivory-call';
  *  animation, so four keep the row filled on screens up to about 5000px wide. */
 const COPIES = [0, 1];
 
-/** Two rails: every card once, split so each rail mixes surfaces. */
-const RAIL_A = ['audit', 'streamline', 'photo-celebrating', 'aether', 'automate', 'apps', 'decision', 'ui-timeline'];
-const RAIL_B = ['encrypted', 'mail', 'ui-report', 'team', 'photo-profile', 'sovereignty', 'proof', 'ui-crm'];
+/** Two rails: every card once. Surfaces take turns (gradient, photo, dark UI, white)
+ *  so no two of a kind or two near hues sit side by side, also across the seams. */
+const RAIL_A = ['automate', 'photo-celebrating', 'ui-crm', 'streamline', 'aether', 'audit', 'ui-timeline', 'apps'];
+const RAIL_B = ['decision', 'mail', 'team', 'encrypted', 'photo-profile', 'ui-report', 'sovereignty', 'proof'];
 // Both rails carry all sixteen cards. The upper one is the readable row; the lower
 // one runs the same set half a loop apart, so the two never show the same card together.
 const ROWS = [
