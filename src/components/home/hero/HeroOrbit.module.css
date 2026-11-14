@@ -529,7 +529,28 @@
   width: 92px;
   height: 92px;
   margin-left: -46px;
-  filter: drop-shadow(0 10px 22px rgba(255, 109, 0, 0.38));
+  filter: drop-shadow(0 8px 20px rgba(255, 110, 20, 0.35));
+}
+/* Warm light pool behind the mark: a soft, blurred radial glow with an eased falloff (no visible
+   ring). Static, so it costs nothing on the moving rails. */
+.mail::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 60px;
+  width: 210px;
+  height: 180px;
+  margin: -90px 0 0 -105px;
+  background: radial-gradient(
+    closest-side,
+    rgba(255, 150, 50, 0.4),
+    rgba(255, 128, 36, 0.3) 25%,
+    rgba(255, 106, 24, 0.18) 50%,
+    rgba(240, 90, 20, 0.07) 75%,
+    transparent
+  );
+  filter: blur(14px);
+  pointer-events: none;
 }
 
 /* Photos fill the card, no frame. */
