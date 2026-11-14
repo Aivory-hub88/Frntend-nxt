@@ -279,7 +279,7 @@ const UiMail = () => (
 
 /** Bump (and rename the files) whenever the renders change: Cloudflare caches
  *  /landing/* for a year, so a new image needs a new URL. */
-const RENDER_VERSION = 'v8';
+const RENDER_VERSION = 'v9';
 
 /** The whole card art, baked to one WebP: a gradient sampled from the brand references, one clear-glass
     object in extreme close-up refracting it, and the film grain (scripts/hero-renders/glass). */
@@ -328,6 +328,8 @@ export type CardDef = {
 };
 
 const cap = (text: string) => <span className={styles.cap}>{text}</span>;
+/** Dark UI cards: live caption on a folder-shaped liquid-glass pane, the shape baked into the gradient cards. */
+const uiCap = (text: string) => <span className={`${styles.cap} ${styles.fold}`}>{text}</span>;
 /** Caption for the baked cards. The folder-shaped liquid-glass pane behind it is part of the WebP
     (sized to this caption at 196px), so the moving rails need no live blur. */
 const glassCap = (text: string) => <span className={`${styles.cap} ${styles.folder}`}>{text}</span>;
@@ -370,7 +372,7 @@ export const HERO_CARDS: CardDef[] = [
     body: () => (
       <>
         <UiCrm />
-        {cap('Move every deal forward')}
+        {uiCap('Move every deal forward')}
       </>
     ),
   },
@@ -434,7 +436,7 @@ export const HERO_CARDS: CardDef[] = [
     body: () => (
       <>
         <UiMail />
-        {cap('Private, fully encrypted email')}
+        {uiCap('Private, fully encrypted email')}
       </>
     ),
   },
@@ -444,7 +446,7 @@ export const HERO_CARDS: CardDef[] = [
     body: () => (
       <>
         <UiReport />
-        {cap('Know where AI pays off')}
+        {uiCap('Know where AI pays off')}
       </>
     ),
   },
@@ -500,7 +502,7 @@ export const HERO_CARDS: CardDef[] = [
     body: () => (
       <>
         <UiTimeline />
-        {cap('Keep every project on track')}
+        {uiCap('Keep every project on track')}
       </>
     ),
   },
