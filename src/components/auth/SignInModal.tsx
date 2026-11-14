@@ -117,11 +117,11 @@ export default function SignInModal({ isOpen, onClose }: SignInModalProps) {
         <div className="text-center mb-8">
           <div className="flex justify-center mb-6">
             <Image
-              src="/aivory-logo.svg"
+              src="/aivory-wordmark.svg"
               alt="Aivory Logo"
-              width={100}
-              height={32}
-              className="h-[32px] w-auto opacity-90"
+              width={205}
+              height={30}
+              className="h-[24px] w-auto opacity-90"
             />
           </div>
           <h2 className="text-2xl font-semibold text-white mb-2 tracking-tight" style={{ fontFamily: "var(--font-manrope), 'Manrope', sans-serif" }}>
