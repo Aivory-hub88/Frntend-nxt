@@ -2,9 +2,6 @@
 const nextConfig = {
   output: 'standalone',
   distDir: process.env.NEXT_DIST_DIR || '.next',
-  typescript: {
-    ignoreBuildErrors: true,
-  },
   experimental: {
     // Tree-shake large barrel packages so only the used exports are bundled.
     optimizePackageImports: ['@react-three/drei', '@react-three/fiber', 'three'],

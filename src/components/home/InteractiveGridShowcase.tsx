@@ -6,7 +6,7 @@ import { DiagnosticAnimation, BlueprintAnimation, RoadmapAnimation, ConsoleAnima
 import dynamic from 'next/dynamic';
 
 const LabFlaskCanvas = dynamic(
-  () => import('./LabFlask3D').then((mod) => mod.LabFlaskCanvas),
+  () => import('@/components/product/LabFlask3D').then((mod) => mod.LabFlaskCanvas),
   { ssr: false }
 );
 

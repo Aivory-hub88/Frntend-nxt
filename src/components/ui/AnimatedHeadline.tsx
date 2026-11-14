@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useRef } from 'react';
-import { motion, useInView } from 'framer-motion';
+import { motion, useInView, type Variants } from 'framer-motion';
 
 // A simple utility to merge class names if a library like clsx/tailwind-merge isn't imported
 function cn(...classes: (string | undefined | null | false)[]) {
@@ -21,13 +21,14 @@ export function AnimatedHeadline({
   className,
   delay = 0,
   trigger = 'onScroll',
-  as: Component = 'h2',
+  as = 'h2',
 }: AnimatedHeadlineProps) {
+  const Component = as as React.ElementType<React.HTMLAttributes<HTMLElement> & React.RefAttributes<HTMLElement>>;
   const ref = useRef<HTMLElement>(null);
   const isInView = useInView(ref, { once: true, margin: "0px 0px -15% 0px" });
   const shouldAnimate = trigger === 'onLoad' ? true : isInView;
 
-  const letterVariants = {
+  const letterVariants: Variants = {
     hidden: { 
       opacity: 0, 
       y: 15,
@@ -44,7 +45,7 @@ export function AnimatedHeadline({
     }
   };
 
-  const containerVariants = {
+  const containerVariants: Variants = {
     hidden: { opacity: 1 },
     visible: {
       opacity: 1,

@@ -555,12 +555,6 @@ export function HalftoneWave() {
       }
       geometry.dispose();
       material.dispose();
-      petals.forEach((pt) => {
-        scene.remove(pt.mesh);
-        (pt.mesh.material as THREE.Material).dispose();
-      });
-      petalGeo?.dispose();
-      petalMat?.dispose();
       renderer.dispose();
     };
   }, []);
