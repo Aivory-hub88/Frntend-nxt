@@ -50,7 +50,7 @@ export default function ContactClient() {
           {/* Eyebrow Logo */}
           <div className="mb-10">
             <Image
-              src="/aivory-logo.svg"
+              src="/aivory-wordmark.svg"
               alt="Aivory Logo"
               width={90}
               height={24}

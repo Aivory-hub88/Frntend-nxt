@@ -110,7 +110,7 @@ export default function LoginClient() {
 
         <div className="text-center mb-8">
           <div className="flex justify-center mb-6">
-            <img src="/Aivory_logo_2_2026.svg" alt="Aivory" width={383} height={79} className="h-[32px] w-auto opacity-90" />
+            <img src="/aivory-wordmark.svg" alt="Aivory" width={205} height={30} className="h-[24px] w-auto opacity-90" />
           </div>
           <h2 className="text-2xl font-semibold text-white mb-2 tracking-tight" style={{ fontFamily: "var(--font-manrope), 'Manrope', sans-serif" }}>
             Welcome back

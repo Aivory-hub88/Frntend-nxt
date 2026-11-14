@@ -44,11 +44,11 @@ export default function CompletePaymentClient() {
         <div className="text-center mb-8">
           <div className="flex justify-center mb-6">
             <img
-              src="/Aivory_logo_2_2026.svg"
+              src="/aivory-wordmark.svg"
               alt="Aivory"
-              width={383}
-              height={79}
-              className="h-[32px] w-auto opacity-90"
+              width={205}
+              height={30}
+              className="h-[24px] w-auto opacity-90"
             />
           </div>
           <h2

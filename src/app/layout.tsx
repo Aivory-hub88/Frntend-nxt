@@ -109,7 +109,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${manrope.variable} ${doto.variable} ${literata.variable} antialiased scroll-smooth`}>
       <head>
-        <link rel="preload" as="image" href="/Aivory_logo_2_2026.svg" fetchPriority="high" />
+        <link rel="preload" as="image" href="/aivory-wordmark.svg" fetchPriority="high" />
         <script async src="https://www.googletagmanager.com/gtag/js?id=G-XYJ0EDEYS8" />
         <script
           dangerouslySetInnerHTML={{

@@ -81,7 +81,7 @@ function ResetPasswordInner() {
         <div className="text-center mb-8">
           <div className="flex justify-center mb-6">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/Aivory_logo_2_2026.svg" alt="Aivory" className="h-[32px] w-auto opacity-90" />
+            <img src="/aivory-wordmark.svg" alt="Aivory" className="h-[24px] w-auto opacity-90" />
           </div>
           <h2
             className="text-2xl font-semibold text-white mb-2 tracking-tight"
