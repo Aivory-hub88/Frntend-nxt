@@ -139,9 +139,8 @@ const CHANNELS: { id: Channel; label: string; badge: React.ReactNode }[] = [
     // DIRECT_CHANNELS: the pick opens Snap straight on Google Pay.
     id: 'google_pay',
     label: 'Google Pay',
-    badge: (
-      <span className="text-[12px] font-semibold tracking-tight text-gray-600">G Pay</span>
-    ),
+    // Google's own acceptance mark, unaltered (brand guidelines).
+    badge: <ChannelMark src="/payments/googlepay.svg" alt="Google Pay" height={22} />,
   },
   {
     id: 'gopay',
