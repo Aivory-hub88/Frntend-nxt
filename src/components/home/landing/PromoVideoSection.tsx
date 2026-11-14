@@ -50,8 +50,8 @@ export default function PromoVideoSection() {
           <video
             ref={videoRef}
             className={s.filmVideo}
-            src="/landing/promo/aivory-walkthrough-2026-11.mp4"
-            poster="/landing/promo/aivory-walkthrough-2026-11-poster.jpg"
+            src="/landing/promo/aivory-walkthrough-2026-11-14.mp4"
+            poster="/landing/promo/aivory-walkthrough-2026-11-14-poster.jpg"
             muted
             playsInline
             controls
