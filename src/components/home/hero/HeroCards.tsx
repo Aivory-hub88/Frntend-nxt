@@ -279,9 +279,10 @@ const UiMail = () => (
 
 /** Bump (and rename the files) whenever the renders change: Cloudflare caches
  *  /landing/* for a year, so a new image needs a new URL. */
-const RENDER_VERSION = 'v4';
+const RENDER_VERSION = 'v5';
 
-/** Close-up 3D technical drawing (Three.js line render, baked to a transparent WebP). */
+/** The whole card art, baked to one WebP: a gradient sampled from the brand references, one clear-glass
+    object in extreme close-up refracting it, and the film grain (scripts/hero-renders/glass). */
 const Render = ({ name }: { name: string }) => (
   <img
     className={styles.render}
@@ -327,6 +328,9 @@ export type CardDef = {
 };
 
 const cap = (text: string) => <span className={styles.cap}>{text}</span>;
+/** Caption for the baked cards. The folder-shaped liquid-glass pane behind it is part of the WebP
+    (sized to this caption at 196px), so the moving rails need no live blur. */
+const glassCap = (text: string) => <span className={`${styles.cap} ${styles.folder}`}>{text}</span>;
 const photo = (src: string, alt: string, decorative: boolean) => (
   // eslint-disable-next-line @next/next/no-img-element
   <img src={src} alt={decorative ? '' : alt} width={480} height={480} loading="lazy" decoding="async" />
@@ -336,21 +340,21 @@ const photo = (src: string, alt: string, decorative: boolean) => (
 export const HERO_CARDS: CardDef[] = [
   {
     id: 'audit',
-    classes: ['tile', 'g2'],
+    classes: ['shot'],
     body: () => (
       <>
         <Render name="audit" />
-        {cap('Governed, with a full audit trail')}
+        {glassCap('Governed, with a full audit trail')}
       </>
     ),
   },
   {
     id: 'streamline',
-    classes: ['tile', 'g3'],
+    classes: ['shot'],
     body: () => (
       <>
         <Render name="growth" />
-        {cap('Streamline your business operations')}
+        {glassCap('Streamline your business operations')}
       </>
     ),
   },
@@ -391,11 +395,11 @@ export const HERO_CARDS: CardDef[] = [
   },
   {
     id: 'automate',
-    classes: ['tile', 'g4'],
+    classes: ['shot'],
     body: () => (
       <>
         <Render name="automation" />
-        {cap('Build any automation')}
+        {glassCap('Build any automation')}
       </>
     ),
   },
@@ -416,11 +420,11 @@ export const HERO_CARDS: CardDef[] = [
   },
   {
     id: 'encrypted',
-    classes: ['tile', 'g6'],
+    classes: ['shot'],
     body: () => (
       <>
         <Render name="lock" />
-        {cap('Encrypted')}
+        {glassCap('Encrypted')}
       </>
     ),
   },
@@ -476,11 +480,11 @@ export const HERO_CARDS: CardDef[] = [
   },
   {
     id: 'decision',
-    classes: ['tile', 'g7'],
+    classes: ['shot'],
     body: () => (
       <>
         <Render name="decision" />
-        {cap('Faster decision making')}
+        {glassCap('Faster decision making')}
       </>
     ),
   },
@@ -502,11 +506,11 @@ export const HERO_CARDS: CardDef[] = [
   },
   {
     id: 'sovereignty',
-    classes: ['tile', 'g5'],
+    classes: ['shot'],
     body: () => (
       <>
         <Render name="vault" />
-        {cap('Data sovereignty')}
+        {glassCap('Data sovereignty')}
       </>
     ),
   },
@@ -527,7 +531,6 @@ export function HeroCard({ def, decorative = false }: { def: CardDef; decorative
   const cls = [styles.card, ...def.classes.map((c) => styles[c])].join(' ');
   return (
     <div className={cls} data-card={def.id}>
-      {def.classes.includes('tile') && <i className={styles.wash} aria-hidden="true" />}
       {def.body({ decorative })}
       <i className={styles.frame} aria-hidden="true" />
     </div>

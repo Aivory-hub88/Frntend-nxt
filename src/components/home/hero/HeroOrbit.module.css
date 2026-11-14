@@ -191,139 +191,25 @@
   mask-image: linear-gradient(180deg, transparent, #000 28px);
 }
 
-.tile .cap {
-  color: #fff;
-  background: linear-gradient(180deg, rgba(12, 16, 34, 0), rgba(12, 16, 34, 0.24) 60%);
-}
-
-/* Gradient tiles: grain on top, diagonal light bands like the reference. */
-.tile {
+.shot {
   box-shadow: 0 16px 30px -24px rgba(20, 30, 60, 0.35);
 }
-.tile::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  background: linear-gradient(
-    135deg,
-    transparent 22%,
-    rgba(255, 255, 255, 0.16) 38%,
-    transparent 52%,
-    rgba(255, 255, 255, 0.09) 66%,
-    transparent 80%
-  );
-  pointer-events: none;
-}
-.tile::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  z-index: 2;
-  background: url('/landing/noise-128.png') 0 0 / 64px 64px repeat;
-  mix-blend-mode: overlay;
-  opacity: 0.4;
-  pointer-events: none;
-}
-
-/* Six palettes, one per tile, none repeated. The card holds the base colour;
-   .wash (an oversized layer behind the drawing) holds three light pools and
-   drifts on its own clock, compositor-only (transform). */
-.wash {
-  position: absolute;
-  inset: -35%;
-  z-index: 0;
-  pointer-events: none;
-  animation: wash 24s ease-in-out infinite alternate;
-  will-change: transform;
-}
-@keyframes wash {
-  0% {
-    transform: rotate(0deg) translate(0, 0) scale(1);
-  }
-  50% {
-    transform: rotate(18deg) translate(5%, -4%) scale(1.08);
-  }
-  100% {
-    transform: rotate(-12deg) translate(-5%, 5%) scale(1.02);
-  }
-}
-.g1 {
-  background: #1d4a9a;
-}
-.g1 .wash {
-  background:
-    radial-gradient(30% 24% at 80% 80%, #e46a24 0, #e46a24 28%, transparent 100%),
-    radial-gradient(32% 30% at 66% 28%, #9aaedc 0, #9aaedc 28%, transparent 100%),
-    radial-gradient(30% 34% at 28% 60%, #2b63c6 0, #2b63c6 28%, transparent 100%);
-  animation-duration: 23s;
-  animation-delay: -4s;
-}
-.g2 {
-  background: #3a3aa8;
-}
-.g2 .wash {
-  background:
-    radial-gradient(28% 24% at 79% 22%, #f2a07a 0, #f2a07a 28%, transparent 100%),
-    radial-gradient(34% 32% at 74% 66%, #b05ad0 0, #b05ad0 28%, transparent 100%),
-    radial-gradient(30% 28% at 26% 74%, #5050c8 0, #5050c8 28%, transparent 100%);
-  animation-duration: 27s;
-  animation-delay: -11s;
-}
-.g3 {
-  background: #1c1e26;
-}
-.g3 .wash {
-  background:
-    radial-gradient(26% 22% at 79% 22%, #d06a3a 0, #d06a3a 28%, transparent 100%),
-    radial-gradient(36% 34% at 70% 70%, #4a5e86 0, #4a5e86 28%, transparent 100%),
-    radial-gradient(30% 30% at 28% 30%, #2c3140 0, #2c3140 28%, transparent 100%);
-  animation-duration: 21s;
-  animation-delay: -7s;
-}
-.g4 {
-  background: #2f4a58;
-}
-.g4 .wash {
-  background:
-    radial-gradient(28% 22% at 22% 22%, #d06a3a 0, #d06a3a 28%, transparent 100%),
-    radial-gradient(34% 30% at 78% 40%, #86aebb 0, #86aebb 28%, transparent 100%),
-    radial-gradient(34% 26% at 50% 78%, #3f6474 0, #3f6474 28%, transparent 100%);
-  animation-duration: 25s;
-  animation-delay: -15s;
-}
-.g5 {
-  background: #0d1b2e;
-}
-.g5 .wash {
-  background:
-    radial-gradient(26% 22% at 78% 22%, #c9cf52 0, #c9cf52 28%, transparent 100%),
-    radial-gradient(34% 32% at 24% 24%, #2f4f72 0, #2f4f72 28%, transparent 100%),
-    radial-gradient(34% 28% at 62% 76%, #17304f 0, #17304f 28%, transparent 100%);
-  animation-duration: 29s;
-  animation-delay: -2s;
-}
-.g6 {
-  background: #3a1d46;
-}
-.g6 .wash {
-  background:
-    radial-gradient(26% 24% at 78% 78%, #f0a45a 0, #f0a45a 28%, transparent 100%),
-    radial-gradient(34% 30% at 24% 24%, #b8517a 0, #b8517a 28%, transparent 100%),
-    radial-gradient(30% 28% at 70% 34%, #6a2f6e 0, #6a2f6e 28%, transparent 100%);
-  animation-duration: 24s;
-  animation-delay: -9s;
-}
-.g7 {
-  background: #0f2a2a;
-}
-.g7 .wash {
-  background:
-    radial-gradient(28% 26% at 80% 18%, #7fd1c7 0, #7fd1c7 28%, transparent 100%),
-    radial-gradient(34% 30% at 18% 82%, #2f7a6a 0, #2f7a6a 28%, transparent 100%),
-    radial-gradient(30% 28% at 60% 60%, #16403c 0, #16403c 28%, transparent 100%);
-  animation-duration: 25s;
-  animation-delay: -12s;
+/* Caption on the baked cards: white type sitting on the folder-shaped glass pane baked into the
+   image. Metrics must stay in step with the bake (min 48% tall, 30/18/16 padding, 21px type). */
+.cap.folder,
+.slot .cap.folder {
+  top: auto;
+  min-height: 48%;
+  display: flex;
+  align-items: flex-end;
+  padding: 30px 18px 16px;
+  color: #fff;
+  text-shadow: 0 1px 10px rgba(0, 0, 0, 0.35);
+  background: none;
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+  -webkit-mask-image: none;
+  mask-image: none;
 }
 
 /*
@@ -581,7 +467,7 @@
 /* Drawings */
 .render {
   /* Full-bleed close-up: the drawing runs off the card edges and carries on
-     behind the caption plate. Sits under the grain (::after) so it shares the film. */
+     behind the caption. Grain and the caption's glass pane are baked into the image. */
   position: absolute;
   z-index: 1;
   inset: 0;
@@ -798,9 +684,6 @@
   backdrop-filter: none;
   background: linear-gradient(180deg, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.9) 55%);
 }
-.slot .tile .cap {
-  background: linear-gradient(180deg, rgba(12, 16, 34, 0), rgba(12, 16, 34, 0.62) 55%);
-}
 .slot .ui .cap {
   background: linear-gradient(180deg, rgba(20, 21, 24, 0), rgba(20, 21, 24, 0.94) 50%);
 }
@@ -867,12 +750,6 @@
   }
   .heads i {
     transform: rotate(var(--r));
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .wash {
-    animation: none;
   }
 }
 

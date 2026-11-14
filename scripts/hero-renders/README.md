@@ -12,3 +12,14 @@ node render.mjs automation /tmp/automation.png 720 720   # also writes /tmp/auto
 ```
 
 Scenes: `automation`, `growth` (the "Streamline your business operations" card; `streamline` is its earlier drawing, no longer shipped), `audit`, `lock`, `vault`, `decision`. Copy each `.webp` to `public/landing/hero/render-<name>-<version>.webp` and bump `RENDER_VERSION` in HeroCards.tsx. Cloudflare caches `/landing/*` for a year, so a changed image must get a new file name.
+
+## Glass cards (v5, current)
+
+The six gradient cards now ship as one baked WebP each: a gradient sampled from the brand references, a single clear-glass object in extreme close-up refracting it (Three.js transmission + dispersion), film grain, and the folder-shaped liquid-glass caption pane. The caption text stays live HTML (`glassCap` + `.folder` in HeroOrbit.module.css); the pane is sized in the bake with the same caption metrics, so keep the two in step.
+
+```bash
+cd scripts/hero-renders/glass
+NODE_PATH=../../../node_modules node bake.cjs   # writes baked/card-<name>-v5.webp (and bake.html)
+```
+
+`cards.html` holds every candidate row plus `#chosen`, the set that ships; change a card by editing its `data-i` in `#chosen`. Copy `baked/card-<name>-vN.webp` to `public/landing/hero/render-<name>-vN.webp` and bump `RENDER_VERSION`.
