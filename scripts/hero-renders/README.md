@@ -19,7 +19,7 @@ The six gradient cards now ship as one baked WebP each: a gradient sampled from 
 
 ```bash
 cd scripts/hero-renders/glass
-NODE_PATH=../../../node_modules node bake.cjs   # writes baked/card-<name>-v10.webp (and bake.html)
+NODE_PATH=../../../node_modules node bake.cjs   # writes baked/card-<name>-v12.webp (and bake.html)
 ```
 
 `cards.html` holds every candidate row plus `#chosen`, the set that ships; change a card by editing its `data-i` in `#chosen`. Copy `baked/card-<name>-vN.webp` to `public/landing/hero/render-<name>-vN.webp` and bump `RENDER_VERSION`.
