@@ -1919,11 +1919,11 @@ function IntroAnimation() {
         className={`transition-all duration-1000 ease-out absolute top-12 ${step >= 1 ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}
       >
         <img
-          src="/Aivory_logo_2_2026.svg"
+          src="/aivory-wordmark.svg"
           alt="Aivory Agent"
-          width={383}
-          height={79}
-          className="h-6 w-auto opacity-80 mx-auto"
+          width={205}
+          height={30}
+          className="h-[17px] w-auto opacity-80 mx-auto"
         />
       </div>
 
