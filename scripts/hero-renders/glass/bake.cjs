@@ -36,6 +36,6 @@ const PROD_CAP = `<style>
     });
   });
   fs.mkdirSync(__dirname + '/baked', { recursive: true });
-  out.forEach(([w, ph, u], i) => { fs.writeFileSync(`${__dirname}/baked/card-${NAMES[i]}-v9.webp`, Buffer.from(u.split(',')[1], 'base64')); console.log(NAMES[i], w, 'pane px @196:', ph); });
+  out.forEach(([w, ph, u], i) => { fs.writeFileSync(`${__dirname}/baked/card-${NAMES[i]}-v10.webp`, Buffer.from(u.split(',')[1], 'base64')); console.log(NAMES[i], w, 'pane px @196:', ph); });
   await b.close();
 })();
