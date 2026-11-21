@@ -171,7 +171,8 @@ export default function PricingStepOne({ currency, variant = 'default' }: { curr
             <GrainPlanCard
               key={card.title}
               world={[WORLD_FRESH, WORLD_DUSK, WORLD_PLATINUM][idx]}
-              surface="window"
+              surface="floral"
+              art={['/landing/pricing/plan-assessment-v6.webp', '/landing/pricing/plan-blueprint-v6.webp', '/landing/pricing/plan-complete-v6.webp'][idx]}
               badge={card.mostPopular ? 'Best value' : undefined}
               title={card.title}
               price={getFormattedPrice(card.price)}
