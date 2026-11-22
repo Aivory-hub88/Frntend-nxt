@@ -17,8 +17,16 @@
   min-height: 100svh;
   overflow: hidden;
   color: var(--ink);
-  /* Plain paper; the colour comes from the one blob behind the copy (.blob). */
-  background: #fff;
+  /* White sky that melts into a pastel wash along the foot (blue left, teal
+     centre, lime right), sampled from the Mercury reference. The prompt blob
+     (.blob) still sits on top, clipped to its glass. */
+  background:
+    radial-gradient(40% 34% at 20% 78%, rgba(150, 205, 222, 0.95), rgba(150, 205, 222, 0) 100%),
+    radial-gradient(44% 30% at 70% 80%, rgba(150, 214, 206, 0.9), rgba(150, 214, 206, 0) 100%),
+    radial-gradient(30% 40% at 100% 86%, rgba(220, 250, 196, 1), rgba(220, 250, 196, 0) 100%),
+    radial-gradient(36% 50% at 0% 92%, rgba(144, 196, 248, 1), rgba(144, 196, 248, 0) 100%),
+    linear-gradient(180deg, #fff 0%, #fff 26%, rgba(232, 247, 226, 0.85) 60%, rgba(206, 236, 232, 0.9) 100%),
+    #fff;
   box-shadow: 0 40px 120px -40px rgba(0, 0, 0, 0.65);
 }
 
@@ -209,7 +217,7 @@
   position: absolute;
   inset: 0;
   filter: blur(30px);
-  opacity: 0.8;
+  opacity: 0.08; /* was 0.8: the composer wash is now almost white */
   background:
     /* deeper accents behind the glass, so the white type reads and the
        wash has depth: azure top right, indigo-violet left, rose low left */
@@ -257,28 +265,27 @@
   text-align: left;
   border-radius: 20px;
 }
-/* iOS frosted glass, like the CTAs: milky grey tint over a heavy blur, white
-   type, a faint light rim and a soft top glow. */
+/* Frosted glass: a faint cool tint and a white veil over a heavy blur, a light
+   rim and a soft top glow. Kept light so the type stays dark and the wash shows. */
 .promptCard {
   position: relative;
   z-index: 1;
   border-radius: 20px;
   background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.14), rgba(255, 255, 255, 0) 55%),
-    rgba(90, 100, 138, 0.23),
-    /* veil: takes the wash behind the composer down by ~28% (the CTAs keep theirs) */
-    linear-gradient(rgba(255, 255, 255, 0.28), rgba(255, 255, 255, 0.28));
+    linear-gradient(180deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0) 55%),
+    rgba(90, 100, 138, 0.07),
+    linear-gradient(rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5));
   -webkit-backdrop-filter: blur(28px) saturate(1.6);
   backdrop-filter: blur(28px) saturate(1.6);
   box-shadow:
-    inset 0 0 0 1px rgba(255, 255, 255, 0.3),
-    inset 0 1px 0 rgba(255, 255, 255, 0.45);
+    inset 0 0 0 1px rgba(255, 255, 255, 0.55),
+    inset 0 1px 0 rgba(255, 255, 255, 0.7);
   transition: box-shadow 0.2s ease;
 }
 .promptCard:focus-within {
   box-shadow:
-    inset 0 0 0 1px rgba(255, 255, 255, 0.55),
-    inset 0 1px 0 rgba(255, 255, 255, 0.6);
+    inset 0 0 0 1px rgba(255, 255, 255, 0.8),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9);
 }
 .promptInput {
   display: block;
@@ -351,15 +358,15 @@
   outline-offset: 2px;
 }
 .promptApps {
-  /* The slate lip (user-picked #3b3e44). It tucks 20px up behind the glass card;
-     the mask cuts the card's rounded bottom out of it, so the lip never shows
-     through the frosted glass. */
+  /* The lip. It tucks 20px up behind the glass card; the mask cuts the card's
+     rounded bottom out of it. Frosted: translucent slate over a blur. */
   margin-top: -20px;
   border-radius: 0 0 20px 20px;
-  /* Same slate-blue family as the CTAs, a few steps darker so the white type and app icons hold. */
   background:
-    radial-gradient(70% 90% at 50% 60%, rgba(64, 78, 102, 0.55), rgba(64, 78, 102, 0) 75%),
-    linear-gradient(180deg, rgb(112, 120, 134) 0%, rgb(82, 96, 120) 52%, rgb(98, 114, 140) 100%);
+    linear-gradient(180deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0) 60%),
+    rgba(84, 100, 128, 0.68);
+  -webkit-backdrop-filter: blur(20px) saturate(1.5);
+  backdrop-filter: blur(20px) saturate(1.5);
   -webkit-mask:
     radial-gradient(circle at 100% 0, transparent 19.5px, #000 20px) 0 0 / 20px 20px no-repeat,
     radial-gradient(circle at 0 0, transparent 19.5px, #000 20px) 100% 0 / 20px 20px no-repeat,
