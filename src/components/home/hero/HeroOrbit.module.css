@@ -217,24 +217,24 @@
   position: absolute;
   inset: 0;
   filter: blur(30px);
-  opacity: 0.08; /* was 0.8: the composer wash is now almost white */
+  opacity: 0.8; /* the colour the frosted composer blurs; without it the glass has nothing to frost */
   background:
     /* deeper accents behind the glass, so the white type reads and the
        wash has depth: azure top right, indigo-violet left, rose low left */
-    radial-gradient(22% 26% at 70% 34%, #cbd0dc 0%, rgba(203, 208, 220, 0.85) 45%, rgba(203, 208, 220, 0) 100%),
-    radial-gradient(20% 28% at 32% 36%, #edd1ba 0%, rgba(237, 209, 186, 0.85) 45%, rgba(237, 209, 186, 0) 100%),
-    radial-gradient(16% 20% at 30% 64%, #e87aae 0%, rgba(232, 122, 174, 0.75) 45%, rgba(232, 122, 174, 0) 100%),
+    radial-gradient(22% 26% at 70% 34%, #c8dcee 0%, rgba(200, 220, 238, 0.85) 45%, rgba(200, 220, 238, 0) 100%),
+    radial-gradient(20% 28% at 32% 36%, #c9ecdc 0%, rgba(201, 236, 220, 0.85) 45%, rgba(201, 236, 220, 0) 100%),
+    radial-gradient(16% 20% at 30% 64%, #8fc4f0 0%, rgba(143, 196, 240, 0.75) 45%, rgba(143, 196, 240, 0) 100%),
     /* sky core */
-    radial-gradient(34% 32% at 60% 40%, #cbd0dc 0%, rgba(203, 208, 220, 0.9) 45%, rgba(203, 208, 220, 0) 100%),
+    radial-gradient(34% 32% at 60% 40%, #c8dcee 0%, rgba(200, 220, 238, 0.9) 45%, rgba(200, 220, 238, 0) 100%),
     /* periwinkle under the core */
-    radial-gradient(32% 26% at 50% 58%, #cbd0dc 0%, rgba(203, 208, 220, 0.85) 45%, rgba(203, 208, 220, 0) 100%),
+    radial-gradient(32% 26% at 50% 58%, #c8dcee 0%, rgba(200, 220, 238, 0.85) 45%, rgba(200, 220, 238, 0) 100%),
     /* lavender into pink along the lower rim */
-    radial-gradient(28% 20% at 40% 70%, #e5d9d0 0%, rgba(229, 217, 208, 0.85) 45%, rgba(229, 217, 208, 0) 100%),
-    radial-gradient(36% 16% at 42% 79%, #f8b2d5 0%, rgba(248, 178, 213, 0.9) 45%, rgba(248, 178, 213, 0) 100%),
+    radial-gradient(28% 20% at 40% 70%, #c6e6e6 0%, rgba(198, 230, 230, 0.85) 45%, rgba(198, 230, 230, 0) 100%),
+    radial-gradient(36% 16% at 42% 79%, #a6dbe9 0%, rgba(166, 219, 233, 0.9) 45%, rgba(166, 219, 233, 0) 100%),
     /* pink on the left flank */
-    radial-gradient(14% 26% at 22% 56%, #f4d3e5 0%, rgba(244, 211, 229, 0.7) 45%, rgba(244, 211, 229, 0) 100%),
+    radial-gradient(14% 26% at 22% 56%, #dff5cf 0%, rgba(223, 245, 207, 0.7) 45%, rgba(223, 245, 207, 0) 100%),
     /* pale blue halo that melts into white */
-    radial-gradient(48% 46% at 56% 46%, #cbd0dc 0%, rgba(203, 208, 220, 0.7) 50%, rgba(203, 208, 220, 0) 100%);
+    radial-gradient(48% 46% at 56% 46%, #c8dcee 0%, rgba(200, 220, 238, 0.7) 50%, rgba(200, 220, 238, 0) 100%);
 }
 /* Grain only where there is colour: masked to the blob's footprint. */
 .blobGrain {
@@ -265,6 +265,23 @@
   text-align: left;
   border-radius: 20px;
 }
+/* Depth: a thin halo hugging the edge of the composer and its lip, a different
+   hue at each corner (sky, mint, lime, blue). Four tight, blurred shadows with a
+   negative spread, so the colour stays at the rim and fades out within a few px (kept thin).
+   Behind the glass (z -1 inside .copy's stacking context), so the frost blurs it. */
+.prompt::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 20px;
+  z-index: -1;
+  pointer-events: none;
+  box-shadow:
+    -1px -1px 5px -1px rgba(110, 180, 245, 0.4),
+    1px -1px 5px -1px rgba(150, 228, 200, 0.4),
+    -1px 1px 5px -1px rgba(205, 242, 160, 0.4),
+    1px 1px 5px -1px rgba(105, 172, 240, 0.4);
+}
 /* Frosted glass: a faint cool tint and a white veil over a heavy blur, a light
    rim and a soft top glow. Kept light so the type stays dark and the wash shows. */
 .promptCard {
@@ -272,20 +289,20 @@
   z-index: 1;
   border-radius: 20px;
   background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0) 55%),
-    rgba(90, 100, 138, 0.07),
-    linear-gradient(rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5));
-  -webkit-backdrop-filter: blur(28px) saturate(1.6);
-  backdrop-filter: blur(28px) saturate(1.6);
+    linear-gradient(180deg, rgba(255, 255, 255, 0.55), rgba(255, 255, 255, 0.3));
+  -webkit-backdrop-filter: blur(30px) saturate(1.9);
+  backdrop-filter: blur(30px) saturate(1.9);
   box-shadow:
-    inset 0 0 0 1px rgba(255, 255, 255, 0.55),
-    inset 0 1px 0 rgba(255, 255, 255, 0.7);
+    inset 0 0 0 1px rgba(255, 255, 255, 0.9),
+    inset 0 1px 0 #fff,
+    0 18px 40px -24px rgba(90, 110, 170, 0.45);
   transition: box-shadow 0.2s ease;
 }
 .promptCard:focus-within {
   box-shadow:
-    inset 0 0 0 1px rgba(255, 255, 255, 0.8),
-    inset 0 1px 0 rgba(255, 255, 255, 0.9);
+    inset 0 0 0 1px #fff,
+    inset 0 1px 0 #fff,
+    0 18px 40px -22px rgba(90, 110, 170, 0.55);
 }
 .promptInput {
   display: block;
@@ -300,8 +317,8 @@
   font-family: var(--font-manrope), 'Manrope', sans-serif;
   font-size: 15.5px;
   line-height: 1.45;
-  color: #3d4252;
-  caret-color: #3d4252;
+  color: #1f2747;
+  caret-color: #1f2747;
   font-weight: 500;
   text-shadow: none;
 }
@@ -363,10 +380,10 @@
   margin-top: -20px;
   border-radius: 0 0 20px 20px;
   background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0) 60%),
-    rgba(84, 100, 128, 0.68);
-  -webkit-backdrop-filter: blur(20px) saturate(1.5);
-  backdrop-filter: blur(20px) saturate(1.5);
+    linear-gradient(180deg, rgba(255, 255, 255, 0.34), rgba(255, 255, 255, 0.2)),
+    rgba(150, 165, 215, 0.26);
+  -webkit-backdrop-filter: blur(26px) saturate(1.7);
+  backdrop-filter: blur(26px) saturate(1.7);
   -webkit-mask:
     radial-gradient(circle at 100% 0, transparent 19.5px, #000 20px) 0 0 / 20px 20px no-repeat,
     radial-gradient(circle at 0 0, transparent 19.5px, #000 20px) 100% 0 / 20px 20px no-repeat,
@@ -382,7 +399,7 @@
   padding: 28px 18px 8px;
   font-family: var(--font-manrope), 'Manrope', sans-serif;
   font-size: 12.5px;
-  color: rgba(255, 255, 255, 0.55);
+  color: #4a5578;
 }
 .promptAppIcons {
   display: flex;
@@ -402,8 +419,8 @@
 .promptAppIcons img.promptWordmark {
   width: auto;
   height: 9px;
-  /* Solid white on the slate lip (user ask 2026-11-17). */
-  filter: brightness(0) invert(1);
+  /* Solid navy on the light frosted lip. */
+  filter: brightness(0) opacity(0.7);
 }
 .promptAppsLabel {
   display: inline-flex;
@@ -417,14 +434,14 @@
 .promptAppsLabel {
   gap: 8px;
   font-weight: 300;
-  color: rgba(255, 255, 255, 0.62);
+  color: #4a5578;
 }
 .promptBrand {
   display: block;
   width: auto;
   height: 11px;
-  filter: brightness(0) invert(1);
-  opacity: 0.85;
+  filter: brightness(0);
+  opacity: 0.72;
 }
 @media (max-width: 560px) {
   .promptInput {
