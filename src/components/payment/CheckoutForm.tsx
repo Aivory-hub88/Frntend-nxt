@@ -96,13 +96,28 @@ export interface CheckoutFormProps {
  * with Tailwind classes (a "VISA" text box, two coloured circles for
  * Mastercard, a red "QRIS" chip).
  */
-function ChannelMark({ src, alt, height }: { src: string; alt: string; height: number }) {
+function ChannelMark({
+  src,
+  alt,
+  height,
+  mono = false,
+}: {
+  src: string;
+  alt: string;
+  height: number;
+  /** Render the mark as soft white, for dark-ink logos on the dark surface. */
+  mono?: boolean;
+}) {
   return (
     <img
       src={src}
       alt={alt}
       height={height}
-      style={{ height, width: 'auto' }}
+      style={{
+        height,
+        width: 'auto',
+        ...(mono ? { filter: 'brightness(0) invert(1)', opacity: 0.88 } : null),
+      }}
       decoding="async"
     />
   );
@@ -128,7 +143,7 @@ const CHANNELS: { id: Channel; label: string; badge: React.ReactNode }[] = [
     label: 'Credit / Debit Card',
     badge: (
       <div className="flex items-center gap-2.5">
-        <ChannelMark src="/payments/visa.svg" alt="Visa" height={14} />
+        <ChannelMark src="/payments/visa.svg" alt="Visa" height={14} mono />
         <ChannelMark src="/payments/mastercard.svg" alt="Mastercard" height={18} />
       </div>
     ),
@@ -144,12 +159,12 @@ const CHANNELS: { id: Channel; label: string; badge: React.ReactNode }[] = [
   {
     id: 'gopay',
     label: 'GoPay (E-Wallet)',
-    badge: <ChannelMark src="/payments/gopay.svg" alt="GoPay" height={13} />,
+    badge: <ChannelMark src="/payments/gopay-dark.svg" alt="GoPay" height={13} />,
   },
   {
     id: 'qris',
     label: 'QRIS',
-    badge: <ChannelMark src="/payments/qris.svg" alt="QRIS" height={14} />,
+    badge: <ChannelMark src="/payments/qris.svg" alt="QRIS" height={14} mono />,
   },
   {
     // Drawn on this page with the bank the customer picks below (VA_BANKS).
@@ -343,7 +358,7 @@ function MidtransBadge() {
         POWERED BY
       </span>
       <img
-        src="/payments/midtrans-blue.svg"
+        src="/payments/midtrans.svg"
         alt="Midtrans"
         height={15}
         style={{ height: 15, width: 'auto' }}
@@ -1079,7 +1094,7 @@ export function CheckoutForm({
             <p className="text-sm font-semibold text-white/50 tracking-wider mb-4 text-center">
               PAY BEFORE {dateStr} AT {timeStr}
             </p>
-            <h1 className="text-5xl font-light text-[#b9b0ff] mb-12 text-center">
+            <h1 className="text-5xl font-light text-white mb-12 text-center">
               {priceLabel}
             </h1>
 
