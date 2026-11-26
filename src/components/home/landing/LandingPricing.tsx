@@ -30,8 +30,7 @@ export default function LandingPricing() {
             <span className={s.dim}>Assess first, then choose how you operate.</span>
           </h2>
           <p className={s.lede}>
-            Every transformation begins with understanding how your organisation operates. Assess first, build your
-            transformation strategy, then deploy AI with confidence.
+            Start with a one-time diagnostic or blueprint, then choose an operating plan when your team is ready to deploy.
           </p>
           {/* Same translucent, rounded, sticky toggle as /pricing. */}
           <div className="sticky top-24 z-50 flex justify-center">

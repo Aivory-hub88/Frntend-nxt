@@ -60,16 +60,16 @@ const cards: PricingCard[] = [
     price: 79,
     // Each purchase includes 3 runs (avry-backend feature_uses).
     frequency: '3 uses',
-    description: 'Gain a clear understanding of how your organisation operates before making AI decisions.',
+    description: 'Map how work, data and approvals run today before spending on AI.',
     features: [
-      '• 3 analyses included',
+      '• 3 assessments included',
       '• Operational maturity analysis',
       '• Business objective alignment',
       '• Operational bottleneck analysis',
       '• AI opportunity mapping',
       '• Process and data readiness',
     ],
-    cta: 'Begin Analysis',
+    cta: 'Begin Assessment',
     productId: PRODUCT_IDS.DEEP_DIAGNOSTIC,
   },
   {
@@ -77,7 +77,7 @@ const cards: PricingCard[] = [
     price: 249,
     // Each purchase includes 3 runs (avry-backend feature_uses).
     frequency: '3 uses',
-    description: 'Transform operational insights into a practical blueprint for business transformation and governed AI deployment.',
+    description: 'Turn diagnostic findings into a sequenced workflow architecture and rollout plan.',
     features: [
       '• 3 blueprints + roadmaps included',
       '• Operational transformation blueprint',
@@ -91,14 +91,14 @@ const cards: PricingCard[] = [
   },
   {
     title: 'Complete Transformation Package',
-    subtitle: 'Business Operations Analysis\n+\nTransformation Blueprint\n+\nTransformation Roadmap\n+\n1 Month Business Plan',
+    subtitle: 'Business Operations Assessment\n+\nTransformation Blueprint\n+\nTransformation Roadmap\n+\n1 Month Business Plan',
     price: 299,
     // Each purchase includes 3 runs (avry-backend feature_uses).
     frequency: '3 uses',
-    description: 'Everything required to move from operational analysis to a clear transformation strategy.',
+    description: 'Assessment, blueprint and roadmap in one package, plus one month on the Business plan.',
     features: [
-      '• 3 full runs: Analysis → Blueprint → Roadmap',
-      '• Business Operations Analysis',
+      '• 3 full runs: Assessment → Blueprint → Roadmap',
+      '• Business Operations Assessment',
       '• Transformation Blueprint',
       '• Transformation Roadmap',
       '• AI opportunity prioritisation',
@@ -163,7 +163,7 @@ export default function PricingStepOne({ currency, variant = 'default' }: { curr
           </div>
           <h2 className={`text-[35px] sm:text-[37px] md:text-[37px] lg:text-[43px] ${landing ? 'font-light tracking-[-0.03em]' : 'font-normal tracking-tight'} mb-6`}>Start With Clarity.</h2>
           <p className="text-xl text-[#494949] font-light leading-relaxed">
-            Every transformation begins with understanding how your organisation operates. Assess first, build your transformation strategy, then deploy AI with confidence.
+            Pay once for a clear diagnosis and rollout plan. No ongoing commitment required.
           </p>
         </div>
 
@@ -223,7 +223,7 @@ export default function PricingStepOne({ currency, variant = 'default' }: { curr
 
               {/* Price row */}
               <div className="flex items-center justify-start gap-3 py-6 mt-2">
-                <span className={`transition-all duration-300 ${(currency || language) === 'IDR' || language === 'id' && !currency ? 'text-[32px] sm:text-[38px] md:text-[44px]' : 'text-[42px] sm:text-[48px] md:text-[52px]'} font-extrabold leading-none whitespace-nowrap text-[#1a1a1a]`}>
+                <span className={`transition-opacity duration-200 ${(currency || language) === 'IDR' || language === 'id' && !currency ? 'text-[32px] sm:text-[38px] md:text-[44px]' : 'text-[42px] sm:text-[48px] md:text-[52px]'} font-extrabold leading-none whitespace-nowrap text-[#1a1a1a]`}>
                   {getFormattedPrice(card.price)}
                 </span>
                 <div className="flex flex-col pt-1">

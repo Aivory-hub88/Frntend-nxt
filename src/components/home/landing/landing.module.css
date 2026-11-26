@@ -984,7 +984,7 @@
 .igc:nth-child(4) { background: radial-gradient(70% 55% at 100% 0%, rgba(48, 176, 199, 0.16), transparent 70%), radial-gradient(60% 50% at 0% 100%, rgba(52, 199, 89, 0.1), transparent 70%), #f5f5f7; }
 .igc:nth-child(5) { background: radial-gradient(70% 55% at 0% 0%, rgba(52, 199, 89, 0.14), transparent 70%), radial-gradient(60% 50% at 100% 100%, rgba(0, 122, 255, 0.1), transparent 70%), #f5f5f7; }
 .igc:nth-child(6) { background: radial-gradient(70% 55% at 100% 0%, rgba(255, 159, 10, 0.13), transparent 70%), radial-gradient(60% 50% at 0% 100%, rgba(88, 86, 214, 0.12), transparent 70%), #f5f5f7; }
-.igc h4 {
+.igc h3 {
   margin: 0 0 8px;
   font-size: 20px;
   font-weight: 600;

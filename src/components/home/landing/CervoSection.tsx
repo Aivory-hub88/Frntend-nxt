@@ -121,7 +121,7 @@ export default function CervoSection() {
         {/* Connectivity strip, as in Figma (node 13:8902). */}
         <div className={s.caps} aria-label="Connectivity">
           <div className={s.cap}>
-            <span>100+ Apps Integrations</span>
+            <span>100+ App Integrations</span>
             <span className={s.chip}>
               <img className={s.chipIc} src="/landing/strip/puzzle.svg" alt="" />
               Integrations
@@ -148,7 +148,7 @@ export default function CervoSection() {
 
         <div className={s.ig} aria-label="What every Cervo agent has">
           <article className={s.igc}>
-            <h4>Memory &amp; Context</h4>
+            <h3>Memory &amp; Context</h3>
             <p className={s.igd}>Each agent remembers customers, vendors and past decisions, then applies them to the next task without being told twice.</p>
             <div className={`${s.igp} ${s.chatp}`}>
               <div className={s.chatH}>
@@ -167,7 +167,7 @@ export default function CervoSection() {
           </article>
 
           <article className={s.igc}>
-            <h4>100+ Apps &amp; Any MCP</h4>
+            <h3>100+ Apps &amp; Any MCP</h3>
             <p className={s.igd}>Agents read and write in the tools your teams already use. Plug in any MCP server and it becomes a new skill.</p>
             <div className={`${s.igp} ${s.icons}`}>
               {APP_ICONS.map((app) =>
@@ -196,7 +196,7 @@ export default function CervoSection() {
           </article>
 
           <article className={s.igc}>
-            <h4>A Brain for Every Role</h4>
+            <h3>A Brain for Every Role</h3>
             <p className={s.igd}>Give each agent the reasoning model and toolkit its role needs. Finance thinks like finance, sales like sales.</p>
             <div className={`${s.igp} ${s.roles}`}>
               {ROLES.map((r) => (
@@ -206,7 +206,7 @@ export default function CervoSection() {
           </article>
 
           <article className={s.igc}>
-            <h4>Its Own Computer</h4>
+            <h3>Its Own Computer</h3>
             <p className={s.igd}>Every agent works in an isolated workspace with a browser and files, so it finishes the task instead of describing it.</p>
             <div className={`${s.igp} ${s.agentp}`}>
               <div className={s.st}><i />Active · Browser · Files · Sandbox</div>
@@ -223,8 +223,8 @@ export default function CervoSection() {
           </article>
 
           <article className={s.igc}>
-            <h4>Agents That Work as a Team</h4>
-            <p className={s.igd}>Built on the full A2A protocol, agents talk to each other and work as a team, inside Aivory and beyond.</p>
+            <h3>Agents That Work as a Team</h3>
+            <p className={s.igd}>Built on the Agent2Agent (A2A) protocol, agents hand off work directly inside Aivory and across external tools.</p>
             <div className={`${s.igp} ${s.agentp}`}>
               <div className={s.st}><i />Active · A2A · Team chat</div>
               <div className={s.flow}>
@@ -238,7 +238,7 @@ export default function CervoSection() {
           </article>
 
           <article className={s.igc}>
-            <h4>Governed by Approvals</h4>
+            <h3>Governed by Approvals</h3>
             <p className={s.igd}>Agents ask before they act on anything that matters. Approve or deny from the console or straight from Slack.</p>
             <div className={`${s.igp} ${s.agentp}`}>
               <div className={s.st}><i />Active · Approvals · Audit log</div>

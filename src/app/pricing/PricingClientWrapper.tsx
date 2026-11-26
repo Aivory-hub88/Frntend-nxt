@@ -31,7 +31,7 @@ export default function PricingClientWrapper({
             Priced for Progress.
           </Heading>
           <p className="text-[#494949] text-xl max-w-2xl mx-auto font-light leading-relaxed mt-4">
-            Every transformation begins with understanding how your organisation operates. Assess first, build your transformation strategy, then deploy AI with confidence.
+            Start with a one-time diagnostic or blueprint, then choose an operating plan when your team is ready to deploy.
           </p>
         </div>
         <div className="flex justify-center sticky top-24 z-50">
