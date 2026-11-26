@@ -118,31 +118,58 @@ export default function CervoSection() {
           <img className={s.fbPeople} src="/landing/cervo-team.webp?v=3" alt="" width={1600} height={739} />
         </div>
 
-        {/* Connectivity strip, as in Figma (node 13:8902). */}
-        <div className={s.caps} aria-label="Connectivity">
-          <div className={s.cap}>
-            <span>100+ App Integrations</span>
-            <span className={s.chip}>
-              <img className={s.chipIc} src="/landing/strip/puzzle.svg" alt="" />
-              Integrations
-              <span className={s.stack} aria-hidden="true">
-                <i><img src="/landing/strip/gmail.svg" alt="" /></i>
-                <i><img src="/integrations/icons/google-calendar.svg" alt="" /></i>
-                <i><img src="/landing/strip/salesforce.svg" alt="" /></i>
-                <i><img src="/landing/strip/hubspot.svg" alt="" /></i>
+        {/* Connectivity architecture dock */}
+        <div className={s.caps} role="group" aria-label="Connectivity architecture">
+          <div className={`${s.cap} ${s.capApps}`}>
+            <div className={s.capTop}>
+              <span className={`${s.capBadge} ${s.capBadgeApps}`} aria-hidden="true">
+                <span className={`${s.capGlyph} ${s.capGlyphPuzzle}`} />
               </span>
-            </span>
+              <span className={s.stack} aria-hidden="true">
+                <i style={{ '--i': 0 } as React.CSSProperties}><img src="/landing/strip/gmail.svg" alt="" /></i>
+                <i style={{ '--i': 1 } as React.CSSProperties}><img src="/integrations/icons/google-calendar.svg" alt="" /></i>
+                <i style={{ '--i': 2 } as React.CSSProperties}><img src="/integrations/icons/slack.svg" alt="" /></i>
+                <i style={{ '--i': 3 } as React.CSSProperties}><img src="/landing/strip/salesforce.svg" alt="" /></i>
+                <i style={{ '--i': 4 } as React.CSSProperties}><img src="/landing/strip/hubspot.svg" alt="" /></i>
+                <b className={s.stackMore} style={{ '--i': 5 } as React.CSSProperties}>+95</b>
+              </span>
+            </div>
+            <div className={s.capBody}>
+              <span className={s.capTitle}>100+ App Integrations</span>
+              <p className={s.capSub}>Direct read &amp; write across your existing stack</p>
+            </div>
           </div>
-          <div className={s.cap}>
-            <span>MCP Connection</span>
-            <span className={s.chip}><img className={s.chipIc} src="/landing/mcp.svg" alt="" />Model Context Protocol</span>
+
+          <div className={`${s.cap} ${s.capMcp}`}>
+            <div className={s.capTop}>
+              <span className={`${s.capBadge} ${s.capBadgeMcp}`} aria-hidden="true">
+                <span className={`${s.capGlyph} ${s.capGlyphMcp}`} />
+              </span>
+              <span className={s.chip}>
+                <i className={`${s.capDot} ${s.capDotBlue}`} aria-hidden="true" />
+                <span className={s.chipLabel}>Model Context Protocol</span>
+              </span>
+            </div>
+            <div className={s.capBody}>
+              <span className={s.capTitle}>MCP Connection</span>
+              <p className={s.capSub}>Plug in any MCP server as a live agent skill</p>
+            </div>
           </div>
-          <div className={s.cap}>
-            <span>A2A Protocol</span>
-            <span className={s.chip}>
-              <img className={s.chipA2a} src="/landing/strip/a2a.svg" alt="" />
-              <img className={s.chipText} src="/landing/strip/agent2agent-text.svg" alt="Agent2Agent" />
-            </span>
+
+          <div className={`${s.cap} ${s.capA2a}`}>
+            <div className={s.capTop}>
+              <span className={`${s.capBadge} ${s.capBadgeA2a}`} aria-hidden="true">
+                <span className={`${s.capGlyph} ${s.capGlyphA2a}`} />
+              </span>
+              <span className={s.chip}>
+                <i className={`${s.capDot} ${s.capDotGreen}`} aria-hidden="true" />
+                <span className={s.chipWordmark} role="img" aria-label="Agent2Agent" />
+              </span>
+            </div>
+            <div className={s.capBody}>
+              <span className={s.capTitle}>A2A Protocol</span>
+              <p className={s.capSub}>Native multi-agent coordination &amp; handoffs</p>
+            </div>
           </div>
         </div>
 

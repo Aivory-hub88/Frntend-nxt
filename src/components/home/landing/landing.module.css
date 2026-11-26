@@ -871,71 +871,242 @@
   .gbStreak { animation: none; }
 }
 
-/* ── Connectivity strip (Figma 13:8902), 60% scale ── */
+/* ── Connectivity architecture dock ── */
 .caps {
   position: relative;
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 10px;
-  margin: 0 auto;
-  width: 60%;
+  gap: 8px;
+  inline-size: 100%;
+  margin-block: 10px 6px;
+  padding: 7px;
+  border-radius: 26px;
+  background: linear-gradient(180deg, rgba(243, 246, 250, 0.86), rgba(236, 241, 247, 0.74));
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
+  backdrop-filter: saturate(180%) blur(20px);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.92),
+    0 0 0 1px rgba(15, 23, 42, 0.055),
+    0 14px 34px -18px rgba(15, 23, 42, 0.12);
 }
 .cap {
-  background: #f5f5f5;
-  border-radius: 10px;
-  padding: 10px 0 0;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 16px;
+  min-inline-size: 0;
+  padding-block: 16px 17px;
+  padding-inline: 18px;
+  border-radius: 19px; /* concentric: 26px outer - 7px padding */
+  background: rgba(255, 255, 255, 0.92);
+  box-shadow:
+    inset 0 1px 0 #ffffff,
+    0 0 0 1px rgba(15, 23, 42, 0.045),
+    0 2px 8px -2px rgba(15, 23, 42, 0.05);
+  overflow: clip;
+  transition: transform 180ms cubic-bezier(0.23, 1, 0.32, 1), box-shadow 180ms cubic-bezier(0.23, 1, 0.32, 1);
+}
+.capApps {
+  background:
+    radial-gradient(65% 70% at 100% 0%, rgba(255, 149, 0, 0.08), transparent 70%),
+    rgba(255, 255, 255, 0.94);
+}
+.capMcp {
+  background:
+    radial-gradient(65% 70% at 100% 0%, rgba(0, 122, 255, 0.085), transparent 70%),
+    rgba(255, 255, 255, 0.94);
+}
+.capA2a {
+  background:
+    radial-gradient(65% 70% at 100% 0%, rgba(16, 185, 129, 0.085), transparent 70%),
+    rgba(255, 255, 255, 0.94);
+}
+.capTop {
+  display: flex;
+  align-items: safe center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.capBadge {
+  inline-size: 38px;
+  block-size: 38px;
+  border-radius: 11px;
   display: grid;
-  gap: 7px;
-  justify-items: stretch;
-  text-align: center;
-  font-size: 12px;
-  color: #1f1f1f;
+  place-items: center;
+  flex: none;
+}
+.capBadgeApps {
+  color: #0f1f26;
+  background: linear-gradient(180deg, #ffffff, #f3f5f8);
+  box-shadow:
+    inset 0 1px 0 #ffffff,
+    0 0 0 1px rgba(15, 23, 42, 0.08),
+    0 4px 10px -2px rgba(15, 23, 42, 0.08);
+}
+.capBadgeMcp {
+  color: #ffffff;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.26), rgba(255, 255, 255, 0) 58%), #007aff;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.45),
+    0 0 0 3px rgba(0, 122, 255, 0.13),
+    0 6px 14px -3px rgba(0, 122, 255, 0.35);
+}
+.capBadgeA2a {
+  color: #ffffff;
+  background: linear-gradient(180deg, #243242, #0f172a);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.22),
+    0 0 0 3px rgba(15, 23, 42, 0.08),
+    0 6px 14px -3px rgba(15, 23, 42, 0.28);
+}
+.capGlyph {
+  display: block;
+  inline-size: 19px;
+  block-size: 19px;
+  background-color: currentColor;
+  flex: none;
+  pointer-events: none;
+  forced-color-adjust: none;
+}
+.capGlyphPuzzle {
+  -webkit-mask: url('/landing/strip/puzzle.svg') no-repeat center / contain;
+  mask: url('/landing/strip/puzzle.svg') no-repeat center / contain;
+}
+.capGlyphMcp {
+  inline-size: 18px;
+  block-size: 18px;
+  -webkit-mask: url('/landing/mcp.svg') no-repeat center / contain;
+  mask: url('/landing/mcp.svg') no-repeat center / contain;
+}
+.capGlyphA2a {
+  inline-size: 20px;
+  block-size: 20px;
+  -webkit-mask: url('/landing/strip/a2a.svg') no-repeat center / contain;
+  mask: url('/landing/strip/a2a.svg') no-repeat center / contain;
 }
 .chip {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  min-height: 29px;
-  padding: 4px 10px;
-  background: #eef3f3;
-  border: 1px solid #b9c2c2;
+  display: inline-flex;
+  align-items: safe center;
+  gap: 7px;
+  min-block-size: 30px;
+  padding-block: 6px;
+  padding-inline: 11px;
+  background: rgba(244, 247, 250, 0.9);
+  box-shadow:
+    inset 0 1px 0 #ffffff,
+    0 0 0 1px rgba(15, 23, 42, 0.07);
   border-radius: 999px;
-  font-size: 12px;
-  font-weight: 500;
-  color: #1f1f1f;
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: #1e293b;
   white-space: nowrap;
 }
-.chipIc {
-  width: 13px;
-  height: 13px;
+.chipLabel {
+  text-box: trim-both cap alphabetic;
 }
-.chipA2a {
-  width: 18px;
-  height: 18px;
+.capDot {
+  inline-size: 6px;
+  block-size: 6px;
+  border-radius: 50%;
+  flex: none;
 }
-.chipText {
-  height: 7px;
-  width: auto;
+.capDotBlue {
+  background: #007aff;
+  box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.16);
+}
+.capDotGreen {
+  background: #10b981;
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.18);
+}
+.chipWordmark {
+  display: block;
+  block-size: 9px;
+  aspect-ratio: 80.3993 / 10.8811;
+  background-color: #0f172a;
+  -webkit-mask: url('/landing/strip/agent2agent-text.svg') no-repeat center / contain;
+  mask: url('/landing/strip/agent2agent-text.svg') no-repeat center / contain;
+  flex: none;
+  forced-color-adjust: none;
 }
 .stack {
   display: inline-flex;
-  padding-left: 4px;
+  align-items: safe center;
+  padding-inline-end: 2px;
 }
-.stack i {
-  width: 18px;
-  height: 18px;
-  margin-left: -5px;
+.stack i,
+.stackMore {
+  inline-size: 28px;
+  block-size: 28px;
+  margin-inline-start: -7px;
   border-radius: 50%;
-  background: #e4e4e4;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.18);
+  background: #ffffff;
+  box-shadow:
+    0 0 0 2px #ffffff,
+    0 1px 3px rgba(15, 23, 42, 0.12),
+    inset 0 0 0 0.5px rgba(15, 23, 42, 0.08);
   display: grid;
   place-items: center;
+  flex: none;
+  transition: transform 200ms cubic-bezier(0.23, 1, 0.32, 1);
+}
+.stack i:first-child {
+  margin-inline-start: 0;
 }
 .stack img {
-  width: 58%;
-  height: 58%;
+  display: block;
+  inline-size: 56%;
+  block-size: 56%;
   object-fit: contain;
+}
+.stackMore {
+  background: #0f1f26;
+  color: #ffffff;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+  text-box: trim-both cap alphabetic;
+}
+.capBody {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  text-align: start;
+}
+.capTitle {
+  font-size: 16.5px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.25;
+  color: #0f1f26;
+  text-box: trim-both cap alphabetic;
+}
+.capSub {
+  font-size: 13.5px;
+  font-weight: 400;
+  line-height: 1.45;
+  color: #5f6f77;
+}
+@media (hover: hover) and (pointer: fine) {
+  .cap:hover {
+    transform: translateY(-2px);
+    box-shadow:
+      inset 0 1px 0 #ffffff,
+      0 0 0 1px rgba(15, 23, 42, 0.07),
+      0 10px 24px -8px rgba(15, 23, 42, 0.11);
+  }
+  .capApps:hover .stack > * {
+    transform: translateX(calc((var(--i, 0) - 5) * 2px));
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .cap,
+  .stack i,
+  .stackMore {
+    transition: none;
+  }
 }
 .agentPic {
   border-radius: 50%;
@@ -2229,7 +2400,7 @@
 
 /* ── Responsive ── */
 @media (max-width: 960px) {
-  .caps { width: 100%; }
+  .caps { grid-template-columns: 1fr; }
   .ig { grid-template-columns: 1fr 1fr; }
   .stage, .builder { grid-template-columns: 1fr; }
   .feats { grid-template-columns: 1fr; }
