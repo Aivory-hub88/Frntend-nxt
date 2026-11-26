@@ -19,7 +19,7 @@ export const DEFAULT_OG_IMAGE = '/hero-video-poster.jpg';
 const ORGANIZATION_DESCRIPTION =
   'Aivory (also known as Aivory AI) is AI infrastructure for business transformation and operational intelligence, helping organisations move from operational clarity to governed AI agents and autonomous workflows.';
 const ORGANIZATION_DISAMBIGUATION =
-  'Business transformation and AI operations platform (United Kingdom / global), founded by Irfan Reichmann and canonically published at aivory.uk. Distinct from dental practice software, HRMS platforms, code-compliance tooling, consumer AI apps, or creative studios that share a similar name — none of those are affiliated with this organisation.';
+  'Business transformation and AI operations platform serving the United Kingdom, Europe, Asia, Australia, and global enterprise teams, founded by Irfan Reichmann and canonically published at aivory.uk. Distinct from dental practice software, HRMS platforms, code-compliance tooling, consumer AI apps, or creative studios that share a similar name — none of those are affiliated with this organisation.';
 const WEBSITE_DESCRIPTION =
   'AI infrastructure for business transformation — from operational analysis to autonomous AI agents.';
 const HOMEPAGE_DESCRIPTION =
@@ -109,8 +109,13 @@ export function createOrganization(siteUrl: PublicSiteUrl) {
     employee: [{ '@id': `${siteUrl}/#founder` }],
     areaServed: [
       { '@type': 'Place', name: 'Worldwide' },
-      { '@type': 'Country', name: 'Indonesia' },
+      { '@type': 'Place', name: 'Europe' },
+      { '@type': 'Place', name: 'Asia' },
       { '@type': 'Country', name: 'United Kingdom' },
+      { '@type': 'Country', name: 'Singapore' },
+      { '@type': 'Country', name: 'Indonesia' },
+      { '@type': 'Country', name: 'Australia' },
+      { '@type': 'Country', name: 'New Zealand' },
       { '@type': 'Country', name: 'Netherlands' },
       { '@type': 'Country', name: 'Germany' },
       { '@type': 'Country', name: 'France' },
@@ -119,9 +124,6 @@ export function createOrganization(siteUrl: PublicSiteUrl) {
       { '@type': 'Country', name: 'Spain' },
       { '@type': 'Country', name: 'South Korea' },
       { '@type': 'Country', name: 'China' },
-      { '@type': 'Country', name: 'Australia' },
-      { '@type': 'Country', name: 'New Zealand' },
-      { '@type': 'Place', name: 'Europe' },
       { '@type': 'Country', name: 'Portugal' },
       { '@type': 'Country', name: 'United Arab Emirates' },
       { '@type': 'Country', name: 'Oman' },
