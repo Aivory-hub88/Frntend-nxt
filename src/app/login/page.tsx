@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import LoginClient from "./LoginClient";
 
 export const metadata: Metadata = {
-  title: "Sign In — Aivory",
+  title: "Sign In",
   description: "Sign in to your Aivory workspace.",
   alternates: {
     canonical: "/login",

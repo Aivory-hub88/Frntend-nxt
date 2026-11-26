@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import ForgotPasswordClient from "./ForgotPasswordClient";
 
 export const metadata: Metadata = {
-  title: "Reset Password — Aivory",
+  title: "Reset Password",
   description: "Request a link to reset your Aivory password.",
   alternates: {
     canonical: "/forgot-password",

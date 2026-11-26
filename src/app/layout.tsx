@@ -34,10 +34,10 @@ const literata = Literata({
   display: 'swap',
 });
 
-const SITE_NAME = 'Aivory AI';
-const SITE_TITLE = 'Aivory AI | Enterprise AI for Business Operations';
+const SITE_NAME = 'Aivory';
+const SITE_TITLE = 'Aivory — Enterprise AI Operations Platform';
 const SITE_DESCRIPTION =
-  'Your business, minus the busywork. Aivory takes you from first analysis to governed agents on the job: streamlined enterprise AI, no handoffs, no patchwork.';
+  'Aivory (Aivory AI) is the enterprise AI operations platform taking your business from first analysis to governed AI agents—no handoffs, no patchwork.';
 
 export const metadata: Metadata = {
   metadataBase: new URL(AIVORY_UK_URL),
@@ -53,7 +53,7 @@ export const metadata: Metadata = {
   },
   title: {
     default: SITE_TITLE,
-    template: '%s | Aivory AI',
+    template: '%s | Aivory',
   },
   description: SITE_DESCRIPTION,
   applicationName: SITE_NAME,

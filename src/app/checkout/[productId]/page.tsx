@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import CheckoutClient from "./CheckoutClient";
 
 export const metadata: Metadata = {
-  title: "Checkout — Aivory",
+  title: "Checkout",
   description: "Complete your Aivory product purchase.",
   alternates: {
     canonical: "/checkout/:productId",

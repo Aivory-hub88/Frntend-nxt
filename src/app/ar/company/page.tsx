@@ -8,7 +8,7 @@ import { LocaleSwitcher } from "@/components/locale/LocaleSwitcher";
 import { buildLanguageAlternates } from "@/lib/localeAlternates";
 
 export const metadata: Metadata = {
-  title: "الشركة — Aivory",
+  title: "الشركة",
   description:
     "تساعد Aivory الفرق الطموحة على فهم العمليات المعقدة، واتخاذ قرارات أوضح، وبناء أنظمة تدوم.",
   alternates: {

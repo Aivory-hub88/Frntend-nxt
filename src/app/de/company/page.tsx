@@ -4,7 +4,7 @@ import { companyContentDe } from "@/content/company/de";
 import { buildLanguageAlternates } from "@/lib/localeAlternates";
 
 export const metadata: Metadata = {
-  title: "Unternehmen — Aivory",
+  title: "Unternehmen",
   description: "Aivory hilft ambitionierten Teams, komplexe Abläufe zu verstehen, klarere Entscheidungen zu treffen und dauerhafte Systeme aufzubauen.",
   alternates: {
     canonical: "/de/company",

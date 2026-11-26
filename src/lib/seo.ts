@@ -82,8 +82,8 @@ export function createOrganization(siteUrl: PublicSiteUrl) {
   return {
     '@type': 'Organization',
     '@id': `${siteUrl}/#organisation`,
-    name: 'Aivory AI',
-    alternateName: ['Aivory', 'Aivory Platform', 'Aivory UK', 'aivory.uk'],
+    name: 'Aivory',
+    alternateName: ['Aivory AI', 'Aivory Platform', 'Aivory UK', 'aivory.uk'],
     legalName: 'Aivory',
     url: `${siteUrl}/`,
     logo: {
@@ -187,8 +187,8 @@ export function createWebsite(siteUrl: PublicSiteUrl) {
     '@type': 'WebSite',
     '@id': `${siteUrl}/#website`,
     url: `${siteUrl}/`,
-    name: 'Aivory AI',
-    alternateName: ['Aivory', 'aivory.uk'],
+    name: 'Aivory',
+    alternateName: ['Aivory AI', 'Aivory Platform', 'aivory.uk'],
     description: WEBSITE_DESCRIPTION,
     isFamilyFriendly: true,
     copyrightHolder: { '@id': `${siteUrl}/#organisation` },
@@ -248,8 +248,8 @@ function createPlatformApplication(siteUrl: PublicSiteUrl) {
   return {
     '@type': 'SoftwareApplication',
     '@id': `${siteUrl}/#software`,
-    name: 'Aivory Platform',
-    alternateName: ['Aivory AI', 'Aivory AI Operations Platform', 'Aivory Agentic AI Platform'],
+    name: 'Aivory',
+    alternateName: ['Aivory Platform', 'Aivory AI', 'Aivory AI Operations Platform', 'Aivory Agentic AI Platform'],
     applicationCategory: 'BusinessApplication',
     applicationSubCategory: 'AI Operations Platform',
     operatingSystem: 'Web',
