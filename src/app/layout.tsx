@@ -35,7 +35,7 @@ const literata = Literata({
 });
 
 const SITE_NAME = 'Aivory AI';
-const SITE_TITLE = 'Aivory AI | Enterprise AI for Business Transformation at Scale';
+const SITE_TITLE = 'Aivory AI | Enterprise AI for Business Operations';
 const SITE_DESCRIPTION =
   'Your business, minus the busywork. Aivory takes you from first analysis to governed agents on the job: streamlined enterprise AI, no handoffs, no patchwork.';
 

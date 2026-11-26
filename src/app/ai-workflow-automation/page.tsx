@@ -10,7 +10,7 @@ import {
 } from "@/lib/seo";
 
 export const metadata: Metadata = {
-  title: "AI Workflow Automation for Business | Aivory",
+  title: "AI Workflow Automation for Business",
   description:
     'Automate repetitive processes with AI workflow automation. Connect CRM, inbox and ops into intelligent workflows in days.',
   alternates: {

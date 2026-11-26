@@ -112,7 +112,7 @@ export default function Footer({ landingAmbient = false }: FooterProps) {
         <div className="max-w-7xl mx-auto px-6 md:px-12">
           <div className="grid grid-cols-2 md:grid-cols-5 gap-12 md:gap-8 mb-16 md:mb-32">
             <div className="col-span-1">
-              <h4 className="text-gray-300 text-sm font-normal mb-4">Product</h4>
+              <p className="text-gray-300 text-sm font-normal mb-4">Product</p>
               <ul className="space-y-3 text-sm">
                 {productLinks.map((link) => (
                   <li key={link.label}>
@@ -125,7 +125,7 @@ export default function Footer({ landingAmbient = false }: FooterProps) {
             </div>
 
             <div className="col-span-1">
-              <h4 className="text-gray-300 text-sm font-normal mb-4">Company</h4>
+              <p className="text-gray-300 text-sm font-normal mb-4">Company</p>
               <ul className="space-y-3 text-sm">
                 {companyLinks.map((link) => (
                   <li key={link.label}>
@@ -138,7 +138,7 @@ export default function Footer({ landingAmbient = false }: FooterProps) {
             </div>
 
             <div className="col-span-1">
-              <h4 className="text-gray-300 text-sm font-normal mb-4">Legal</h4>
+              <p className="text-gray-300 text-sm font-normal mb-4">Legal</p>
               <ul className="space-y-3 text-sm">
                 {legalLinks.map((link) => (
                   <li key={link.label}>
@@ -151,7 +151,7 @@ export default function Footer({ landingAmbient = false }: FooterProps) {
             </div>
 
             <div className="col-span-1">
-              <h4 className="text-gray-300 text-sm font-normal mb-4">Get in touch</h4>
+              <p className="text-gray-300 text-sm font-normal mb-4">Get in touch</p>
               <ul className="space-y-3 text-sm">
                 <li>
                   <a href="mailto:hello@aivory.uk" className="text-white/90 hover:text-[#c9c9c9] transition-colors">

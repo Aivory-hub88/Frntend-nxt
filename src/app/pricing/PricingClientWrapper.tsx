@@ -6,9 +6,16 @@ import PricingStepOne from '@/components/home/PricingStepOne';
 import PricingStepTwo from '@/components/home/PricingStepTwo';
 import PaymentMethods from '@/components/home/PaymentMethods';
 
-export default function PricingClientWrapper({ withBackground = false }: { withBackground?: boolean }) {
+export default function PricingClientWrapper({
+  withBackground = false,
+  headingAs = 'h2',
+}: {
+  withBackground?: boolean;
+  headingAs?: 'h1' | 'h2';
+}) {
   const { language } = useLanguage();
   const [currency, setCurrency] = useState<'IDR' | 'USD' | null>(null);
+  const Heading = headingAs;
 
   useEffect(() => {
     setCurrency(language === 'id' ? 'IDR' : 'USD');
@@ -20,9 +27,9 @@ export default function PricingClientWrapper({ withBackground = false }: { withB
     <div id="pricing-section" className={`w-full pt-16 ${withBackground ? 'bg-[#E4E6E8]' : ''}`}>
       <div className="max-w-7xl mx-auto px-6">
         <div className="text-center mb-12">
-          <h2 className="text-[26px] sm:text-[28px] md:text-[28px] lg:text-[32px] font-normal tracking-tight text-[#1a1a1a]" style={{ fontFamily: "var(--font-manrope), 'Manrope', sans-serif" }}>
+          <Heading className="text-[26px] sm:text-[28px] md:text-[28px] lg:text-[32px] font-normal tracking-tight text-[#1a1a1a]" style={{ fontFamily: "var(--font-manrope), 'Manrope', sans-serif" }}>
             Priced for Progress.
-          </h2>
+          </Heading>
           <p className="text-[#494949] text-xl max-w-2xl mx-auto font-light leading-relaxed mt-4">
             Every transformation begins with understanding how your organisation operates. Assess first, build your transformation strategy, then deploy AI with confidence.
           </p>

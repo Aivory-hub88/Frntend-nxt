@@ -30,6 +30,7 @@ export default function BastionPage() {
 
   return (
     <main className="relative bg-black min-h-screen text-white font-manrope selection:bg-[#165444] selection:text-white">
+      <h1 className="sr-only">Bastion — Autonomous Infrastructure Defence</h1>
       <JsonLd data={buildBastionGraph(siteUrl)} />
 
       {/* Global Ambient Background Gradient Wash (Fixed across ENTIRE page in #165444 emerald teal) */}

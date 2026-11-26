@@ -21,6 +21,13 @@ function postDescription(post: BlogPostDetail): string {
   return clampDescription(richContentToPlainText(post.body?.blocks))
 }
 
+function formatBlogMetaTitle(title: string): Metadata["title"] {
+  if (title.length <= 48) return title
+  if (title.length <= 60) return { absolute: title }
+  const clipped = title.slice(0, 59).replace(/\s+\S*$/, "")
+  return { absolute: `${clipped || title.slice(0, 59)}…` }
+}
+
 export async function generateMetadata(
   props: { params: Promise<{ slug: string }> }
 ): Promise<Metadata> {
@@ -41,7 +48,7 @@ export async function generateMetadata(
   const images = [post.thumbnail_url || DEFAULT_OG_IMAGE]
 
   return {
-    title: post.title,
+    title: formatBlogMetaTitle(post.title),
     description,
     alternates: {
       canonical: url,
@@ -114,7 +121,8 @@ function ContentBlock({ block, isRedacted }: { block: BlogContentBlock; isRedact
         6: "text-sm font-medium",
       }
       const className = `${sizeClasses[level] || sizeClasses[2]} text-[#11110f] mt-8 mb-3`
-      if (level === 1) return <h1 className={className}>{block.text}</h1>
+      // The article header already renders the page's sole <h1>; demote in-body h1 blocks to <h2>.
+      if (level === 1) return <h2 className={className}>{block.text}</h2>
       if (level === 3) return <h3 className={className}>{block.text}</h3>
       if (level === 4) return <h4 className={className}>{block.text}</h4>
       if (level === 5) return <h5 className={className}>{block.text}</h5>

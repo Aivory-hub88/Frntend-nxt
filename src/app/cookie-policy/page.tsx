@@ -5,7 +5,8 @@ import { JsonLd, createBreadcrumbList, absoluteUrl } from "@/lib/seo"
 
 export const metadata: Metadata = {
   title: "Cookie Policy",
-  description: "Cookie Policy for Aivory platform.",
+  description:
+    "Cookie Policy for the Aivory AI platform explaining which essential, analytics, and preference cookies we use and how to manage your settings.",
   alternates: {
     canonical: "/cookie-policy",
   },
@@ -18,9 +19,9 @@ export const metadata: Metadata = {
 
 function SectionTitle({ children }: { children: React.ReactNode }) {
   return (
-    <h3 className="text-[22px] font-light leading-[1.15] tracking-[-0.02em] text-[#11110f]">
+    <h2 className="text-[22px] font-light leading-[1.15] tracking-[-0.02em] text-[#11110f]">
       {children}
-    </h3>
+    </h2>
   )
 }
 

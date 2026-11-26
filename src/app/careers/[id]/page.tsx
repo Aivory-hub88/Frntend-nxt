@@ -79,7 +79,9 @@ function vacancyDescription(vacancy: Vacancy): string {
   ]
     .filter(Boolean)
     .join(" ")
-  return brief || full
+  const combined = brief && brief.length >= 70 ? brief : [brief, full].filter(Boolean).join(" ")
+  if (combined.length >= 70) return combined
+  return `${combined ? `${combined} ` : ""}Join Aivory AI to build enterprise AI operations, workflow automation, and governed autonomous agents.`
 }
 
 export async function generateMetadata(
