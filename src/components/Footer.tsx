@@ -204,7 +204,7 @@ export default function Footer({ landingAmbient = false }: FooterProps) {
               />
             </a>
             <a
-              href="https://www.instagram.com/aivorylab.ai"
+              href="https://www.instagram.com/its.aivory"
               target="_blank"
               rel="noopener noreferrer"
               className="text-white/80 hover:text-white transition-colors text-sm"

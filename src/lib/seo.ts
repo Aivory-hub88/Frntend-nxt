@@ -162,7 +162,7 @@ export function createOrganization(siteUrl: PublicSiteUrl) {
     sameAs: [
       'https://www.linkedin.com/company/aivoryai/',
       'https://www.producthunt.com/products/aivory-ai',
-      'https://www.instagram.com/aivorylab.ai',
+      'https://www.instagram.com/its.aivory',
       'https://www.youtube.com/@itsAivory',
       'https://www.threads.com/@its.aivory',
       'https://x.com/aivoryai',
