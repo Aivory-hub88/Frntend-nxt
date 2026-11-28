@@ -3,6 +3,7 @@
 import type { CSSProperties, ReactNode } from 'react';
 import { BokehGradient, type BokehScene, type LeafFigure } from '@/components/ui/BokehGradient';
 import { RollButton } from '@/components/ui/RollButton';
+import { GlitchAscii } from './GlitchAscii';
 
 /* One "tri" scene per card (see BokehGradient): three colours in 60/30/10 —
    a dominant field, one large soft shape, a small glow in the far corner —
@@ -84,10 +85,8 @@ function Tick({ className = 'text-[#17181c]' }: { className?: string }) {
   );
 }
 
-/** The header art melts into the white body; the shade keeps white type readable on the lightest blooms. */
-const ART_FADE = 'linear-gradient(180deg,#000 52%,transparent 100%)';
-const SHADE =
-  'linear-gradient(180deg,rgba(8,10,24,0) 20%,rgba(8,10,24,.34) 62%,rgba(8,10,24,0) 100%)';
+/** Darkens the foot of the header art so the white plan name reads on any photo. */
+const SHADE = 'linear-gradient(180deg,transparent 50%,rgba(8,10,24,.45) 100%)';
 
 export interface GrainPlanFeature {
   text: string;
@@ -129,7 +128,7 @@ export function GrainPlanCard({
   onCta: () => void;
   /** 'full' paints the whole card; 'window' keeps the card neutral and puts the gradient in a tile behind title and price, the way ElevenLabs frames its one colour moment. */
   surface?: 'full' | 'window' | 'floral';
-  /** 'floral': the baked header art (a WebP). Only the badge and the plan name sit on it; everything else stays on white. */
+  /** 'floral': the header photo (a WebP) with its live ASCII layer. Only the badge and the plan name sit on it; everything else stays on white. */
   art?: string;
   /** Optional [restColor, fillColor] hex pair for the CTA button. */
   buttonColors?: [string, string];
@@ -195,7 +194,7 @@ export function GrainPlanCard({
   // Six rows on a subgrid of the cards' grid, so title, sub-headline, price,
   // description, features and CTA line up across every card in the row. The
   // parent grid must leave rows to auto-placement; each card spans six.
-  // Floral surface: a calm, blurred floral header (badge + plan name only) fading into a white body, so
+  // Floral surface: a dreamy flower photo with glitch blocks as the header (badge + plan name only), so
   // price, features and CTA always sit on a plain surface. Six rows on the cards' subgrid, as the others.
   if (surface === 'floral' && art) {
     const hi = Boolean(badge);
@@ -215,21 +214,21 @@ export function GrainPlanCard({
           aria-hidden="true"
           className="pointer-events-none absolute inset-0 -z-10 bg-gradient-to-br from-white/62 to-white/40 backdrop-blur-[28px] shadow-[inset_0_0_0_1px_rgba(255,255,255,0.78)]"
         />
-        <div className="relative z-10 h-[176px]">
+        <div className="relative z-10 h-[270px]">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={art}
             alt=""
             aria-hidden="true"
-            width={720}
-            height={360}
+            width={960}
+            height={820}
             loading="lazy"
             decoding="async"
             draggable={false}
             className="absolute inset-0 h-full w-full select-none object-cover"
-            style={{ WebkitMaskImage: ART_FADE, maskImage: ART_FADE }}
           />
-          <div className="absolute inset-0" style={{ background: SHADE, WebkitMaskImage: 'linear-gradient(180deg,#000 60%,transparent)', maskImage: 'linear-gradient(180deg,#000 60%,transparent)' }} />
+          <GlitchAscii name={art.match(/plan-([a-z]+)/)?.[1] ?? ''} className="absolute inset-0 h-full w-full object-cover" />
+          <div className="absolute inset-0" style={{ background: SHADE }} />
           {badge && (
             <span className="absolute left-6 top-5 inline-flex items-center whitespace-nowrap rounded-full bg-white/20 px-3 py-[5px] text-[11.5px] font-medium tracking-[0.02em] text-white shadow-[inset_0_0_0_1px_rgba(255,255,255,0.45)] backdrop-blur-[14px] backdrop-saturate-[1.4]">
               {badge}
@@ -237,7 +236,7 @@ export function GrainPlanCard({
           )}
           <h3
             className={`absolute left-6 right-6 whitespace-pre-line font-light tracking-[-0.03em] text-white [text-shadow:0_1px_14px_rgba(0,0,0,0.35)] ${
-              title.length > 14 ? 'bottom-[44px] text-[28px] leading-[1.08]' : 'bottom-[52px] text-[34px] leading-none'
+              title.length > 14 ? 'bottom-5 text-[28px] leading-[1.08]' : 'bottom-6 text-[34px] leading-none'
             }`}
           >
             {title}
