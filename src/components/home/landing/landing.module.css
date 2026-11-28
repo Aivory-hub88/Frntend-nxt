@@ -2160,13 +2160,46 @@
 /* ── Pricing ── */
 /* ── Comparison (light): neutral panel, the Aivory column as one grain card that overhangs it ── */
 .cmp {
+  position: relative;
+  isolation: isolate;
   margin-top: 52px;
   padding: 0 14px 0 26px;
-  background: var(--paper-2);
-  border: 1px solid var(--rule);
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.72);
   border-radius: 28px;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.78), 0 18px 42px -24px rgba(15, 23, 42, 0.16);
+}
+.cmpBackdrop {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  overflow: hidden;
+  z-index: 0;
+  pointer-events: none;
+}
+.cmpBackdrop::before {
+  content: '';
+  position: absolute;
+  inset: -44px;
+  background-image: url('/images/hero-new/hero-surreal-bg.jpeg');
+  background-size: cover;
+  background-position: 50% 42%;
+  filter: blur(36px) saturate(1.4) brightness(1.06);
+  transform: scale(1.08);
+  z-index: 0;
+}
+.cmpBackdrop::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(155deg, rgba(255, 255, 255, 0.68), rgba(255, 255, 255, 0.44));
+  -webkit-backdrop-filter: saturate(180%) blur(24px);
+  backdrop-filter: saturate(180%) blur(24px);
+  z-index: 1;
 }
 .cmpGrid {
+  position: relative;
+  z-index: 1;
   display: grid;
   grid-template-columns: minmax(0, 1.75fr) repeat(3, minmax(0, 1fr)) minmax(0, 1.15fr);
   grid-template-rows: repeat(6, auto);
@@ -2179,7 +2212,11 @@
   grid-row: 1 / -1;
   margin: -16px 0;
   border-radius: 24px;
-  box-shadow: 0 24px 48px -18px rgba(13, 32, 80, 0.45), 0 2px 6px rgba(13, 32, 80, 0.12);
+  background: linear-gradient(165deg, rgba(24, 52, 118, 0.68), rgba(18, 38, 92, 0.54));
+  -webkit-backdrop-filter: saturate(170%) blur(28px);
+  backdrop-filter: saturate(170%) blur(28px);
+  border: 1px solid rgba(255, 255, 255, 0.36);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.42), 0 24px 48px -18px rgba(13, 32, 80, 0.42), 0 2px 6px rgba(13, 32, 80, 0.12);
 }
 .cmpHead,
 .cmpCell {

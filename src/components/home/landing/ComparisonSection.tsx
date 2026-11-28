@@ -71,18 +71,10 @@ export default function ComparisonSection() {
         </div>
 
         <div className={s.cmp}>
+          <div className={s.cmpBackdrop} aria-hidden="true" />
           <div className={s.cmpGrid} role="table" aria-label="Aivory compared with AI chat, consulting and automation">
-            {/* The Aivory column: Glitch Flora cobalt card behind the last column, overhanging the panel. */}
-            <div
-              className={s.cmpCard}
-              aria-hidden="true"
-              style={{
-                backgroundImage:
-                  "url('/landing/flora/comparison-cobalt.webp?v=20261127'), linear-gradient(180deg, #1a3d8a 0%, #2452ad 50%, #17377d 100%)",
-                backgroundSize: 'cover',
-                backgroundPosition: 'center',
-              }}
-            />
+            {/* The Aivory column: translucent frosted glass card behind the last column, overhanging the panel. */}
+            <div className={s.cmpCard} aria-hidden="true" />
 
             <div className={s.cmpRow} role="row" style={HEAD_LINES}>
               <span className={`${s.cmpHead} ${s.cmpCap}`} role="columnheader">Capabilities</span>
