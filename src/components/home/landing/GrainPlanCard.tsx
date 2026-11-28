@@ -200,11 +200,20 @@ export function GrainPlanCard({
     const hi = Boolean(badge);
     return (
       <div
-        className={`relative row-span-6 grid-cols-[minmax(0,1fr)] grid-rows-subgrid gap-y-0 overflow-hidden rounded-[24px] bg-white ring-1 ring-black/[0.07] ${
+        className={`relative isolate row-span-6 grid-cols-[minmax(0,1fr)] grid-rows-subgrid gap-y-0 overflow-hidden rounded-[24px] bg-transparent ring-1 ring-white/75 ${
           hi ? 'shadow-[0_30px_50px_-26px_rgba(140,40,160,0.45)]' : 'shadow-[0_24px_40px_-28px_rgba(20,30,60,0.35)]'
         }`}
         style={SUBGRID}
       >
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute -inset-10 -z-20 scale-110 bg-cover bg-center blur-[52px] saturate-150 brightness-105"
+          style={{ backgroundImage: "url('/images/hero-new/hero-surreal-bg.jpeg')" }}
+        />
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0 -z-10 bg-gradient-to-br from-white/62 to-white/40 backdrop-blur-[28px] shadow-[inset_0_0_0_1px_rgba(255,255,255,0.78)]"
+        />
         <div className="relative z-10 h-[270px]">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
@@ -243,7 +252,7 @@ export function GrainPlanCard({
             <span className={`${priceSmall ? 'text-[34px]' : 'text-[46px]'} font-light leading-none tracking-[-0.04em] text-[#17181c]`}>{price}</span>
             <span className={`text-[13px] ${priceSuffixStrong ? 'font-semibold text-[#3a3d48]' : 'font-medium text-[#5c6070]'}`}>{priceSuffix}</span>
           </div>
-          {note && <p className="mt-[6px] text-[12px] text-[#70747f]">{note}</p>}
+          {note && <p className="mt-[6px] text-[12px] text-[#8a8e9c]">{note}</p>}
         </div>
 
         <div />
@@ -254,10 +263,10 @@ export function GrainPlanCard({
           </RollButton>
         </div>
 
-        <ul className="mx-6 mt-5 space-y-[9px] border-t border-black/[0.08] pb-7 pt-[18px] text-[13.5px] leading-[1.4] text-[#2a2c34]">
+        <ul className="mx-6 mt-5 space-y-[9px] border-t border-white/25 pb-7 pt-[18px] text-[13.5px] leading-[1.4] text-white">
           {features.map((f) => (
-            <li key={f.text} className={`flex gap-[10px] ${f.strong ? 'font-semibold text-[#17181c]' : ''}`}>
-              <Tick />
+            <li key={f.text} className={`flex gap-[10px] ${f.strong ? 'font-semibold text-white' : ''}`}>
+              <Tick className="text-white" />
               <span>{f.text}</span>
             </li>
           ))}
