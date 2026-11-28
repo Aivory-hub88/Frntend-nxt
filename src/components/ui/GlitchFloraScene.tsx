@@ -13,9 +13,12 @@ import {
 
 interface GlitchFloraSceneProps {
   paletteKey?: string;
+  imageSrc?: string;
   seedOffset?: number;
   className?: string;
   interactive?: boolean;
+  showAscii?: boolean;
+  asciiOpacity?: number;
 }
 
 const VERTEX_SHADER = /* glsl */ `
@@ -34,6 +37,8 @@ const FRAGMENT_SHADER = /* glsl */ `
   uniform float uTime;
   uniform vec2 uPointer;
   uniform float uHover;
+  uniform float uShowAscii;
+  uniform float uAsciiOpacity;
   varying vec2 vUv;
 
   float hash11(float p) {
@@ -65,21 +70,19 @@ const FRAGMENT_SHADER = /* glsl */ `
     vec2 uv = vUv;
     vec2 coverUv = getCoverUv(uv, uResolution, uFloraSize);
 
-    // Smooth, continuous optical prism bands (zero abrupt frame-snapping or GPU-tear artifacts)
+    // Smooth, continuous optical prism glitch bands on the clean floral artwork
     float rowId = floor((uv.y * uResolution.y) / 28.0);
     float bandSeed = hash11(rowId * 1.73 + 0.19);
     float bandMask = step(0.62, bandSeed);
 
-    // Slow, silky sinusoidal glide per glass band
-    float smoothWave = sin(uTime * (0.45 + bandSeed * 0.55) + bandSeed * 6.2831);
+    float smoothWave = sin(uTime * (0.55 + bandSeed * 0.65) + bandSeed * 6.2831);
     float distToPointerY = abs(uv.y - uPointer.y);
     float pointerLens = smoothstep(0.24, 0.0, distToPointerY) * uHover;
 
-    float xShift = smoothWave * (0.012 + pointerLens * 0.022) * bandMask;
+    float xShift = smoothWave * (0.014 + pointerLens * 0.024) * bandMask;
 
-    // Gentle fluid drift across the underlying floral canvas
     vec2 floraUv = clamp(
-      coverUv + vec2(xShift + sin(coverUv.y * 3.5 + uTime * 0.35) * 0.003, 0.0),
+      coverUv + vec2(xShift + sin(coverUv.y * 3.5 + uTime * 0.4) * 0.004, 0.0),
       0.002,
       0.998
     );
@@ -88,16 +91,19 @@ const FRAGMENT_SHADER = /* glsl */ `
     // Keep ASCII UVs 100% untorn so characters never shear or look like broken VRAM
     vec4 asciiSample = texture2D(uAsciiTex, uv);
 
-    vec3 composed = mix(floraCol, vec3(1.0), asciiSample.a * 0.92);
+    vec3 composed = mix(floraCol, vec3(1.0), asciiSample.a * uAsciiOpacity * uShowAscii);
     gl_FragColor = vec4(composed, 1.0);
   }
 `;
 
 export function GlitchFloraScene({
   paletteKey = 'porcelain',
+  imageSrc,
   seedOffset = 0,
   className = '',
   interactive = true,
+  showAscii = true,
+  asciiOpacity = 0.92,
 }: GlitchFloraSceneProps) {
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -126,16 +132,26 @@ export function GlitchFloraScene({
     const scene = new THREE.Scene();
     const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
 
-    const floraCanvas = generateGlitchFloraCanvas(
-      palette,
-      effectiveSeed,
-      FLORA_TEX_W,
-      FLORA_TEX_H
-    );
-    const floraTexture = new THREE.CanvasTexture(floraCanvas);
+    let floraTexture: THREE.Texture;
+    if (imageSrc) {
+      floraTexture = new THREE.TextureLoader().load(imageSrc, (tex) => {
+        const img = tex.image as HTMLImageElement | undefined;
+        if (img?.naturalWidth && img?.naturalHeight) {
+          uniforms.uFloraSize.value.set(img.naturalWidth, img.naturalHeight);
+        }
+        renderer.render(scene, camera);
+      });
+    } else {
+      const floraCanvas = generateGlitchFloraCanvas(
+        palette,
+        effectiveSeed,
+        FLORA_TEX_W,
+        FLORA_TEX_H
+      );
+      floraTexture = new THREE.CanvasTexture(floraCanvas);
+    }
     floraTexture.minFilter = THREE.LinearFilter;
     floraTexture.magFilter = THREE.LinearFilter;
-    floraTexture.colorSpace = THREE.SRGBColorSpace;
 
     let asciiState = createAsciiOverlayState(effectiveSeed, currentW, currentH);
     let asciiTexture = new THREE.CanvasTexture(asciiState.canvas);
@@ -150,6 +166,8 @@ export function GlitchFloraScene({
       uTime: { value: 0 },
       uPointer: { value: new THREE.Vector2(0.5, 0.5) },
       uHover: { value: 0 },
+      uShowAscii: { value: showAscii ? 1 : 0 },
+      uAsciiOpacity: { value: asciiOpacity },
     };
 
     const geometry = new THREE.PlaneGeometry(2, 2);
@@ -253,7 +271,7 @@ export function GlitchFloraScene({
       asciiTexture.dispose();
       renderer.dispose();
     };
-  }, [paletteKey, seedOffset, interactive]);
+  }, [paletteKey, imageSrc, seedOffset, interactive, showAscii, asciiOpacity]);
 
   const positionClass =
     className.includes('absolute') || className.includes('fixed') ? '' : 'relative';

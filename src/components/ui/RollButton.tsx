@@ -30,6 +30,8 @@ export function RollButton({
   children,
   onClick,
   tone = 'ink',
+  restColor,
+  fillColor,
   className = '',
   type = 'button',
   disabled = false,
@@ -39,6 +41,8 @@ export function RollButton({
   type?: 'button' | 'submit';
   disabled?: boolean;
   tone?: RollTone;
+  restColor?: string;
+  fillColor?: string;
   className?: string;
 }) {
   const t = TONES[tone];
@@ -48,10 +52,12 @@ export function RollButton({
       onClick={onClick}
       disabled={disabled}
       data-cta-cursor
+      style={restColor ? { backgroundColor: restColor, color: '#ffffff' } : undefined}
       className={`group relative isolate w-full overflow-hidden rounded-full px-6 py-3 text-center text-[14px] font-medium outline-none ring-offset-2 focus-visible:ring-2 focus-visible:ring-[#1d4a9a] active:scale-[0.985] transition-transform duration-150 disabled:cursor-wait disabled:opacity-60 ${t.rest} ${className}`}
     >
       <span
         aria-hidden="true"
+        style={fillColor ? { backgroundColor: fillColor } : undefined}
         className={`absolute inset-0 -z-10 translate-y-full rounded-full group-hover:translate-y-0 group-focus-visible:translate-y-0 ${t.fill} ${MOVE}`}
       />
       <span className="relative block overflow-hidden leading-[1.4]">

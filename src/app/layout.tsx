@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import Script from 'next/script';
 import { Manrope, Doto, Literata } from 'next/font/google';
 import './globals.css';
 import {
@@ -110,19 +111,20 @@ export default function RootLayout({
     <html lang="en" className={`${manrope.variable} ${doto.variable} ${literata.variable} antialiased scroll-smooth`}>
       <head>
         <link rel="preload" as="image" href="/aivory-wordmark.svg" fetchPriority="high" />
-        <script async src="https://www.googletagmanager.com/gtag/js?id=G-XYJ0EDEYS8" />
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              window.dataLayer = window.dataLayer || [];
-              function gtag(){dataLayer.push(arguments);}
-              gtag('js', new Date());
-              gtag('config', 'G-XYJ0EDEYS8');
-            `,
-          }}
-        />
       </head>
       <body className="bg-background text-white font-manrope antialiased overflow-x-hidden w-full" style={{ fontFamily: 'var(--font-manrope), Manrope, sans-serif' }}>
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=G-XYJ0EDEYS8"
+          strategy="afterInteractive"
+        />
+        <Script id="gtag-init" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-XYJ0EDEYS8');
+          `}
+        </Script>
         <JsonLd data={buildSiteGraph(AIVORY_UK_URL)} />
         <HtmlLangSync />
         <LanguageProvider initialLanguage="en">

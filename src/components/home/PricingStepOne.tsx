@@ -174,7 +174,7 @@ export default function PricingStepOne({ currency, variant = 'default' }: { curr
               key={card.title}
               world={[WORLD_FRESH, WORLD_DUSK, WORLD_PLATINUM][idx]}
               surface="floral"
-              art={['/landing/pricing/plan-assessment-v6.webp', '/landing/pricing/plan-blueprint-v6.webp', '/landing/pricing/plan-complete-v6.webp'][idx]}
+              art={['/landing/pricing/plan-assessment-v6.webp?v=20261128', '/landing/pricing/plan-blueprint-v6.webp?v=20261128', '/landing/pricing/plan-complete-v6.webp?v=20261128'][idx]}
               badge={card.mostPopular ? 'Best value' : undefined}
               title={card.title}
               price={getFormattedPrice(card.price)}

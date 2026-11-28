@@ -1,6 +1,6 @@
 'use client';
 
-import type { ReactNode } from 'react';
+import type { CSSProperties, ReactNode } from 'react';
 import { BokehGradient, type BokehScene, type LeafFigure } from '@/components/ui/BokehGradient';
 import { RollButton } from '@/components/ui/RollButton';
 
@@ -110,6 +110,7 @@ export function GrainPlanCard({
   onCta,
   surface = 'full',
   art,
+  buttonColors,
 }: {
   world: PlanWorld;
   badge?: string;
@@ -130,6 +131,8 @@ export function GrainPlanCard({
   surface?: 'full' | 'window' | 'floral';
   /** 'floral': the baked header art (a WebP). Only the badge and the plan name sit on it; everything else stays on white. */
   art?: string;
+  /** Optional [restColor, fillColor] hex pair for the CTA button. */
+  buttonColors?: [string, string];
 }) {
   const win = surface === 'window';
   const head = (
@@ -247,7 +250,7 @@ export function GrainPlanCard({
         <div />
 
         <div className="px-6 pt-[18px]">
-          <RollButton onClick={onCta} tone={hi ? 'brand' : 'ink'}>
+          <RollButton onClick={onCta} tone="ink">
             {cta}
           </RollButton>
         </div>

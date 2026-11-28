@@ -142,9 +142,111 @@ export const FLORA_PALETTES: Record<string, FloraPalette> = {
     tip: ['#e9d5ff', '#c7d2fe'],
     ang: 56.3,
   },
+  planAssessment: {
+    name: 'planAssessment',
+    label: 'Mint Apricot',
+    seed: 103,
+    kind: 'tear',
+    n: 9,
+    ls: 1.45,
+    bl: 3.6,
+    glitchCount: 16,
+    bokeh: 5,
+    bk: ['#fff4e6', '#d1fae5', '#fed7aa'],
+    bg: ['#3e9682', '#e2904a'],
+    petal: ['#4eb39c', '#82d1be', '#f0a868', '#ffd2a8', '#e59554'],
+    core: '#fff2e0',
+    tip: ['#ffe8cc', '#d1fae5'],
+    ang: 28,
+  },
+  planBlueprint: {
+    name: 'planBlueprint',
+    label: 'Cervo Ember',
+    seed: 117,
+    kind: 'poppy',
+    n: 8,
+    ls: 1.4,
+    bl: 3.6,
+    glitchCount: 16,
+    bokeh: 5,
+    bk: ['#ffe4d1', '#b5d6d3', '#f28c5e'],
+    bg: ['#5b8683', '#d23b18'],
+    petal: ['#6f9996', '#b8947d', '#df7848', '#f29568', '#d23b18'],
+    core: '#ffe4d1',
+    tip: ['#ffd2b8', '#a8ccc9'],
+    ang: 24,
+  },
+  planComplete: {
+    name: 'planComplete',
+    label: 'Workspace Iris',
+    seed: 131,
+    kind: 'tear',
+    n: 9,
+    ls: 1.42,
+    bl: 3.6,
+    glitchCount: 16,
+    bokeh: 5,
+    bk: ['#ffffff', '#e9d5ff', '#c7d2fe'],
+    bg: ['#5775db', '#8636bf'],
+    petal: ['#6f86e0', '#9aa8ec', '#c484e0', '#b468d4', '#8636bf'],
+    core: '#f3e8ff',
+    tip: ['#e9d5ff', '#c7d2fe'],
+    ang: 30,
+  },
+  planOperational: {
+    name: 'planOperational',
+    label: 'Azure Mint',
+    seed: 149,
+    kind: 'tear',
+    n: 9,
+    ls: 1.45,
+    bl: 3.6,
+    glitchCount: 16,
+    bokeh: 5,
+    bk: ['#e0f2fe', '#ccfbf1', '#ffffff'],
+    bg: ['#3a7fd5', '#42b89a'],
+    petal: ['#5ea2ee', '#8cc5f8', '#5cd4b4', '#9ae6d0', '#3898c8'],
+    core: '#e8fcf8',
+    tip: ['#e0f7fa', '#dbeafe'],
+    ang: 26,
+  },
+  planBusiness: {
+    name: 'planBusiness',
+    label: 'Cobalt Rose',
+    seed: 163,
+    kind: 'poppy',
+    n: 8,
+    ls: 1.42,
+    bl: 3.6,
+    glitchCount: 16,
+    bokeh: 5,
+    bk: ['#fce7f3', '#e0e7ff', '#ffffff'],
+    bg: ['#4a68e0', '#d44c8e'],
+    petal: ['#6f88f0', '#a98be8', '#e868a8', '#ff9ec8', '#c8509a'],
+    core: '#ffe8f4',
+    tip: ['#fbcfe8', '#ddd6fe'],
+    ang: 28,
+  },
+  planEnterprise: {
+    name: 'planEnterprise',
+    label: 'Footer Dusk',
+    seed: 179,
+    kind: 'tear',
+    n: 9,
+    ls: 1.45,
+    bl: 3.6,
+    glitchCount: 16,
+    bokeh: 5,
+    bk: ['#f5d8c8', '#a3c1cc', '#d97a54'],
+    bg: ['#2f4a58', '#9e5236'],
+    petal: ['#486674', '#6d8a96', '#c8714e', '#df8864', '#9e5236'],
+    core: '#f5d8c8',
+    tip: ['#e8a688', '#8aa7b3'],
+    ang: 24,
+  },
 };
 
-export const ASCII_GLYPHS = 'XHMS#8I40/_';
+export const ASCII_GLYPHS = '0123456789ABCDEFGHJKLMNPQRSTUVWXYZ';
 
 const SPEC: Record<PetalKind, [number, number, number, number, number]> = {
   tear: [0.2, 0.44, 0.28, 0.52, 1],
@@ -448,8 +550,10 @@ interface AnimatedAsciiCell {
   r: number;
   ch: string;
   phase: number;
-  speed: number;
-  swappedInTrough: boolean;
+  tickRate: number;
+  lastTick: number;
+  seqOffset: number;
+  seqLen: number;
 }
 
 export function createAsciiOverlayState(
@@ -460,54 +564,45 @@ export function createAsciiOverlayState(
   const safeW = Math.max(240, Math.round(width));
   const safeH = Math.max(180, Math.round(height));
   const rng = createRng(seed + 101);
-  const cw = 22;
-  const ch = 30;
-  const cols = Math.max(8, Math.floor(safeW / cw));
+  const cw = 13;
+  const ch = 26;
+  const cols = Math.max(12, Math.floor(safeW / cw));
   const rows = Math.max(6, Math.floor(safeH / ch));
   const cellMap = new Map<string, AnimatedAsciiCell>();
 
   const pick = () => ASCII_GLYPHS[rng.randrange(ASCII_GLYPHS.length)];
 
-  const makeCell = (c: number, r: number): AnimatedAsciiCell => ({
-    c,
-    r,
-    ch: pick(),
-    phase: rng.uniform(0, Math.PI * 2),
-    speed: rng.uniform(0.55, 1.35),
-    swappedInTrough: false,
-  });
+  // Build neat, non-overlapping horizontal secret-code sequences on an aligned grid
+  const sequenceCount = Math.max(8, Math.round((cols * rows) / 55));
+  for (let s = 0; s < sequenceCount; s++) {
+    const r = rng.randint(1, Math.max(1, rows - 2));
+    const len = rng.randint(6, Math.min(14, Math.max(6, cols - 4)));
+    const c0 = rng.randint(1, Math.max(1, cols - len - 1));
+    const seqPhase = rng.uniform(0, Math.PI * 2);
+    const tickRate = rng.uniform(12, 20); // fast cipher scramble ticks/sec
 
-  for (let k = 0; k < 8; k++) {
-    const c0 = rng.randrange(cols);
-    const r0 = rng.randrange(rows);
-    const w = rng.randint(4, Math.min(12, cols));
-    const h = rng.randint(2, Math.min(5, rows));
-    const dn = rng.uniform(0.42, 0.72);
-    for (let i = 0; i < w; i++) {
-      for (let j = 0; j < h; j++) {
-        if (rng.next() < dn && c0 + i < cols && r0 + j < rows) {
-          cellMap.set(`${c0 + i},${r0 + j}`, makeCell(c0 + i, r0 + j));
-        }
+    // Skip if this row already has a sequence nearby to keep layout clean & uncluttered
+    let occupied = false;
+    for (let i = -2; i < len + 2; i++) {
+      if (cellMap.has(`${c0 + i},${r}`)) {
+        occupied = true;
+        break;
       }
     }
-  }
+    if (occupied) continue;
 
-  for (let k = 0; k < 9; k++) {
-    const c0 = rng.randrange(cols);
-    const r0 = rng.randrange(rows);
-    const h = rng.randint(2, 6);
-    for (let j = 0; j < h; j++) {
-      if (r0 + j < rows) {
-        cellMap.set(`${c0},${r0 + j}`, makeCell(c0, r0 + j));
-      }
+    for (let i = 0; i < len; i++) {
+      cellMap.set(`${c0 + i},${r}`, {
+        c: c0 + i,
+        r,
+        ch: pick(),
+        phase: seqPhase,
+        tickRate,
+        lastTick: -1,
+        seqOffset: i,
+        seqLen: len,
+      });
     }
-  }
-
-  const singleCount = Math.max(18, Math.round((cols * rows) / 22));
-  for (let k = 0; k < singleCount; k++) {
-    const c = rng.randrange(cols);
-    const r = rng.randrange(rows);
-    cellMap.set(`${c},${r}`, makeCell(c, r));
   }
 
   const cells = Array.from(cellMap.values());
@@ -520,29 +615,25 @@ export function createAsciiOverlayState(
   const updateSmooth = (elapsedSec: number) => {
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     ctx.clearRect(0, 0, safeW, safeH);
-    ctx.font = '500 13px "JetBrains Mono", ui-monospace, monospace';
+    ctx.font = '500 11.5px "JetBrains Mono", ui-monospace, monospace';
     ctx.textBaseline = 'top';
     ctx.fillStyle = '#ffffff';
 
     for (let i = 0; i < cells.length; i++) {
       const cell = cells[i];
-      // Smooth cosine wave 0..1 per glyph
-      const wave = 0.5 + 0.5 * Math.cos(elapsedSec * cell.speed + cell.phase);
-
-      // Only swap glyph silently when faded near zero so characters never pop abruptly
-      if (wave < 0.06) {
-        if (!cell.swappedInTrough) {
-          cell.ch = ASCII_GLYPHS[(i + Math.floor(elapsedSec * 3.7)) % ASCII_GLYPHS.length];
-          cell.swappedInTrough = true;
-        }
-      } else if (wave > 0.25) {
-        cell.swappedInTrough = false;
+      // Fast deterministic cipher tick per cell
+      const tick = Math.floor(elapsedSec * cell.tickRate + cell.seqOffset * 0.37);
+      if (tick !== cell.lastTick) {
+        const idx = Math.abs((tick * 17 + i * 31 + seed) % ASCII_GLYPHS.length);
+        cell.ch = ASCII_GLYPHS[idx];
+        cell.lastTick = tick;
       }
 
-      // Smooth cubic ease on opacity (0.08 .. 0.90)
-      const eased = wave * wave * (3 - 2 * wave);
-      ctx.globalAlpha = 0.08 + eased * 0.82;
-      ctx.fillText(cell.ch, cell.c * cw + 5, cell.r * ch + 5);
+      // Subtle pulse wave along each sequence (never overpowering UI text)
+      const pulse =
+        0.5 + 0.5 * Math.sin(elapsedSec * 2.6 + cell.phase - cell.seqOffset * 0.45);
+      ctx.globalAlpha = 0.14 + pulse * 0.26;
+      ctx.fillText(cell.ch, cell.c * cw + 4, cell.r * ch + 4);
     }
     ctx.globalAlpha = 1;
   };

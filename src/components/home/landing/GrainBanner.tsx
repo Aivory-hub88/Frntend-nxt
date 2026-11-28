@@ -3,15 +3,15 @@ import type { ReactNode } from 'react';
 import { GlitchFloraScene } from '@/components/ui/GlitchFloraScene';
 import s from './landing.module.css';
 
-export type GrainPalette = { floraKey: string; fallback: string };
+export type GrainPalette = { image: string; fallback: string };
 
 export const PALETTES = {
   ember: {
-    floraKey: 'cervoEmber',
+    image: '/landing/flora/banner-cervo-clean.webp?v=20261128',
     fallback: 'linear-gradient(100deg, #6f9996 0%, #b8947d 45%, #df7848 78%, #d23b18 100%)',
   },
   iris: {
-    floraKey: 'workspaceIris',
+    image: '/landing/flora/banner-workspace-clean.webp?v=20261128',
     fallback: 'linear-gradient(104deg, #6f86e0 0%, #9aa8ec 35%, #b468d4 70%, #8636bf 100%)',
   },
 } satisfies Record<string, GrainPalette>;
@@ -29,11 +29,13 @@ export default function GrainBanner({ palette, lockup, lockupWidth, lockupRatio,
     <div
       className={s.gb}
       style={{
-        backgroundImage: palette.fallback,
+        backgroundImage: `url(${palette.image}), ${palette.fallback}`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
       }}
     >
       <GlitchFloraScene
-        paletteKey={palette.floraKey}
+        imageSrc={palette.image}
         className="absolute inset-0 z-0 h-full w-full"
       />
       <img
