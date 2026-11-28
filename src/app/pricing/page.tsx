@@ -14,7 +14,8 @@ import {
 
 export const metadata: Metadata = {
   title: 'Pricing',
-  description: 'Simple, transparent pricing. Buy once, own the output.',
+  description:
+    'Simple, transparent pricing for Aivory AI operations: one-time Business Operations Assessments, Transformation Blueprints, and monthly platform plans.',
   alternates: {
     canonical: '/pricing',
   },
@@ -46,7 +47,7 @@ export default function PricingPage() {
               'linear-gradient(to bottom, #050505 0, #050505 64px, #E4E6E8 64px, #E4E6E8 100%)',
           }}
         >
-          <PricingClientWrapper />
+          <PricingClientWrapper headingAs="h1" />
         </main>
 
         <Footer />

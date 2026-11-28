@@ -3,7 +3,7 @@ import { Suspense } from "react";
 import CheckoutSuccessClient from "./CheckoutSuccessClient";
 
 export const metadata: Metadata = {
-  title: "Payment status — Aivory",
+  title: "Payment status",
   description: "The status of your Aivory payment.",
   robots: { index: false, follow: false },
 };

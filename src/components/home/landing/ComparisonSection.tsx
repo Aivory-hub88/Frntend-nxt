@@ -1,6 +1,4 @@
 import type { CSSProperties } from 'react';
-import { BokehGradient, type BokehScene } from '@/components/ui/BokehGradient';
-import { ParametricPattern } from '@/components/ui/ParametricPattern';
 import s from './landing.module.css';
 
 type Status = 'yes' | 'no' | 'warn';
@@ -15,17 +13,6 @@ const ROWS: Array<{ capability: string; detail: string; values: [Status, Status,
 
 const RIVALS = ['AI Chat', 'Consulting', 'Automation'];
 const LABEL: Record<Status, string> = { yes: 'Yes', warn: 'Partly', no: 'No' };
-
-/* Aivory's own trio (same world as the Operational plan card): deep blue field,
-   a periwinkle-steel shape, a warm orange glow. The one colour moment of the section. */
-const SCENE: BokehScene = {
-  colors: ['#0a1838', '#1d4a9a', '#5a6fb0', '#e46a24', '#9aaedc', '#9aaedc'],
-  mode: 'tri',
-  scale: 0.55,
-  seed: 5.2,
-  light: 0.35,
-  shadow: 0.55,
-};
 
 /* Every cell is placed explicitly (the card holds the last column on every row, which breaks
    auto-placement). Rows pass their line numbers down as custom properties: --r on desktop,
@@ -84,11 +71,10 @@ export default function ComparisonSection() {
         </div>
 
         <div className={s.cmp}>
+          <div className={s.cmpBackdrop} aria-hidden="true" />
           <div className={s.cmpGrid} role="table" aria-label="Aivory compared with AI chat, consulting and automation">
-            {/* The Aivory column: one gradient card (with a parametric facade pattern) behind the last column, overhanging the panel. */}
-            <BokehGradient scene={SCENE} className={s.cmpCard}>
-              <ParametricPattern kind="lattice" />
-            </BokehGradient>
+            {/* The Aivory column: translucent frosted glass card behind the last column, overhanging the panel. */}
+            <div className={s.cmpCard} aria-hidden="true" />
 
             <div className={s.cmpRow} role="row" style={HEAD_LINES}>
               <span className={`${s.cmpHead} ${s.cmpCap}`} role="columnheader">Capabilities</span>

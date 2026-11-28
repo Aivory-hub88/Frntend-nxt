@@ -5,7 +5,7 @@ import Footer from "@/components/Footer";
 import { JsonLd, absoluteUrl, createBreadcrumbList } from "@/lib/seo";
 
 export const metadata: Metadata = {
-  title: "AI Lead Qualification Workflow | Aivory",
+  title: "AI Lead Qualification Workflow",
   description:
     'AI lead qualification workflow that scores, enriches and routes inbound leads in one pass. Deploy on Aivory in a day.',
   alternates: { canonical: "/templates/lead-qualification" },

@@ -19,7 +19,7 @@ export const DEFAULT_OG_IMAGE = '/hero-video-poster.jpg';
 const ORGANIZATION_DESCRIPTION =
   'Aivory (also known as Aivory AI) is AI infrastructure for business transformation and operational intelligence, helping organisations move from operational clarity to governed AI agents and autonomous workflows.';
 const ORGANIZATION_DISAMBIGUATION =
-  'Business transformation and AI operations platform (United Kingdom / global), founded by Irfan Reichmann and canonically published at aivory.uk. Distinct from dental practice software, HRMS platforms, code-compliance tooling, consumer AI apps, or creative studios that share a similar name — none of those are affiliated with this organisation.';
+  'Business transformation and AI operations platform serving the United Kingdom, Europe, the Middle East (UAE), Asia-Pacific (Singapore, Indonesia, Malaysia, Japan, South Korea), Australia & New Zealand, and North America, founded by Irfan Reichmann and canonically published at aivory.uk. Distinct from dental practice software, HRMS platforms, code-compliance tooling, consumer AI apps, or creative studios that share a similar name — none of those are affiliated with this organisation.';
 const WEBSITE_DESCRIPTION =
   'AI infrastructure for business transformation — from operational analysis to autonomous AI agents.';
 const HOMEPAGE_DESCRIPTION =
@@ -82,8 +82,8 @@ export function createOrganization(siteUrl: PublicSiteUrl) {
   return {
     '@type': 'Organization',
     '@id': `${siteUrl}/#organisation`,
-    name: 'Aivory AI',
-    alternateName: ['Aivory', 'Aivory Platform', 'Aivory UK', 'aivory.uk'],
+    name: 'Aivory',
+    alternateName: ['Aivory AI', 'Aivory Platform', 'Aivory UK', 'aivory.uk'],
     legalName: 'Aivory',
     url: `${siteUrl}/`,
     logo: {
@@ -109,21 +109,25 @@ export function createOrganization(siteUrl: PublicSiteUrl) {
     employee: [{ '@id': `${siteUrl}/#founder` }],
     areaServed: [
       { '@type': 'Place', name: 'Worldwide' },
-      { '@type': 'Country', name: 'Indonesia' },
+      { '@type': 'Place', name: 'Europe' },
+      { '@type': 'Place', name: 'Asia' },
+      { '@type': 'Place', name: 'Middle East' },
       { '@type': 'Country', name: 'United Kingdom' },
+      { '@type': 'Country', name: 'United States' },
+      { '@type': 'Country', name: 'United Arab Emirates' },
+      { '@type': 'Country', name: 'Singapore' },
+      { '@type': 'Country', name: 'Malaysia' },
+      { '@type': 'Country', name: 'Indonesia' },
+      { '@type': 'Country', name: 'Japan' },
+      { '@type': 'Country', name: 'South Korea' },
+      { '@type': 'Country', name: 'Australia' },
+      { '@type': 'Country', name: 'New Zealand' },
       { '@type': 'Country', name: 'Netherlands' },
       { '@type': 'Country', name: 'Germany' },
       { '@type': 'Country', name: 'France' },
-      { '@type': 'Country', name: 'United States' },
-      { '@type': 'Country', name: 'Japan' },
       { '@type': 'Country', name: 'Spain' },
-      { '@type': 'Country', name: 'South Korea' },
       { '@type': 'Country', name: 'China' },
-      { '@type': 'Country', name: 'Australia' },
-      { '@type': 'Country', name: 'New Zealand' },
-      { '@type': 'Place', name: 'Europe' },
       { '@type': 'Country', name: 'Portugal' },
-      { '@type': 'Country', name: 'United Arab Emirates' },
       { '@type': 'Country', name: 'Oman' },
       { '@type': 'Country', name: 'Saudi Arabia' },
       { '@type': 'Country', name: 'Bahrain' },
@@ -158,7 +162,7 @@ export function createOrganization(siteUrl: PublicSiteUrl) {
     sameAs: [
       'https://www.linkedin.com/company/aivoryai/',
       'https://www.producthunt.com/products/aivory-ai',
-      'https://www.instagram.com/aivorylab.ai',
+      'https://www.instagram.com/its.aivory',
       'https://www.youtube.com/@itsAivory',
       'https://www.threads.com/@its.aivory',
       'https://x.com/aivoryai',
@@ -183,8 +187,8 @@ export function createWebsite(siteUrl: PublicSiteUrl) {
     '@type': 'WebSite',
     '@id': `${siteUrl}/#website`,
     url: `${siteUrl}/`,
-    name: 'Aivory AI',
-    alternateName: ['Aivory', 'aivory.uk'],
+    name: 'Aivory',
+    alternateName: ['Aivory AI', 'Aivory Platform', 'aivory.uk'],
     description: WEBSITE_DESCRIPTION,
     isFamilyFriendly: true,
     copyrightHolder: { '@id': `${siteUrl}/#organisation` },
@@ -244,8 +248,8 @@ function createPlatformApplication(siteUrl: PublicSiteUrl) {
   return {
     '@type': 'SoftwareApplication',
     '@id': `${siteUrl}/#software`,
-    name: 'Aivory Platform',
-    alternateName: ['Aivory AI', 'Aivory AI Operations Platform', 'Aivory Agentic AI Platform'],
+    name: 'Aivory',
+    alternateName: ['Aivory Platform', 'Aivory AI', 'Aivory AI Operations Platform', 'Aivory Agentic AI Platform'],
     applicationCategory: 'BusinessApplication',
     applicationSubCategory: 'AI Operations Platform',
     operatingSystem: 'Web',

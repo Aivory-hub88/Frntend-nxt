@@ -21,6 +21,34 @@ function postDescription(post: BlogPostDetail): string {
   return clampDescription(richContentToPlainText(post.body?.blocks))
 }
 
+const BLOG_SEO_OVERRIDES: Record<string, { title: string; description?: string }> = {
+  "ai-automation-workflow-builder-building-workflows-from-natural-language": {
+    title: "Natural Language AI Workflow Builder (No Drag & Drop)",
+    description:
+      "Build and run IT and business workflows from plain English instead of drag-and-drop node builders. See how Aivory compiles, validates, and governs workflows.",
+  },
+  "deploying-ai-agents-to-slack-and-hubspot-a-no-code-walkthrough": {
+    title: "Deploy AI Agents to Slack & HubSpot (No-Code Guide)",
+    description:
+      "Step-by-step walkthrough to connect governed AI agents to Slack and HubSpot without engineering tickets—with live permissions, approvals, and audit trails.",
+  },
+  "from-process-mapping-to-ai-workflow-a-six-step-transformation-blueprint": {
+    title: "6-Step AI Workflow & Process Mapping Blueprint",
+    description:
+      "Turn an operational process map into a testable, governed AI workflow in six steps—covering data boundaries, human-in-the-loop review, and rollout metrics.",
+  },
+  "what-is-an-agentic-ai-platform-a-practical-definition-for-business-leaders": {
+    title: "What Is an Agentic AI Platform? Practical Guide",
+  },
+}
+
+function formatBlogMetaTitle(title: string): Metadata["title"] {
+  if (title.length <= 48) return title
+  if (title.length <= 60) return { absolute: title }
+  const clipped = title.slice(0, 59).replace(/\s+\S*$/, "")
+  return { absolute: `${clipped || title.slice(0, 59)}…` }
+}
+
 export async function generateMetadata(
   props: { params: Promise<{ slug: string }> }
 ): Promise<Metadata> {
@@ -36,19 +64,21 @@ export async function generateMetadata(
     return { title: "Post not found", robots: { index: false, follow: false } }
   }
 
-  const description = postDescription(post)
+  const override = BLOG_SEO_OVERRIDES[post.slug]
+  const metaTitle = override?.title ?? post.title
+  const description = override?.description ?? postDescription(post)
   const url = absoluteUrl(`/blog/${post.slug}`)
   const images = [post.thumbnail_url || DEFAULT_OG_IMAGE]
 
   return {
-    title: post.title,
+    title: formatBlogMetaTitle(metaTitle),
     description,
     alternates: {
       canonical: url,
     },
     openGraph: {
       type: "article",
-      title: post.title,
+      title: metaTitle,
       description,
       url,
       images,
@@ -57,7 +87,7 @@ export async function generateMetadata(
     },
     twitter: {
       card: "summary_large_image",
-      title: post.title,
+      title: metaTitle,
       description,
       images,
     },
@@ -114,7 +144,8 @@ function ContentBlock({ block, isRedacted }: { block: BlogContentBlock; isRedact
         6: "text-sm font-medium",
       }
       const className = `${sizeClasses[level] || sizeClasses[2]} text-[#11110f] mt-8 mb-3`
-      if (level === 1) return <h1 className={className}>{block.text}</h1>
+      // The article header already renders the page's sole <h1>; demote in-body h1 blocks to <h2>.
+      if (level === 1) return <h2 className={className}>{block.text}</h2>
       if (level === 3) return <h3 className={className}>{block.text}</h3>
       if (level === 4) return <h4 className={className}>{block.text}</h4>
       if (level === 5) return <h5 className={className}>{block.text}</h5>
@@ -384,7 +415,43 @@ export default async function BlogPostPage(props: { params: Promise<{ slug: stri
               ))}
             </div>
 
-            <div className="mt-16 pt-8 border-t border-black/15">
+            <aside
+              aria-label="Start with Aivory"
+              className="mt-16 rounded-xl border border-black/15 bg-white/70 p-7 md:p-9"
+            >
+              <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-black/55">
+                From reading to implementation
+              </p>
+              <h2 className="mt-3 text-[24px] md:text-[28px] font-light leading-[1.15] tracking-[-0.02em] text-[#11110f]">
+                See where AI fits in your actual operations.
+              </h2>
+              <p className="mt-3 text-[15px] leading-relaxed text-black/70 font-light">
+                Start with Aivory&apos;s free Business Operations Readiness Diagnostic to benchmark your workflows, or explore how we deploy governed AI agents into Slack, HubSpot, and your CRM.
+              </p>
+              <div className="mt-6 flex flex-wrap items-center gap-4">
+                <Link
+                  href="/free-diagnostic"
+                  className="inline-flex items-center gap-2 rounded-full bg-[#11110f] px-5 py-2.5 text-[13px] font-normal text-white transition-opacity hover:opacity-85"
+                >
+                  Start Free AI Diagnostic
+                  <ArticleArrow />
+                </Link>
+                <Link
+                  href="/ai-workflow-automation"
+                  className="inline-flex items-center gap-2 border-b border-black/50 pb-0.5 text-[13px] font-light text-[#11110f] transition-opacity hover:opacity-60"
+                >
+                  Explore AI Workflow Automation
+                </Link>
+                <Link
+                  href="/product"
+                  className="inline-flex items-center gap-2 border-b border-black/50 pb-0.5 text-[13px] font-light text-[#11110f] transition-opacity hover:opacity-60"
+                >
+                  View Platform
+                </Link>
+              </div>
+            </aside>
+
+            <div className="mt-12 pt-8 border-t border-black/15">
               <Link
                 href="/blog"
                 className="inline-flex items-center gap-2 text-sm text-black/50 hover:text-black transition-colors font-light"

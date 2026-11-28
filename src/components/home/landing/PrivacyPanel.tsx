@@ -61,7 +61,7 @@ export default function PrivacyPanel() {
         <div className={s.secList}>
           <div><b>No third-party sharing</b><span>Nothing goes to advertisers or analytics vendors.</span></div>
           <div><b>End-to-end private</b><span>Encrypted in transit from first request to response.</span></div>
-          <div><b>Enterprise grade</b><span>Roles, audit trails and SSO in every workspace.</span></div>
+          <div><b>Enterprise grade</b><span>Role-based permissions and audit trails in every workspace, with SSO on Enterprise.</span></div>
           <div><b>No model training</b><span>Prompts, documents and outputs never train a model.</span></div>
         </div>
       </div>

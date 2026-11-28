@@ -9,7 +9,7 @@ import { CTAFooter } from '@/components/product/CTAFooter';
 import { DarkSectionSpotlight } from '@/components/ui/DarkSectionSpotlight';
 
 export const metadata: Metadata = {
-  title: 'AI Operations Platform — Autonomous AI Agents for Business',
+  title: 'AI Operations Platform — Autonomous Agents',
   description:
     'The agentic AI operations platform: diagnostics, blueprints, no-code automation and governed AI agents for your business.',
   alternates: {

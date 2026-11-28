@@ -40,7 +40,7 @@ export default function WorkspaceSection() {
           </h2>
         </div>
 
-        <div className={s.wsh} role="img" aria-label="Workspace: where teams and AI agents work together, literally">
+        <div className={s.wsh} role="img" aria-label="Workspace: where teams and AI agents work side by side">
           <div className={s.wshIn}>
             <i className={`${s.wshGlow} ${s.wg1}`} />
             <i className={`${s.wshGlow} ${s.wg2}`} />
@@ -49,7 +49,7 @@ export default function WorkspaceSection() {
               lockup="/landing/brand/workspace-lockup.webp"
               lockupWidth={42.4}
               lockupRatio={1018 / 123}
-                copy={<>Where teams and AI<br />agents work together,<br />literally</>}
+              copy={<>Where teams and AI<br />agents work side by side</>}
             />
             <img className={s.wshIll} src="/landing/workspace-illustrated.webp?v=3" alt="" width={1200} height={762} />
             <img className={s.wshReal} src="/landing/workspace-people.webp?v=3" alt="" width={1200} height={683} />
@@ -89,19 +89,19 @@ export default function WorkspaceSection() {
             <span className={s.featIc}>
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4" /><path d="M16 8v5a3 3 0 006 0v-1a10 10 0 10-4 8" /></svg>
             </span>
-            <p>Tag, alert and assign tasks to team members and agents.</p>
+            <p>Mention @people or @agents in the same thread to assign work.</p>
           </div>
           <div className={s.feat}>
             <span className={s.featIc}>
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} aria-hidden="true"><circle cx="12" cy="12" r="9" /><circle cx="12" cy="12" r="4" /></svg>
             </span>
-            <p>Start discussions and resolve issues in the workspace itself.</p>
+            <p>Review approvals, files and decisions alongside the thread.</p>
           </div>
           <div className={s.feat}>
             <span className={s.featIc}>
               <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3c5 0 9 3.6 9 8s-4 8-9 8c-1.2 0-2.3-.2-3.4-.5L4 20l1.3-3.6C3.9 15 3 13.1 3 11c0-4.4 4-8 9-8z" /></svg>
             </span>
-            <p>Increase visibility and keep all work in one place.</p>
+            <p>Keep every conversation, workflow and handoff in one shared record.</p>
           </div>
         </div>
       </div>

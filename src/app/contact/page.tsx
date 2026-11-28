@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import ContactClient from "./ContactClient";
 
 export const metadata: Metadata = {
-  title: "Contact — Aivory",
+  title: "Contact",
   description:
     "Get in touch with Aivory. Contact the team about AI readiness, transformation blueprints, platform enquiries, or partnership opportunities.",
   alternates: {

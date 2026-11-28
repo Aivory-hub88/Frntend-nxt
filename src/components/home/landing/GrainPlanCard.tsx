@@ -1,6 +1,6 @@
 'use client';
 
-import type { ReactNode } from 'react';
+import type { CSSProperties, ReactNode } from 'react';
 import { BokehGradient, type BokehScene, type LeafFigure } from '@/components/ui/BokehGradient';
 import { RollButton } from '@/components/ui/RollButton';
 
@@ -76,9 +76,9 @@ function CheckCircle() {
 // `main .grid` until it scrolls in, which would fade each card part separately.
 const SUBGRID = { display: 'grid' } as const;
 
-function Tick() {
+function Tick({ className = 'text-[#17181c]' }: { className?: string }) {
   return (
-    <svg className="mt-[5px] h-[10px] w-[12px] shrink-0 text-[#17181c]" viewBox="0 0 12 10" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden="true">
+    <svg className={`mt-[5px] h-[10px] w-[12px] shrink-0 ${className}`} viewBox="0 0 12 10" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden="true">
       <path d="M1.5 5.2l3 3 6-6.4" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   );
@@ -110,6 +110,7 @@ export function GrainPlanCard({
   onCta,
   surface = 'full',
   art,
+  buttonColors,
 }: {
   world: PlanWorld;
   badge?: string;
@@ -130,6 +131,8 @@ export function GrainPlanCard({
   surface?: 'full' | 'window' | 'floral';
   /** 'floral': the baked header art (a WebP). Only the badge and the plan name sit on it; everything else stays on white. */
   art?: string;
+  /** Optional [restColor, fillColor] hex pair for the CTA button. */
+  buttonColors?: [string, string];
 }) {
   const win = surface === 'window';
   const head = (
@@ -198,12 +201,21 @@ export function GrainPlanCard({
     const hi = Boolean(badge);
     return (
       <div
-        className={`row-span-6 grid-cols-[minmax(0,1fr)] grid-rows-subgrid gap-y-0 overflow-hidden rounded-[24px] bg-white ring-1 ring-black/5 ${
+        className={`relative isolate row-span-6 grid-cols-[minmax(0,1fr)] grid-rows-subgrid gap-y-0 overflow-hidden rounded-[24px] bg-transparent ring-1 ring-white/75 ${
           hi ? 'shadow-[0_30px_50px_-26px_rgba(140,40,160,0.45)]' : 'shadow-[0_24px_40px_-28px_rgba(20,30,60,0.35)]'
         }`}
         style={SUBGRID}
       >
-        <div className="relative h-[176px]">
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute -inset-10 -z-20 scale-110 bg-cover bg-center blur-[52px] saturate-150 brightness-105"
+          style={{ backgroundImage: "url('/images/hero-new/hero-surreal-bg.jpeg')" }}
+        />
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0 -z-10 bg-gradient-to-br from-white/62 to-white/40 backdrop-blur-[28px] shadow-[inset_0_0_0_1px_rgba(255,255,255,0.78)]"
+        />
+        <div className="relative z-10 h-[176px]">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={art}
@@ -247,15 +259,15 @@ export function GrainPlanCard({
         <div />
 
         <div className="px-6 pt-[18px]">
-          <RollButton onClick={onCta} tone={hi ? 'brand' : 'ink'}>
+          <RollButton onClick={onCta} tone="ink">
             {cta}
           </RollButton>
         </div>
 
-        <ul className="mx-6 mt-5 space-y-[9px] border-t border-black/[0.08] pb-7 pt-[18px] text-[13.5px] leading-[1.4] text-[#2a2c34]">
+        <ul className="mx-6 mt-5 space-y-[9px] border-t border-white/25 pb-7 pt-[18px] text-[13.5px] leading-[1.4] text-white">
           {features.map((f) => (
-            <li key={f.text} className={`flex gap-[10px] ${f.strong ? 'font-semibold text-[#17181c]' : ''}`}>
-              <Tick />
+            <li key={f.text} className={`flex gap-[10px] ${f.strong ? 'font-semibold text-white' : ''}`}>
+              <Tick className="text-white" />
               <span>{f.text}</span>
             </li>
           ))}

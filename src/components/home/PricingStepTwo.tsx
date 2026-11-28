@@ -217,7 +217,7 @@ export default function PricingStepTwo({ currency, variant = 'default' }: { curr
           </div>
           <h2 className={`text-[35px] sm:text-[37px] md:text-[37px] lg:text-[43px] ${landing ? 'font-light tracking-[-0.03em]' : 'font-normal tracking-tight'} mb-6`}>Choose how your organisation runs on Aivory.</h2>
           <p className="text-xl text-[#494949] font-light leading-relaxed">
-            Continue your transformation with Aivory's Operational Intelligence Platform. Modernise operations, orchestrate intelligent workflows, and deploy governed AI across your organisation.
+            Scale into recurring workspaces, workflow automation, and team-wide agent governance with predictable monthly or annual billing.
           </p>
         </div>
 
@@ -259,7 +259,7 @@ export default function PricingStepTwo({ currency, variant = 'default' }: { curr
                   key={plan.name}
                   world={STEP_TWO_WORLDS[idx]}
               surface="floral"
-                  art={`/landing/pricing/plan-${plan.name.toLowerCase()}-v2.webp`}
+                  art={`/landing/pricing/plan-${plan.name.toLowerCase()}-v5.webp?v=20261128`}
                   badge={plan.mostPopular ? 'Most popular' : undefined}
                   title={plan.name}
                   subtitle={plan.description}
@@ -302,7 +302,7 @@ export default function PricingStepTwo({ currency, variant = 'default' }: { curr
 
               {/* Price */}
               <div className="flex items-center justify-start gap-3 py-6 mt-2">
-                <span className={`transition-all duration-300 ${activeCurrency === 'IDR' && !plan.customPriceString ? 'text-[28px] sm:text-[32px] md:text-[38px]' : 'text-[42px] sm:text-[48px] md:text-[52px]'} font-extrabold leading-none whitespace-nowrap text-[#1a1a1a]`}>
+                <span className={`transition-opacity duration-200 ${activeCurrency === 'IDR' && !plan.customPriceString ? 'text-[28px] sm:text-[32px] md:text-[38px]' : 'text-[42px] sm:text-[48px] md:text-[52px]'} font-extrabold leading-none whitespace-nowrap text-[#1a1a1a]`}>
                   {getFormattedPrice(plan)}
                 </span>
                 <div className="flex flex-col pt-1">
@@ -349,17 +349,14 @@ export default function PricingStepTwo({ currency, variant = 'default' }: { curr
         {/* IC Explanation */}
         <div className="mx-auto mt-24 max-w-5xl border-t-2 border-[#6f7473] pt-8">
           <p className="text-[16px] md:text-[17px] font-bold leading-[1.65] text-[#494949]">
-            Intelligence Credits (IC) fuel Aivory™ reasoning — every consultation, workflow generation, and agent
-            configuration runs on IC. Think of it as the fuel tank for your AI system. 1 IC covers about 13,000 AI
-            tokens at peak hours and up to 26,000 off-peak; agents are charged for the tokens they actually use.
-            Need more? Top up anytime from $15 for 1,000 IC — top-ups never expire.
+            Intelligence Credits (IC) meter model usage across diagnostics, workflow builds, and live agent runs. 1 IC covers 28,000 AI tokens at peak hours and 43,334 off-peak, billed for the tokens your team actually uses. Need more capacity? Top up anytime from $15 for 1,000 IC; purchased top-ups never expire.
           </p>
         </div>
 
         {/* Bottom note */}
         <div className="mt-16 text-center">
           <p className="text-[15px] md:text-[17px] font-medium leading-tight text-[#494949]">
-            Enterprise governance. Predictable pricing. Business operations transformation powered by AI.
+            Role-based access controls, audit trails, and monthly or annual billing included.
           </p>
         </div>
       </div>

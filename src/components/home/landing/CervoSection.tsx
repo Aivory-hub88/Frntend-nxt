@@ -118,37 +118,64 @@ export default function CervoSection() {
           <img className={s.fbPeople} src="/landing/cervo-team.webp?v=3" alt="" width={1600} height={739} />
         </div>
 
-        {/* Connectivity strip, as in Figma (node 13:8902). */}
-        <div className={s.caps} aria-label="Connectivity">
-          <div className={s.cap}>
-            <span>100+ Apps Integrations</span>
-            <span className={s.chip}>
-              <img className={s.chipIc} src="/landing/strip/puzzle.svg" alt="" />
-              Integrations
-              <span className={s.stack} aria-hidden="true">
-                <i><img src="/landing/strip/gmail.svg" alt="" /></i>
-                <i><img src="/integrations/icons/google-calendar.svg" alt="" /></i>
-                <i><img src="/landing/strip/salesforce.svg" alt="" /></i>
-                <i><img src="/landing/strip/hubspot.svg" alt="" /></i>
+        {/* Connectivity architecture dock */}
+        <div className={s.caps} role="group" aria-label="Connectivity architecture">
+          <div className={`${s.cap} ${s.capApps}`}>
+            <div className={s.capTop}>
+              <span className={`${s.capBadge} ${s.capBadgeApps}`} aria-hidden="true">
+                <span className={`${s.capGlyph} ${s.capGlyphPuzzle}`} />
               </span>
-            </span>
+              <span className={s.stack} aria-hidden="true">
+                <i style={{ '--i': 0 } as React.CSSProperties}><img src="/landing/strip/gmail.svg" alt="" /></i>
+                <i style={{ '--i': 1 } as React.CSSProperties}><img src="/integrations/icons/google-calendar.svg" alt="" /></i>
+                <i style={{ '--i': 2 } as React.CSSProperties}><img src="/integrations/icons/slack.svg" alt="" /></i>
+                <i style={{ '--i': 3 } as React.CSSProperties}><img src="/landing/strip/salesforce.svg" alt="" /></i>
+                <i style={{ '--i': 4 } as React.CSSProperties}><img src="/landing/strip/hubspot.svg" alt="" /></i>
+                <b className={s.stackMore} style={{ '--i': 5 } as React.CSSProperties}>+95</b>
+              </span>
+            </div>
+            <div className={s.capBody}>
+              <span className={s.capTitle}>100+ App Integrations</span>
+              <p className={s.capSub}>Direct read &amp; write across your existing stack</p>
+            </div>
           </div>
-          <div className={s.cap}>
-            <span>MCP Connection</span>
-            <span className={s.chip}><img className={s.chipIc} src="/landing/mcp.svg" alt="" />Model Context Protocol</span>
+
+          <div className={`${s.cap} ${s.capMcp}`}>
+            <div className={s.capTop}>
+              <span className={`${s.capBadge} ${s.capBadgeMcp}`} aria-hidden="true">
+                <span className={`${s.capGlyph} ${s.capGlyphMcp}`} />
+              </span>
+              <span className={s.chip}>
+                <i className={`${s.capDot} ${s.capDotBlue}`} aria-hidden="true" />
+                <span className={s.chipLabel}>Model Context Protocol</span>
+              </span>
+            </div>
+            <div className={s.capBody}>
+              <span className={s.capTitle}>MCP Connection</span>
+              <p className={s.capSub}>Plug in any MCP server as a live agent skill</p>
+            </div>
           </div>
-          <div className={s.cap}>
-            <span>A2A Protocol</span>
-            <span className={s.chip}>
-              <img className={s.chipA2a} src="/landing/strip/a2a.svg" alt="" />
-              <img className={s.chipText} src="/landing/strip/agent2agent-text.svg" alt="Agent2Agent" />
-            </span>
+
+          <div className={`${s.cap} ${s.capA2a}`}>
+            <div className={s.capTop}>
+              <span className={`${s.capBadge} ${s.capBadgeA2a}`} aria-hidden="true">
+                <span className={`${s.capGlyph} ${s.capGlyphA2a}`} />
+              </span>
+              <span className={s.chip}>
+                <i className={`${s.capDot} ${s.capDotGreen}`} aria-hidden="true" />
+                <span className={s.chipWordmark} role="img" aria-label="Agent2Agent" />
+              </span>
+            </div>
+            <div className={s.capBody}>
+              <span className={s.capTitle}>A2A Protocol</span>
+              <p className={s.capSub}>Native multi-agent coordination &amp; handoffs</p>
+            </div>
           </div>
         </div>
 
         <div className={s.ig} aria-label="What every Cervo agent has">
           <article className={s.igc}>
-            <h4>Memory &amp; Context</h4>
+            <h3>Memory &amp; Context</h3>
             <p className={s.igd}>Each agent remembers customers, vendors and past decisions, then applies them to the next task without being told twice.</p>
             <div className={`${s.igp} ${s.chatp}`}>
               <div className={s.chatH}>
@@ -167,7 +194,7 @@ export default function CervoSection() {
           </article>
 
           <article className={s.igc}>
-            <h4>100+ Apps &amp; Any MCP</h4>
+            <h3>100+ Apps &amp; Any MCP</h3>
             <p className={s.igd}>Agents read and write in the tools your teams already use. Plug in any MCP server and it becomes a new skill.</p>
             <div className={`${s.igp} ${s.icons}`}>
               {APP_ICONS.map((app) =>
@@ -196,7 +223,7 @@ export default function CervoSection() {
           </article>
 
           <article className={s.igc}>
-            <h4>A Brain for Every Role</h4>
+            <h3>A Brain for Every Role</h3>
             <p className={s.igd}>Give each agent the reasoning model and toolkit its role needs. Finance thinks like finance, sales like sales.</p>
             <div className={`${s.igp} ${s.roles}`}>
               {ROLES.map((r) => (
@@ -206,7 +233,7 @@ export default function CervoSection() {
           </article>
 
           <article className={s.igc}>
-            <h4>Its Own Computer</h4>
+            <h3>Its Own Computer</h3>
             <p className={s.igd}>Every agent works in an isolated workspace with a browser and files, so it finishes the task instead of describing it.</p>
             <div className={`${s.igp} ${s.agentp}`}>
               <div className={s.st}><i />Active · Browser · Files · Sandbox</div>
@@ -223,8 +250,8 @@ export default function CervoSection() {
           </article>
 
           <article className={s.igc}>
-            <h4>Agents That Work as a Team</h4>
-            <p className={s.igd}>Built on the full A2A protocol, agents talk to each other and work as a team, inside Aivory and beyond.</p>
+            <h3>Agents That Work as a Team</h3>
+            <p className={s.igd}>Built on the Agent2Agent (A2A) protocol, agents hand off work directly inside Aivory and across external tools.</p>
             <div className={`${s.igp} ${s.agentp}`}>
               <div className={s.st}><i />Active · A2A · Team chat</div>
               <div className={s.flow}>
@@ -238,7 +265,7 @@ export default function CervoSection() {
           </article>
 
           <article className={s.igc}>
-            <h4>Governed by Approvals</h4>
+            <h3>Governed by Approvals</h3>
             <p className={s.igd}>Agents ask before they act on anything that matters. Approve or deny from the console or straight from Slack.</p>
             <div className={`${s.igp} ${s.agentp}`}>
               <div className={s.st}><i />Active · Approvals · Audit log</div>

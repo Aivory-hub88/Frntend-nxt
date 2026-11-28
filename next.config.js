@@ -37,6 +37,22 @@ const nextConfig = {
         destination: '/free-diagnostic',
         permanent: true,
       },
+      {
+        // Template preview pages retired into the main workflow automation hub.
+        source: '/templates/customer-onboarding',
+        destination: '/ai-workflow-automation',
+        permanent: true,
+      },
+      {
+        source: '/templates/email-triage',
+        destination: '/ai-workflow-automation',
+        permanent: true,
+      },
+      {
+        source: '/templates/invoice-processing',
+        destination: '/ai-workflow-automation',
+        permanent: true,
+      },
     ];
   },
   async headers() {

@@ -5,7 +5,8 @@ import { JsonLd, createBreadcrumbList, absoluteUrl } from "@/lib/seo"
 
 export const metadata: Metadata = {
   title: "Investor Relations",
-  description: "Investor relations and investment information for Aivory.",
+  description:
+    "Investor relations, company overview, and strategic investment contact information for Aivory AI enterprise operations infrastructure.",
   alternates: {
     canonical: "/investor-relations",
   },
@@ -18,9 +19,9 @@ export const metadata: Metadata = {
 
 function SectionTitle({ children }: { children: React.ReactNode }) {
   return (
-    <h3 className="text-[22px] font-light leading-[1.15] tracking-[-0.02em] text-[#11110f]">
+    <h2 className="text-[22px] font-light leading-[1.15] tracking-[-0.02em] text-[#11110f]">
       {children}
-    </h3>
+    </h2>
   )
 }
 

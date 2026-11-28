@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import FreeSignupClient from "./FreeSignupClient";
 
-const TITLE = "Free AI Readiness Analysis — Business Operations Diagnostic";
+const TITLE = "Free AI Readiness Diagnostic";
 const DESCRIPTION =
   "Create a free Aivory account and run 2 AI readiness analyses of your business operations in your dashboard. No card needed.";
 

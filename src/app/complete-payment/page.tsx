@@ -3,7 +3,7 @@ import { Suspense } from "react";
 import CompletePaymentClient from "./CompletePaymentClient";
 
 export const metadata: Metadata = {
-  title: "Complete your purchase — Aivory",
+  title: "Complete your purchase",
   description: "Finish checkout to keep your Aivory account.",
   alternates: {
     canonical: "/complete-payment",

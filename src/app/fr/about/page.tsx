@@ -4,7 +4,7 @@ import { aboutContentFr } from "@/content/about/fr";
 import { buildLanguageAlternates } from "@/lib/localeAlternates";
 
 export const metadata: Metadata = {
-  title: "À propos d'Aivory et du fondateur Irfan Reichmann",
+  title: "À propos d'Aivory et d'Irfan Reichmann",
   description:
     "Découvrez Aivory, le fondateur Irfan Reichmann, et l'approche fondée sur l'opérationnel qui sous-tend la transformation d'entreprise par l'IA gouvernée.",
   alternates: {
