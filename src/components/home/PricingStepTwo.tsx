@@ -259,7 +259,7 @@ export default function PricingStepTwo({ currency, variant = 'default' }: { curr
                   key={plan.name}
                   world={STEP_TWO_WORLDS[idx]}
               surface="floral"
-                  art={`/landing/pricing/flora/plan-${plan.name.toLowerCase()}.webp?v=1`}
+                  art={`/landing/pricing/flora/plan-${plan.name.toLowerCase()}-v2.webp`}
                   badge={plan.mostPopular ? 'Most popular' : undefined}
                   title={plan.name}
                   subtitle={plan.description}
