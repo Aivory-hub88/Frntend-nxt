@@ -252,7 +252,7 @@ export function GrainPlanCard({
             <span className={`${priceSmall ? 'text-[34px]' : 'text-[46px]'} font-light leading-none tracking-[-0.04em] text-[#17181c]`}>{price}</span>
             <span className={`text-[13px] ${priceSuffixStrong ? 'font-semibold text-[#3a3d48]' : 'font-medium text-[#5c6070]'}`}>{priceSuffix}</span>
           </div>
-          {note && <p className="mt-[6px] text-[12px] text-[#8a8e9c]">{note}</p>}
+          {note && <p className="mt-[6px] text-[12px] font-medium text-white">{note}</p>}
         </div>
 
         <div />
